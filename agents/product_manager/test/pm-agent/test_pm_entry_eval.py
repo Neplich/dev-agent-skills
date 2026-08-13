@@ -110,6 +110,7 @@ CHANGE_TIER_CASES = {
         "QA",
     ],
 }
+READ_ONLY_DIAGNOSIS_CASE = "eval-020-route-read-only-diagnosis"
 
 
 def load_evals():
@@ -162,6 +163,10 @@ def test_change_tier_contract_evals_are_defined():
     assert_eval_workspaces_exist(set(CHANGE_TIER_CASES))
 
 
+def test_read_only_diagnosis_eval_is_defined():
+    assert_eval_workspaces_exist({READ_ONLY_DIAGNOSIS_CASE})
+
+
 def test_pm_agent_protocol_covers_fr006_entry_routes():
     skill_text = PM_AGENT_SKILL.read_text()
 
@@ -192,6 +197,39 @@ def test_pm_agent_protocol_covers_missing_targets_and_change_tier():
             "`major`",
             "`hotfix` plus `delivery` / `status` requests may use the fast lane",
             "Do not route them to downstream execution as `hotfix`",
+        ],
+    )
+
+
+def test_pm_agent_only_assigns_diagnosis_mode_for_explicit_read_only_intent():
+    skill_text = PM_AGENT_SKILL.read_text()
+    section = skill_text.split("For `bug_report`, add the diagnosis-only", 1)[1]
+    section = section.split("## Default Routes", 1)[0]
+
+    assert_contains_all(
+        section,
+        [
+            "explicitly says the investigation must be read-only",
+            "mode: diagnosis_only",
+            "allowed_mutations: none",
+            "must not be assigned `diagnosis_only` automatically",
+        ],
+    )
+    assert_contains_all(section, ["查一下", "为什么挂了"])
+
+    handoff_section = skill_text.split(
+        "For an explicit read-only `bug_report`, also carry", 1
+    )[1]
+    handoff_section = handoff_section.split(
+        "If a required field is unresolved", 1
+    )[0]
+    assert_contains_all(
+        handoff_section,
+        [
+            "code, tests, E2E assets, configuration, databases, external state",
+            "commits",
+            "pushes",
+            "pull requests",
         ],
     )
 

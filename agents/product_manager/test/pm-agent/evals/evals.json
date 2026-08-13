@@ -859,6 +859,50 @@
           "text": "已启用目录中的一般请求不得被拦截：必须进入分类流程，输出 Routing decision 或语义等价的分类说明；若请求无法归入任何 PM 类别或下游角色，须诚实说明该请求不在 PM 工作流分类范围内并停在 PM，不得伪造与请求内容矛盾的 request_type 或 selected_owner，也不得输出「当前目录未启用」的拦截提示。"
         }
       ]
+    },
+    {
+      "id": "eval-020-route-read-only-diagnosis",
+      "name": "route-read-only-diagnosis",
+      "description": "Verifies that pm-agent recognizes an explicit no-mutation diagnosis request and hands it to Engineer without requiring repair alignment first.",
+      "scenario": {
+        "persona": "只想确认线上异常原因的产品负责人",
+        "situation": "会话接口间歇返回 500，当前只有错误摘要，没有已批准的产品或技术预期文档。",
+        "trigger": "负责人要求先调查原因，并明确禁止任何修复或状态修改。",
+        "goal": "把只读调查交给正确的工程能力，同时锁定零修改边界",
+        "materials": [
+          "incident-summary.md"
+        ],
+        "constraints": [
+          "只读收集证据，不修改代码、配置、数据库或外部状态",
+          "不把缺失的预期文档自动补成已确认缺陷",
+          "当前不进入修复"
+        ],
+        "success_criteria": [
+          "请求仍被分类为 bug_report",
+          "Engineer handoff 明确携带只读模式和零修改约束",
+          "缺少预期文档不阻止只读调查，但结论保持未对齐"
+        ]
+      },
+      "prompt": "会话接口偶尔返回 500。请先只读确认原因，不要修复，也不要修改任何代码、配置或外部状态。错误摘要在 `incident-summary.md`。",
+      "expected_output": "PM 将请求分类为 bug_report 的只读诊断子模式，向 Engineer 传递零修改边界和证据化诊断报告要求，不先要求补齐修复文档。",
+      "workspace": "workspace/eval-020-route-read-only-diagnosis",
+      "assertions": [
+        {
+          "id": "classifies_read_only_bug_report",
+          "description": "识别只读 bug_report 子模式",
+          "text": "输出必须保持 `request_type: bug_report`，并因用户明确只读、不修复而附加 `mode: diagnosis_only`。"
+        },
+        {
+          "id": "sets_zero_mutation_boundary",
+          "description": "设置零修改边界",
+          "text": "Engineer handoff 必须包含 `allowed_mutations: none`，并明确禁止代码、测试、E2E、配置、数据库、外部状态以及 commit、push、PR 的修改。"
+        },
+        {
+          "id": "allows_unaligned_diagnosis_handoff",
+          "description": "缺文档仍可只读调查",
+          "text": "缺少 PRD/TRD 时仍可把只读证据收集交给 Engineer/debugger，但必须将预期保持为 unaligned，不能确认 `implementation_deviation` 或进入修复。"
+        }
+      ]
     }
   ]
 }

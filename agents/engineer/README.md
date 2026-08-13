@@ -27,7 +27,7 @@
 | `trd-gen` | Writing technical plans, API docs, and ADRs after PRD / DECISIONS are confirmed | `docs/engineer/{feature_path}/TRD.md`, optional `API.md` / `ADR-*.md` |
 | `feature-implementor` | Implementing a confirmed TRD or design document | `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`, code changes, necessary docs |
 | `test-writer` | Adding unit, integration, or validation coverage | Test files, test execution evidence |
-| `debugger` | Reproducing, diagnosing, and fixing bugs or build failures | Minimal fix, regression evidence |
+| `debugger` | Read-only diagnosis or gated repair of bugs and build failures | Evidence-based diagnosis or minimal fix with regression evidence |
 | `delivery` | Branches, commits, pushes, PRs, delivery wrap-up | Git commit, PR, delivery summary |
 
 ## Routing Rules
@@ -37,10 +37,11 @@
 - Implement features, behavior changes, or design handoff: use `feature-implementor`
 - Frontend code updates, UI implementation, or design-to-code: enter through Engineer; hand off to Designer only when design deliverables are missing or stale
 - Add tests, coverage, or implementation validation: use `test-writer`
-- Debug bugs, failed logs, failing tests, or broken builds: use `debugger`
+- Diagnose bugs without mutation, or repair failed logs, tests, and builds: use `debugger`; explicit read-only requests use `diagnosis_only`
 - Commit, push, open PRs, or finish delivery: use `delivery`
 
 Default rule: if the request changes production behavior, first confirm the requirement source and code context. If the request starts from a failure symptom, prefer `debugger`.
+Missing PRD/TRD does not block an explicitly read-only diagnosis, but its report must mark expected behavior unaligned and must not confirm an implementation defect. A later fix request re-enters the full repair gates.
 
 ## Typical Flow
 

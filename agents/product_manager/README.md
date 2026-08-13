@@ -48,6 +48,9 @@ explicit invocation of `pm-agent` or any skill proceed into the routing below.
   `docs-agent:release-notes-gen`.
 - Roadmap and milestone planning: use `roadmap-gen`
 - GitHub project status, PR/Issue queues, release blockers: use `github-reader`
+- Explicit read-only bug diagnosis: classify as `bug_report` and hand off to
+  Engineer with `mode: diagnosis_only` and `allowed_mutations: none`; ordinary
+  repair requests still require expected-behavior alignment.
 
 Default rule: if the core task is still product direction, requirements, scope, planning, or communication, keep it in PM Agent. Hand off to Designer or Engineer only after the requirement is stable enough.
 
@@ -100,7 +103,7 @@ host site's `docs/site/release-notes/`; PM only produces GitHub Releases via
 PM Agent hands off to peer agents that are packaged and installed as separate plugins:
 
 - `designer-agent` for confirmed UX, UI structure, visual-system, or design handoff work
-- `engineer-agent` for confirmed TRD, implementation, tests, debugging, delivery, or codebase work
+- `engineer-agent` for confirmed TRD, implementation, tests, debugging, delivery, or codebase work, plus explicitly bounded read-only diagnosis
 - `qa-agent` for confirmed acceptance, exploratory, bug analysis, or regression validation work
 - `devops-agent` for confirmed deployment, CI/CD, environment, release readiness, rollback, or runbook work
 - `security-agent` for confirmed AppSec, auth/authz, dependency, privacy, or data-flow review work

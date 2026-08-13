@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a` from `agents/product_manager/test/idea-to-spec/workspace/iteration-1/eval-2-existing-project-update`.
 - Identity schema: `2`
-- target_skill_sha256: `a5ef9beb8352f2c9b4cfde83ccd9caf0accd15d632ffa2d78214f3c51045041a`
+- target_skill_sha256: `34042e851466ff927567e09fc5777d952f1546cabc96fbe4de98617d27f5b1fb`
 - eval_definition_sha256: `2eb26345c0320238f13795dd231ba4c205d452d230de64d35bcf4cc4acb002f8`
 - metadata_sha256: `d7142d966569c4d32f40a170b0f92f6780789b8a982e6faeead586a238a9f649`
 - fixture_sha256: `4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `34ccc67474b5d5409e42b47f3e143e51f307a39f3959fa17d3be62715a379bc6`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `7ac19d358ca18ef7b2d109aeec17239bc9d0f4c0`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441`
+- Repository HEAD: `c13c53a9b6e4cf18215450050bc9e7d0a810b73c`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `55d032569bbd4014a60103aafb1c0773a93ff9dbe0ea681c46297ebeef4a35b3`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,21 +33,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `update` | PASS | with_skill 明确称这是 `notification-center` 的“既有能力更新”，并标注 `existing-project-update`。 |
-| `delta_blast_radius` | PASS | with_skill 先给出当前上下文与“影响范围”表，随后才提出设计方向和文档更新顺序。 |
-| `assertion_3` | PASS | with_skill 明确推荐 `change-impactor`，并提出 PRD/DECISIONS、TRD/ADR/API 的增量迭代路径。 |
-| `assertion_4` | PASS | with_skill 明确列出 PRD、DECISIONS、TRD 及测试规格、API、DevOps、安全和设计文档的路径或文档类型。 |
+| `update` | PASS | With-skill output explicitly identifies this as an existing-project update, not a new notification feature. |
+| `delta_blast_radius` | PASS | With-skill output states the delta and blast radius before presenting recommended design and document updates. |
+| `assertion_3` | PASS | With-skill output explicitly recommends `change-impactor` and multi-document incremental updates. |
+| `assertion_4` | PASS | With-skill output names the affected PRD, DECISIONS, and TRD paths, plus proposed API, QA, DevOps, and Security documentation paths/types. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441; fixture_sha256=4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a; output_sha256=9c4a0841c48c5331126c05d0d57b720ff60b9a6f15dac985cab2fc188a6c8552; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 识别为既有项目更新，先分析影响范围，再推荐增量迭代，并明确文档路径。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441; fixture_sha256=4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a; output_sha256=8661a2c798d9a53fd886b96bae16924e35005b1895769033091bbaea47a6b4b9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly recognized an existing-project update, analyzed delta and blast radius first, recommended iterative change-impact analysis, and identified affected document paths.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441; fixture_sha256=4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a; output_sha256=b7262beb00a9ec6e80154b48fe72844a0b96637b2c69ada04821aae3f3ce3613; snapshot_sha256=510ce766f41c6be42b9639e8b4aa6a6bbadb08405d9190436cb84126890e12b9
-- Behavior: 直接声称已更新文档并给出影响范围，但未清晰呈现既有项目更新与 change-impactor 迭代框架。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=6aaa57677f60fb06006df08dac712b315ee95015f718fd4450b32d594a455441; fixture_sha256=4a0c4f24287b030b034f66b2e9e0787c5b6e4b2e4a40435cb46ef2275f03923a; output_sha256=ea4527595ec013e9a9686d0171eeaae6fe1cefc67dfc1ad1fac40d2d5dddf466; snapshot_sha256=8d33f28ee5de44b367b7ade060736116652af25abf69b732454dd13cce510564
+- Behavior: Produced a technically strong design and updated three documents, but did not explicitly frame the work as an existing-project update or recommend the iteration/change-impactor workflow.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

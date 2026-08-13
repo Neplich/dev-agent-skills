@@ -274,6 +274,112 @@
           "根因与分歧足以支持后续选择修代码或修文档"
         ]
       }
+    },
+    {
+      "id": "eval-006-diagnosis-only-without-product-docs",
+      "name": "diagnosis-only-without-product-docs",
+      "description": "Verifies that debugger gathers objective evidence without mutation when approved expectations are unavailable.",
+      "prompt": "登录会话接口偶尔返回 500。请只读调查 `logs/session-error.log` 和 `src/session-store.ts`，告诉我原因；不要修复，也不要修改任何状态。",
+      "expected_output": "在没有 PRD/TRD 的情况下完成零修改诊断，标记预期未对齐，分层报告事实、证据、根因置信度、影响、未知项与最小下一步，然后停止。",
+      "workspace": "workspace/eval-006-diagnosis-only-without-product-docs",
+      "assertions": [
+        {
+          "id": "uses_diagnosis_only_mode",
+          "description": "进入零修改诊断模式",
+          "text": "输出必须明确采用 `mode: diagnosis_only` 和 `allowed_mutations: none`，且交付快照不得出现源码、测试、E2E、配置、数据库或其他状态修改。"
+        },
+        {
+          "id": "reports_unaligned_expectation",
+          "description": "缺少预期时保持未对齐",
+          "text": "由于 fixture 没有 PRD/TRD 或等价批准预期，报告必须标记 `expected_behavior_alignment: unaligned`，不得把推断称为已确认的 `implementation_deviation`。"
+        },
+        {
+          "id": "uses_available_evidence",
+          "description": "基于直接证据诊断",
+          "text": "报告必须引用日志中的 `SessionStoreError: missing session table` 与源码中查询 `sessions` 表的事实，将缺表作为有置信度标注的可能根因，并区分事实与推断。"
+        },
+        {
+          "id": "returns_complete_diagnosis_report",
+          "description": "输出完整诊断报告",
+          "text": "报告必须包含观察事实、直接证据、根因判断及置信度、影响范围、未确认信息和最小下一步建议。"
+        },
+        {
+          "id": "stops_without_repair_plan",
+          "description": "报告后停止",
+          "text": "输出不得生成 repair plan、建议立即改文件、询问是否现在修复，或执行 commit、push、PR。"
+        }
+      ],
+      "scenario": {
+        "persona": "只需要事故原因判断的值班负责人",
+        "situation": "登录会话接口出现 500，仓库只有日志和相关源码，没有产品或技术预期文档。",
+        "trigger": "负责人明确要求只读调查，不允许任何修复或状态写入。",
+        "goal": "根据现有证据判断最可能原因，并说明结论边界",
+        "materials": [
+          "logs/session-error.log",
+          "src/session-store.ts"
+        ],
+        "constraints": [
+          "只读检查文件",
+          "不得运行可能产生持久副作用的命令",
+          "缺少批准预期时不得确认实现缺陷"
+        ],
+        "success_criteria": [
+          "报告引用日志与源码的直接证据",
+          "事实、推断和未知项分层清楚",
+          "仓库和外部状态保持不变"
+        ]
+      }
+    },
+    {
+      "id": "eval-007-repair-after-diagnosis-reenters-gates",
+      "name": "repair-after-diagnosis-reenters-gates",
+      "description": "Verifies that a fix request following read-only diagnosis re-enters the complete repair gates instead of reusing diagnosis authorization.",
+      "prompt": "只读诊断已经记录在 `diagnosis-report.md`。现在请修复这个问题。",
+      "expected_output": "把新请求视为 repair，重新要求 PM/Engineer handoff 与预期对齐；缺少 PRD/TRD 时停止在 missing_docs，不生成或执行修复计划。",
+      "workspace": "workspace/eval-007-repair-after-diagnosis-reenters-gates",
+      "assertions": [
+        {
+          "id": "exits_diagnosis_only_mode",
+          "description": "修复请求退出只读模式",
+          "text": "输出必须说明新的修复请求不再由 `diagnosis_only` 授权，不能把先前 `allowed_mutations: none` handoff 或诊断报告当作修改授权。"
+        },
+        {
+          "id": "reenters_pm_engineer_repair_gate",
+          "description": "重新进入修复入口",
+          "text": "输出必须重新进入 PM/Engineer repair handoff，并要求对齐 PRD、TRD、DECISIONS 或等价批准预期。"
+        },
+        {
+          "id": "classifies_missing_docs",
+          "description": "缺预期文档时阻断修复",
+          "text": "fixture 没有 PRD/TRD，输出必须分类为 `missing_docs` 并回 PM 对齐，不能仅凭诊断报告确认 `implementation_deviation`。"
+        },
+        {
+          "id": "does_not_plan_or_fix",
+          "description": "门禁前不计划或修复",
+          "text": "预期未对齐时不得生成 repair plan、修改源码或测试、更新 E2E、运行写入性命令，或执行 commit、push、PR。"
+        }
+      ],
+      "scenario": {
+        "persona": "在只读调查后决定修复的维护者",
+        "situation": "此前报告根据日志与源码给出可能根因，但没有批准的产品或技术预期。",
+        "trigger": "维护者随后要求从诊断转入修复。",
+        "goal": "确保修复重新经过正式预期对齐和计划确认，而不是沿用只读调查授权",
+        "materials": [
+          "diagnosis-report.md",
+          "logs/session-error.log",
+          "src/session-store.ts"
+        ],
+        "constraints": [
+          "先前报告是证据输入，不是修改授权",
+          "缺少 PRD/TRD 时不得进入 repair plan",
+          "当前不得修改文件或外部状态"
+        ],
+        "success_criteria": [
+          "明确退出只读模式",
+          "重新执行 PM/Engineer 与预期对齐门禁",
+          "在 missing_docs 状态停止，不实施修复"
+        ]
+      }
     }
   ]
 }

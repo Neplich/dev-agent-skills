@@ -45,6 +45,8 @@
   `docs-agent:release-notes-gen`
 - 路线图、milestone 规划：使用 `roadmap-gen`
 - GitHub 项目状态、PR/Issue 队列、release blocker：使用 `github-reader`
+- 明确要求只读、不修复的缺陷诊断：分类为 `bug_report`，携带
+  `mode: diagnosis_only` 与 `allowed_mutations: none` 交给 Engineer；普通修复仍需先对齐预期行为
 
 默认规则：只要核心问题仍是“产品方向、需求、范围、计划或沟通”，留在 PM Agent；只有需求已经足够稳定时，才交给 Designer 或 Engineer。
 
@@ -96,7 +98,7 @@ Repo 级 PM 产物可以放在：
 PM Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
 
 - `designer-agent` 用于已确认的 UX、UI 结构、视觉系统或设计 handoff 工作
-- `engineer-agent` 用于已确认的 TRD、实现、测试、调试、交付或代码库工作
+- `engineer-agent` 用于已确认的 TRD、实现、测试、调试、交付或代码库工作，以及边界明确的只读诊断
 - `qa-agent` 用于已确认的验收、探索、缺陷分析或回归验证工作
 - `devops-agent` 用于已确认的部署、CI/CD、环境、发版就绪、回滚或 runbook 工作
 - `security-agent` 用于已确认的 AppSec、认证授权、依赖、隐私或数据流审查工作

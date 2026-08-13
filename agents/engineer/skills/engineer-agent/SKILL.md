@@ -30,6 +30,11 @@ than replacing the required handoff.
 An approved-expectation change returns to `pm-agent:idea-to-spec` existing
 project update; a technical gap returns to `trd-gen`; implementation begins
 only after same-path PRD/TRD/design inputs and a confirmed plan are ready.
+An explicit read-only diagnosis packet is routed to the existing `debugger`
+with `mode: diagnosis_only` and `allowed_mutations: none` preserved. This route
+may collect objective evidence before PRD/TRD alignment because it cannot
+repair or confirm an implementation deviation while expectations are
+unaligned.
 For an implementation route, state the future execution basis explicitly:
 codebase findings, confirmed same-path PRD/TRD and applicable design inputs,
 and the confirmed `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`. Mark
@@ -123,7 +128,9 @@ the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
   for classification.
 - If a packet is present, preserve its `request_type`, `change_tier`,
   `feature_path` fields, source documents, and required output while selecting
-  the narrowest engineering skill.
+  the narrowest engineering skill. Also preserve `mode: diagnosis_only` and
+  `allowed_mutations: none` when an explicit read-only diagnosis handoff
+  supplies those mode-specific supplemental fields.
 - If no packet is present, apply the selected specialist's own entry basis:
   `trd-gen` may proceed from confirmed PM documents with stable scope and
   feature path, even before an Engineer TRD exists; `feature-implementor`
@@ -134,6 +141,13 @@ the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
   specialist (`feature-implementor`, `debugger`, `trd-gen`, or `test-writer`);
   this router points to them instead of copying
   their full gate text.
+
+For `diagnosis_only`, route to the existing `debugger` even when PRD/TRD is
+missing. Do not create or suggest a parallel diagnosis specialist. Missing
+expected-behavior documents limit the conclusion to objective facts and
+inference; they do not justify dropping the read-only investigation. Any later
+request to fix leaves this mode and re-enters the normal PM/Engineer and
+debugger repair gates.
 
 All Engineer document-writing tasks, including TRD and implementation plan
 documents, should be delegated to a fresh document-writing sub-agent when
@@ -168,7 +182,7 @@ sub-agents.
 - `engineer-agent:trd-gen` - Write or update Engineer-owned TRDs, API docs, and ADRs after PRD confirmation
 - `engineer-agent:feature-implementor` - Implement features, behavior changes, and scoped refactors
 - `engineer-agent:test-writer` - Add or update automated tests and coverage
-- `engineer-agent:debugger` - Reproduce, diagnose, and fix bugs or failing builds/tests
+- `engineer-agent:debugger` - Perform read-only diagnosis or gated repair for bugs and failing builds/tests
 - `engineer-agent:delivery` - Branch, commit, push, and create PRs for completed work
 
 ## Default Routes
@@ -181,7 +195,7 @@ Route by the engineering outcome the user wants, not by literal phrasing.
 | PRD 确认后的技术计划、TRD/API/ADR 编写或更新 | `trd-gen` | Technical planning from confirmed PRD and product decisions, TRD creation or revision, architecture plan, implementation blueprint, "写 TRD", "技术方案", "技术计划", "工程设计", "API 文档", "接口规范", "ADR", "架构决策" |
 | 实现需求、改行为、按 spec 或设计落地、设计转代码、前端/UI 实现与优化、为需求做重构 | after the existing feature alignment gate passes, `feature-implementor` | Feature implementation, code changes, requirement delivery, design-to-code, frontend code updates, UI implementation, interface optimization, scoped refactors in service of a requirement, "实现功能", "落地设计", "更新前端代码", "改 UI", "优化界面实现", "把这个需求做掉", "改造这块逻辑" |
 | 补测试、补 coverage、把实现转成自动化验证 | `test-writer` | Test coverage, acceptance tests, unit/integration tests, "补测试", "加 coverage", "验证实现" |
-| 修 bug、查失败、定位构建/运行/测试异常、线上回归、hotfix | after the expected behavior is aligned against PRD / TRD, `debugger` | Bug fixing, failing tests, broken builds, runtime regressions, hotfixes, "为什么挂了", "修 bug", "debug 一下", "CI 炸了" |
+| 只读排障、修 bug、查失败、定位构建/运行/测试异常、线上回归、hotfix | `debugger`; explicit read-only requests preserve `diagnosis_only` / `allowed_mutations: none`, while repair remains after expected behavior alignment | Read-only diagnosis, bug fixing, failing tests, broken builds, runtime regressions, hotfixes, "只诊断不要修", "为什么挂了", "修 bug", "CI 炸了" |
 | commit / push / branch / PR / 交付收尾 | `delivery` | Branching, commits, pushes, PR creation, delivery wrapping, "提交代码", "提 PR", "push 上去" |
 
 If the request is engineering-shaped but underspecified, use these defaults:
@@ -191,6 +205,8 @@ If the request is engineering-shaped but underspecified, use these defaults:
   already approved
 - if it asks for technical planning or TRD before implementation -> `trd-gen`
 - if it implies a failure or regression -> `debugger`
+- if it explicitly requests read-only diagnosis -> preserve the zero-mutation
+  fields and route to `debugger` without inventing a separate specialist
 - if it implies verification without behavior change -> `test-writer`
 - if it implies shipping already-complete work -> `delivery`
 - if the workspace is empty/new and the user is still defining the product ->

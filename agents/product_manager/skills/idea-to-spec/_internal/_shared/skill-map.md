@@ -205,6 +205,31 @@ Required fields:
 | `required_output` | Concrete artifact or action expected from the next owner: document, plan, implementation, report, verification evidence, delivery action, or status summary. |
 | `blockers_risks` | Missing docs, unresolved decisions, unavailable plugins, platform limits, verification risk, or security / privacy risk. |
 
+### Diagnosis-Only Optional Extension
+
+For a `bug_report` whose user explicitly requires read-only investigation,
+diagnosis only, or no fix, extend the Engineer handoff with these optional,
+mode-specific fields:
+
+```yaml
+mode: diagnosis_only
+allowed_mutations: none
+```
+
+These fields are not universal packet requirements and must not be inferred
+from ambiguous investigation language such as “查一下” or “为什么挂了”. The
+handoff must render the zero-mutation boundary explicitly: no changes to code,
+tests, E2E assets, configuration, databases, external state, commits, pushes,
+or pull requests. Its `required_output` is an evidence-based diagnosis report.
+
+This narrow route may send objective evidence collection to `Engineer` before
+approved PRD/TRD expectations exist. Keep `feature_path` and other unresolved
+fields honest, record missing expectations in `blockers_risks`, and require the
+downstream diagnosis to use `expected_behavior_alignment: unaligned`; it must
+not confirm an `implementation_deviation`, produce a repair plan, or mutate
+state. Any later fix request leaves this extension and re-enters the normal PM
+and Engineer repair gates.
+
 `feature_path_evidence` must always use this shape:
 
 ```yaml
@@ -237,6 +262,7 @@ instead of blocking or inventing a feature path.
 | Routing condition | downstream_owner | Required packet emphasis |
 | --- | --- | --- |
 | Confirmed UX, UI, information architecture, wireframes, or visual-system work | `Designer` | PM scope, source PRD, design goal, target users, required design artifact. |
+| Explicit read-only `bug_report` with the diagnosis-only optional extension | `Engineer` | Preserve `mode: diagnosis_only`, `allowed_mutations: none`, the explicit zero-mutation boundary, unaligned expectation status when applicable, and the evidence-based report output. |
 | Confirmed TRD, implementation, debugging, tests, code review, commit, push, PR, or delivery work | `Engineer` or `delivery` | PRD / TRD / implementation-plan source docs, `change_tier`, verification expectations, delivery state. |
 | Confirmed acceptance, exploratory, bug analysis, smoke, retest, or regression work | `QA` | Test basis, expected behavior, environment, affected flows, result format. |
 | Confirmed deployment, CI/CD, environment, Docker, Helm, release readiness, rollback, or runbook work | `DevOps` | Environment, release target, rollback expectation, operational risk. |

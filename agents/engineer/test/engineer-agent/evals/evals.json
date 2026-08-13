@@ -232,6 +232,51 @@
           "设计缺失时能明确先补设计，齐全后再安排实现"
         ]
       }
+    },
+    {
+      "id": "eval-005-route-read-only-diagnosis",
+      "name": "route-read-only-diagnosis",
+      "description": "Verifies that engineer-agent preserves an explicit read-only handoff and routes it to the existing debugger without inventing a specialist or requiring repair documents.",
+      "prompt": "产品团队已经把会话接口 500 的调查范围写在 `handoff.md`。请按其中边界安排调查并给出本阶段的处理方式，不要修改任何内容。",
+      "workspace": "workspace/eval-005-route-read-only-diagnosis",
+      "expected_output": "Engineer 保留只读 handoff 的模式和权限字段，选择现有 debugger 进行客观证据调查；缺少 PRD/TRD 时不进入修复，也不创建新 specialist。",
+      "assertions": [
+        {
+          "id": "preserves_read_only_fields",
+          "description": "保留只读约束",
+          "text": "输出必须保留 handoff 中的 `mode: diagnosis_only` 和 `allowed_mutations: none`，不能扩大权限。"
+        },
+        {
+          "id": "routes_to_existing_debugger",
+          "description": "路由到现有 debugger",
+          "text": "输出必须由 `engineer-agent` 选择现有 `debugger` 作为唯一主 route，不得新建或建议平行 diagnosis specialist。"
+        },
+        {
+          "id": "does_not_require_repair_docs_first",
+          "description": "只读调查不被修复文档阻断",
+          "text": "缺少 PRD/TRD 不得阻止只读证据收集；输出应将预期标为 unaligned，且不得确认实现偏差、生成 repair plan 或修改状态。"
+        }
+      ],
+      "scenario": {
+        "persona": "接收只读调查请求的工程负责人",
+        "situation": "产品团队已明确只读范围，但该异常尚无可用 PRD/TRD。",
+        "trigger": "工程负责人需要选择现有能力承接调查，不进入修复。",
+        "goal": "把只读诊断交给正确 specialist 并完整保留权限边界",
+        "materials": [
+          "handoff.md",
+          "incident-summary.md"
+        ],
+        "constraints": [
+          "不得修改仓库或外部状态",
+          "不得因缺少修复文档而拒绝客观调查",
+          "不得新增平行 specialist"
+        ],
+        "success_criteria": [
+          "现有 debugger 被选为主 route",
+          "只读约束原样传递",
+          "输出区分调查与后续修复门禁"
+        ]
+      }
     }
   ]
 }
