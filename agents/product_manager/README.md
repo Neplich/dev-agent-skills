@@ -33,10 +33,11 @@
 
 ## Routing Rules
 
-The `pm-agent` scope guard stops general conversation, local-machine
-operations, and generic file work in directories without a dev-agent-skills
-enable marker (one-line notice, no routing). Project-oriented requests and
-explicit invocation of `pm-agent` or any skill proceed into the routing below.
+Explicit invocation of `pm-agent`, a role agent, or any skill always proceeds
+through that capability's existing gate. Without an explicit invocation,
+product or engineering R&D intent enters `pm-agent`; ordinary non-R&D requests
+remain with the current assistant. Project docs, code, and markers are context
+only after PM entry.
 
 - Idea shaping, scope definition, PRD/DECISIONS: use `idea-to-spec`
 - Project take-over, feature catalog, feature profile for an existing repo: use `feature-catalog`

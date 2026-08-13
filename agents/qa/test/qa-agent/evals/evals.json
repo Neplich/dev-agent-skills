@@ -34,22 +34,22 @@
       },
       "prompt": "登录刷新已经按确认文档实现，现有 QA 资料和变更说明也在仓库里；CI 的 WebKit 分片偶尔等不到锁定账号提示。产品现在想知道是否可以进入验收，请先确定最合适的 QA 处理方式和需要产出的证据。",
       "workspace": "workspace/eval-1-route-mixed-qa-request",
-      "expected_output": "QA 路由决策，明确选择最窄的下游 QA skill、选择理由、需要读取的上下文和预期 evidence artifact",
+  "expected_output": "确定一个主 QA 验收路径和需要产出的证据，并把间歇性 CI 失败保留为风险。",
       "assertions": [
         {
           "id": "assertion_1",
           "description": "路由选择",
-          "text": "必须选择一个主 QA 承接路径，并用当前已实现变更、既有测试记忆和间歇性 CI 证据说明它为何是当前最窄的责任方。"
+      "text": "必须确定一个主 QA 验收路径，基于已实现变更和既有测试记忆推进，并把间歇性 CI 证据保留为风险；不要求展示内部 selected specialist 字段。"
         },
         {
           "id": "assertion_2",
           "description": "上下文传递",
-          "text": "必须列出下游 skill 需要先读取的 PM/spec、实现变更、CI 失败信息、环境说明和测试命令，而不是直接假设浏览器或端口"
+      "text": "后续验收继续使用已有 PM/spec、实现变更、E2E 记忆和 CI 失败信息，不直接假设浏览器或端口；不要求逐项复述内部 handoff packet。"
         },
         {
           "id": "specialist_gate_pointer",
           "description": "Specialist 权威门禁指针",
-          "text": "路由输出必须声明选中的 specialist 是后续验证的执行责任方，并保留其检查现有 E2E 记忆、平台版本、凭据、执行入口和确认文档的责任；router 不自行执行或复制完整 specialist 协议。"
+          "text": "必须把后续验证交给选中的 specialist，并保留其检查现有 E2E 记忆、平台版本、凭据、执行入口和确认文档的责任；router 不自行执行或复制完整 specialist 协议。"
         },
         {
           "id": "assertion_4",
@@ -83,7 +83,7 @@
         "constraints": [
           "用户已授权查看项目文件补充用例",
           "平台版本尚未记录",
-          "当前只做路由，不直接实施或修复"
+          "用户明确要求先确认 QA 推进方式，不直接实施或修复"
         ],
         "success_criteria": [
           "识别现有目录没有活动覆盖",
@@ -93,7 +93,7 @@
       },
       "prompt": "账户资料设置表单刚有更新，请完成这部分 E2E 验证。现有 QA 资料在 `docs/qa/e2e/account/profile-settings/profile-form/`，但还没有覆盖这次改动；你可以查看已提供的页面、表单和环境资料来补充所需用例。",
       "workspace": "workspace/eval-2-empty-qa-directory-expands-cases",
-      "expected_output": "QA 路由决策与执行协议，明确空 E2E 功能树目录需要触发目标文件探索、更新 TEST_SUITE.md 和 FLOW_INDEX.md、创建独立 TC 与 script 文件，并要求后续验证基于这些用例执行",
+      "expected_output": "明确空 E2E 功能树目录需要触发目标文件探索、更新 TEST_SUITE.md 和 FLOW_INDEX.md、创建独立 TC 与 script 文件，并要求后续验证基于这些用例执行",
       "assertions": [
         {
           "id": "assertion_1",
@@ -103,12 +103,12 @@
         {
           "id": "assertion_2",
           "description": "授权后传递探索范围",
-          "text": "因为用户已确认有新功能更新并授权探索，路由输出必须把目标项目文件与环境说明作为下游上下文，并声明选中的 specialist 权威执行门禁适用；不要求 qa-agent 复述 specialist 内部如何发现或读取仓库测试命令，也不能再次询问是否可以探索或直接返回 blocked"
+          "text": "因为用户已确认有新功能更新并授权探索，必须把目标项目文件与环境说明作为下游上下文，并应用选中 specialist 的权威执行门禁；不要求 qa-agent 复述 specialist 内部如何发现或读取仓库测试命令，也不能再次询问是否可以探索或直接返回 blocked"
         },
         {
           "id": "specialist_gate_pointer",
           "description": "Specialist 权威门禁指针",
-          "text": "路由输出必须声明选中的 specialist 是后续验证的执行责任方，并把目标项目文件、环境说明和现有 E2E 记忆交给它；router 不自行探索或复制完整 specialist 协议。"
+          "text": "必须把后续验证交给选中的 specialist，并把目标项目文件、环境说明和现有 E2E 记忆交给它；router 不自行探索或复制完整 specialist 协议。"
         },
         {
           "id": "assertion_6",
@@ -134,7 +134,7 @@
         ],
         "constraints": [
           "沿用 account/profile/preferences 功能树",
-          "当前只做路由，不执行 specialist 协议",
+          "用户明确要求先确认 QA 推进方式，不执行 specialist 协议",
           "不得创建同义 QA 目录"
         ],
         "success_criteria": [
@@ -145,7 +145,7 @@
       },
       "prompt": "账户资料偏好已经开发完成，请根据 `docs/pm/account/profile/preferences/PRD.md`、对应 TRD 和现有 QA 目录更新并执行 E2E 验收。请先确定由哪类 QA 工作承接，并说明当前材料是否足够。",
       "workspace": "workspace/eval-3-feature-path-missing-plan-blocked",
-      "expected_output": "QA 路由决策必须识别 feature_path account/profile/preferences，读取同路径 PRD/TRD 和 QA 功能树，但因为缺少 docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md 而 blocked，不创建、更新或执行 E2E acceptance TC",
+      "expected_output": "识别 feature_path account/profile/preferences，读取同路径 PRD/TRD 和 QA 功能树，但因为缺少 docs/engineer/account/profile/preferences/IMPLEMENTATION_PLAN.md 而 blocked，不创建、更新或执行 E2E acceptance TC",
       "assertions": [
         {
           "id": "reads_same_feature_path",
@@ -155,7 +155,7 @@
         {
           "id": "specialist_gate_pointer",
           "description": "Specialist 权威门禁指针",
-          "text": "路由输出必须声明选中的 specialist 是后续验证的执行责任方，并客观指出当前缺少已确认实施计划而不能执行；router 不自行创建、更新或运行 E2E 资产。"
+          "text": "必须把后续验证交给选中的 specialist，并客观指出当前缺少已确认实施计划而不能执行；router 不自行创建、更新或运行 E2E 资产。"
         },
         {
           "id": "keeps_single_route",

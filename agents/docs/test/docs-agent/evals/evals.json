@@ -26,8 +26,8 @@
           "不复制 specialist 执行协议或写入文档站"
         ]
       },
-      "prompt": "搜索 API 的实现和合同测试已经完成，交接信息在 `pm-handoff.md`。请帮我安排正式文档同步，告诉我接下来由哪个文档能力处理，以及会带上哪些已确认上下文。",
-      "expected_output": "选择正确的正式文档同步 specialist，完整保留 handoff 上下文并停在 router 交接边界。",
+    "prompt": "搜索 API 的实现和合同测试已经完成，交接信息在 `pm-handoff.md`。请帮我安排正式文档同步并说明下一步，不需要展示内部路由记录。",
+    "expected_output": "让正式文档同步成为明确下一步，继续使用既有 handoff 事实并停在 router 交接边界。",
       "workspace": "workspace/eval-001-route-formal-docs-sync",
       "assertions": [
         {
@@ -37,17 +37,17 @@
         },
         {
           "id": "preserves_handoff_context",
-          "description": "无损保留已确认交接上下文",
-          "text": "准确保留 `pm-handoff.md` 中的搜索 API 功能范围、来源证据、正式 API 页面和 change-map 输出、排除范围及风险，不重分类或遗漏已提供字段。"
+      "description": "继续使用已确认交接上下文",
+      "text": "下一步以 `pm-handoff.md` 中已确认的搜索 API 范围、证据、正式 API 页面和 change-map 输出为依据，不要求向用户逐字段复述 handoff packet。"
         },
         {
           "id": "points_to_authoritative_gate",
           "description": "只指向 specialist 权威合同",
-          "text": "明确由 `formal-docs-sync` specialist 接管后续执行并停在 router 边界；不要求向用户暴露本地 SKILL.md 路径，也不复制八步同步协议或 change-map 写入细节。"
+          "text": "后续执行必须交给 `formal-docs-sync` specialist，router 不执行同步流程；不向用户暴露本地 SKILL.md 路径，也不复制八步同步协议或 change-map 写入细节。"
         },
         {
           "id": "stops_at_router_boundary",
-          "description": "停在文档路由边界",
+          "description": "保持文档职责边界",
           "text": "本轮只完成路由与上下文交接，不修改 `docs/site/` 或执行 formal-docs-sync 的写入流程。"
         }
       ]
@@ -116,7 +116,7 @@
         {
           "id": "references_audit_gate_only",
           "description": "只引用审计 specialist gate",
-          "text": "明确由 `docs-audit` specialist 接管审计并停在 router 边界；不要求向用户暴露本地 SKILL.md 路径，也不复制 base/target、确定性层、事实层或统一盖章协议。"
+          "text": "后续审计必须交给 `docs-audit` specialist，router 不执行审计；不向用户暴露本地 SKILL.md 路径，也不复制 base/target、确定性层、事实层或统一盖章协议。"
         }
       ],
       "scenario": {
@@ -143,7 +143,7 @@
       "name": "站内 Release Notes 请求分流",
       "description": "验证 router 接受完整 Release Notes 入口依据，保留 handoff 上下文并只指向 release-notes-gen 的权威 gate。",
       "prompt": "请根据 `release-handoff.md` 处理 v1.0.0 的站内版本说明请求。",
-      "expected_output": "接受完整 entry basis，选择 release-notes-gen，保留版本、scope、宿主、证据与输出上下文，并仅引用 specialist gate，不复制确认、metadata、checks 或 `pm-agent:github-release-gen` handoff 执行协议。",
+      "expected_output": "接受现有 entry basis，让站内版本说明成为明确下一步，并继续使用已确认的版本、scope、宿主、证据与输出上下文；不展示原始 routing packet 或复制 specialist 协议。",
       "workspace": "workspace/eval-004-route-release-notes",
       "assertions": [
         {
@@ -158,13 +158,13 @@
         },
         {
           "id": "preserves_handoff_context",
-          "description": "保留入口上下文",
-          "text": "保留 request_type、change_tier、feature_path、release_version、release_scope、host_repository、source_documents、evidence_sources、required_output 与 blockers_risks。"
+          "description": "继续使用入口上下文",
+          "text": "后续以 `release-handoff.md` 中已确认的版本、scope、宿主、证据和输出要求为依据，不改写这些事实；是否满足 specialist entry basis 由独立断言判断，不要求向用户逐字段复述内部 handoff packet。"
         },
         {
           "id": "references_release_notes_gate_only",
           "description": "仅指向 specialist gate",
-          "text": "明确由 `release-notes-gen` specialist 接管站内版本说明并停在 router 边界；不要求向用户暴露本地 SKILL.md 路径，也不复制正文确认、metadata/index、docs checks 或 GitHub Release handoff 的详细协议。"
+          "text": "后续站内版本说明由 `release-notes-gen` 的既有 gate 承接，router 不执行生成流程且不向用户暴露本地 SKILL.md 路径；是否简述恢复条件不影响本断言。"
         }
       ],
       "scenario": {
@@ -323,7 +323,7 @@
         {
           "id": "references_manual_gate_only",
           "description": "仅指向 manual specialist gate",
-          "text": "明确由 `manual-gen` specialist 接管图文手册并停在 router 边界；不要求向用户暴露本地 SKILL.md 路径，router 不代为协商环境、采集截图、写入站点或执行审计 handoff。"
+          "text": "后续图文手册必须交给 `manual-gen` specialist，router 不执行生成流程；不向用户暴露本地 SKILL.md 路径，router 不代为协商环境、采集截图、写入站点或执行审计 handoff。"
         }
       ],
       "scenario": {

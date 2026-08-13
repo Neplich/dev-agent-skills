@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-7-direct-downstream-without-handoff`.
 - Identity schema: `2`
-- target_skill_sha256: `f9ea1bade234ebfd780e1e4773d4808a60f7baa61920e5859daea2b146c1ce93`
-- eval_definition_sha256: `13771c6d0b126a3ca1ee1723ee43dcbca8cef0bbfd3ed1a8c42651bbd42a7c19`
+- target_skill_sha256: `28ec452f7594200030ea15ffdc8d5edc9ae2298318457884574b818964824cf6`
+- eval_definition_sha256: `186d8c8ca55f244592124c29f316a47679d008908c7385a9f2c3b6deef26649d`
 - metadata_sha256: `70b36659756bbd4d7fc0e09d0fabc7ee5ba1a168323c148fa735110fb59ec768`
 - fixture_sha256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
-- judge_schema_sha256: `6f1f540339fe5c4c310ca6aaedc38adff3d61e4268399a40149f44e3770ac25c`
+- judge_schema_sha256: `e2570bd95ea9768bb87ca218eab9d1b8a91216a2492cd9d22af400362c435dbb`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f`
-- Repository HEAD: `2ac10136f4ed18048058361915e66c52b4e038c5`
+- Repository HEAD: `2f950c46c67111058957774f796ccf97ae616d36`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `84ad07662e525000bb3bbf1da6aa3f2d49322c424326b70644431a72cdb52c55`
+- Skill overlay SHA-256: `8041f8266999d0ba9597ccc13e0354e28fcccb4a3b921ae9b5b9d1e08fe1da7b`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,20 +33,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `routing_decision_present` | PASS | With-skill output provides an auditable Routing decision with selected_owner: idea-to-spec, entry_basis: missing, feature_path: unresolved, and execution_boundary. |
-| `stay_in_pm_alignment` | PASS | With-skill output keeps the request in the idea-to-spec PM lane, requires confirmation, and explicitly prohibits Engineer handoff and downstream execution. |
-| `blocks_engineering_without_basis` | PASS | With-skill output identifies missing product/design/technical evidence, requires scope confirmation, and states that code implementation is prohibited; git evidence confirms no mutation. |
+| `keeps_pm_alignment` | PASS | With-skill output keeps the request in PM/idea-to-spec, marks entry_basis as missing, and states execution does not enter design, engineering, QA, or testing. |
+| `stay_in_pm_alignment` | PASS | With-skill output marks feature_path unresolved, provides no handoff packet fields as completed, and explicitly says engineering handoff/downstream execution has not begun. |
+| `blocks_engineering_without_basis` | PASS | With-skill output identifies missing source, current-page/target-layout information, product/design acceptance evidence, and unresolved scope; it prohibits code changes pending confirmation. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=fc0ece70b682ac07ef18aad9ef4ca1e0b39d4aaf0919fc0497d7967bac249a1f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly routes the request to PM idea-to-spec, maintains scope alignment, blocks engineering pending product/design/technical basis, and leaves the workspace unchanged.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=aedea9b7d12718876df98870ebf12ce1317bc7df4c8f0be448395258b338cfc3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Stayed in PM scope alignment, identified missing product/design/implementation basis, and made no workspace or git mutations.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=fc0e2e4a4997ce12cc503589e525879f08c31a0c1d2caf538797eea266b6f7fc; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline inspects the empty repository and reports that implementation cannot proceed, but does not provide the required PM routing or explicit evidence-based scope-alignment decision.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=aa11a7ab76a1fb8cb405ad79ecf7a9910dd98c1ebeef378bad5378457b4de052; snapshot_sha256=5331584c89cf0e3c5dab7b80a3ab6a6a0875d12655c99309d2c86ad572dc1c57
+- Behavior: Fresh baseline directly implemented a settings page and reported completed code changes despite missing product/design materials.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

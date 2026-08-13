@@ -27,7 +27,7 @@
       },
       "prompt": "账单通知设置的需求已经写在 `docs/pm/billing-notifications/PRD.md`。请把设置页的流程和视觉风格都设计好；后续还要做 React 组件，如果设计阶段能一并处理也请帮我完成。",
       "workspace": "workspace/eval-1-route-design-handoff",
-      "expected_output": "设计路由决策，明确 ui-ux-design 和 visual-design 的顺序，使用真实设计产物文件名，并停在 engineer-agent handoff 前。",
+      "expected_output": "明确 ui-ux-design 和 visual-design 的处理顺序，使用真实设计产物文件名，并保持设计交付边界。",
       "assertions": [
         {
           "id": "routes_ux_first",
@@ -81,7 +81,7 @@
       },
       "prompt": "聊天历史搜索的产品需求在 `docs/pm/chat-interface/messages/history/search/PRD.md`，技术约束在同层级对应的 TRD。请完成这项功能需要的界面与视觉设计，继续沿用现有功能树，不要另拆一个同名功能。",
       "workspace": "workspace/eval-2-feature-path-design-handoff",
-      "expected_output": "设计路由决策，读取同一 feature_path 的 PM/Engineer 文档，输出 docs/design/chat-interface/messages/history/search 下的设计产物路径，并在 design handoff 停止",
+      "expected_output": "读取同一 feature_path 的 PM/Engineer 文档，确定 docs/design/chat-interface/messages/history/search 下的设计产物路径，并保持 design handoff 边界",
       "assertions": [
         {
           "id": "uses_confirmed_feature_path",

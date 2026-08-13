@@ -4,7 +4,7 @@
     "pm-agent": {
       "source": "agents/product_manager/skills/pm-agent",
       "sourceType": "local",
-      "computedHash": "6ec163af2cf891a3e09f254a47b3086ccc748810eea03e217967dd95370c4362"
+      "computedHash": "6bcf9d6214e92c682ead4faf558367fd3dffd2e8f9543ea5d14cfd91536d8f3d"
     },
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
@@ -49,7 +49,7 @@
     "engineer-agent": {
       "source": "agents/engineer/skills/engineer-agent",
       "sourceType": "local",
-      "computedHash": "cab952a89228b77dcf371aa94df9d3fcfe8ca3d84cfece0a287467837d3d662e"
+      "computedHash": "ccbfc8b995de722a69d5c74905c7225821bfe384a1a1371fbfdac66ff1c8735b"
     },
     "codebase-analyzer": {
       "source": "agents/engineer/skills/codebase-analyzer",
@@ -84,7 +84,7 @@
     "qa-agent": {
       "source": "agents/qa/skills/qa-agent",
       "sourceType": "local",
-      "computedHash": "f3dca1b724428519cfcadb5817f8a0c323bbb9dd4bc0d53ba998e4f058c90017"
+      "computedHash": "6f6df572fe8fe0566c66ab0d0f532d904ff9ec975e821b9e9abe134caf03114a"
     },
     "exploratory-tester": {
       "source": "agents/qa/skills/exploratory-tester",
@@ -109,7 +109,7 @@
     "devops-agent": {
       "source": "agents/devops/skills/devops-agent",
       "sourceType": "local",
-      "computedHash": "d0c489b44f5df18f61ab68af771963a0681c3fb7f5e2ebc0c62a3016f5f9c9f0"
+      "computedHash": "11a75f9ba54fcff602edc50a75177dbbf1aed191c22f0dd0bdaefc197cfab27f"
     },
     "deployment-planner": {
       "source": "agents/devops/skills/deployment-planner",
@@ -134,7 +134,7 @@
     "designer-agent": {
       "source": "agents/designer/skills/designer-agent",
       "sourceType": "local",
-      "computedHash": "a6bb4cc6bdfd01d2e4be8c05eca2da4b416481874f8f5079723170878be9cda9"
+      "computedHash": "66b222fec93d82619f5d1ff4d1a6603aa338bdb706ece6d26bc27be7638906ae"
     },
     "ui-ux-design": {
       "source": "agents/designer/skills/ui-ux-design",
@@ -149,7 +149,7 @@
     "security-agent": {
       "source": "agents/security/skills/security-agent",
       "sourceType": "local",
-      "computedHash": "d719807a4c0987bdefd57864821eac42a56c22a643211a28b8c148afe23894b5"
+      "computedHash": "3fe72e042f3947dff8467fef4ff6c488ebb566bf085b9077a7d8bf87588da87e"
     },
     "appsec-checklist": {
       "source": "agents/security/skills/appsec-checklist",
@@ -174,7 +174,7 @@
     "docs-agent": {
       "source": "agents/docs/skills/docs-agent",
       "sourceType": "local",
-      "computedHash": "efce0d88396ab7394452417ec04e816156f2251191aa41c1825daba951d3ad26"
+      "computedHash": "1fc2a896ea86a542c7989608aeb7107ce5ce32671b2768402384728674786e9b"
     },
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",

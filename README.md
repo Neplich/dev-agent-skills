@@ -77,14 +77,11 @@ Skills previously installed Codex-style into `~/.agents/skills/` are also discov
 
 ## Scope
 
-These agents target in-project R&D workflows. A personal install — the Codex
-path (`~/.agents/skills/`), a user-scope Claude plugin, or the Kimi plugin —
-makes the skills discoverable in every project the host sees. In a project
-that has not enabled dev-agent-skills, `pm-agent` applies a scope guard:
-general conversation, local-machine operations, and generic file work stop
-with a one-line notice instead of entering the heavy PM workflow. Project
-requests and explicit invocation of `pm-agent` or any skill still proceed
-normally.
+These agents target product and engineering R&D workflows. Explicitly naming
+`pm-agent`, a role agent, or a skill always uses that capability and preserves
+its existing gate. Otherwise, R&D intent enters `pm-agent`, while ordinary
+non-R&D requests remain with the current assistant. Project docs, code, and
+enable markers provide context only after PM entry; they do not trigger it.
 
 For the tightest isolation, prefer a Codex project install (see
 [`docs/README.codex.md`](./docs/README.codex.md)), which keeps the skills

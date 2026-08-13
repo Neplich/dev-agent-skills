@@ -57,13 +57,13 @@ CLONE_ROOT="$HOME/.agents/dev-agent-skills"
 SKILL_ROOT="$HOME/.agents/skills"
 ```
 
-A personal install is discoverable in every project Codex opens. In projects
-without an enable marker, `pm-agent`'s scope guard stops general conversation,
-local-machine operations, and generic file work with a one-line notice;
-project-oriented requests and explicit invocation still proceed. Choose
-`personal` only when that global trigger surface is intended; a project
-install keeps the skills inside the project and gives it an explicit enable
-marker (`.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json`).
+A personal install is discoverable in every project Codex opens. Explicitly
+named agents and skills always run their existing gates; otherwise product or
+engineering R&D intent enters `pm-agent`, and ordinary non-R&D work remains
+with the current assistant. Project docs, code, and enable markers are context
+after PM entry rather than trigger conditions. Choose `personal` only when
+that global discovery surface is intended; a project install keeps the skills
+inside the project.
 
 For a project install, run from the project root:
 

@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `5bfe584ec04ca9f6271a87eb0a6a94432a493cce40c865cd7e77c63d4d5a5991` from `agents/docs/test/docs-agent/evals/workspace/eval-001-route-formal-docs-sync`.
 - Identity schema: `2`
-- target_skill_sha256: `cf92649952a97be677cf5e900a4d9c793a6c0724813cf1fa3154f57e7d2c08f3`
-- eval_definition_sha256: `4f62b001057b225d1029a6284046afacf46248ad92aa43b0c065e0a0456b7450`
+- target_skill_sha256: `af94ca4b38768885230f6271f3d4ae9e1b1be30fcd2f5bdf1098250b4ded0306`
+- eval_definition_sha256: `feba21121d4c3b05845e70bb42290b3e48f9ac62ef8bf5b095426802bc992c41`
 - metadata_sha256: `320948f19ccb8c159c24fdc827ddc592aac02ee3f64236dd9e4896bae8e4979e`
 - fixture_sha256: `5bfe584ec04ca9f6271a87eb0a6a94432a493cce40c865cd7e77c63d4d5a5991`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `d9120b553be3673816559c0b102ba0210980dbae3daaf9eeba42b66ee4308ec2`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `f2aa9b2c49be68550ec45538c221425607f428ce`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `423ca5e3f4ef1219a92f03bc262d7f2ca4bc9b68b5e71c112a143161c77467e6`
+- Repository HEAD: `2f950c46c67111058957774f796ccf97ae616d36`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `cc06f7d0ec314789bbccd4de68e0c4e6f74c0821dbe36228153c86490ecf37d8`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,27 +33,27 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `routes_to_formal_docs_sync` | PASS | With-skill output selects `formal-docs-sync`; raw handoff prompt preserves the confirmed delivery context and excludes bootstrap, release notes, and audit. |
-| `preserves_handoff_context` | PASS | The locked specialist handoff carries the feature path, source documents and statuses, scope, required API page/change-map outputs, exclusions, and risk constraints from `pm-handoff.md`. |
-| `points_to_authoritative_gate` | PASS | Output names `formal-docs-sync` as the authoritative execution gate and does not expose a local path or duplicate its protocol. |
-| `stops_at_router_boundary` | PASS | Output explicitly stops at handoff; locked git evidence shows no changes, no snapshots, and no writes to documentation. |
+| `routes_to_formal_docs_sync` | PASS | With-skill output explicitly identifies the request as formal documentation synchronization after feature delivery and routes it to `formal-docs-sync`; no competing route is selected. |
+| `preserves_handoff_context` | PASS | With-skill output carries forward the confirmed search API scope, implementation diff and contract-test evidence, affected formal API page, API change-map, and exclusions without requiring field-by-field handoff repetition. |
+| `points_to_authoritative_gate` | PASS | With-skill output names `formal-docs-sync` as the downstream specialist and does not expose local skill paths or reproduce the internal synchronization protocol. |
+| `stops_at_router_boundary` | PASS | Locked git evidence shows no workspace changes, and the output limits this turn to routing/context handoff while requesting confirmation before synchronization proceeds. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=898aa52a50fa14b6ed2119a9c317cdc1f3e3e5286bf4d35a0cdd450c4352f602; fixture_sha256=5bfe584ec04ca9f6271a87eb0a6a94432a493cce40c865cd7e77c63d4d5a5991; output_sha256=0ddac8387ee29d37ff2727a18ce021a3a96d2c6de5108718effbd220cb21e3b3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly routes the confirmed feature-delivery handoff to `formal-docs-sync`, preserves context, and stops before specialist execution.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=423ca5e3f4ef1219a92f03bc262d7f2ca4bc9b68b5e71c112a143161c77467e6; fixture_sha256=5bfe584ec04ca9f6271a87eb0a6a94432a493cce40c865cd7e77c63d4d5a5991; output_sha256=39bcc8ea03085d56e1942012764e069d47926a90401a5a4f8d49d5fbda53c5e2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly routes the confirmed feature-delivery documentation request to `formal-docs-sync`, preserves the handoff scope and evidence, and stops before any write pending confirmation.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=898aa52a50fa14b6ed2119a9c317cdc1f3e3e5286bf4d35a0cdd450c4352f602; fixture_sha256=5bfe584ec04ca9f6271a87eb0a6a94432a493cce40c865cd7e77c63d4d5a5991; output_sha256=4d52548d54375dba3a1082e163eaf0ee50c3287e6cbf136728880b22687e1275; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Provides a generic delivery/documentation dispatch and claims execution is underway without selecting the authoritative `formal-docs-sync` route or clearly stopping at the router boundary.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=423ca5e3f4ef1219a92f03bc262d7f2ca4bc9b68b5e71c112a143161c77467e6; fixture_sha256=5bfe584ec04ca9f6271a87eb0a6a94432a493cce40c865cd7e77c63d4d5a5991; output_sha256=fc7a54ecc8b317edbfc2fe1a4188b01d33a1522d84d0a7ec900ca0dc8f68ec78; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a reasonable baseline synchronization plan and preserves the clean workspace, but does not explicitly route to the formal-docs-sync specialist.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: None.
+- Next: Confirm continuation so the specialist can verify host-repository evidence and perform the synchronization workflow.
 
 ## Runtime Artifact Policy
 

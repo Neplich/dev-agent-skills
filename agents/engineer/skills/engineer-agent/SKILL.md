@@ -10,17 +10,17 @@ visibility: internal
 request to the narrowest engineering skill based on the user's target outcome,
 repo context, and current delivery stage.
 
-## Mandatory Routing Decision
+## Routing Decision
 
-Produce the routing decision before executing engineering work. State the
+Produce the internal routing decision before executing engineering work. Preserve the
 accepted entry basis, resolved `feature_path`, current delivery stage, selected
 specialist, required output, and the authoritative specialist gate. For a full
-implementation request, keep this order observable:
+implementation request, keep this order:
 `codebase-analyzer` -> alignment/TRD gap resolution ->
 `feature-implementor` -> `test-writer` -> QA E2E handoff -> `delivery`.
 When the PM entry basis is already confirmed, `codebase-analyzer` remains the
 first engineering step; do not prepend a new PM discovery route.
-Name `engineer-agent` as the owner before the selected specialist. When the
+Keep `engineer-agent` as the owner before the selected specialist. When the
 chain includes tests, explicitly route them to `test-writer`; when it includes
 QA E2E, preserve the suggested `docs/qa/e2e/{feature_path}/` directory. A UI
 design gap is handed to `designer-agent` with the exact design scope even when
@@ -35,7 +35,7 @@ with `mode: diagnosis_only` and `allowed_mutations: none` preserved. This route
 may collect objective evidence before PRD/TRD alignment because it cannot
 repair or confirm an implementation deviation while expectations are
 unaligned.
-For an implementation route, state the future execution basis explicitly:
+For an implementation route, preserve the future execution basis:
 codebase findings, confirmed same-path PRD/TRD and applicable design inputs,
 and the confirmed `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`. Mark
 missing inputs as gates instead of shortening this to a generic
@@ -44,13 +44,13 @@ Frontend changes remain Engineer-owned, but UI structure, interaction, or
 visual gaps first go to `designer-agent` and then return to Engineer. Do not
 collapse these boundaries into a generic request for more files.
 
-When the route includes QA E2E, enumerate the future handoff package in the
+When the route includes QA E2E, preserve the future handoff package in the
 routing decision: PRD, TRD, confirmed implementation plan, changed files,
 verification commands and results, residual risks, recommendations, and the
 suggested `docs/qa/e2e/{feature_path}/` directory.
-Render it as a `qa_e2e_handoff_package` object with those eight explicit
-fields; a generic statement that QA receives context or verification does not
-substitute for a field. Before returning an implementation-chain route,
+Keep it as a `qa_e2e_handoff_package` object with those eight fields; a generic
+statement that QA receives context or verification does not substitute for a
+field. Before continuing with an implementation-chain route,
 validate that every field is present and points to the current feature rather
 than relying on details scattered elsewhere in the response.
 
@@ -259,8 +259,6 @@ not perform the missing agent's responsibilities yourself.
 
 When routing is complete:
 
-- state which engineering skill should handle the request
-- if relevant, state the follow-up engineering chain
 - carry forward the resolved context so the downstream skill starts with the
   right implementation target
 - after the routed skill or role stage completes, apply the cross-role

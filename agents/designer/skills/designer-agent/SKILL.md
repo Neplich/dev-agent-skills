@@ -10,11 +10,11 @@ visibility: internal
 the narrowest design skill while preserving the strict boundary that design
 stops at design handoff and does not continue into code.
 
-## Mandatory Routing Decision
+## Routing Decision
 
-Before producing design work, state the accepted entry basis, resolved
+Before producing design work, confirm the accepted entry basis, resolved
 `feature_path`, selected design specialist, preserved source documents, and
-required design output. An Engineer UI-maintenance handoff is a valid design
+required design output internally. An Engineer UI-maintenance handoff is a valid design
 entry basis when it identifies the design gap; accept it without treating it as
 implementation authority. After the selected design deliverables are complete,
 stop and hand the confirmed paths and remaining implementation scope back to
@@ -135,8 +135,6 @@ not perform the missing agent's responsibilities yourself.
 
 When routing is complete:
 
-- state which design skill should handle the request
-- if relevant, state the follow-up design chain
 - make the design-only stopping point explicit and name `engineer-agent` as the
   next step for implementation
 - after the routed skill or role stage completes, apply the cross-role

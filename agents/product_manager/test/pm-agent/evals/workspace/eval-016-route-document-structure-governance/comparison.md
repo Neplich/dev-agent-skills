@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8` from `agents/product_manager/test/pm-agent/evals/workspace/eval-016-route-document-structure-governance`.
 - Identity schema: `2`
-- target_skill_sha256: `f9ea1bade234ebfd780e1e4773d4808a60f7baa61920e5859daea2b146c1ce93`
+- target_skill_sha256: `28ec452f7594200030ea15ffdc8d5edc9ae2298318457884574b818964824cf6`
 - eval_definition_sha256: `ba37454a106688e9f5f2e2586231a60f2093e364612eb14bfa53540c9e2d1589`
 - metadata_sha256: `fe53b448dd4fd2693ceb179d875dd617b7b717601fc7d9d3214cab940b4cdef7`
 - fixture_sha256: `1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8`
@@ -22,33 +22,33 @@
 - judge_schema_sha256: `c8400122a967de4e5b8b409bbe920fe16ec946724a3aa7d4b3077b3582a3f2f0`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3`
-- Repository HEAD: `2ac10136f4ed18048058361915e66c52b4e038c5`
+- Repository HEAD: `2f950c46c67111058957774f796ccf97ae616d36`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `84ad07662e525000bb3bbf1da6aa3f2d49322c424326b70644431a72cdb52c55`
+- Skill overlay SHA-256: `8041f8266999d0ba9597ccc13e0354e28fcccb4a3b921ae9b5b9d1e08fe1da7b`
 - Behavior result: **PASS**
-- Coverage result: **PARTIAL**
-Overall result: PASS (partial coverage)
+- Coverage result: **FULL**
+Overall result: PASS
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `routes_to_structure_governance` | PASS | 运行轨迹中的用户可见路由明确为 `idea-to-spec:structure-governance`。 |
-| `read_only_audit` | PASS | 候选输出明确称审计为只读并且未修改仓库文件；git evidence 显示无差异、无新提交或未跟踪文件。 |
-| `report_form` | PASS | 运行轨迹验证了 `/tmp/structure-governance.o89q1a/structure-governance-report.html` 存在且在仓库外；最终对话提供了结论摘要和报告路径。 |
-| `scope_six_role_dirs` | PASS | 最终输出明确记录扫描了 PM、Engineer，并将 Design、QA、DevOps、Security 缺失作为扫描限制。 |
-| `structural_change_requires_confirmation` | NOT_EXERCISED | 本次仅完成审计，未执行结构变更；没有后续用户确认步骤或结构变更运行证据可供判断。 |
+| `routes_to_structure_governance` | PASS | Trace explicitly records selection of `idea-to-spec:structure-governance` after routing through pm-agent. |
+| `read_only_audit` | PASS | The candidate states the audit is read-only; git status remained clean and no fixture documents were modified. |
+| `report_form` | PASS | Trace shows an HTML report was generated, moved to `/tmp/structure-governance-report/structure-governance-report.html`, verified non-empty, and linked in the final response. |
+| `scope_six_role_dirs` | PASS | The audit command explicitly iterates over docs/pm, docs/engineer, docs/design, docs/qa, docs/devops, and docs/security, recording missing roots as scan limitations. |
+| `structural_change_requires_confirmation` | PASS | No structural change was proposed or executed; the final result says no adjustment is currently needed and reports no repository modifications. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=3ebf5160ba6b8b4a3e0fd08c6104dd4a0b0ed904e2300f248234cbd6b39aa330; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 完成只读结构治理审计，路由正确，生成运行期 HTML 报告并保持仓库无变更；结构变更确认流程未被触发。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=826028ad2c2bc0db291803b71abe68e33e6e28b3584c5eb0de9911ff2d9d91fe; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly routed to structure governance, audited all six role-directory scopes read-only, produced a temporary HTML report, and made no repository changes.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=05d9d9ca1f6a78edf9549311d939f1abb3aa84223e830db5740695d1ec75f7ea; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 仅检查到 PM 与 Engineer 两个目录，未覆盖六角色范围，也未生成 HTML 报告。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=3c2465376532d652a4a4c6f9cc0180f8d5a17470e9a2589c4ca8ee1daa014004; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provided a basic read-only report covering only the two existing role directories; it did not demonstrate the required specialized route, six-directory scope, or HTML report delivery.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

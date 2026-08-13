@@ -1,0 +1,18 @@
+{
+  "eval_id": "eval-021-explicit-downstream-specialist",
+  "eval_name": "explicit-downstream-specialist",
+  "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-021-explicit-downstream-specialist",
+  "fixture_context": [],
+  "skill_dependencies": [
+    "agents/engineer/skills/engineer-agent",
+    "agents/engineer/skills/codebase-analyzer"
+  ],
+  "runtime_isolation": {
+    "processes": "not_used",
+    "ports": "not_used",
+    "database": "not_used",
+    "browser": "not_used",
+    "login_state": "not_used",
+    "downloads": "not_used"
+  }
+}
