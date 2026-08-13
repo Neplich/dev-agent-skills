@@ -2,6 +2,7 @@
 
 仓库级发布变更记录按版本归档到 `docs/changelog/`。
 
+- [v0.5.0](./docs/changelog/changelog-v0.5.0.md)
 - [v0.4.1](./docs/changelog/changelog-v0.4.1.md)
 - [v0.4.0](./docs/changelog/changelog-v0.4.0.md)
 - [v0.3.5](./docs/changelog/changelog-v0.3.5.md)
