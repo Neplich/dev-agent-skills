@@ -132,7 +132,7 @@ owner 或等价过程信息的句子。分类表、gate 指针、specialist entr
 预计整个 PR 净改约 500–900 行，以删除和改写为主，不新增抽象。若明显超出该量级，先
 停止实施并核对是否误触 specialist gate、handoff schema、无关 skill 或新的输出协议。
 
-实际暂存 diff 为新增 1729 行、删除 1776 行、raw net -47 行；其中约 500 行来自将上一轮
+最终实施 diff 为新增 1733 行、删除 1775 行、raw net -42 行；其中约 500 行来自将上一轮
 活动计划忠实复制到新归档文件。排除这份已批准的机械归档后，主体净改约 -548 行，符合
 预期量级，未发现范围扩张。
 
@@ -187,7 +187,7 @@ GitHub CI 与 Codex Review 状态。
   存在的 FAIL；eval-004 已恢复为原有单一 entry-basis 缺陷，没有新增 handoff/输出断言
   回归。本次需求引入的 FAIL 为 0。
 - `scope_review`：共享 handoff contract、specialist gate、eval runtime 和 release 流程均
-  未修改；raw net -47 行，排除约 500 行忠实计划归档后主体净改约 -548 行，未新增输出
+  未修改；raw net -42 行，排除约 500 行忠实计划归档后主体净改约 -548 行，未新增输出
   协议或抽象。
 - `independent_validation`：独立只读验收提出的下游显式调用覆盖、Docs eval-004 断言和
   README 中文措辞问题已修复并 fresh/静态复核。
