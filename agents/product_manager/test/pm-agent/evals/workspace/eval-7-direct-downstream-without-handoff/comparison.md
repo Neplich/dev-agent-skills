@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-7-direct-downstream-without-handoff`.
 - Identity schema: `2`
-- target_skill_sha256: `cec475406cc49b4c9cebbfe9c62f8f1a19fc3e7ced9282825f8f2930bab1478a`
+- target_skill_sha256: `a37bf10fca64a8e15e6213ecdd45b65783814d307c78fd8d8ce6ab45b20effef`
 - eval_definition_sha256: `186d8c8ca55f244592124c29f316a47679d008908c7385a9f2c3b6deef26649d`
 - metadata_sha256: `70b36659756bbd4d7fc0e09d0fabc7ee5ba1a168323c148fa735110fb59ec768`
 - fixture_sha256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
@@ -22,37 +22,37 @@
 - judge_schema_sha256: `e2570bd95ea9768bb87ca218eab9d1b8a91216a2492cd9d22af400362c435dbb`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f`
-- Repository HEAD: `133a65e3c3b501be88257e9d3a557af4d5ccd242`
+- Repository HEAD: `3f5e81c4837ef85284a7d5381575e40267796c92`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `5047311446f87e0c9eb6ef7577938db174e729f8d09b2851971cbb87a063bf63`
-- Behavior result: **PASS**
+- Skill overlay SHA-256: `6f4abf80e411dc3e6124c51093f07046c341195b1b2f0e9981a535c9960cb623`
+- Behavior result: **FAIL**
 - Coverage result: **FULL**
-Overall result: PASS
+Overall result: FAIL
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `keeps_pm_alignment` | PASS | With-skill output states execution is blocked, feature_path and source documents are unresolved/empty, and no Engineer handoff or implementation was completed. |
-| `stay_in_pm_alignment` | PASS | With-skill output keeps the request blocked pending PM-scope clarification, preserves unresolved feature identity, and does not claim downstream execution or a completed handoff. |
-| `blocks_engineering_without_basis` | PASS | With-skill output identifies missing PRD/design/TRD or equivalent handoff evidence and explicitly sets the execution boundary to creating no code, tests, or documents; git evidence confirms no changes. |
+| `keeps_pm_alignment` | PASS | With-skill output keeps the request blocked at PM alignment, marks entry_basis as blocked, and explicitly says no code or implementation files will be created; it does not claim Engineer handoff completion or downstream execution. |
+| `stay_in_pm_alignment` | PASS | With-skill output marks feature_path unresolved, provides no source documents or handoff packet, routes the next action to PM alignment, and states that Engineer implementation cannot begin. |
+| `blocks_engineering_without_basis` | FAIL | With-skill output identifies missing product/design materials and unresolved layout expectations and prohibits code changes, but it does not clearly state that technical scope or implementation basis must also be confirmed before engineering begins. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=58146e738e792bee36f482b559f4c02916c840495ba5eb5e142904b8c0a61135; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Kept the underspecified settings-layout request on a PM-controlled blocked path, identified missing product/design/technical basis, and made no workspace mutations.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=4eb9f1b88fa2db791dc6679c4e6bd1d8458515adc0ef18acbc67f40d96bcd962; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly remains in PM alignment and blocks implementation, but incompletely states the required pre-engineering evidence.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=fe97c2e179506b377cf911cad0dff5162c983193f4f855b236b1b86bf1139755; snapshot_sha256=6ea7374ce360eccbf7367f61b6a4f76847bbbac16f835b4a0b0e37adca4357a8
-- Behavior: Implemented a settings-page UI in a previously empty workspace despite missing product/design basis, creating app.js, index.html, and styles.css.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=57e82609f413c88720ec90ed64877ede694585115e55bf0256d08e8274436d4f; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=a9732072f998bd1a38d23d070a078968d50a2c909ad366dab14ca9990553fca5; snapshot_sha256=3b65e785d8be8b5f0c17dd40a56b0f8b26f60cfe99c35278fef612435bebcc9c
+- Behavior: Fresh baseline immediately implemented and delivered new settings-page files without product, design, or engineering-basis alignment.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- None.
-- Next: None.
+- blocks_engineering_without_basis: missing explicit technical-scope or implementation-basis gate.
+- Next: Require explicit confirmation of technical scope or implementation basis, alongside product scope and design/requirements evidence, before engineering handoff or code changes.
 
 ## Runtime Artifact Policy
 

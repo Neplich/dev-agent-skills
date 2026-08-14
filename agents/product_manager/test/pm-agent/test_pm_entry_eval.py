@@ -184,7 +184,8 @@ def test_pm_entry_uses_explicit_invocation_then_rd_intent():
     assert_contains_all(
         skill_text,
         [
-            "If the user explicitly names `pm-agent`, a role agent, or a skill",
+            "If the user explicitly names `pm-agent`, use `pm-agent`",
+            "Otherwise, if the user explicitly names a role agent or skill",
             "Otherwise, determine whether the request expresses product or engineering",
             "leave it to the current assistant without PM",
             "absence does not decide automatic entry",
@@ -192,8 +193,9 @@ def test_pm_entry_uses_explicit_invocation_then_rd_intent():
     )
 
     frontmatter_description = skill_text.split('description: "', 1)[1].split('"', 1)[0]
-    assert "Use when the user explicitly names pm-agent" in frontmatter_description
-    assert "Do not activate when the user explicitly names a different role agent or skill" in frontmatter_description
+    assert "Use when the user explicitly names pm-agent, including requests that also name a downstream capability" in frontmatter_description
+    assert "When another role agent or skill is named without pm-agent, do not activate pm-agent" in frontmatter_description
+    assert "this remains true when the same request also names a downstream capability" in skill_text
 
 
 def test_router_skills_do_not_require_user_visible_routing_process():

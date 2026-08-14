@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8` from `agents/product_manager/test/pm-agent/evals/workspace/eval-016-route-document-structure-governance`.
 - Identity schema: `2`
-- target_skill_sha256: `cec475406cc49b4c9cebbfe9c62f8f1a19fc3e7ced9282825f8f2930bab1478a`
+- target_skill_sha256: `a37bf10fca64a8e15e6213ecdd45b65783814d307c78fd8d8ce6ab45b20effef`
 - eval_definition_sha256: `ba37454a106688e9f5f2e2586231a60f2093e364612eb14bfa53540c9e2d1589`
 - metadata_sha256: `fe53b448dd4fd2693ceb179d875dd617b7b717601fc7d9d3214cab940b4cdef7`
 - fixture_sha256: `1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `c8400122a967de4e5b8b409bbe920fe16ec946724a3aa7d4b3077b3582a3f2f0`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3`
-- Repository HEAD: `133a65e3c3b501be88257e9d3a557af4d5ccd242`
+- Repository HEAD: `3f5e81c4837ef85284a7d5381575e40267796c92`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `5047311446f87e0c9eb6ef7577938db174e729f8d09b2851971cbb87a063bf63`
+- Skill overlay SHA-256: `6f4abf80e411dc3e6124c51093f07046c341195b1b2f0e9981a535c9960cb623`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,22 +33,22 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `routes_to_structure_governance` | PASS | Raw trace records selection of `idea-to-spec:structure-governance` as the PM specialist route. |
-| `read_only_audit` | PASS | Candidate output states the audit was read-only; git evidence shows unchanged HEAD, branch, status, and diffs. |
-| `report_form` | PASS | Raw trace proves an HTML report was written under `/tmp/structure-governance.7BCSp7/`, verified its size, and showed clean git status; output provides a summary and report link. |
-| `scope_six_role_dirs` | PASS | Raw trace scans all six required roots and the report records the four missing role roots as coverage limitations. |
-| `structural_change_requires_confirmation` | PASS | Report and trace state no structural change was executed; future move/split operations require confirmation and `change_tier: major`. |
+| `routes_to_structure_governance` | PASS | With-skill output and trace record selected_owner: idea-to-spec:structure-governance. |
+| `read_only_audit` | PASS | Output states read-only and repository unchanged; git evidence shows no status, diff, commit, or ref changes. |
+| `report_form` | PASS | Trace creates and verifies /tmp/structure-governance.pb2ADf/structure-governance-report.html; output links it and provides a summary. |
+| `scope_six_role_dirs` | PASS | Locked HTML snapshot explicitly lists docs/pm, docs/engineer, docs/design, docs/qa, docs/devops, and docs/security. |
+| `structural_change_requires_confirmation` | PASS | HTML and output state no structural action; future move/split requires user confirmation and change_tier: major, with no mutation performed. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=dab979c4e20d389443772979825d24e937f95c9c37c66c4a3e3d3954e9cef490; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly routed and completed a read-only six-role structure audit, produced the runtime HTML report, and preserved the repository unchanged.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=1d421fe0b59552e5a33914ce2d117ce428c10dc15a0e217312fd2ad04b0ed657; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Completed a routed, read-only six-role structure audit, delivered the HTML report in runtime tmp, summarized findings, and preserved the repository.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=9560ebdbea487676678c5228957740782c0b06e52a2d1a76c7f817aa45f048ec; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline inspected only PM and Engineer content, omitted the required six-role scope and runtime HTML report, and did not use the structure-governance route.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=78a9ed4a2ff6af194b93c81277958547f5a87533a70b2aa14e43822f139e54d3; fixture_sha256=1a6d7fa4c22a394f3c854eef7a25f4d0cf2e6b4ecd7c7a3d3bf15d295d6e43f8; output_sha256=3eb23d44e047d514c45770a84a1ed21e2801139684cb2ebcdb4e76e4017f3d45; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Produced a basic read-only PM/Engineer report with no HTML delivery, explicit six-role coverage, routing packet, or structural-change governance.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
