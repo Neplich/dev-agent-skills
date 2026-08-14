@@ -69,7 +69,7 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 /plugins install https://github.com/Neplich/dev-agent-skills/tree/main
 ```
 
-仓库内置 `.kimi-plugin/plugin.json` manifest：7 个角色 skill 目录注册为单个插件，`pm-agent` 随会话启动自动加载（`sessionStart.skill`）。上面的 `tree/main` 形式安装最新开发状态，包含 pm-agent 的 Scope Guard。包含 Scope Guard 的版本发布后，可改用 `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/vX.Y.Z` 固定不可变版本。
+仓库内置 `.kimi-plugin/plugin.json` manifest：7 个角色 skill 目录注册为单个插件，`pm-agent` 随会话启动自动加载（`sessionStart.skill`）。上面的 `tree/main` 形式安装最新开发状态；版本发布后，可改用 `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/vX.Y.Z` 固定不可变版本。
 
 已按 Codex 方式安装到 `~/.agents/skills/` 的 skill 也会被 Kimi Code 自动扫描到；推荐优先使用上面的原生插件方式。
 
@@ -77,7 +77,7 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 
 ## 使用范围
 
-这些 Agent 面向项目内研发工作流。个人级安装——Codex 路径（`~/.agents/skills/`）、用户级 Claude 插件或 Kimi 插件——会让 skill 在宿主可见的每个项目中都可被发现。在未启用 dev-agent-skills 的项目中，`pm-agent` 会执行使用范围判定：一般对话、本机环境操作与通用文件处理只输出一句提示后停止，不进入重型 PM 工作流；项目向请求与显式点名 `pm-agent` 或任意 skill 仍正常执行。
+这些 Agent 面向产品与工程研发工作流。显式点名 `pm-agent`、role agent 或 skill 时始终使用对应能力并保留其既有门禁；未显式点名时，研发意图进入 `pm-agent`，普通非研发请求由当前助手直接处理。项目文档、代码与启用 marker 只在进入 PM 后提供上下文，不决定是否触发。
 
 若需要最严格的隔离，优先使用 Codex 项目级安装（见 [`docs/README.codex.md`](./docs/README.codex.md)），它会将 skill 保持在项目目录内，并为项目提供明确的启用标记。
 

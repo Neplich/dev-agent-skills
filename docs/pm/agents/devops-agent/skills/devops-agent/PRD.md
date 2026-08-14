@@ -5,11 +5,11 @@ feature: "skill-devops-agent"
 feature_path: "agents/devops-agent/skills/devops-agent"
 parent_feature: "agents/devops-agent/skills"
 feature_level: "4"
-version: "1.0.0"
+version: "1.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-08-14"
 generated_by: "prd-gen"
 related_docs:
   - "agents/devops/README.md"
@@ -18,6 +18,9 @@ related_docs:
   - ".claude-plugin/marketplace.json"
   - "agents/devops/test/devops-agent/evals/evals.json"
 changelog:
+  - version: "1.1.0"
+    date: "2026-08-14"
+    changes: "Remove mandatory user-visible router selection explanation"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"
@@ -123,7 +126,7 @@ Error flow: 如果必要上下文无法满足，输出 blocked reason、missing 
 
 - 输出先给结论、产物和证据，再说明限制和下一步。
 - 对需要用户确认的事项只问当前最小阻塞问题。
-- Dispatcher 选择 skill 时应说明选择理由；specialist 自身不需要把“正在使用某 skill”作为产品强制要求，除非 SKILL.md 明确要求。
+- Dispatcher 内部选择 skill 并保留交接依据；不把选择过程作为用户侧强制输出。
 
 ## 数据模型
 

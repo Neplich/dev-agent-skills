@@ -33,7 +33,7 @@
 
 ## 路由规则
 
-`pm-agent` 的使用范围判定（Scope Guard）会拦截未启用 dev-agent-skills 的目录中的一般对话、本机操作与通用文件处理（一句提示后停止，不进入路由）；项目向请求与显式点名 `pm-agent` 或任意 skill 正常进入以下路由。
+显式点名 `pm-agent`、role agent 或任意 skill 时，始终进入该能力的既有门禁。未显式点名时，产品或工程研发意图进入 `pm-agent`，普通非研发请求由当前助手处理；项目文档、代码与 marker 只在进入 PM 后作为上下文。
 
 - 想法收敛、范围定义、PRD/DECISIONS：使用 `idea-to-spec`
 - 接手已有项目、建立功能目录、功能画像：使用 `feature-catalog`

@@ -69,7 +69,7 @@ Implementation details and troubleshooting are in the [Codex Guide](./docs/READM
 /plugins install https://github.com/Neplich/dev-agent-skills/tree/main
 ```
 
-The repository ships a `.kimi-plugin/plugin.json` manifest: all seven role skill directories are registered as a single plugin, and `pm-agent` loads automatically at session start via `sessionStart.skill`. The `tree/main` form installs the latest development state, which includes the pm-agent scope guard. Once a release that includes the scope guard is published, pin an immutable version with `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/vX.Y.Z`.
+The repository ships a `.kimi-plugin/plugin.json` manifest: all seven role skill directories are registered as a single plugin, and `pm-agent` loads automatically at session start via `sessionStart.skill`. The `tree/main` form installs the latest development state, where explicit capability names take priority and otherwise product or engineering R&D intent enters `pm-agent`. Once this policy is released, pin an immutable version with `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/vX.Y.Z`.
 
 Skills previously installed Codex-style into `~/.agents/skills/` are also discovered by Kimi Code automatically; the native plugin above is the recommended path.
 
@@ -77,14 +77,11 @@ Skills previously installed Codex-style into `~/.agents/skills/` are also discov
 
 ## Scope
 
-These agents target in-project R&D workflows. A personal install — the Codex
-path (`~/.agents/skills/`), a user-scope Claude plugin, or the Kimi plugin —
-makes the skills discoverable in every project the host sees. In a project
-that has not enabled dev-agent-skills, `pm-agent` applies a scope guard:
-general conversation, local-machine operations, and generic file work stop
-with a one-line notice instead of entering the heavy PM workflow. Project
-requests and explicit invocation of `pm-agent` or any skill still proceed
-normally.
+These agents target product and engineering R&D workflows. Explicitly naming
+`pm-agent`, a role agent, or a skill always uses that capability and preserves
+its existing gate. Otherwise, R&D intent enters `pm-agent`, while ordinary
+non-R&D requests remain with the current assistant. Project docs, code, and
+enable markers provide context only after PM entry; they do not trigger it.
 
 For the tightest isolation, prefer a Codex project install (see
 [`docs/README.codex.md`](./docs/README.codex.md)), which keeps the skills

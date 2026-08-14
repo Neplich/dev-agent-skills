@@ -9,7 +9,7 @@
       "description": "Verifies that engineer-agent routes a multi-step implementation request through the narrowest engineering chain.",
       "prompt": "请接手这个仓库，按 `docs/engineer/billing-webhook/TRD.md` 落实 webhook 重试逻辑、补齐测试并最终提交 PR。先告诉我你会如何安排这项工作，暂时不要改代码。",
       "workspace": "workspace/eval-1-route-implementation-chain",
-      "expected_output": "工程路由决策，明确先理解仓库，再基于已确认 TRD 编写实现计划、实现、补测试、交付，并说明每一步对应的 specialist skill。",
+      "expected_output": "明确先理解仓库，再基于已确认 TRD 编写实现计划、实现、补测试、交付，并说明各阶段职责。",
       "assertions": [
         {
           "id": "starts_with_codebase_context",
@@ -38,8 +38,8 @@
         },
         {
           "id": "does_not_execute_directly",
-          "description": "只做路由不执行",
-          "text": "因为用户要求先做工程路由，不能直接修改代码、运行测试或创建提交。"
+          "description": "遵守暂不执行边界",
+          "text": "因为用户明确要求先确认推进顺序且暂不执行，不能直接修改代码、运行测试或创建提交。"
         }
       ],
       "scenario": {
@@ -138,7 +138,7 @@
         {
           "id": "routes_requirement_change_to_pm",
           "description": "需求变更回 PM",
-          "text": "如果排序调整改变 PRD/TRD 已批准预期，输出必须路由回 `pm-agent:idea-to-spec` 的 `existing-project-update`，再同步 TRD。"
+      "text": "如果排序调整改变 PRD/TRD 已批准预期，必须先回到 PM 完成现有功能需求对齐，再同步 TRD；不要求向用户展示内部 route 名称或 routing block。"
         },
         {
           "id": "routes_trd_mismatch_to_trd_gen",
@@ -147,8 +147,8 @@
         },
         {
           "id": "does_not_execute_directly",
-          "description": "只做路由不执行",
-          "text": "因为用户要求先做工程路由，输出不得修改代码、写 IMPLEMENTATION_PLAN 或运行测试。"
+          "description": "遵守暂不执行边界",
+          "text": "因为用户明确要求暂不修改，当前不得修改代码、写 IMPLEMENTATION_PLAN 或运行测试。"
         }
       ],
       "scenario": {
@@ -210,8 +210,8 @@
         },
         {
           "id": "does_not_execute_directly",
-          "description": "只做路由不执行",
-          "text": "因为用户要求先做工程路由，输出不得修改代码、写 IMPLEMENTATION_PLAN 或运行测试。"
+          "description": "遵守暂不执行边界",
+          "text": "因为用户明确要求暂不修改，当前不得修改代码、写 IMPLEMENTATION_PLAN 或运行测试。"
         }
       ],
       "scenario": {

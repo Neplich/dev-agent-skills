@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a` from `agents/designer/test/designer-agent/evals/workspace/eval-003-engineer-ui-maintenance-handoff`.
 - Identity schema: `2`
-- target_skill_sha256: `e8c75de1d6f9996313bad1fce4ede6ed7cde9c08fd07355edd02169db57e8e68`
+- target_skill_sha256: `0ea73feefb23eaaa1087f7930615deb60bd48042a3221450dac25110527e9a02`
 - eval_definition_sha256: `138aebdae4a1049db8b791a6754cc321fff06d447fcae99b0206d1d5aa26e929`
 - metadata_sha256: `f547a888a015d9e9862374a63fae63a3c03679e1e0f3c3c280b9cf0370c3b020`
 - fixture_sha256: `821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `642d6c7ee5330dc1af39bc9648e9c1bffdb74e1229fc98a9c317e40e13baaebf`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7`
+- Repository HEAD: `2f950c46c67111058957774f796ccf97ae616d36`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `08aafb5ab4f6346282a3571edc0bcbd3cde0a44d4f90ceae2c697a568d95ad53`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,22 +33,22 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `accepts_engineer_design_handoff` | PASS | 交付文档将 TRD 识别为前端设计缺口，并将设计交接回 Engineer。 |
-| `uses_confirmed_feature_path` | PASS | 两个设计快照均使用 feature_path customer-portal/profile-settings，并列明对应 PRD 与 TRD 为源文档。 |
-| `routes_design_skills` | PASS | 交付了 ui-ux-spec.md 与 visual-system.md，分别覆盖页面信息层级和主按钮视觉规范。 |
-| `writes_design_outputs_only` | PASS | 工作区仅新增 docs/design/customer-portal/profile-settings/ui-ux-spec.md 与 visual-system.md；无代码、测试或配置变更。 |
-| `hands_back_to_engineer` | PASS | 最终输出及设计文档明确指定 engineer-agent 负责 TRD、IMPLEMENTATION_PLAN.md、前端实现和代码/测试验证。 |
+| `accepts_engineer_design_handoff` | PASS | The design artifacts identify the confirmed frontend design gap, cite the Engineer TRD as an input, and describe the work as a design handoff. |
+| `uses_confirmed_feature_path` | PASS | Both locked design files use feature_path `customer-portal/profile-settings` and list the PM PRD and Engineer TRD as source documents. |
+| `routes_design_skills` | PASS | The captured command events show ui-ux-design and visual-design skill instructions being read and the visual-design reference data being queried; the resulting artifacts cover both information hierarchy and primary-button visuals. |
+| `writes_design_outputs_only` | PASS | The locked delivery snapshot contains only `ui-ux-spec.md` and `visual-system.md`; no code, tests, shell commands, deployment configuration, or engineering implementation artifact was delivered. |
+| `hands_back_to_engineer` | PASS | Both locked design artifacts explicitly state that the next owner is `engineer-agent` for TRD consumption, IMPLEMENTATION_PLAN, frontend implementation, and tests. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=cfa29c62c0e3097f8bfb2c9629e002af1daabe9116a57479e8e40b90b06f0770; snapshot_sha256=6d92ebd3d5782c6493ebca9ecf080e97280c354156f8ddf197607738a8df6684
-- Behavior: 完成双文档设计交付，覆盖信息架构、响应式布局、主按钮视觉状态，并明确交回 engineer-agent。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=1e9a8d25428f2976ad892473005a1d7ef26dc76562e5db15d39e4317e26f3868; snapshot_sha256=d8c7dc423ce5f606f0eb1064e70a53bf4de2dc3834adec30463697518b65aca0
+- Behavior: Delivered focused UI/UX and visual design specifications for the confirmed profile-settings frontend design gap, with explicit Engineer handoff.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=09716fbf43b75f3b4a1f475d44b0e0f950ae4269ed99d4e0dc4dc880301d4918; snapshot_sha256=8c67d2592cd99c15764cd0d853cf1336b13c4362499e177dbf7435b9257d4225
-- Behavior: 基线产出非约定的 DESIGN.md，并修改 TRD，未按要求路由或限定设计输出。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=92f4c4b043cb3aab774531019133e8d4e6f2d81d21a277f0cd9696a8cc0a58e7; fixture_sha256=821c99c85df4188cff291d55bb3f776ec720f8cbbd3f93df4bf7a03b6520bf3a; output_sha256=476d7e98373ad65bdc20e791e27ebf50b38496e31f950a29ca375df05b3f1915; snapshot_sha256=08dec7f7c1f876e226259c98f38eea23f8a0c2c5827893970e4adb7fb14f82a0
+- Behavior: Fresh baseline created a generic DESIGN.md and modified the Engineer TRD, rather than using the required design-only output paths and skill-routed split artifacts.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

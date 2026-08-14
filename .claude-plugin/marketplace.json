@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "pm-agent",
-      "description": "Default entry plugin for new user requests. Use when the user describes product ideas, feature requests, requirement changes, bugs, build/test/deploy/review/status requests, feature catalogs, competitive research, release communication, roadmaps, or GitHub project status. Classifies scope first, then routes to PM specialists or hands off to downstream role agents.",
+      "description": "Default entry plugin for product and engineering R&D requests when no other agent or skill is named. Explicitly naming pm-agent selects it even when a downstream capability is also named; naming another role agent or skill without pm-agent excludes pm-agent and leaves that capability to enforce its own gate. Routes product ideas, features, changes, bugs, implementation, testing, design, deployment, security, formal docs, delivery, planning, and repository status work.",
       "source": "./agents/product_manager",
       "strict": true,
       "skills": [

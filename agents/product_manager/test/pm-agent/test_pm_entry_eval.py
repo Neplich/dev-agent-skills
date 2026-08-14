@@ -11,6 +11,7 @@ ROLE_ROUTER_SKILLS = [
     ROOT / "agents/qa/skills/qa-agent/SKILL.md",
     ROOT / "agents/devops/skills/devops-agent/SKILL.md",
     ROOT / "agents/security/skills/security-agent/SKILL.md",
+    ROOT / "agents/docs/skills/docs-agent/SKILL.md",
 ]
 SPECIALIST_GATE_SKILLS = [
     ROOT / "agents/engineer/skills/feature-implementor/SKILL.md",
@@ -77,8 +78,8 @@ FR006_GATE_DEFENSE_CASES = {
     ],
     "eval-008-direct-specialist-bypass-gate": [
         "PM handoff entry gate",
-        "Direct invocation",
-        "`pm-agent`",
+        "不得绕过",
+        "pm-agent",
     ],
 }
 MISSING_TARGET_CASES = {
@@ -105,12 +106,18 @@ CHANGE_TIER_CASES = {
         "`standard`",
     ],
     "eval-013-change-tier-hotfix-e2e-direct-path": [
-        "`hotfix`",
+        "hotfix",
         "directly affected path",
         "QA",
     ],
 }
 READ_ONLY_DIAGNOSIS_CASE = "eval-020-route-read-only-diagnosis"
+INTENT_ENTRY_CASES = {
+    "eval-017-scope-guard-unenabled-general",
+    "eval-018-scope-guard-explicit-invocation",
+    "eval-019-scope-guard-enabled-general",
+    "eval-021-explicit-downstream-specialist",
+}
 
 
 def load_evals():
@@ -167,10 +174,48 @@ def test_read_only_diagnosis_eval_is_defined():
     assert_eval_workspaces_exist({READ_ONLY_DIAGNOSIS_CASE})
 
 
+def test_intent_entry_evals_are_defined():
+    assert_eval_workspaces_exist(INTENT_ENTRY_CASES)
+
+
+def test_pm_entry_uses_explicit_invocation_then_rd_intent():
+    skill_text = PM_AGENT_SKILL.read_text()
+
+    assert_contains_all(
+        skill_text,
+        [
+            "If the user explicitly names `pm-agent`, use `pm-agent`",
+            "Otherwise, if the user explicitly names a role agent or skill",
+            "Otherwise, determine whether the request expresses product or engineering",
+            "leave it to the current assistant without PM",
+            "absence does not decide automatic entry",
+        ],
+    )
+
+    frontmatter_description = skill_text.split('description: "', 1)[1].split('"', 1)[0]
+    assert "Use when the user explicitly names pm-agent, including requests that also name a downstream capability" in frontmatter_description
+    assert "When another role agent or skill is named without pm-agent, do not activate pm-agent" in frontmatter_description
+    assert "this remains true when the same request also names a downstream capability" in skill_text
+
+
+def test_router_skills_do_not_require_user_visible_routing_process():
+    forbidden = [
+        "## Mandatory Routing Decision",
+        "one-line routing statement",
+        "Make the decision observable",
+        "Emit one compact `Routing decision` block",
+    ]
+
+    for path in [PM_AGENT_SKILL, *ROLE_ROUTER_SKILLS]:
+        skill_text = path.read_text()
+        for phrase in forbidden:
+            assert phrase not in skill_text
+
+
 def test_pm_agent_protocol_covers_fr006_entry_routes():
     skill_text = PM_AGENT_SKILL.read_text()
 
-    assert "Treat `pm-agent` as the first stop" in skill_text
+    assert "treat `pm-agent` as the first stop" in skill_text
     assert "Classify the request before selecting a downstream PM skill or role agent" in skill_text
 
     for required_terms in FR006_ENTRY_CASES.values():

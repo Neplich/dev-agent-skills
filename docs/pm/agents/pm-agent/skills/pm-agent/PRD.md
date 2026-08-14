@@ -5,11 +5,11 @@ feature: "skill-pm-agent"
 feature_path: "agents/pm-agent/skills/pm-agent"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
-version: "1.0.0"
+version: "1.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-06"
+last_updated: "2026-08-14"
 generated_by: "prd-gen"
 related_docs:
   - "agents/product_manager/README.md"
@@ -21,6 +21,9 @@ related_docs:
   - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
   - "docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
+  - version: "1.1.0"
+    date: "2026-08-14"
+    changes: "Align intent-based entry and remove mandatory user-visible routing explanation"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"
@@ -128,7 +131,7 @@ Error flow: 如果必要上下文无法满足，输出 blocked reason、missing 
 
 - 输出先给结论、产物和证据，再说明限制和下一步。
 - 对需要用户确认的事项只问当前最小阻塞问题。
-- Dispatcher 选择 skill 时应说明选择理由；specialist 自身不需要把“正在使用某 skill”作为产品强制要求，除非 SKILL.md 明确要求。
+- Dispatcher 内部选择 skill 并保留分类依据；不把选择过程作为用户侧强制输出。
 
 ## 数据模型
 

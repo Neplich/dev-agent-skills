@@ -10,10 +10,9 @@ visibility: internal
 downstream entry basis, selects the narrowest documentation specialist, and
 preserves confirmed scope and evidence through the handoff.
 
-## Mandatory Routing Decision
+## Routing Decision
 
-This router produces a routing decision, not specialist output. Before any
-write, it must:
+Before any write, this router must:
 
 - identify which explicit packet, equivalent confirmed chain, or specialist
   entry basis was accepted; if incomplete, return to `pm-agent` and name every
@@ -25,7 +24,7 @@ write, it must:
 - name the selected specialist's authoritative gate without exposing a local
   filesystem path, copying its protocol, or executing that gate
 
-Emit one compact `Routing decision` block with explicit fields:
+Preserve these fields in the internal routing decision:
 `selected_specialist`, `accepted_entry_basis`, `request_type`, `change_tier`,
 `feature_path`, `host_repository`, `source_documents`, `confirmed_scope`,
 `evidence_sources`, `required_output`, `blockers_risks`, and
@@ -35,14 +34,14 @@ one specialist and stop at its router boundary. Do not add an unrelated site
 bootstrap prerequisite, second specialist, or PM round-trip after the selected
 specialist's documented entry basis is already complete.
 
-When routing is blocked, make the missing-entry result equally explicit: name
+When routing is blocked, name
 each missing credential and the exact credential combination that would make
 the selected specialist entry basis complete. For an explicit site-
 initialization request that lacks only the host path, state that the existing
 explicit request plus a confirmed host repository path completes the
 `docs-site-bootstrap` entry basis; do not merely repeat that the path is
 missing.
-Render blocked routing with `missing_credentials`, `unblock_credentials`,
+Preserve `missing_credentials`, `unblock_credentials`,
 `entry_basis_after_unblock`, and `return_owner`. For site initialization,
 `entry_basis_after_unblock` must explicitly state whether the combination of an
 explicit site-initialization request and a confirmed host repository path is
@@ -180,9 +179,6 @@ perform its responsibilities.
 
 When routing is complete:
 
-- state the selected specialist, or the blocked stage if a required target is
-  unavailable
-- state the accepted entry basis and the expected documentation artifact
 - preserve unresolved evidence or ownership gaps for the selected specialist
 - when a specialist triggers the documentation-site deployment-completeness
   safety-net, preserve its stable status, evidence paths, covered variants,

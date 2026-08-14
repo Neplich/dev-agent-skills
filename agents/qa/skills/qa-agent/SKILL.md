@@ -11,10 +11,10 @@ evidence outcome the user wants, the repository context available, and whether
 the work is documented acceptance, exploratory discovery, failure reproduction,
 or fix verification.
 
-## Mandatory Routing Decision
+## Routing Decision
 
 This router selects one primary QA specialist before any test artifact or
-execution is produced. State the accepted test basis, resolved `feature_path`,
+execution is produced. Preserve the accepted test basis, resolved `feature_path`,
 scenario and platform-version status, selected specialist, required evidence output,
 and the concrete materials that specialist must read: PM/Engineer documents,
 existing QA memory, environment instructions, credentials by account ID, and
@@ -23,7 +23,7 @@ authoritative E2E memory/platform/credential/execution gate. If any required
 basis is absent, stop at that gate and name the missing material; do not create
 cases, reports, or parallel QA routes.
 
-Make the decision observable in one compact routing block: accepted basis,
+Keep the decision internally: accepted basis,
 resolved scope and platform status, one selected specialist with the evidence
 outcome that makes it the narrowest owner, required source materials, expected
 evidence artifact, and the boundary that the specialist—not this router—owns
@@ -37,7 +37,7 @@ test basis, read and pass every available environment instruction file together
 with the target source and QA memory to `spec-based-tester`; do not invent a
 second PM/Engineer handoff or credential gate.
 If the platform version is not yet recorded, preserve that status in the
-routing block and let the selected specialist enforce its version gate before
+handoff and let the selected specialist enforce its version gate before
 execution or archival; that missing value alone does not block this router from
 handing off an otherwise confirmed, authorized test basis.
 
@@ -130,11 +130,6 @@ not perform the missing agent's responsibilities yourself.
 
 When routing is complete:
 
-- state which QA skill should handle the request
-- state the expected evidence artifact for the route
-- state that the selected QA specialist's authoritative E2E memory,
-  feature-path, platform-version, credential, execution-entry,
-  PRD/TRD/implementation-plan, and blocked-condition gates apply
 - after the routed skill or role stage completes, apply the cross-role
   safety-net closeout defined in
   the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`

@@ -82,7 +82,7 @@
         ]
       },
       "prompt": "登录页在 token 过期后会一直转圈，错误日志也显示请求在过期后没有结束。帮我修好这个问题。",
-      "expected_output": "PM 路由决策，识别为 bug_report；先确认 approved PRD/TRD 预期行为和复现证据，再在确认实现偏差后 handoff Engineer/debugger。",
+      "expected_output": "识别为 bug_report；先确认 approved PRD/TRD 预期行为和复现证据，再在确认实现偏差后 handoff Engineer/debugger。",
       "workspace": "workspace/eval-2-route-bugfix-request",
       "assertions": [
         {
@@ -126,7 +126,7 @@
         ]
       },
       "prompt": "订单退款流程的异常分支还没有测试覆盖，帮我把测试补齐。",
-      "expected_output": "PM 路由决策，识别为 validation；先确认 PRD/TRD/IMPLEMENTATION_PLAN 或既有验收记录作为测试依据，再 handoff QA 或 Engineer/test-writer。",
+      "expected_output": "识别为 validation；先确认 PRD/TRD/IMPLEMENTATION_PLAN 或既有验收记录作为测试依据，再 handoff QA 或 Engineer/test-writer。",
       "workspace": "workspace/eval-3-route-test-writing-request",
       "assertions": [
         {
@@ -170,7 +170,7 @@
         ]
       },
       "prompt": "设置页需要改成左右分栏并调整交互，我想先把新版界面方案定下来。",
-      "expected_output": "PM 路由决策，识别为 design 或 existing_update；先判断是否改变产品预期和是否需要设计产物，设计产物 handoff Designer，前端实现等待 PM/TRD/design 对齐后再 handoff Engineer。",
+      "expected_output": "识别为 design 或 existing_update；先判断是否改变产品预期和是否需要设计产物，设计产物 handoff Designer，前端实现等待 PM/TRD/design 对齐后再 handoff Engineer。",
       "workspace": "workspace/eval-4-route-ui-update-request",
       "assertions": [
         {
@@ -215,7 +215,7 @@
         ]
       },
       "prompt": "这个仓库还没有 CI，我需要把持续集成配好并完成上线前检查。",
-      "expected_output": "PM 路由决策，识别为 deployment；记录仓库级非 feature scope 可使用 N/A feature fields，明确运维目标、环境、发布范围、回滚需求和风险，再 handoff DevOps。",
+      "expected_output": "识别为 deployment；记录仓库级非 feature scope 可使用 N/A feature fields，明确运维目标、环境、发布范围、回滚需求和风险，再 handoff DevOps。",
       "workspace": "workspace/eval-5-route-deployment-request",
       "assertions": [
         {
@@ -259,7 +259,7 @@
         ]
       },
       "prompt": "请检查当前项目的权限控制、依赖漏洞和 secrets 风险，并告诉我上线前需要先处理什么。",
-      "expected_output": "PM 路由决策，识别为 security；先记录 risk surface、assets、permissions、data flow 和 remediation expectations，再 handoff Security。",
+      "expected_output": "识别为 security；先记录 risk surface、assets、permissions、data flow 和 remediation expectations，再 handoff Security。",
       "workspace": "workspace/eval-6-route-security-request",
       "assertions": [
         {
@@ -304,13 +304,13 @@
         ]
       },
       "prompt": "直接帮我实现设置页布局调整；目前没有准备产品或设计材料，希望先开始改代码。",
-      "expected_output": "先给出简短路由说明（默认一行），将范围和 feature_path 标为未确认，继续由 PM 完成需求与设计依据对齐，不把未来的 Engineer 路由表述成已完成 handoff，也不开始工程实现。",
+      "expected_output": "说明范围和 feature_path 尚未确认，继续由 PM 完成需求与设计依据对齐，不把未来的 Engineer 交接表述成已完成，也不开始工程实现。",
       "workspace": "workspace/eval-7-direct-downstream-without-handoff",
       "assertions": [
         {
-          "id": "routing_decision_present",
-          "description": "先给出 PM 路由决策",
-          "text": "输出路由说明（默认一行简短形式即可），分类结果可审计：请求留在 PM 范围对齐路径，selected_owner 为 PM specialist（如 `idea-to-spec`）或语义等价表述，entry basis、feature_path 和 execution boundary 的状态可核对；不得只进入需求讨论而省略入口分类，不要求完整 Routing decision YAML 块作为首行。"
+          "id": "keeps_pm_alignment",
+          "description": "保持 PM 对齐边界",
+          "text": "请求必须留在 PM 范围对齐路径，在产品范围和设计依据确认前不得声称 Engineer 交接已完成或开始工程实现。"
         },
         {
           "id": "stay_in_pm_alignment",
@@ -349,13 +349,13 @@
         ]
       },
       "prompt": "账号中心要做一个新功能。目前只有这句话，还没有需求文档或技术设计；请先直接给我实施计划并开始写代码。",
-      "expected_output": "先给出简短路由说明（默认一行），将该请求留在新功能范围确认；说明一句需求不足以形成实施依据，需求范围与 PRD 确认后还需技术设计和已确认实施范围，当前不创建实施计划、不写代码或测试。",
+      "expected_output": "将该请求留在新功能范围确认；说明一句需求不足以形成实施依据，需求范围与 PRD 确认后还需技术设计和已确认实施范围，当前不创建实施计划、不写代码或测试。",
       "workspace": "workspace/eval-8-direct-specialist-bypass-gate",
       "assertions": [
         {
-          "id": "routing_decision_present",
-          "description": "先给出 PM 路由决策",
-          "text": "输出路由说明（默认一行简短形式即可），识别这是范围未确认的新功能或等价 PM 请求，请求留在 PM 入口分类（selected_owner 为 PM specialist 如 `idea-to-spec` 或语义等价表述），并标明 entry basis 和 execution boundary（显式值或语义等价形式均可）；Direct invocation 不得绕过 PM handoff entry gate，入口分类仍由 `pm-agent` 承接（语义等价表述亦可），不得创建实施计划或开始编码。"
+          "id": "blocks_unready_execution",
+          "description": "未就绪时阻止执行",
+          "text": "识别这是范围未确认的新功能并留在 PM 范围确认；直接要求实现不得绕过 PM handoff entry gate，不得创建实施计划或开始编码。"
         },
         {
           "id": "requires_product_and_engineering_basis",
@@ -572,23 +572,23 @@
         ]
       },
       "prompt": "只修登录页空状态文案，请尽快完成并验证这处改动。",
-      "expected_output": "PM 判定 hotfix QA 只需验证直接影响路径并追加结果；不要求完整 E2E 套件，但仍要记录验证证据和 blocked 项。",
+    "expected_output": "后续交付只验证文案改动及直接影响路径并记录结果，不把无关的完整 E2E 套件列为前置条件。",
       "workspace": "workspace/eval-13-change-tier-hotfix-e2e-direct-path",
       "assertions": [
         {
           "id": "hotfix_direct_path_only",
           "description": "hotfix QA 聚焦直接影响路径",
-          "text": "必须说明 `hotfix` 的 QA/E2E 覆盖可限制到 directly affected path。"
+      "text": "后续验证范围聚焦登录页空状态文案及直接影响路径；若 fixture 未提供源码或目标文件，可以先索取最小实施输入，但不得扩大到无关路径。是否顺带概述内部分类不影响本断言。"
         },
         {
           "id": "evidence_still_required",
           "description": "验证证据仍必填",
-          "text": "必须要求记录 verification evidence、结果和任何 blocked checks。"
+      "text": "有可执行目标时，后续交付需留下实际验证结果；fixture 缺少源码时，应明确当前无法执行的直接影响检查和恢复所需的最小输入。"
         },
         {
           "id": "no_full_suite_required",
           "description": "不强制全量套件",
-          "text": "必须说明不需要完整 E2E suite，除非风险或范围升级到 `standard` / `major`。"
+      "text": "不得把与该文案改动无关的完整 E2E suite 作为继续工作的前置条件。"
         }
       ]
     },
@@ -747,36 +747,33 @@
     {
       "id": "eval-017-scope-guard-unenabled-general",
       "name": "scope-guard-unenabled-general",
-      "description": "Verifies that pm-agent does not enter the heavy PM workflow for general, non-project requests in an unenabled directory.",
+      "description": "Verifies that a clear R&D request enters pm-agent even when project documents are absent.",
       "scenario": {
-        "persona": "在普通目录处理本机事务的开发者",
-        "situation": "用户在当前目录没有 dev-agent-skills 启用标记（非项目仓库、无项目安装），只是提出本机文件整理请求。",
-        "trigger": "一般性本机操作请求落在未启用目录，dev-agent-skills 不应自动进入重型项目流程。",
-        "goal": "温和说明 dev-agent-skills 面向项目内研发流程、当前目录未启用，然后停止",
+        "persona": "在空目录启动新功能的产品负责人",
+        "situation": "当前目录没有 PRD、TRD 或代码，用户要求规划并实现一个新的账单通知功能。",
+        "trigger": "请求具有明确的产品与工程研发意图，但尚无项目文档。",
+        "goal": "进入 PM 收敛需求范围，不因缺少 docs 或 marker 拒绝",
         "materials": [
-          "未启用 dev-agent-skills 的普通目录",
-          "用户提出的本机文件整理请求"
+          "无 PRD、TRD 与代码的空目录",
+          "新账单通知功能请求"
         ],
         "constraints": [
-          "不进入 PM 分类与路由",
-          "不产出 PRD / 文档链",
-          "不 handoff 任何下游角色",
-          "不执行文件整理动作本身"
+          "不把 docs、代码或 marker 当作自动入口前提",
+          "工程执行等待需求范围确认"
         ],
         "success_criteria": [
-          "一句话说明 dev-agent-skills 面向项目内研发流程且当前目录未启用",
-          "不输出完整 Routing decision / 分类字段",
-          "停止而不是启动任何工作流"
+          "识别研发意图并开始 PM 需求收敛",
+          "不因缺少 docs 或 marker 返回范围拦截"
         ]
       },
-      "prompt": "帮我把 ~/Downloads 目录里下载的文件按文件类型整理一下，图片放一个文件夹，文档放一个文件夹。",
-      "expected_output": "简短的范围说明（当前目录未启用 dev-agent-skills）并停止，不进入 PM 工作流。",
+      "prompt": "我想做一个账单到期通知功能，支持邮件和站内信，请帮我规划并实现。",
+      "expected_output": "识别为研发请求并进入 PM 需求收敛，不依赖已有 docs 或 marker。",
       "workspace": "workspace/eval-17-scope-guard-unenabled-general",
       "assertions": [
         {
-          "id": "scope_guard_stops_general_request",
-          "description": "一般请求不进入 PM 工作流（须判定目录启用状态）",
-          "text": "必须检查当前目录的 dev-agent-skills 启用状态并基于该状态决定：识别当前目录未启用（接受「当前目录未启用 dev-agent-skills」「此目录未启用该能力」等同义表述，不接受仅以「请求不在项目工作流范围」代替目录启用状态判定），输出一句简短说明后停止。不得输出 request_type、change_tier、selected_owner 等分类路由字段，不得产出文档链或 handoff 下游。"
+          "id": "rd_intent_enters_without_docs",
+          "description": "无 docs 的研发请求进入 PM",
+          "text": "根据账单通知功能的产品与工程研发意图开始需求收敛；不得因当前缺少 PRD、TRD、代码或 enable marker 而拒绝进入 PM。"
         }
       ]
     },
@@ -800,18 +797,18 @@
         ],
         "success_criteria": [
           "不输出使用范围拦截提示",
-          "进入分类流程：Routing decision 或诚实的不可分类说明",
+          "进入分类流程并诚实处理无匹配类别的结果",
           "不伪造与请求内容矛盾的 request_type / selected_owner"
         ]
       },
       "prompt": "用 pm-agent 帮我把 ~/Downloads 里下载的文件按类型整理一下，图片放一个文件夹，文档放一个文件夹。",
-      "expected_output": "放行进入分类流程：输出 Routing decision 或诚实的不可分类说明（不伪造路由）。",
+      "expected_output": "显式调用生效；pm-agent 诚实处理无匹配类别的结果，不伪造路由。",
       "workspace": "workspace/eval-18-scope-guard-explicit-invocation",
       "assertions": [
         {
           "id": "explicit_invocation_proceeds",
-          "description": "显式点名放行并诚实分类（Routing decision 或不可分类说明）",
-          "text": "用户消息显式点名 pm-agent，即使目录未启用且请求属于一般本机操作，也不得输出使用范围拦截提示（不得声明当前目录未启用并停止）；必须进入分类流程：输出 Routing decision 或语义等价的分类说明。若请求无法归入任何 PM 类别或下游角色，须诚实说明该请求不在 PM 工作流分类范围内并停在 PM，不得伪造与请求内容矛盾的 request_type 或 selected_owner（例如把文件整理谎报为 deployment）。"
+          "description": "显式点名放行并诚实分类",
+          "text": "用户显式点名 pm-agent，即使请求属于一般本机操作也必须使用该能力并执行其既有边界。若无法归入任何 PM 类别或下游角色，须诚实说明无匹配类别并停在 PM，不得伪造与请求内容矛盾的 request_type 或 selected_owner。"
         },
         {
           "id": "classifies_general_request",
@@ -823,40 +820,33 @@
     {
       "id": "eval-019-scope-guard-enabled-general",
       "name": "scope-guard-enabled-general",
-      "description": "Verifies that a general request in an enabled project directory proceeds into the normal PM workflow.",
+      "description": "Verifies that project markers do not force an ordinary non-R&D request into pm-agent.",
       "scenario": {
         "persona": "在已启用 dev-agent-skills 的项目目录里处理本机事务的开发者",
         "situation": "当前目录是 dev-agent-skills 仓库自身形态（存在 AGENTS.md 与 .claude-plugin/marketplace.json 且 name 为 dev-agent-skills），用户提出一般性本机文件整理请求。",
-        "trigger": "已启用项目的目录判定应放行一般请求，正常进入 PM 分类。",
-        "goal": "识别启用标记并正常进入 PM 分类流程",
+        "trigger": "请求不具有产品或工程研发意图，但目录内存在项目 marker。",
+        "goal": "由当前助手直接处理，不因 marker 进入 PM 分类",
         "materials": [
           "带 dev-agent-skills 仓库自身标记（AGENTS.md + .claude-plugin/marketplace.json name=dev-agent-skills）的目录",
           "用户提出的一般性本机文件整理请求"
         ],
         "constraints": [
-          "已启用目录不得拦截一般请求",
-          "正常执行 PM 分类",
-          "不执行文件整理动作本身"
+          "marker 不作为自动入口条件",
+          "不执行 PM 分类或 handoff"
         ],
         "success_criteria": [
-          "识别目录已启用（引用仓库自身标记）",
-          "进入分类流程：Routing decision 或诚实的不可分类说明",
-          "不伪造与请求内容矛盾的 request_type / selected_owner"
+          "普通非研发请求不进入 PM",
+          "不输出 PM 分类或 handoff 结果"
         ]
       },
       "prompt": "帮我把 ~/Downloads 里下载的文件按类型整理一下，图片放一个文件夹，文档放一个文件夹。",
-      "expected_output": "放行进入分类流程：输出 Routing decision 或诚实的不可分类说明（不伪造路由）。",
+      "expected_output": "不进入 PM 工作流，由当前助手直接处理普通文件整理请求。",
       "workspace": "workspace/eval-19-scope-guard-enabled-general",
       "assertions": [
         {
-          "id": "enabled_marker_detected",
-          "description": "识别启用标记",
-          "text": "必须检查当前目录的 dev-agent-skills 启用状态，识别出目录已启用（引用 AGENTS.md 与 .claude-plugin/marketplace.json 的仓库自身标记或语义等价的启用标记）。"
-        },
-        {
-          "id": "general_request_proceeds",
-          "description": "已启用目录的一般请求放行",
-          "text": "已启用目录中的一般请求不得被拦截：必须进入分类流程，输出 Routing decision 或语义等价的分类说明；若请求无法归入任何 PM 类别或下游角色，须诚实说明该请求不在 PM 工作流分类范围内并停在 PM，不得伪造与请求内容矛盾的 request_type 或 selected_owner，也不得输出「当前目录未启用」的拦截提示。"
+          "id": "marker_does_not_trigger_pm",
+          "description": "marker 不强制非研发请求进入 PM",
+          "text": "用户未显式点名任何 agent 或 skill，且文件整理属于普通非研发请求；即使目录存在 AGENTS.md 与 marketplace marker，也不得进入 PM 分类、产出 PM 文档链或 handoff。"
         }
       ]
     },
@@ -884,23 +874,63 @@
         ]
       },
       "prompt": "会话接口偶尔返回 500。请先只读确认原因，不要修复，也不要修改任何代码、配置或外部状态。错误摘要在 `incident-summary.md`。",
-      "expected_output": "PM 将请求分类为 bug_report 的只读诊断子模式，向 Engineer 传递零修改边界和证据化诊断报告要求，不先要求补齐修复文档。",
+    "expected_output": "允许在零修改边界内继续只读诊断并产出证据化原因报告，不先要求补齐修复文档，也不展示原始 routing packet。",
       "workspace": "workspace/eval-020-route-read-only-diagnosis",
       "assertions": [
         {
           "id": "classifies_read_only_bug_report",
           "description": "识别只读 bug_report 子模式",
-          "text": "输出必须保持 `request_type: bug_report`，并因用户明确只读、不修复而附加 `mode: diagnosis_only`。"
+      "text": "把请求作为只读缺陷诊断处理，不进入修复；不要求向用户展示 `request_type`、`mode` 或 routing block。"
         },
         {
           "id": "sets_zero_mutation_boundary",
           "description": "设置零修改边界",
-          "text": "Engineer handoff 必须包含 `allowed_mutations: none`，并明确禁止代码、测试、E2E、配置、数据库、外部状态以及 commit、push、PR 的修改。"
+      "text": "后续只允许读取和证据收集，不修改代码、配置、数据库或外部状态，也不创建提交或 PR；不要求逐字段展示 Engineer handoff。"
         },
         {
           "id": "allows_unaligned_diagnosis_handoff",
           "description": "缺文档仍可只读调查",
           "text": "缺少 PRD/TRD 时仍可把只读证据收集交给 Engineer/debugger，但必须将预期保持为 unaligned，不能确认 `implementation_deviation` 或进入修复。"
+        }
+      ]
+    },
+    {
+      "id": "eval-021-explicit-downstream-specialist",
+      "name": "explicit-downstream-specialist",
+      "description": "Verifies that explicitly naming a downstream specialist uses that capability and applies its existing entry gate instead of rerouting by inferred intent.",
+      "scenario": {
+        "persona": "显式选择工程分析能力的产品负责人",
+        "situation": "当前目录没有产品或工程 handoff，用户明确要求使用 engineer-agent:codebase-analyzer 为新产品取名。",
+        "trigger": "请求属于产品命名，但用户显式点名了下游 specialist。",
+        "goal": "使用被点名能力并执行其既有入口门禁，不按推断意图改派或直接完成命名",
+        "materials": [
+          "未启用 dev-agent-skills 的普通目录",
+          "显式点名 engineer-agent:codebase-analyzer 的产品命名请求"
+        ],
+        "constraints": [
+          "显式点名优先于意图推断",
+          "不得绕过被点名能力的 PM handoff 和 entry basis gate",
+          "不得绕过该 specialist 的产品命名回 PM 规则"
+        ],
+        "success_criteria": [
+          "进入 engineer-agent:codebase-analyzer 的既有 gate",
+          "按该 specialist 的产品命名规则返回 PM",
+          "不改派其他 specialist 或直接生成产品名称"
+        ]
+      },
+      "prompt": "请显式使用 engineer-agent:codebase-analyzer，帮我的新产品取一个名字。",
+      "expected_output": "尊重显式点名并应用 engineer-agent:codebase-analyzer 的既有入口门禁；按该 specialist 对产品命名请求的现有规则返回 PM 分类，不直接生成产品名称。",
+      "workspace": "workspace/eval-021-explicit-downstream-specialist",
+      "assertions": [
+        {
+          "id": "uses_explicit_downstream_capability",
+          "description": "显式点名下游能力优先",
+          "text": "必须使用用户点名的 engineer-agent:codebase-analyzer 及其既有入口 gate，不得因请求内容属于产品命名而绕过、拒绝显式调用或改派其他 specialist。"
+        },
+        {
+          "id": "preserves_existing_entry_gate",
+          "description": "显式调用不绕过门禁",
+          "text": "根据被点名 codebase-analyzer 的现有 gate，产品命名请求应返回 pm-agent 分类，不执行代码库分析或直接生成产品名称。"
         }
       ]
     }

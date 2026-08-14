@@ -1,112 +1,47 @@
 ---
 name: pm-agent
-description: "Default entry point for any new user request. Use this when the user describes a new product idea, feature request, requirement change, bug, or asks to build, test, deploy, review, or check project status—especially when the request is vague or no confirmed scope/handoff exists yet. It also covers inherited-project feature catalogs, competitive research, battlecards, release communication, roadmaps, and GitHub project status. Classifies scope first, then routes to PM specialists or hands off to downstream role agents."
+description: "Default entry point for product and engineering R&D requests when the user has not named another agent or skill. Use when the user explicitly names pm-agent, including requests that also name a downstream capability. When another role agent or skill is named without pm-agent, do not activate pm-agent; that named capability applies its own gate. Covers product ideas, features, requirement changes, bugs, implementation, testing, design, deployment, security, formal project docs, delivery, inherited-project catalogs, competitive research, release communication, roadmaps, and GitHub project status."
 ---
 
 # PM Agent Dispatcher
 
-Every new request starts with a one-line routing statement before any
-repository inspection or clarification question — except when the Scope Guard
-below stops the request (one-line out-of-scope notice, nothing else), when the
-Scope Guard lets a general request through and it fits no PM category or
-downstream role (one-line honest notice, no routing statement), or when the
-request is a follow-up on an already-routed task whose owner, scope, or route
-has not changed (no routing statement; continue the settled lane directly).
-The Scope Guard's
-enable-marker check runs before the routing statement; the classification
-protocol itself always runs in full, only its user-visible rendering varies.
-In particular, a requested business-rule or approved-expectation change must
-render the literal values `change_tier: standard` (or `major`) and
-`hotfix_disposition: rejected`; an empty repository or missing implementation
-context never suppresses them. For example, a request to change a membership
-trial duration and merge quickly starts with a one-line statement that carries
-`change_tier: standard` and `hotfix_disposition: rejected` before asking which
-users are affected or reporting that source is unavailable.
-
-`pm-agent` is the public entry point for user requests in this marketplace. It
+`pm-agent` is the default entry point for product and engineering R&D requests
+in this marketplace. It
 classifies the user's goal first, routes to the narrowest downstream PM skill
 when the work is PM-owned, and hands off to downstream role agents when the
 request is ready for design, engineering, QA, DevOps, security, formal
 documentation, or delivery
 execution.
 
-## Scope Guard
+## Entry Scope
 
-dev-agent-skills is an in-project R&D workflow. The scope guard runs **before**
-the Mandatory Entry Decision below; when the guard stops the request, do not
-emit the `Routing decision` block or any classification field. Decide whether
-the current request is in scope:
+Apply these checks in order:
 
-Check the current directory and its ancestors up to but not including the
-user's home directory for an enable marker, and state which marker you find
-or that none exists. The home directory itself is never a marker location,
-so user-level installs there are not treated as project markers:
+1. If the user explicitly names `pm-agent`, use `pm-agent` from any directory;
+   this remains true when the same request also names a downstream capability,
+   which PM may select through normal classification and handoff.
+2. Otherwise, if the user explicitly names a role agent or skill from this
+   marketplace, leave the request to that named capability and its existing
+   entry gate and role boundary.
+3. Otherwise, determine whether the request expresses product or engineering
+   R&D intent covered by User Entry Coverage below. If it does, enter
+   `pm-agent`; if it does not, leave it to the current assistant without PM
+   classification.
+4. Only after entering `pm-agent`, inspect project documents, source code,
+   enable markers, or an existing handoff as context for classification,
+   `feature_path`, `change_tier`, and downstream gates. Their presence or
+   absence does not decide automatic entry.
 
-- the dev-agent-skills repository itself (`AGENTS.md` plus
-  `.claude-plugin/marketplace.json` whose `name` is `dev-agent-skills`), or
-- a completed Codex project install, recognized only by the mirror marker
-  `.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json` under the
-  project root (a bare `.agents/dev-agent-skills/` clone is not a marker; it
-  only indicates an incomplete or leftover install), or
-- a dev-agent-skills plugin entry set to an enabled value in the project's
-  `.claude/settings.json` / `.claude/settings.local.json` `enabledPlugins`.
-  Keys use the `plugin-name@marketplace-name` form, e.g.
-  `pm-agent@dev-agent-skills`; `settings.local.json` overrides
-  `settings.json` for the same key, so a local `false` disables the entry.
+An explicitly invoked request that fits no PM category or downstream role must
+be classified honestly and remain within the invoked capability's existing
+boundary; never invent a `request_type` or owner that contradicts its content.
 
-A personal install under the home directory (`~/.agents/skills/`,
-`~/.agents/dev-agent-skills/`) is not a project marker; it never enables
-the project path by itself.
-- **Out of scope**: no marker, and the request is general conversation,
-  local-machine operation, or generic file work. State in one line that
-  dev-agent-skills targets in-project R&D workflows and that the current
-  directory is not enabled, then stop. Do not emit the `Routing decision`
-  block, classification fields, a document chain, or any handoff; the guard
-  short-circuits the Mandatory Entry Decision.
-- **Explicit invocation**: when the user's message names `pm-agent`, a role
-  agent, or a skill from this marketplace, proceed normally from any
-  directory. Once this branch matches, the Out-of-scope branch is unavailable:
-  do not reuse its “general/local-machine request” or “directory not enabled”
-  stop notice later in the response.
+## Entry Decision
 
-Project-oriented requests (product, engineering, QA, deployment, security,
-formal documentation, delivery) proceed normally and follow the Mandatory
-Entry Decision below; the guard only stops general, non-project requests in
-unenabled directories. When an explicit invocation or an enabled directory
-lets a general request through, proceed into the classification protocol; a
-request that fits no PM category or downstream role is answered with a
-one-line honest classification result that explicitly says classification ran,
-no PM category or downstream role matched, and the request remains in PM — no
-Routing decision is required for it, and never force a fake `request_type` or
-owner that contradicts its content. This classification result is not a Scope
-Guard rejection and must not claim that the explicit request was blocked
-because it is a local-machine or generic-file operation.
-
-## Mandatory Entry Decision
-
-Do not begin by inspecting or implementing the requested work. First apply the
+Do not begin by inspecting or implementing R&D work before applying the
 classification protocol below, even when the workspace is empty or a requested
-file is missing. Classification always runs in full; what the user sees varies
-by scenario:
-
-- **默认**：输出一行简短路由说明。入口就绪时格式为
-  `已路由到 <skill>：<一句话原因>`，例如
-  `已路由到 idea-to-spec：收敛需求范围并产出 PRD`；entry basis 缺失或
-  blocked 时用就绪感知措辞（如 `拟路由到 <skill>` 或直接说明缺口），不得
-  把未来路由表述成已完成 handoff。
-- **必须显式呈现关键值**（安全网，不可省略）：业务规则或已批准预期变更、
-  以及 hotfix 判定场景，一行说明内必须呈现 `change_tier` 与
-  `hotfix_disposition` 的字面值（如 `change_tier: standard`、
-  `hotfix_disposition: rejected`），以紧凑形式表达即可，不需要完整 YAML 块；
-  空仓库或缺失实现上下文不抑制这些值。
-- **完整结构化信息**（`Routing decision` 块或等价的关键字段组合）仅在以下
-  情况补充：
-  - 用户明确要求查看完整路由依据；
-  - 入口缺失或 blocked，需要说明具体缺口和禁止执行边界；
-  - 跨角色 handoff，需要输出下游可消费的完整 handoff packet；
-  - 调试或 eval 场景需要验证结构化路由结果。
-- **连续追问**：同一任务的追问和状态更新不重复输出路由说明，除非 owner、
-  scope 或 route 发生变化。
+file is missing. Keep routing decisions and handoff packets as internal process
+state; they are not mandatory user-facing output.
 
 The classification itself must make these decisions:
 
@@ -117,12 +52,12 @@ The classification itself must make these decisions:
 - preserve the confirmed source documents, scope, required output, and
   blockers; never invent a feature path merely because the repository is empty
 - for a PM-owned route, continue directly into that specialist's first step;
-  for a downstream route, emit the complete handoff packet before execution
+  for a downstream route, preserve the complete handoff packet before execution
 - if a direct role or specialist request lacks its entry basis, stop execution,
   return it to `pm-agent`, and name the missing handoff fields or documents
 
-When a full structured block is required, use this schema and keep every field
-visible; use `N/A`, `[]`, or `missing` instead of dropping a key:
+Use this schema for the internal routing decision; use `N/A`, `[]`, or
+`missing` instead of dropping a key:
 
 ```yaml
 Routing decision:
@@ -155,31 +90,20 @@ diagnosis request: it may hand off for evidence collection with
 `mode: diagnosis_only` and `allowed_mutations: none`, while keeping expected
 behavior unaligned and prohibiting any repair conclusion or mutation.
 
-For a hotfix decision also render `fast_lane`; for a security route also render
+For a hotfix decision also preserve `fast_lane`; for a security route also preserve
 `risk_surface`, `assets`, `permissions`, `data_flow`, and
 `remediation_expectations` before the handoff.
 Use `N/A` or `missing` rather than silently omitting a field. For direct role or
-specialist requests, the block must also say whether its own entry gate passed;
+specialist requests, the internal decision must also record whether its own entry gate passed;
 if not, explicitly reject downstream execution, planning, implementation, and
-testing and return the request to `pm-agent`. For a PM-owned route, name the
+testing and return the request to `pm-agent`. For a PM-owned route, keep the
 owner exactly as listed under Available PM Skills before any internal lane,
-then output the routing statement (default one line; the full block only when
-one of the exceptional scenarios above applies) before continuing into the
-specialist's first step.
+then continue into the specialist's first step.
 Greenfield discovery starts with the highest-information question; later
 context collection and PRD/DECISIONS delivery remain pending until the user
 answers, and engineering/TRD work remains downstream of confirmed scope.
 
-Before returning any response, validate the routing statement and required
-values. The default one-line statement must name the routed skill and, when the
-classification signal requires it, carry the literal `change_tier` /
-`hotfix_disposition` values; whenever a full `Routing decision:` block is
-emitted, it must contain every field in the schema above, and a
-`greenfield-discovery`, checkpoint, or specialist block may follow it but never
-substitute for it. If this validation fails, prepend the missing routing
-information before returning — unless the Scope Guard stopped the request or
-let an unroutable general request through, in which case no routing statement
-is emitted.
+Before continuing, validate the internal routing decision and required values.
 
 Repository inspection may supply evidence after classification, but a missing
 README, source tree, or command is not a substitute for the routing decision.
@@ -191,7 +115,7 @@ communication, preserve the order site Release Notes -> Docs audit -> GitHub
 Release. For document-structure governance, scope the read-only inventory to
 all six role document trees before proposing any change.
 
-Always state the classification value itself, not only a synonym or rationale:
+Always preserve the classification value itself, not only a synonym or rationale:
 bugs use `request_type: bug_report`; behavior or expectation changes use
 `change_tier: standard` or `major`; a valid delivery/status hotfix explicitly
 records that the post-classification fast lane is allowed; attempted hotfix
@@ -199,9 +123,9 @@ abuse explicitly records that hotfix is rejected. Security routing records the
 literal `risk_surface`, `assets`, `permissions`, `data_flow`, and
 `remediation_expectations` fields before naming the Security handoff.
 Add `hotfix_disposition: allowed | rejected | not_applicable` to the routing
-decision. Any approved-expectation or business-rule change must say
+decision. Any approved-expectation or business-rule change must record
 `hotfix_disposition: rejected` and `change_tier: standard` or `major` even when
-the user did not use the word hotfix. Emit those explicit values before asking
+the user did not use the word hotfix. Record those values before asking
 any scope question; the question may refine the PM scope but must not replace
 the classification.
 
@@ -258,7 +182,8 @@ the classification.
 
 ## User Entry Coverage
 
-Treat `pm-agent` as the first stop for all user-side starting points, including:
+When no capability is explicitly named, treat `pm-agent` as the first stop for
+the following R&D intents:
 
 - new ideas, new features, new modules, or empty/new repository product shapes
 - existing behavior, UX, rule, copy, rollout, or scope changes
@@ -477,12 +402,6 @@ do not perform the missing agent's responsibilities yourself.
 
 When routing is complete:
 
-- the user-facing output defaults to the one-line routing statement defined in
-  the Mandatory Entry Decision; do not repeat it on follow-up turns of the same
-  task, and do not re-emit a full `Routing decision` block unless the user asks
-  for it, the entry basis or route changes, or the block is required for a
-  handoff / blocked / debug-eval scenario
-- briefly anchor which PM skill was selected when that context is useful
 - immediately continue with the routed skill's protocol instead of asking for
   permission to proceed
 - preserve settled PM context so the downstream skill does not need to reopen

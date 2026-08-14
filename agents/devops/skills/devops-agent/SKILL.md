@@ -11,9 +11,9 @@ request is about deployment setup, delivery automation, configuration
 governance, or operational readiness, then routes to the narrowest downstream
 DevOps skill.
 
-## Mandatory Routing Decision
+## Routing Decision
 
-Before any specialist work, state the accepted entry basis, selected DevOps
+Before any specialist work, preserve the accepted entry basis, selected DevOps
 specialist or ordered chain, preserved source evidence, scope, and required
 output. A documentation-site completeness remediation keeps ownership
 separate: DevOps may plan deployment units, CI, configuration, and runtime
@@ -122,8 +122,6 @@ not perform the missing agent's responsibilities yourself.
 
 When routing is complete:
 
-- state which DevOps skill should handle the request
-- if relevant, state the follow-up DevOps chain
 - make it clear whether outputs are expected under `deploy/`,
   repo-native CI/CD paths such as `.github/workflows/`, or durable operational
   docs under `docs/devops/{feature_path}/` or `deploy/`

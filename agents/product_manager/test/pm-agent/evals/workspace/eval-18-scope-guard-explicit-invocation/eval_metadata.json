@@ -3,9 +3,7 @@
   "eval_name": "scope-guard-explicit-invocation",
   "workspace_root": "agents/product_manager/test/pm-agent/evals/workspace/eval-18-scope-guard-explicit-invocation",
   "fixture_context": [],
-  "skill_dependencies": [
-    "agents/product_manager/skills/idea-to-spec"
-  ],
+  "skill_dependencies": [],
   "runtime_isolation": {
     "processes": "not_used",
     "ports": "not_used",

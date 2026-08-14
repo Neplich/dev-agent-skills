@@ -55,9 +55,9 @@ flowchart TD
 - `agents/` 镜像到 `~/.agents/skills/.dev-agent-skills/agents/`
 - selected skills 以相对软链暴露到 `~/.agents/skills/<skill-name>`
 
-Personal 安装的 skill 在宿主可见的每个项目中都可被发现。未启用
-dev-agent-skills 的项目中，`pm-agent` 的使用范围判定会拦截一般对话、本机
-环境操作与通用文件处理（只提示一句并停止）；项目向请求与显式点名仍正常执行。
+Personal 安装的 skill 在宿主可见的每个项目中都可被发现。显式点名
+`pm-agent`、role agent 或 skill 时始终使用该能力并保留其既有门禁；未显式点名时，
+研发意图进入 `pm-agent`，普通非研发请求由当前助手处理。
 
 ### Project
 
@@ -68,8 +68,7 @@ dev-agent-skills 的项目中，`pm-agent` 的使用范围判定会拦截一般�
 - selected skills 以相对软链暴露到 `<project>/.agents/skills/<skill-name>`
 
 Project 安装把 skill 保持在项目目录内，天然隔离其他项目；项目内的
-`.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json` 同时作为
-`pm-agent` 使用范围判定的启用标记。若需要最严格的隔离，优先选择本层级。
+`.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json` 记录安装镜像。若需要最严格的隔离，优先选择本层级。
 
 两种安装方式都保持仓库内的 `agents/*/skills/*` 目录不变，用于兼容 Claude marketplace。
 

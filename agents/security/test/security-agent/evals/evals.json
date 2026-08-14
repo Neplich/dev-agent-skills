@@ -31,7 +31,7 @@
       },
       "prompt": "登录和权限模型重构准备上线，最担心 admin 越权，同时也要确认依赖有没有已知风险。相关产品范围、变更摘要和依赖清单都在仓库里；请先安排最合适的安全审查顺序和每一步的证据交付。",
       "workspace": "workspace/eval-1-route-auth-release-risk",
-      "expected_output": "安全路由决策，明确 authz-reviewer 是当前主 route，dependency-risk-auditor 是后续，并保持证据型安全输出边界。",
+      "expected_output": "明确 authz-reviewer 是当前主要工作，dependency-risk-auditor 是后续，并保持证据型安全输出边界。",
       "assertions": [
         {
           "id": "routes_primary_to_authz",

@@ -13,8 +13,8 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-5-route-deployment-request`.
 - Identity schema: `2`
-- target_skill_sha256: `f9ea1bade234ebfd780e1e4773d4808a60f7baa61920e5859daea2b146c1ce93`
-- eval_definition_sha256: `73a2b58c1c65bf56a5f6d6f35f003c86e432caed7b530c34cf851322050e2633`
+- target_skill_sha256: `a37bf10fca64a8e15e6213ecdd45b65783814d307c78fd8d8ce6ab45b20effef`
+- eval_definition_sha256: `cad357efac6928bd9cbca7d09df3972a7367fdbfc93dd87da1f5982bf69d7b10`
 - metadata_sha256: `d17a05b229136107ac1e50142856979a9ae9f563cdb19b940e4810dadda79e1c`
 - fixture_sha256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `42fd42dc7a350eab589db47b48a132e9f478c8e119c1fdbd30b4875075f9f0b5`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe`
-- Repository HEAD: `2ac10136f4ed18048058361915e66c52b4e038c5`
+- Repository HEAD: `3f5e81c4837ef85284a7d5381575e40267796c92`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `84ad07662e525000bb3bbf1da6aa3f2d49322c424326b70644431a72cdb52c55`
+- Skill overlay SHA-256: `6f4abf80e411dc3e6124c51093f07046c341195b1b2f0e9981a535c9960cb623`
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
 Overall result: PASS (partial coverage)
@@ -33,26 +33,27 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `request_type_deployment` | PASS | with_skill 的锁定输出明确写出 request_type: deployment。 |
-| `repo_wide_scope_allowed` | PASS | with_skill 的锁定输出对仓库级 CI 使用 feature_path: N/A、feature: N/A、parent_feature: N/A、feature_level: N/A，并给出 feature_path_evidence: []。 |
-| `devops_handoff_packet` | NOT_EXERCISED | with_skill 已完成路由并明确 entry_basis: blocked；由于缺少 DevOps agent/plugin、环境及回滚运行证据，DevOps handoff 尚未实际发生，因此该后续断言未执行。 |
+| `request_type_deployment` | PASS | With-skill output and trace explicitly classify the request as `request_type: deployment`. |
+| `repo_wide_scope_allowed` | PASS | With-skill output records `feature_path: N/A`, `feature: N/A`, `parent_feature: N/A`, `feature_level: N/A`, and `feature_path_evidence: []`. |
+| `devops_handoff_packet` | NOT_EXERCISED | The candidate correctly blocked the downstream DevOps handoff because `devops-agent` and required environment, release, rollback, and build/test context were unavailable; no completed handoff packet is exercised. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=84b6a284caa62c13490db5e5f8c0f72fcd0f8e8bd20c40557a6c9c21683114ea; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 正确识别 deployment，允许仓库级 N/A scope，并在缺少前置证据时安全阻止下游执行。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=ec193f40460cbf20f80c73e9e1ae02f31d10222757af0e8313b9e50392ad1d76; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly classified the request, allowed repository-wide N/A scope, and stopped at the unavailable DevOps handoff boundary without mutations.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=8bd159ba4960144b05c17a7bc90e3ede30e76b9f565ef5fab1ac88ee2d12ad50; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 识别到空仓库并停止，但未提供结构化 deployment 路由或 DevOps handoff packet。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=df8dd8d18e0b79f0114ea9e750efb47af7d21bc05b6ea3666cff7d6bae4802fe; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=66a220a974b5903285a5c97c9aee139ab6ad284f6bededc092f71ef84148e781; snapshot_sha256=f9d5b45620285dd10d5b4ac4a8b7528f206e52d4182e29f6a6d90a7e4e55c08b
+- Behavior: Created CI and release-checklist files as a fresh baseline, but did not provide the PM classification or handoff context.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: 补齐实际仓库内容、目标环境、部署目标、构建测试命令和回滚要求，并启用 DevOps agent 后再执行 handoff。
+- Next: Install or enable the DevOps agent.
+- Next: Provide the deployment environment, target, build/test commands, release scope, operational goal, and rollback needs before resuming the handoff.
 
 ## Runtime Artifact Policy
 
