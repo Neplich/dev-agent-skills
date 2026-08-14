@@ -1,7 +1,7 @@
 ---
 title: "研发意图入口与路由过程收敛实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.2.0"
+version: "0.3.0"
 status: "Implemented"
 author: "Neplich Codex"
 date: "2026-08-14"
@@ -20,6 +20,9 @@ related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/281"
   - "https://github.com/Neplich/dev-agent-skills/issues/282"
 changelog:
+  - version: "0.3.0"
+    date: "2026-08-14"
+    changes: "处理 Codex Review 三项 P2：排除其他显式能力触发 PM、移除 eval prompt 答案泄漏、更新 Kimi 入口说明；22 项受影响 fresh eval 通过"
   - version: "0.2.0"
     date: "2026-08-14"
     changes: "完成研发意图入口、显式调用优先、7 个 router 输出收敛、42 条 fresh paired eval、确定性验证与独立验收"
@@ -132,8 +135,8 @@ owner 或等价过程信息的句子。分类表、gate 指针、specialist entr
 预计整个 PR 净改约 500–900 行，以删除和改写为主，不新增抽象。若明显超出该量级，先
 停止实施并核对是否误触 specialist gate、handoff schema、无关 skill 或新的输出协议。
 
-最终实施 diff 为新增 1733 行、删除 1775 行、raw net -42 行；其中约 500 行来自将上一轮
-活动计划忠实复制到新归档文件。排除这份已批准的机械归档后，主体净改约 -548 行，符合
+最终实施 diff 为新增 1750 行、删除 1780 行、raw net -30 行；其中 424 行来自将上一轮
+活动计划忠实复制到新归档文件。排除这份已批准的机械归档后，主体净改约 -454 行，接近
 预期量级，未发现范围扩张。
 
 ## 8. 验证命令
@@ -187,12 +190,15 @@ GitHub CI 与 Codex Review 状态。
   存在的 FAIL；eval-004 已恢复为原有单一 entry-basis 缺陷，没有新增 handoff/输出断言
   回归。本次需求引入的 FAIL 为 0。
 - `scope_review`：共享 handoff contract、specialist gate、eval runtime 和 release 流程均
-  未修改；raw net -42 行，排除约 500 行忠实计划归档后主体净改约 -548 行，未新增输出
+  未修改；raw net -30 行，排除 424 行忠实计划归档后主体净改约 -454 行，未新增输出
   协议或抽象。
 - `independent_validation`：独立只读验收提出的下游显式调用覆盖、Docs eval-004 断言和
   README 中文措辞问题已修复并 fresh/静态复核。
+- `review_followup`：Codex Review 三项 P2 已处理：PM discovery metadata 明确排除其他
+  被点名能力，Docs eval-001 prompt 恢复为自然请求，英文 Kimi 安装说明改为意图入口；
+  PM 21 项与 Docs eval-001 共 22 项 fresh comparison 均 PASS 或 partial coverage。
 - `residual_risks`：Docs eval-004、005、006 的既有 skill 缺陷仍按 fresh FAIL 保存，超出
   #281/#282 范围，后续应独立处理。
-- `delivery`：PR #283 已标记 Ready；GitHub CI 4/4 通过，PR 为 `MERGEABLE/CLEAN`，
-  review、comment 和 unresolved thread 均为空。
+- `delivery`：PR #283 已标记 Ready；首轮 GitHub CI 4/4 通过。Codex Review 三条 P2
+  已在同一 PR 修复，等待更新后的 CI 与线程复核后执行已获授权的 squash merge。
 - `next_owner`：维护者审阅并明确确认是否合并 PR #283；不得自动合并。

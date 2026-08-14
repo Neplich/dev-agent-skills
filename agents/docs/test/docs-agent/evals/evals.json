@@ -26,7 +26,7 @@
           "不复制 specialist 执行协议或写入文档站"
         ]
       },
-    "prompt": "搜索 API 的实现和合同测试已经完成，交接信息在 `pm-handoff.md`。请帮我安排正式文档同步并说明下一步，不需要展示内部路由记录。",
+    "prompt": "搜索 API 的实现和合同测试已经完成，交接信息在 `pm-handoff.md`。请帮我安排正式文档同步并说明下一步。",
     "expected_output": "让正式文档同步成为明确下一步，继续使用既有 handoff 事实并停在 router 交接边界。",
       "workspace": "workspace/eval-001-route-formal-docs-sync",
       "assertions": [

@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-9-missing-handoff-target-unavailable`.
 - Identity schema: `2`
-- target_skill_sha256: `28ec452f7594200030ea15ffdc8d5edc9ae2298318457884574b818964824cf6`
+- target_skill_sha256: `cec475406cc49b4c9cebbfe9c62f8f1a19fc3e7ced9282825f8f2930bab1478a`
 - eval_definition_sha256: `ea4ff3ed92cd6df9743d23b747dc29d9087560d5cfa7f5f4525b8e146b0b7e97`
 - metadata_sha256: `f52777a03f0c132438bf125e153205560b01f6abb53fcb15add6a3552b96312b`
 - fixture_sha256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `45aa95828b353344675a6e62421acac466500932a42ce4d64f8f43969bd5bb6d`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `5230fc275f473a55b5d59c172358aff82cf42415f36da1a920c1b4fa1e1e3cc1`
-- Repository HEAD: `2f950c46c67111058957774f796ccf97ae616d36`
+- Repository HEAD: `133a65e3c3b501be88257e9d3a557af4d5ccd242`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `8041f8266999d0ba9597ccc13e0354e28fcccb4a3b921ae9b5b9d1e08fe1da7b`
+- Skill overlay SHA-256: `5047311446f87e0c9eb6ef7577938db174e729f8d09b2851971cbb87a063bf63`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,20 +33,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `detect_missing_target` | PASS | The locked with_skill output explicitly says the environment has not installed or exposed `designer-agent`. |
-| `mark_handoff_blocked` | PASS | The locked with_skill output sets `entry_basis: blocked`, says formal design handoff cannot proceed, lists `designer-agent` as unavailable, and requests installing/enabling it. |
-| `do_not_perform_missing_role` | PASS | The locked with_skill output explicitly states it will not substitute for the designer, produce design稿 or frontend implementation, and marks those actions prohibited. |
+| `detect_missing_target` | PASS | With_skill output explicitly states that `designer-agent` is not installed or provided and that it needs to be installed. |
+| `mark_handoff_blocked` | PASS | With_skill output explicitly marks the handoff as blocked, sets `entry_basis: blocked`, and names installing `designer-agent` as the next action. |
+| `do_not_perform_missing_role` | PASS | With_skill output explicitly limits execution to PM handoff context and says it will not substitute for Designer or enter implementation; no design deliverable was produced. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5230fc275f473a55b5d59c172358aff82cf42415f36da1a920c1b4fa1e1e3cc1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=3d4eea985765ee4f9456c773e237ad0cadac4b1d90da7cc1f5c995d9bed1b9c8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly identifies the unavailable designer-agent, marks the design handoff blocked, requests the required capability and missing evidence, and preserves the Designer boundary without producing design deliverables.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5230fc275f473a55b5d59c172358aff82cf42415f36da1a920c1b4fa1e1e3cc1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=2838ae3b4c08fd374e09dcc048b3966de35e2a346ef5753403aec563b5dfb75a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly identified the unavailable designer capability, marked the handoff blocked, named installation as the next action, and preserved the Designer role boundary without producing design work.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5230fc275f473a55b5d59c172358aff82cf42415f36da1a920c1b4fa1e1e3cc1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=6b5c0405049f1176fcc6b129fa41662df0b67ad1451e62873fa3aa391eb743fa; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline reports missing workspace inputs and asks for requirements, but does not identify designer-agent unavailability, mark the handoff blocked, or establish the missing-role boundary.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5230fc275f473a55b5d59c172358aff82cf42415f36da1a920c1b4fa1e1e3cc1; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=cb31d8cf725def60bd2a39bdadb29ba4984a5d0d6fd2697d340af27c52cd04f9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline did not identify the unavailable `designer-agent`, did not mark the handoff blocked, and offered to prepare design deliverables.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

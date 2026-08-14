@@ -191,6 +191,10 @@ def test_pm_entry_uses_explicit_invocation_then_rd_intent():
         ],
     )
 
+    frontmatter_description = skill_text.split('description: "', 1)[1].split('"', 1)[0]
+    assert "Use when the user explicitly names pm-agent" in frontmatter_description
+    assert "Do not activate when the user explicitly names a different role agent or skill" in frontmatter_description
+
 
 def test_router_skills_do_not_require_user_visible_routing_process():
     forbidden = [

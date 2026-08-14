@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "pm-agent",
-      "description": "Default entry plugin for product and engineering R&D requests when no other agent or skill is named; explicit agent or skill invocation always takes priority and retains its existing gate. Routes product ideas, features, changes, bugs, implementation, testing, design, deployment, security, formal docs, delivery, planning, and repository status work.",
+      "description": "Default entry plugin for product and engineering R&D requests when no other agent or skill is named. Explicitly naming pm-agent selects it; explicitly naming a different role agent or skill excludes pm-agent and leaves that capability to enforce its own gate. Routes product ideas, features, changes, bugs, implementation, testing, design, deployment, security, formal docs, delivery, planning, and repository status work.",
       "source": "./agents/product_manager",
       "strict": true,
       "skills": [
