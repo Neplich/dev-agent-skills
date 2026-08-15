@@ -7,6 +7,8 @@ manuals from real running interfaces, site Release Notes delivery, and release
 documentation audit requests to the matching documentation specialist.
 
 > [!NOTE]
+> Repository architecture and document ownership: [Architecture](../../docs/architecture.md) and [Documentation Governance](../../docs/AGENTS.md).
+>
 > Other languages: [中文](./README_zh.md)
 
 > [!IMPORTANT]

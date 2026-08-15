@@ -1,5 +1,8 @@
 # E2E Credential Store Reference
 
+This file is the only manually maintained authority for E2E credential storage
+and credential-ID references.
+
 This reference defines how QA skills store local E2E credentials. It is for
 test-only accounts and SSH access used during QA validation.
 

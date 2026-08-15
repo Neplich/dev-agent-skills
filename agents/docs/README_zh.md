@@ -3,6 +3,8 @@
 `docs-agent` 是第七个角色 Agent，也是正式文档层的所有者。它将明确的文档站点 bootstrap、基于证据的同步与回填、基于真实运行界面的图文用户操作手册、站内 Release Notes 交付，以及发布文档审计请求路由到匹配的文档 specialist。
 
 > [!NOTE]
+> 仓库架构与文档归属见 [Architecture](../../docs/architecture.md) 和 [Documentation Governance](../../docs/AGENTS.md)。
+>
 > 其他语言：[English](./README.md)
 
 > [!IMPORTANT]

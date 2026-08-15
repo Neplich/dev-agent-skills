@@ -6,6 +6,10 @@ visibility: internal
 
 # QA Agent Dispatcher
 
+Persistent E2E credential, case/script, and report formats are authoritative in
+`references/e2e-credential-store.md`, `references/e2e-case-format.md`, and
+`references/e2e-test-report.md`. This Router only points to those owners.
+
 `qa-agent` is the QA capability entry point. It routes the request based on the
 evidence outcome the user wants, the repository context available, and whether
 the work is documented acceptance, exploratory discovery, failure reproduction,
@@ -20,8 +24,9 @@ and the concrete materials that specialist must read: PM/Engineer documents,
 existing QA memory, environment instructions, credentials by account ID, and
 the repository execution entry or command. Point to the selected specialist's
 authoritative E2E memory/platform/credential/execution gate. If any required
-basis is absent, stop at that gate and name the missing material; do not create
-cases, reports, or parallel QA routes.
+basis is absent and no equivalent confirmed test basis below applies, stop at
+that gate and name the missing material; do not create cases, reports, or
+parallel QA routes.
 
 Keep the decision internally: accepted basis,
 resolved scope and platform status, one selected specialist with the evidence
@@ -66,7 +71,7 @@ handing off an otherwise confirmed, authorized test basis.
 QA is a downstream router. Before routing, require an explicit PM handoff
 packet or equivalent confirmed test basis. The PM-side packet fields are
 defined in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `_internal/_generated/shared-contracts/handoff-contract.md`.
 
 A user-confirmed feature update plus explicit bounded-exploration authority,
 the target QA memory, target source files, and an environment instruction file
@@ -74,6 +79,16 @@ is equivalent confirmed test basis for router handoff. Route it to the selected
 specialist even when the platform version or specialist-level PRD/TRD/plan gate
 is not yet resolved; preserve those gaps for the specialist instead of
 returning the router to PM.
+
+This equivalent-basis exception overrides the generic missing-basis stop at the
+Router layer. The Router must not return `blocked`, ask for exploration approval
+again, or require credentials merely to pass the supplied files, environment
+instructions, and unresolved specialist gates to the selected specialist.
+
+Same-path confirmed PRD/TRD plus the existing QA feature memory is also enough
+for the Router to select a specialist. If the confirmed implementation plan is
+missing, preserve the resolved `feature_path` and hand that exact execution
+blocker to the selected specialist; do not return the route to PM or execute E2E.
 
 - If the user directly asks `qa-agent` or a QA specialist for acceptance,
   exploratory, bug-analysis, retest, regression, or E2E work without PM
@@ -132,7 +147,7 @@ When routing is complete:
 
 - after the routed skill or role stage completes, apply the cross-role
   safety-net closeout defined in
-  the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
+  the plugin-local generated `_internal/_generated/shared-contracts/closeout-contract.md`
   (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
   next step, request confirmation before continuing, and honor user-enabled
   `auto-continue`

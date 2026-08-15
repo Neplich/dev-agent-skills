@@ -56,11 +56,11 @@ an existing QA memory scope, or a confirmed exploration target, return the
 request to `pm-agent` for classification instead of expanding broad discovery.
 
 Use the PM-side packet definition in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `../qa-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
 
 ## Exploration Preflight
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the plugin-local generated `../qa-agent/_internal/_generated/shared-contracts/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 Before any testing action, gather the context needed to choose an exploration charter:
 

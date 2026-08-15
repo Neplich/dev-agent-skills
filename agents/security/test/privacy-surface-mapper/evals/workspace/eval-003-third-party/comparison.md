@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-003-third-party`.
 - Identity schema: `2`
-- target_skill_sha256: `25bd4dbed66f3625883b2a2072dcd568eef569278521e1eac012e86f61347836`
+- target_skill_sha256: `36470092bada7ef550e554a98c281f2fe94c427f5a20542e3fb5f13c69f3b496`
 - eval_definition_sha256: `fde37322a972618cf8b85d5463c8e7a856c7547f8c15123669fd15297f556852`
-- metadata_sha256: `1b358949b025cd13ff498cda0a21978c243d4781824a1ceab1947fe97db21069`
+- metadata_sha256: `2bb39446486b68c792ab91df36f237757842e6cc3f736b5a421d1cc25cf91455`
 - fixture_sha256: `a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `46c6f10cb2ee094e0f2d9b8cf0d9d794ebc801a301eb97187a76e961b4e37fd0`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `04d179782a25ad87f73775d407c14368f4301d86a871528ca2b66e82792a813b`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,21 +33,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `data_inventory` | PASS | Delivered privacy map inventories fields, data categories, collection/send entry points, recipients, and purposes with code-linked evidence. |
-| `sharing_and_retention` | PASS | Delivered report identifies recipients, US/unknown regions, configured retention, missing Ads retention/deletion evidence, and distinguishes configured policy from runtime proof. |
-| `user_rights` | PASS | Delivered report assesses consent, access, deletion, export/portability, correction, and vendor-rights propagation; it does not overclaim ExamplePay’s configured deletion API. |
-| `compliance_gaps` | PASS | Delivered report provides prioritized consent, transfer, retention, deletion, rights-workflow, and data-minimization gaps with actionable recommendations. |
+| `data_inventory` | PASS | With-skill delivery snapshot inventories all three vendors, fields, data categories, purposes, and code-triggered sending paths with direct file references. |
+| `sharing_and_retention` | PASS | With-skill report identifies sharing recipients, US/unknown regions, configured retention, missing or limited deletion support, and distinguishes configured policy from runtime proof. |
+| `user_rights` | PASS | With-skill report evaluates access, deletion, export, correction, consent, and propagation gaps, including the payment deletion API limitation. |
+| `compliance_gaps` | PASS | With-skill report provides prioritized compliance risks and concrete recommendations covering consent, minimization, rights propagation, regional transfer evidence, retention, deletion, and follow-up ownership. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935; fixture_sha256=a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73; output_sha256=f35e241ad05b3d77d19064f277adf84dfab9804474c25fc8607a362596cf610a; snapshot_sha256=3ada52de09d056e2710a0a35359b8e6bacb804eefe03a0cda5277403f3115669
-- Behavior: Produced the required Security-owned privacy map with evidence freshness, data inventory, sharing/retention assessment, user-rights status, compliance risks, recommendations, and PM escalation; no integration or formal-site mutation is evidenced.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935; fixture_sha256=a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73; output_sha256=972b8801eb902b8f1e90ac6658596ecfab64aceac7a9af580fdc8975ef01c1aa; snapshot_sha256=5721405a998f34cb0c5b70271637df91afbf8ab3911ebbc1a905c9d336c83c6c
+- Behavior: Delivered a complete, evidence-linked privacy processing map and actionable compliance assessment without implementing unrelated fixes.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935; fixture_sha256=a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73; output_sha256=f908ed5559b2025e8e26959988fc854921f319ab7ff12c04f63704864c708e15; snapshot_sha256=7361618269c208e63dd59ce9e60cc016c1c0ac9c89aedcfa3523f88d13eb33f4
-- Behavior: Produced a broadly correct sharing report and recommendations, but with less explicit evidence-freshness, runtime-evidence qualification, and structured rights/compliance treatment than the with_skill lane.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f08db36d8714dffcf75b41015d8dc4b37be4570b39ece9523f67238ebf8ed935; fixture_sha256=a0f9b5ed56aa92319d126897928b2da5ef1b5b085fbe003f0b4425dde5805c73; output_sha256=d0319b007fdf0d61094c0552b74470891cbe8ec9a300cfc6e4cdbe87b264ae93; snapshot_sha256=fb6708495744d5e5bd995c66cc80bb7e2b7ce1041c9583867560c13b64e96052
+- Behavior: Provided a shorter third-party sharing report covering the main findings, useful as a fresh baseline comparison.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `08e37b0f6a888462b39d6fb25d39b0f94b11e631f275f2f0a4af2411345138b6` from `agents/engineer/test/feature-implementor/evals/workspace/eval-004-small-change-plan-gate`.
 - Identity schema: `2`
-- target_skill_sha256: `2cef9a078b25940be2cd93c65c4193da4205d9703e5924079fcda5ac81b0dc82`
+- target_skill_sha256: `248d30c2e10162217ecb1d6a0d7c66973ee945c6f2e9b7e4bf01a677aac7bc3c`
 - eval_definition_sha256: `7ad36e3dae8256ee32b41e326daa72d3992661ae3195905ab94c0de9d5bb4663`
-- metadata_sha256: `62fa61590c7d39e5404273472c64cb54c1f2eedc4a5d8859470cb476742b524a`
+- metadata_sha256: `7941c9c3d9afca2e9d36cebf8798f3daecf66e49c0fab7c8d3115e0aae5e5b57`
 - fixture_sha256: `08e37b0f6a888462b39d6fb25d39b0f94b11e631f275f2f0a4af2411345138b6`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `133a3fd5fa38d2737eb59228058522a6b1f1268ab7cae969d1962b0b8a3f990f`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `7ac19d358ca18ef7b2d109aeec17239bc9d0f4c0`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `334abb7e4defb6a609eb3e27f2a8ee311f59dfd40169a8f184ac8785cb43611a`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `8002de5f5ec8cbba9c876b3fa5b95d04da373914039535f254ff8fce02f9cbab`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,29 +33,29 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `records_prd_alignment` | PASS | 候选输出说明用户已提供产品与技术负责人对 PRD/TRD 的确认；锁定的 IMPLEMENTATION_PLAN.md 也记录了该对齐依据。 |
-| `writes_plan_for_small_change` | PASS | 锁定 delivery_snapshot 直接包含 docs/engineer/settings-label/IMPLEMENTATION_PLAN.md，状态为 Draft。 |
-| `records_split_decision` | PASS | 输出及锁定计划均明确说明单文件文案改动不启用独立 implementation/validation sub-agent，且仍创建实施计划。 |
-| `waits_for_user_confirmation` | PASS | 输出明确要求用户确认实施安排，确认后才开始修改。 |
-| `blocks_e2e_without_confirmed_plan` | PASS | 输出明确将 QA E2E 新建或更新标记为 blocked_until_plan_confirmed，并指定确认后引用 IMPLEMENTATION_PLAN.md。 |
-| `does_not_modify_code` | PASS | 锁定 delivery_snapshot 仅新增 IMPLEMENTATION_PLAN.md；git_status 未显示代码文件变更，输出也未声称已完成实现。 |
+| `records_prd_alignment` | PASS | 输出及计划明确记录用户说明产品负责人和技术负责人已确认 PRD/TRD，并引用对应路径。 |
+| `writes_plan_for_small_change` | PASS | 已交付并直接检视 `docs/engineer/settings-label/IMPLEMENTATION_PLAN.md`。 |
+| `records_split_decision` | PASS | 输出和计划均记录单文件小改动不启用 implementation/validation sub-agent，同时保留并生成实施计划。 |
+| `waits_for_user_confirmation` | PASS | 输出明确要求用户确认计划后再开始修改。 |
+| `blocks_e2e_without_confirmed_plan` | PASS | 输出及计划明确规定 QA E2E 创建或更新在计划确认前 blocked，确认后引用该计划文件。 |
+| `does_not_modify_code` | PASS | 代码与测试文件未被修改；交付内容仅为实施计划，且输出明确表示确认后才开始修改。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=334abb7e4defb6a609eb3e27f2a8ee311f59dfd40169a8f184ac8785cb43611a; fixture_sha256=08e37b0f6a888462b39d6fb25d39b0f94b11e631f275f2f0a4af2411345138b6; output_sha256=1f034b88c4e66929148a5340f83aa457bf460e07ab387bf60b478e320482c0f5; snapshot_sha256=bb63931a95485653f348f4bc81b8692ec7e8ee71c43ff80cc17ee540f214c85d
-- Behavior: 识别 PRD/TRD 对齐依据，写入小改动实施计划，记录不拆分判断，阻止下游 E2E 工作并等待用户确认；未修改代码。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=334abb7e4defb6a609eb3e27f2a8ee311f59dfd40169a8f184ac8785cb43611a; fixture_sha256=08e37b0f6a888462b39d6fb25d39b0f94b11e631f275f2f0a4af2411345138b6; output_sha256=3f39837614f784a757c233cc4efc94a2a4c63f1b3047eb725cac464f5bb8754c; snapshot_sha256=a564c5a231b66a9d105ed0e492d7f86e28e9d68473b9a47bf3508ded09e15c63
+- Behavior: 完整记录确认依据、单文件变更计划、拆分判断、确认门禁和 E2E 依赖；仅新增实施计划，未修改代码。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=334abb7e4defb6a609eb3e27f2a8ee311f59dfd40169a8f184ac8785cb43611a; fixture_sha256=08e37b0f6a888462b39d6fb25d39b0f94b11e631f275f2f0a4af2411345138b6; output_sha256=488ed4aedbac036c61c99940cd151aa62cd6f28b74ae8c35ad5e1aa4ab5e3863; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 提出了代码修改安排并等待补充源码，但未记录或写入实施计划，也未覆盖确认前阻塞 E2E 等规划约束。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=334abb7e4defb6a609eb3e27f2a8ee311f59dfd40169a8f184ac8785cb43611a; fixture_sha256=08e37b0f6a888462b39d6fb25d39b0f94b11e631f275f2f0a4af2411345138b6; output_sha256=07c4790201cb138ad65eb6cf9423f9be325eeea5906e0c4bbd91afcdca17884d; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 提供了基础修改步骤和验证命令，但未记录实施计划、确认门禁、拆分判断或 E2E 依赖。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: None.
+- Next: 等待用户确认实施计划。
 
 ## Runtime Artifact Policy
 

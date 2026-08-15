@@ -1,11 +1,11 @@
 ---
 title: "接手项目功能目录与项目画像 PRD"
 type: PRD
-version: "0.1.0"
-status: Draft
+version: "0.1.1"
+status: Approved
 author: "Neplich Codex"
 date: "2026-07-04"
-last_updated: "2026-07-04"
+last_updated: "2026-08-15"
 generated_by: "idea-to-spec"
 feature: "feature-catalog"
 feature_path: "agents/pm-agent/skills/feature-catalog"
@@ -20,6 +20,9 @@ related_docs:
   - "agents/engineer/skills/codebase-analyzer/SKILL.md"
   - ".claude-plugin/marketplace.json"
 changelog:
+  - version: "0.1.1"
+    date: "2026-08-15"
+    changes: "收敛 marketplace 当前能力镜像状态，确认文档正文对应已发布 Skill 契约"
   - version: "0.1.0"
     date: "2026-07-04"
     changes: "Initial requirements for take-over feature catalog and feature inventory"

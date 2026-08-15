@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `4ef8c6418e526050652f1a037736acaff4cffdb17b27acf4e8f94adbd8c3be96` from `agents/engineer/test/feature-implementor/evals/workspace/eval-013-implementation-plan-archive-allows-next-plan`.
 - Identity schema: `2`
-- target_skill_sha256: `2cef9a078b25940be2cd93c65c4193da4205d9703e5924079fcda5ac81b0dc82`
+- target_skill_sha256: `248d30c2e10162217ecb1d6a0d7c66973ee945c6f2e9b7e4bf01a677aac7bc3c`
 - eval_definition_sha256: `e7ce63b1af29ecd94dfeb7909e7f066642dfdd9e9e7c1c834d32f01202820dcf`
-- metadata_sha256: `09c697e47642eeb80d16370a2788d572a97cb4a1e71356745930b9203f62054c`
+- metadata_sha256: `126a2db171ef57efac6a8c26a7d508c9646b5e72099470e6d4ba41325678a04b`
 - fixture_sha256: `4ef8c6418e526050652f1a037736acaff4cffdb17b27acf4e8f94adbd8c3be96`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `92c95ee84208d5ddf7a774382e98fb939786b7da025643fcac881491d89921d5`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `7ac19d358ca18ef7b2d109aeec17239bc9d0f4c0`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `fead462ed6258e1fbe13bf1caae06939d2877c023c15076e0ceb2b67cbc05022`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `8002de5f5ec8cbba9c876b3fa5b95d04da373914039535f254ff8fce02f9cbab`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,22 +33,22 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `detects_prior_plan_archived` | PASS | with_skill 输出确认旧计划已存在并已读取于 `docs/engineer/payment-refund/archive/IMPLEMENTATION_PLAN-full-refund-flow.md`，且 `active_plan_status` 为“不存在”。 |
-| `allows_new_active_plan` | PASS | delivery_snapshot 中已创建 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`，范围为 `partial-refund`，并要求确认后再编码。 |
-| `records_previous_plan_archive` | PASS | delivery_snapshot 的 frontmatter 明确包含 `previous_plan_archive: "docs/engineer/payment-refund/archive/IMPLEMENTATION_PLAN-full-refund-flow.md"`。 |
-| `keeps_active_entry_fixed` | PASS | 输出明确说明 `active_plan_path` 为 `docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md`，并说明归档只放入 archive 目录。 |
-| `waits_for_user_confirmation` | PASS | 输出要求确认精确计划后才开始编码；delivery_snapshot 状态为 Draft，git_evidence 显示未修改代码且无新提交。 |
+| `detects_prior_plan_archived` | PASS | 归档计划文件和路径在锁定计划及原始检查证据中明确可见，且原始检查显示没有 active plan。 |
+| `allows_new_active_plan` | PASS | 锁定 delivery_snapshot 已创建部分退款范围的 docs/engineer/payment-refund/IMPLEMENTATION_PLAN.md。 |
+| `records_previous_plan_archive` | PASS | 锁定计划 frontmatter 明确包含 previous_plan_archive，且指向指定归档路径。 |
+| `keeps_active_entry_fixed` | PASS | 锁定计划位于固定 active entry 路径，且归档引用仍位于 archive 目录；未写入归档目录。 |
+| `waits_for_user_confirmation` | PASS | 候选输出明确要求确认精确计划后再实现，并声明确认前不会修改代码或测试；git evidence 也显示无代码修改。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fead462ed6258e1fbe13bf1caae06939d2877c023c15076e0ceb2b67cbc05022; fixture_sha256=4ef8c6418e526050652f1a037736acaff4cffdb17b27acf4e8f94adbd8c3be96; output_sha256=4868e3f68614e7f3b697471a23ed650de3319d4dd1962ec930fe54a60ae3881e; snapshot_sha256=d1b330cec12f2fd473ed80759f6ba0c38f4398a25907a01f115ed359832be265
-- Behavior: 识别已归档的全额退款计划，创建固定路径的部分退款计划，记录归档回链，并在确认前阻止编码。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fead462ed6258e1fbe13bf1caae06939d2877c023c15076e0ceb2b67cbc05022; fixture_sha256=4ef8c6418e526050652f1a037736acaff4cffdb17b27acf4e8f94adbd8c3be96; output_sha256=67608e73e754a9a8d2c9c81bc9f08dc4423c2f58eea7e2bea367911737dfd6b7; snapshot_sha256=647a1ab2717c8f085b246aa1f80a3033c452c102923fd3092acfa98b09c8a1d1
+- Behavior: 识别无 active plan 且旧计划已归档，创建了带归档回链的固定路径部分退款计划，并在确认前阻止编码。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fead462ed6258e1fbe13bf1caae06939d2877c023c15076e0ceb2b67cbc05022; fixture_sha256=4ef8c6418e526050652f1a037736acaff4cffdb17b27acf4e8f94adbd8c3be96; output_sha256=6a378f147621a7ea132e4595d968b4f77f9b718e1665aceab79238207bb22545; snapshot_sha256=707e7135d550f5865efcd6b9ee13ed7033cd454ea709be80c0fcd25ebb3224dc
-- Behavior: 创建了部分退款计划文件，但未识别归档状态、未记录 previous_plan_archive，也未等待用户确认。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fead462ed6258e1fbe13bf1caae06939d2877c023c15076e0ceb2b67cbc05022; fixture_sha256=4ef8c6418e526050652f1a037736acaff4cffdb17b27acf4e8f94adbd8c3be96; output_sha256=ec7782a01482f3fce6eaa2627e77b35b45604bb03e19ff65cc1758c2de9c20a1; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅概括确认旧计划已归档并询问下一步，未创建计划或提供归档回链和确认门禁。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

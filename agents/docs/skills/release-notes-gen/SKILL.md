@@ -48,7 +48,7 @@ that identifies all of the following:
   handoff.
 
 The PM packet definition lives in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `../docs-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
 Direct invocation does not waive this gate. If the version, scope, host, or
 evidence boundary is unresolved, stop before writing, name the missing entry
 credential, and return product ambiguity to `pm-agent` or technical-impact gaps
@@ -128,7 +128,7 @@ Report:
 Only an explicitly maintainer-confirmed `target_release_version`,
 `confirmation_status: confirmed`, and successful host docs checks together can
 produce a ready handoff. At closeout, follow the safety-net behavior
-in the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
+in the plugin-local generated `../docs-agent/_internal/_generated/shared-contracts/closeout-contract.md`
 and wait for confirmation before another role acts unless the applicable
 `auto-continue` authorization already exists.
 

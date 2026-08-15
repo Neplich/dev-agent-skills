@@ -111,7 +111,7 @@ work, or an equivalent confirmed document chain:
 decision.
 
 The PM-side packet field definition lives in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `../engineer-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
 If the user directly asks this skill to "implement", "build", "change a
 feature", or "do the code" without PM handoff or equivalent confirmed docs,
 stop and return the request to `pm-agent` for classification. Direct invocation
@@ -213,7 +213,7 @@ The active plan path remains fixed at
 
 ## Implementation Flow
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the plugin-local generated `../engineer-agent/_internal/_generated/shared-contracts/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 1. Gather PRD, DECISIONS, TRD, relevant design docs, repo structure, and active
    plan/archive state.

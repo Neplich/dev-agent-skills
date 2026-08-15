@@ -73,7 +73,7 @@ commands, code patches, tests, or deployment instructions.
 Designer is a downstream router. Before routing, require an explicit PM handoff
 packet or equivalent confirmed PM/design documents with a stable
 `feature_path`. The PM-side packet fields are defined in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `_internal/_generated/shared-contracts/handoff-contract.md`.
 
 - If the user directly asks `designer-agent` or a design specialist for new
   design work without PM handoff context, return the request to `pm-agent` for
@@ -139,7 +139,7 @@ When routing is complete:
   next step for implementation
 - after the routed skill or role stage completes, apply the cross-role
   safety-net closeout defined in
-  the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
+  the plugin-local generated `_internal/_generated/shared-contracts/closeout-contract.md`
   (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
   next step, request confirmation before continuing, and honor user-enabled
   `auto-continue`

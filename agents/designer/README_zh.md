@@ -3,6 +3,8 @@
 `designer-agent` 是设计角色的 dispatcher skill，负责把 UX 流程、页面结构、信息架构、线框、参考风格分析和视觉系统请求路由到合适的设计 specialist skill。它只产出设计交付物，不进入工程实现。
 
 > [!NOTE]
+> 仓库架构与文档归属见 [Architecture](../../docs/architecture.md) 和 [Documentation Governance](../../docs/AGENTS.md)。
+>
 > 其他语言：[English](./README.md)
 
 > [!IMPORTANT]

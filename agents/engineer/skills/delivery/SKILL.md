@@ -43,7 +43,7 @@ delivery while scope or verification status is unclear, return to `pm-agent`
 for classification or status confirmation.
 
 Use the PM-side packet definition in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `../engineer-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
 
 ## Step 1 — Assess current Git state
 

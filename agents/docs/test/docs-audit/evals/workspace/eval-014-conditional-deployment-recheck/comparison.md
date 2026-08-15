@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52` from `agents/docs/test/docs-audit/evals/workspace/eval-014-conditional-deployment-recheck`.
 - Identity schema: `2`
-- target_skill_sha256: `5b11b38c1c44c386fe19122dfb1ce5918b2bfbc4830ad32aa994d8a7e39f35e7`
+- target_skill_sha256: `dafd53371901dfd724f88c70262b157e59494d29da1c613d0ef130564b6ff4f9`
 - eval_definition_sha256: `3b49ebce5564e2973a0e2404ae2204baef9f3926736e7959e09be720ea423b90`
 - metadata_sha256: `2b29c083a590a4eda139a3861e29b83daf406cc100d9a6f0e884225e104c8734`
 - fixture_sha256: `02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `b484eac80dd3c83d19d6e2564672bb72616ee37e54370c5c00059bfaaa781dcf`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `fecf485e8e3dcaf191b2b221d9cccbddfdea0b72`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `7e61bd8eca6431729aee1f3be4656be0a4348119eb1218623bafd54cfaead2ab`
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
 Overall result: PASS (partial coverage)
@@ -33,25 +33,25 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `preserves_state_for_no_surface_change` | PASS | with_skill 将 version-stamp.patch 识别为仅修改 last_verified_version 元数据，并判断不影响构建目标、导航、资源或运行入口，因此保留既有完整性状态。 |
-| `refreshes_shared_state_for_material_change` | NOT_EXERCISED | with_skill 正确识别 internal-build-target.patch 改变内部输出目录和构建默认逻辑，并提出重新核对；但因缺少正式 docs site、部署状态、交接证据及确认的 target_release_version 而 blocked，未实际证明共享检查刷新或后续状态更新。 |
+| `preserves_state_for_no_surface_change` | PASS | With-skill output correctly identifies version-stamp.patch as changing only last_verified_version and says deployment completeness remains unchanged. |
+| `refreshes_shared_state_for_material_change` | NOT_EXERCISED | With-skill output correctly identifies the build-target changes and recommends rechecking deployment completeness, but the actual shared-state refresh cannot be exercised because the required audit handoff, target references, and confirmed target version are absent. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba; fixture_sha256=02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52; output_sha256=c1bb64b4f7291618b068b79d1e5f321f9e6b906ba31a6e2430e96b6d81b0e14f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 正确区分无发布面变化与构建面变化，识别需重检的部署影响，保持只读并在缺少运行时/审计基础证据时阻止完整审计。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba; fixture_sha256=02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52; output_sha256=7305c790c6c7474cc5d1e87fa559da7bd8b27fb884cb77f9be7a0ec002214a29; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly distinguishes the non-material version stamp from the material internal build-output change, preserves the no-change state, and identifies the required recheck without modifying deployment configuration.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba; fixture_sha256=02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52; output_sha256=8e43bc98392d3cae7ed1d7ee86ef415bc1ced1d6c99ebd56f3cfa78d7d2bf3a4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 新鲜基线也正确区分两类补丁并指出工作区缺少站点和部署配置；仅作对比，不用于判定 with_skill 断言。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cb27f98c195c0adaa2bc7ce90eded119c590e29ff34ec55cdd7a71187adb71ba; fixture_sha256=02024e6f0aaa0bcf6615062b3d8a31430a90f2e0a76edad7ce1044c04423eb52; output_sha256=9c21d48aa29aaee51d6768b180af43b4d8549c3badd7a31cf15b30b2ba90f59c; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline reaches the same patch-level conclusions and reports no deployment mutation, but lacks the structured audit-gate framing present in the with_skill lane.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: 补充正式 docs site、部署完整性状态、审计交接证据和维护者确认的 target_release_version 后，复用共享检查并刷新状态。
+- Next: Provide the audit handoff, refs, and confirmed target version, then run the shared documentation audit and refresh the deployment completeness state for the material build-target change.
 
 ## Runtime Artifact Policy
 

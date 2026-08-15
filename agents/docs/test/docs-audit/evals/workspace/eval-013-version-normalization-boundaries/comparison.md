@@ -13,48 +13,48 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970` from `agents/docs/test/docs-audit/evals/workspace/eval-013-version-normalization-boundaries`.
 - Identity schema: `2`
-- target_skill_sha256: `5b11b38c1c44c386fe19122dfb1ce5918b2bfbc4830ad32aa994d8a7e39f35e7`
+- target_skill_sha256: `dafd53371901dfd724f88c70262b157e59494d29da1c613d0ef130564b6ff4f9`
 - eval_definition_sha256: `5705e506f62200b76867ebca90e47274aa68bc0ca81a7790a3ab2ac8baafd194`
 - metadata_sha256: `de723686d571b59f10dc657eaf98d1d9ad27c06a9381fcb0dfee19364fb401ec`
 - fixture_sha256: `1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `3cb4db02fceb3a963ab35cfa46d9bd95146e58bed4f92e90064a4aa2fe2f0404`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `fecf485e8e3dcaf191b2b221d9cccbddfdea0b72`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
-- Behavior result: **PASS**
+- Skill overlay SHA-256: `7e61bd8eca6431729aee1f3be4656be0a4348119eb1218623bafd54cfaead2ab`
+- Behavior result: **FAIL**
 - Coverage result: **PARTIAL**
-Overall result: PASS (partial coverage)
+Overall result: FAIL
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `preserves_complete_version_identity` | PASS | with_skill 输出保留 `v1.2.0-rc.1+Build.7` 与 `1.2.0-rc.1+Build.7` 的前缀差异，并明确保留大小写、预发布标识和 build metadata 后归一化判等。 |
-| `enforces_each_source_contract` | PASS | with_skill 输出逐项列出观察集 B 的前缀、缺失、空值和非法 SemVer 问题，并指出 selector resolution 为 0、索引匹配数为 2 及 extractor identity 不一致；同时拒绝以观察集 A 或其他来源替代缺失正式来源。 |
-| `reports_all_version_blockers` | PASS | with_skill 输出覆盖了大小写/重复前缀、缺少 v、索引缺失与重复、空 releases 值、marketplace 缺失、非法 package 版本、候选版本不精确及 extractor 不一致，并分别判定 pre-tag 与 post-tag blocked。 |
-| `binds_pre_and_post_tag_inventory` | NOT_EXERCISED | 原始 fixture 显示正式来源和审计 handoff 在当前树中不存在，且 with_skill 输出确认 pre-tag 无法建立可信 inventory，post-tag 无法绑定同一 inventory；按判定规则该后续消费场景未被实际行使。 |
-| `makes_inventory_integrity_reproducible` | NOT_EXERCISED | 原始 fixture 与 locked trace 仅能证明来源树不完整、inventory 未建立；with_skill 输出报告 `invalid / unbound`，但确定性完整性证据在 pre-tag 阻断前尚不可产生。 |
+| `preserves_complete_version_identity` | FAIL | The with_skill output preserves the full target identity and rejects case, prerelease, and build-metadata changes, but it never states that the prefixed and unprefixed observations in set A map to the same complete identity. |
+| `enforces_each_source_contract` | PASS | It gives source-by-source observations and blockers, rejects malformed raw values, and reports the extractor mismatch without silently filling values from other sources. |
+| `reports_all_version_blockers` | PASS | It reports the missing, malformed, duplicate, unresolved, and extractor-contract blockers and gives blocked conclusions for both pre-tag and post-tag stages. |
+| `binds_pre_and_post_tag_inventory` | NOT_EXERCISED | The output states that no pre-tag handoff, candidate audit record, or consumable binding exists, so post-tag consumption of a generated inventory was not reached. |
+| `makes_inventory_integrity_reproducible` | NOT_EXERCISED | The output states that no normalized digest or candidate record exists, so deterministic inventory-integrity evidence could not yet be produced. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e; fixture_sha256=1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970; output_sha256=793cfbbf2bcfbd62af7559f21f4b4a7e695184f4922b9a65dcd301682dfced04; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 准确识别完整版本 identity、逐来源阻断非法观测并报告全部 blocker；因 pre-tag 已阻断，inventory 绑定与完整性重算未实际行使。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e; fixture_sha256=1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970; output_sha256=7d9f9b29a8a3a6ed40d531b21f94be6ed5cd02db2f446506f5c1000474945677; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a detailed blocked pre-tag/post-tag audit with per-source failures, but omits the set-A prefixed/unprefixed identity conclusion.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e; fixture_sha256=1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970; output_sha256=9c4d30afdef83d9273214911dd4d47ad44b919789ba0004962ae0d4f5fbce7ea; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 能识别部分发布后版本问题，但发布前仅给出有条件通过，未完整执行逐来源审计，也未建立后续 inventory 语义。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e4e9083fe5f80e87e2a90dbd2508e2ce8a005911bcd108e280ebfcc392bef53e; fixture_sha256=1cee6041bd72db3f52d6c6c5a5cd2b2192f387347cccb99c7f5a1da1c4e1e970; output_sha256=1c86d157d2d7fcd2f82e1f019cb0ff7864aa486b14da8ccd39ee0c0394d6f640; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline also reports the major post-tag blockers and mentions set A, but lacks the with_skill audit's stronger repository and inventory-binding analysis.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- None.
-- Next: 补齐正式版本来源与 pre-tag audit handoff 后，重新执行 inventory 绑定和完整性重算。
+- preserves_complete_version_identity
+- Next: Explicitly map the prefixed and unprefixed set-A observations to the same complete, case-sensitive identity while retaining the raw-form distinction.
 
 ## Runtime Artifact Policy
 

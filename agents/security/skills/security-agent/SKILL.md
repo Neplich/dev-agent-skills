@@ -55,7 +55,7 @@ to `docs-agent` and never creates the PM tracking issue itself.
 Security is a downstream router. Before routing, require an explicit PM handoff
 packet or equivalent confirmed security context. The PM-side packet fields are
 defined in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `_internal/_generated/shared-contracts/handoff-contract.md`.
 
 - If the user directly asks `security-agent` or a security specialist for a
   review without PM handoff context, return the request to `pm-agent` for
@@ -112,7 +112,7 @@ security outcome.
   remediation directly to `engineer-agent` or `devops-agent` as appropriate.
   Conclusions that trigger the escalation always return to `pm-agent`, which
   dispatches remediation through the issue lifecycle.
-- At Security closeout, evaluate Security's own confirmed conclusion — a review finding, or a Security re-review confirming that a remediation has landed — against the `Security Conclusion Escalation to PM` rule in the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`. If that conclusion establishes that formal documentation facts, externally visible behavior, operational facts, or release readiness have changed, return the conclusion and evidence to `pm-agent` for entry classification and issue filing. The trigger is Security's own conclusion; Security does not wait on a separate Engineer or DevOps return handoff and does not hand evidence directly to `docs-agent`.
+- At Security closeout, evaluate Security's own confirmed conclusion — a review finding, or a Security re-review confirming that a remediation has landed — against the `Security Conclusion Escalation to PM` rule in the plugin-local generated `_internal/_generated/shared-contracts/security-escalation.md`. If that conclusion establishes that formal documentation facts, externally visible behavior, operational facts, or release readiness have changed, return the conclusion and evidence to `pm-agent` for entry classification and issue filing. The trigger is Security's own conclusion; Security does not wait on a separate Engineer or DevOps return handoff and does not hand evidence directly to `docs-agent`.
 
 ## Missing Handoff Target
 
@@ -131,7 +131,7 @@ When routing is complete:
   `docs/security/{feature_path}/...`
 - after the routed skill or role stage completes, apply the cross-role
   safety-net closeout defined in
-  the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
+  the plugin-local generated `_internal/_generated/shared-contracts/closeout-contract.md`
   (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
   next step, request confirmation before continuing, and honor user-enabled
   `auto-continue`

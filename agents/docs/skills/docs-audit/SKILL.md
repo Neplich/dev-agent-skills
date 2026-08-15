@@ -107,7 +107,7 @@ or not maintainer-confirmed, return `blocked` before writing a report, stamping
 pages, or changing version metadata.
 
 The PM packet definition lives in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `../docs-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
 Direct invocation does not waive this gate. If the audit scope is ambiguous,
 stop before writing a report or version metadata and return the missing scope
 to `docs-agent` or `pm-agent`.
@@ -149,7 +149,7 @@ Before auditing or writing:
    update directly into `stale`.
 3. Verify every affected page against current code or test evidence under the
    trust model in
-   the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`.
+   the plugin-local generated `../docs-agent/_internal/_generated/shared-contracts/consumption-contract.md`.
    Code and tests are ground truth; preserve each conflicting document claim,
    code fact, and impact.
 4. Treat `stale`, `mismatch`, a page that remains unverified after fact review,
@@ -205,7 +205,7 @@ Report:
 
 At closeout, return the audit conclusion to the release handoff and follow the
 safety-net behavior in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `../docs-agent/_internal/_generated/shared-contracts/closeout-contract.md`.
 Wait for confirmation before another role acts unless the user has enabled the
 applicable continuation.
 

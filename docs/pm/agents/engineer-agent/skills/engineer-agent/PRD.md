@@ -5,11 +5,11 @@ feature: "skill-engineer-agent"
 feature_path: "agents/engineer-agent/skills/engineer-agent"
 parent_feature: "agents/engineer-agent/skills"
 feature_level: "4"
-version: "1.3.0"
-status: Draft
+version: "1.3.1"
+status: Approved
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-14"
+last_updated: "2026-08-15"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -22,6 +22,9 @@ related_docs:
   - ".claude-plugin/marketplace.json"
   - "agents/engineer/test/engineer-agent/evals/evals.json"
 changelog:
+  - version: "1.3.1"
+    date: "2026-08-15"
+    changes: "收敛 marketplace 当前能力镜像状态，确认文档正文对应已发布 Skill 契约"
   - version: "1.3.0"
     date: "2026-08-14"
     changes: "Remove mandatory user-visible router selection explanation"

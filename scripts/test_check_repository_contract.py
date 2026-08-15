@@ -1564,3 +1564,64 @@ def test_kimi_plugin_session_start_skill_glob_metachar_rejected(tmp_path: Path) 
 
     assert len(errors) == 1
     assert "sessionStart.skill" in errors[0].message
+
+
+@pytest.mark.parametrize("status", ["Implemented", "Archived"])
+def test_active_plan_rejects_completed_status(
+    tmp_path: Path, status: str
+) -> None:
+    root = initialize_repo(tmp_path, base_status="Draft")
+    write_plan(root, status=status)
+
+    errors: list[contract.ContractError] = []
+    contract.validate_implementation_plan_metadata(root, errors)
+
+    assert any(
+        "active implementation plan status must not be" in error.message
+        for error in errors
+    )
+
+
+def test_router_budget_reports_actual_and_limit(tmp_path: Path) -> None:
+    path = tmp_path / "agents/product_manager/skills/pm-agent/SKILL.md"
+    path.parent.mkdir(parents=True)
+    path.write_text(("word\n" * 321), encoding="utf-8")
+
+    errors: list[contract.ContractError] = []
+    contract.validate_router_budgets(tmp_path, errors)
+
+    assert any(
+        error.path == path and "321/320 lines" in error.message
+        for error in errors
+    )
+
+
+def test_marketplace_skill_mirror_rejects_draft(tmp_path: Path) -> None:
+    marketplace = tmp_path / ".claude-plugin/marketplace.json"
+    marketplace.parent.mkdir(parents=True)
+    marketplace.write_text(
+        json.dumps(
+            {
+                "plugins": [
+                    {
+                        "name": "engineer-agent",
+                        "source": "./agents/engineer",
+                        "skills": ["./skills/debugger"],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    prd = (
+        tmp_path
+        / "docs/pm/agents/engineer-agent/skills/debugger/PRD.md"
+    )
+    prd.parent.mkdir(parents=True)
+    prd.write_text("---\nstatus: Draft\n---\n", encoding="utf-8")
+
+    errors: list[contract.ContractError] = []
+    contract.validate_marketplace_document_status(tmp_path, errors)
+
+    assert len(errors) == 1
+    assert "must not be 'Draft'" in errors[0].message

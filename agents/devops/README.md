@@ -3,6 +3,8 @@
 `devops-agent` is the dispatcher skill for deployment, delivery automation, configuration governance, and runtime readiness. It routes deployment planning, CI/CD, environment audits, and incident playbook requests to the right DevOps specialist skill.
 
 > [!NOTE]
+> Repository architecture and document ownership: [Architecture](../../docs/architecture.md) and [Documentation Governance](../../docs/AGENTS.md).
+>
 > Other languages: [中文](./README_zh.md)
 
 > [!TIP]

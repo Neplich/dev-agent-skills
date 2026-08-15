@@ -1870,7 +1870,7 @@ class EvalContractTests(unittest.TestCase):
             rendered,
         )
 
-    def test_repository_contract_accepts_frontmatter_only_update_for_implemented_base(self):
+    def test_repository_contract_rejects_frontmatter_only_update_for_implemented_base(self):
         checker = load_repository_checker_module()
 
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -1898,8 +1898,8 @@ class EvalContractTests(unittest.TestCase):
                 stdout=subprocess.DEVNULL,
             )
             subprocess.run(["git", "switch", "-c", "feature"], cwd=root, check=True)
-            # Administrative metadata changes keep the active-plan body
-            # identical to the completed base round and need no back link.
+            # Even an administrative-only change must not leave a completed
+            # plan at the active entry.
             plan = self._write_history_search_plan_fixture(
                 root,
                 status="Implemented",
@@ -1910,7 +1910,11 @@ class EvalContractTests(unittest.TestCase):
             errors = []
             checker.validate_implementation_plan_metadata(root, errors)
 
-        self.assertEqual([], errors)
+        self.assertEqual(1, len(errors))
+        self.assertIn(
+            "active implementation plan status must not be 'Implemented' or 'Archived'",
+            errors[0].message,
+        )
 
     def test_repository_contract_rejects_missing_backlink_for_settled_base_plan(self):
         checker = load_repository_checker_module()

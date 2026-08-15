@@ -3,6 +3,8 @@
 `engineer-agent` 是工程角色的 dispatcher skill，负责把代码库分析、TRD 生成、功能实现、测试补齐、缺陷修复和交付收尾请求路由到合适的工程 specialist skill。
 
 > [!NOTE]
+> 仓库架构与文档归属见 [Architecture](../../docs/architecture.md) 和 [Documentation Governance](../../docs/AGENTS.md)。
+>
 > 其他语言：[English](./README.md)
 
 > [!IMPORTANT]

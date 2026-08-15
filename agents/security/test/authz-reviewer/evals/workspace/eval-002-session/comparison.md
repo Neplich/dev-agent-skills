@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a` from `agents/security/test/authz-reviewer/evals/workspace/eval-002-session`.
 - Identity schema: `2`
-- target_skill_sha256: `c5c4e1b3eeeb704a06966dee8397bc4f1df239be6ed5f5799f8d4bd382f23626`
+- target_skill_sha256: `28d6bd56202068b6de6f4e41d3bc74df73f15108b0013486fcd02eaa93f991d8`
 - eval_definition_sha256: `86d9727a0807549b3bf3936da079aa7238a2b14b16eed4306c9bda4eb6d7be43`
-- metadata_sha256: `f26166d912f73c7f118a1561bee3e62973123b274975fb4a17a869fba31f82a0`
+- metadata_sha256: `bc625033c4a7355e536aa9f113162cca0659e6b3b33765385304d88e087c3513`
 - fixture_sha256: `ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `a3c690bb602cdac9c05191ab0581fc35b8fd034dd27825093b3b51de5926404b`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `2d47191ee1ff1f15f350d3cf5e7d5d57f991913e4e2049f23f29264b335bfc56`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `217840028dda2eba806419edc71588064b0361d1a26fbfdbb7a47693678ccfa6`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,21 +33,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `authorization_model` | PASS | 报告包含 anonymous/authenticated-user 角色、已认证资源边界及登录、解析、过期、退出授权路径。 |
-| `access_control_findings` | PASS | 报告以 session-store.js 行号指出可预测会话 ID、缺失 30 分钟过期、退出未撤销服务端会话，以及 Cookie/路由集成缺口。 |
-| `evidence_and_impact` | PASS | 每项发现均给出代码位置、严重度、账户接管或旧会话继续访问等影响。 |
-| `remediation` | PASS | 报告提供随机高熵令牌、TTL、服务端撤销、登录轮换、Cookie 属性和集成回归测试建议。 |
+| `authorization_model` | PASS | 报告列出 anonymous/authenticated-user、用户资料与账户设置资源，并描述创建、解析、退出和受保护资源访问路径。 |
+| `access_control_findings` | PASS | 报告准确指出可预测会话 ID、无 30 分钟空闲过期、退出未撤销服务端会话，以及缺失登录/Cookie/端点集成证据。 |
+| `evidence_and_impact` | PASS | 各项发现均提供了 session-store.js 的具体行号、影响范围、账户接管或会话重放后果及严重度。 |
+| `remediation` | PASS | 报告提供了 CSPRNG opaque token、TTL/活动时间、服务端撤销、安全 Cookie 配置及单元/端到端回归验证建议。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2d47191ee1ff1f15f350d3cf5e7d5d57f991913e4e2049f23f29264b335bfc56; fixture_sha256=ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a; output_sha256=2970ac207d849d5b83742567db54f2560ac0af64d48d95ccb853db969f2c3959; snapshot_sha256=8fd3292d4752830247802fd90c5db1cfbf686c087048ac3272430c0976d374cc
-- Behavior: 完成并交付结构化安全审查，覆盖全部要求。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2d47191ee1ff1f15f350d3cf5e7d5d57f991913e4e2049f23f29264b335bfc56; fixture_sha256=ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a; output_sha256=339acdc111be851a47d99dff3f56e0cd793f72c66a2cbf45eff074eefd5e7ddb; snapshot_sha256=1c1a596d83c40aa30d58371651bd8d96ba5240e14313cc65a76bf071eb5960c7
+- Behavior: 完成结构化会话授权审查，覆盖角色边界、授权路径、缺陷证据、影响、严重度和修复验证建议。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2d47191ee1ff1f15f350d3cf5e7d5d57f991913e4e2049f23f29264b335bfc56; fixture_sha256=ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a; output_sha256=ec64be4e0fe7cc7d6ee7e743498ea934fb8bdda556ff46906ab391b5cb1f979e; snapshot_sha256=c5a507dedc9a8d3b6cfcfc38adf76001365ccc1a9d12cea9b53a6d68f1f8ed62
-- Behavior: 同样识别主要会话缺陷并交付报告，但内容与结构较简略。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2d47191ee1ff1f15f350d3cf5e7d5d57f991913e4e2049f23f29264b335bfc56; fixture_sha256=ef54897bb21af32853256277d12077e05ab3c6d281df76ae5f08944cb67d641a; output_sha256=35a0ac2d23a14260e7dca061d460ba0f9db40f57949b4ff900580a78ad8ec70f; snapshot_sha256=deb02e7459da8fa3c6bafa362cc1a7f41c4a3a852bc83a87247e8e3f665d7b71
+- Behavior: 完成静态会话安全审查并识别核心缺陷，但报告结构和授权模型覆盖较简略。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

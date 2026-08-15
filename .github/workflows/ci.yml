@@ -76,6 +76,7 @@ jobs:
             scripts/test_eval_runtime.py \
             scripts/test_run_skill_eval.py \
             scripts/test_check_eval_artifacts.py \
+            scripts/test_generate_shared_contracts.py \
             scripts/test_install_codex_skills.py \
             scripts/test_summarize_eval_results.py \
             scripts/test_check_repository_contract.py

@@ -1,5 +1,8 @@
 # Docs-Agent 消费契约
 
+> 本文件是跨插件文档消费协议的唯一人工维护源。下游插件中的同名文件由
+> `scripts/generate_shared_contracts.py` 生成，禁止直接修改。
+
 ## 强制执行顺序
 
 宿主存在 `docs/site/standards/change-map.yaml` 时，消费方必须在读取无关文档

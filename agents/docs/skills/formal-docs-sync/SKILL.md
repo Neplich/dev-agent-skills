@@ -110,7 +110,7 @@ to remain in the host tree.
 
 Require a PM handoff packet or an equivalent confirmed entry basis for exactly
 one mode. The PM packet definition lives in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `../docs-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
 Direct invocation does not waive this gate.
 Security-originated evidence is not an equivalent entry basis for any mode. If
 there is no PM handoff packet, stop and guide the request back to `pm-agent` for

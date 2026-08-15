@@ -144,6 +144,9 @@ PRD/TRD 对齐、实现计划确认和 QA E2E handoff 等工程门禁见 [Engine
 
 ## 文档索引
 
+- [架构](./docs/architecture.md)：当前角色、路由、安装、协作和扩展关系。
+- [文档治理](./docs/AGENTS.md)：文档归属、生命周期、归档和链接规则。
+- 维护 cookbook：[Role Skill](./docs/cookbook/maintain-skills.md)、[Skill Eval](./docs/cookbook/run-skill-evals.md)、[发布](./docs/cookbook/release.md)。
 - [Codex Guide](./docs/README.codex.md)：Codex 安装模型、镜像机制、排障和按路径禁用。
 - [Agents Guide](./AGENTS.md)：agent 仓库指导、文档契约、维护流程、eval 规则和 PR 检查的唯一事实源。
 - [Contributing](./CONTRIBUTING_zh.md)：本地验证命令和维护流程链接。

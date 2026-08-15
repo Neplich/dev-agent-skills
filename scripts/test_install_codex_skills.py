@@ -647,6 +647,53 @@ def test_shared_skill_map_reference_is_reachable_inside_mirror_without_rewrite(t
     assert (target / MIRROR_DIR / "agents/engineer/skills/trd-gen/SKILL.md").is_file()
 
 
+def test_generated_shared_contracts_are_reachable_in_full_and_router_mirrors(
+    tmp_path: Path,
+) -> None:
+    expected = {
+        "designer": "designer-agent",
+        "engineer": "engineer-agent",
+        "qa": "qa-agent",
+        "devops": "devops-agent",
+        "security": "security-agent",
+        "docs": "docs-agent",
+    }
+    for mode in ((), ("--routers-only",)):
+        target = tmp_path / ("full" if not mode else "routers")
+        result = run_installer(target, *mode)
+        assert result.returncode == 0, result.stderr + result.stdout
+
+        for agent, router in expected.items():
+            contract_dir = (
+                target
+                / MIRROR_DIR
+                / f"agents/{agent}/skills/{router}"
+                / "_internal/_generated/shared-contracts"
+            )
+            assert sorted(path.name for path in contract_dir.glob("*.md")) == [
+                "closeout-contract.md",
+                "consumption-contract.md",
+                "handoff-contract.md",
+                "security-escalation.md",
+            ]
+
+
+def test_claude_plugin_copies_keep_generated_contracts_inside_plugin_root(
+    tmp_path: Path,
+) -> None:
+    for plugin in marketplace_data()["plugins"]:
+        if plugin["name"] == "pm-agent":
+            continue
+        plugin_root = tmp_path / plugin["name"]
+        shutil.copytree(ROOT / plugin["source"], plugin_root)
+        router = plugin["name"]
+        generated = (
+            plugin_root
+            / f"skills/{router}/_internal/_generated/shared-contracts"
+        )
+        assert len(list(generated.glob("*.md"))) == 4
+
+
 def is_under(link: Path, parent: Path) -> bool:
     try:
         link.resolve(strict=True).relative_to(parent.resolve(strict=True))
