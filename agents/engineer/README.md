@@ -3,6 +3,8 @@
 `engineer-agent` is the engineering-role dispatcher skill. It routes codebase analysis, TRD generation, feature implementation, test coverage, debugging, and delivery requests to the right engineering specialist skill.
 
 > [!NOTE]
+> Repository architecture and document ownership: [Architecture](../../docs/architecture.md) and [Documentation Governance](../../docs/AGENTS.md).
+>
 > Other languages: [中文](./README_zh.md)
 
 > [!IMPORTANT]

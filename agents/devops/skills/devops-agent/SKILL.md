@@ -48,7 +48,7 @@ those authority boundaries explicitly in the handoff.
 DevOps is a downstream router. Before routing, require an explicit PM handoff
 packet or equivalent confirmed operational context. The PM-side packet fields
 are defined in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `_internal/_generated/shared-contracts/handoff-contract.md`.
 
 - If the user directly asks `devops-agent` or a DevOps specialist for
   deployment, CI, config, release, rollback, or runbook work without PM handoff
@@ -127,7 +127,7 @@ When routing is complete:
   docs under `docs/devops/{feature_path}/` or `deploy/`
 - after the routed skill or role stage completes, apply the cross-role
   safety-net closeout defined in
-  the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
+  the plugin-local generated `_internal/_generated/shared-contracts/closeout-contract.md`
   (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
   next step, request confirmation before continuing, and honor user-enabled
   `auto-continue`

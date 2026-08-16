@@ -11,7 +11,7 @@ visibility: internal
 Require a PM handoff packet or an equivalent confirmed document chain that
 defines the host repository, bounded manual scope, evidence sources, and
 required output. The PM packet definition lives in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `../docs-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
 Direct invocation does not waive this gate.
 
 Verify that the host already contains the `docs/site/` foundation and its

@@ -1,5 +1,8 @@
 # E2E Test Report Reference
 
+This file is the only manually maintained authority for E2E result and summary
+report formats.
+
 This reference defines the required Markdown format for E2E summary reports
 created by the main agent after subagent execution.
 

@@ -6,264 +6,145 @@ visibility: internal
 
 # Engineer Agent Dispatcher
 
-`engineer-agent` is the engineering capability entry point. It routes the
-request to the narrowest engineering skill based on the user's target outcome,
-repo context, and current delivery stage.
-
-## Routing Decision
-
-Produce the internal routing decision before executing engineering work. Preserve the
-accepted entry basis, resolved `feature_path`, current delivery stage, selected
-specialist, required output, and the authoritative specialist gate. For a full
-implementation request, keep this order:
-`codebase-analyzer` -> alignment/TRD gap resolution ->
-`feature-implementor` -> `test-writer` -> QA E2E handoff -> `delivery`.
-When the PM entry basis is already confirmed, `codebase-analyzer` remains the
-first engineering step; do not prepend a new PM discovery route.
-Keep `engineer-agent` as the owner before the selected specialist. When the
-chain includes tests, explicitly route them to `test-writer`; when it includes
-QA E2E, preserve the suggested `docs/qa/e2e/{feature_path}/` directory. A UI
-design gap is handed to `designer-agent` with the exact design scope even when
-that downstream capability is unavailable; mark availability separately rather
-than replacing the required handoff.
-
-An approved-expectation change returns to `pm-agent:idea-to-spec` existing
-project update; a technical gap returns to `trd-gen`; implementation begins
-only after same-path PRD/TRD/design inputs and a confirmed plan are ready.
-An explicit read-only diagnosis packet is routed to the existing `debugger`
-with `mode: diagnosis_only` and `allowed_mutations: none` preserved. This route
-may collect objective evidence before PRD/TRD alignment because it cannot
-repair or confirm an implementation deviation while expectations are
-unaligned.
-For an implementation route, preserve the future execution basis:
-codebase findings, confirmed same-path PRD/TRD and applicable design inputs,
-and the confirmed `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`. Mark
-missing inputs as gates instead of shortening this to a generic
-`feature-implementor` handoff.
-Frontend changes remain Engineer-owned, but UI structure, interaction, or
-visual gaps first go to `designer-agent` and then return to Engineer. Do not
-collapse these boundaries into a generic request for more files.
-
-When the route includes QA E2E, preserve the future handoff package in the
-routing decision: PRD, TRD, confirmed implementation plan, changed files,
-verification commands and results, residual risks, recommendations, and the
-suggested `docs/qa/e2e/{feature_path}/` directory.
-Keep it as a `qa_e2e_handoff_package` object with those eight fields; a generic
-statement that QA receives context or verification does not substitute for a
-field. Before continuing with an implementation-chain route,
-validate that every field is present and points to the current feature rather
-than relying on details scattered elsewhere in the response.
-
-## Role Boundary
-
-`engineer-agent` is responsible for:
-
-- identifying whether the request is about understanding, implementing,
-  testing, debugging, or delivering code
-- selecting the narrowest downstream engineering skill
-- owning technical planning after PM requirements are confirmed
-- owning API documentation and ADR routing after PM scope is confirmed
-- defining an ordered engineering chain when the user clearly wants an
-  end-to-end implementation workflow
-- asking at most one route-level clarification question when the target outcome
-  is truly ambiguous
-
-`engineer-agent` is not responsible for:
-
-- re-implementing the internal protocol of downstream engineering skills
-- replacing dedicated QA, DevOps, design, or security review loops
-- forcing every engineering request through the full build-test-deliver chain
-- replacing PM discovery for greenfield product ideas or empty-workspace scope
-  definition
-- changing PM scope while writing technical plans
-
-## Planning Handoff
-
-After `pm-agent` confirms the PRD and any product decision records, route
-technical planning to `trd-gen`. TRD belongs to Engineer and is written to
-`docs/engineer/{feature_path}/TRD.md`, mirroring the confirmed PM path
-`docs/pm/{feature_path}/PRD.md`.
-
-API documentation and ADR creation also belong to Engineer once PM scope is
-confirmed. Route API specs, endpoint documentation, architecture decision
-records, and durable technical rationale to `trd-gen`; PM should only provide
-product requirements, constraints, decision context, and feature path evidence.
-
-After the TRD is confirmed, route implementation planning and execution to
-`feature-implementor`. `feature-implementor` writes
-`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` from the confirmed TRD,
-then waits for implementation confirmation before coding.
-
-Frontend code updates, UI implementation, interface optimization, and
-design-to-code requests are engineering requests. Complete the PM handoff entry
-gate first. If the request changes page structure, interaction flow,
-visual system, component rules, usability, or information hierarchy, check
-whether `docs/design/{feature_path}/ui-ux-spec.md` and/or
-`docs/design/{feature_path}/visual-system.md` exist and cover the change. If
-the design deliverables are missing, stale, or conflicting, hand off to
-`designer-agent` with the resolved feature path, source docs, and design gap;
-after design handoff returns, route the implementation to
-`feature-implementor`. Do not route local frontend implementation work to an
-external UI reference skill.
-
-After implementation and self-review complete, check that the
-`feature-implementor` result includes a QA E2E documentation handoff package
-when the change can affect user-facing flows. The package must include PRD,
-TRD, confirmed `IMPLEMENTATION_PLAN.md`, changed files, verification commands,
-risks, and the suggested `docs/qa/e2e/{feature_path}/` directory.
-If the package is missing or does not cite a confirmed implementation plan,
-route back to the implementor before handing the result to QA.
+`engineer-agent` routes confirmed engineering work to the narrowest specialist.
+It preserves scope and gates; it does not duplicate specialist protocols.
 
 ## PM Handoff Entry Gate
 
-Before routing, require either an explicit PM handoff packet or an equivalent
-confirmed entry basis for the selected engineering specialist. The PM-side
-packet fields are defined in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+Require an explicit PM handoff packet or an equivalent entry basis accepted by
+the selected specialist after PM classification. Packet fields are defined in
+`_internal/_generated/shared-contracts/handoff-contract.md`.
 
-- If the user directly invokes `engineer-agent`, `feature-implementor`,
-  `debugger`, `test-writer`, or `delivery` without a packet or equivalent
-  specialist entry basis,
-  do not execute the engineering workflow; return the request to `pm-agent`
-  for classification.
-- If a packet is present, preserve its `request_type`, `change_tier`,
-  `feature_path` fields, source documents, and required output while selecting
-  the narrowest engineering skill. Also preserve `mode: diagnosis_only` and
-  `allowed_mutations: none` when an explicit read-only diagnosis handoff
-  supplies those mode-specific supplemental fields.
-- If no packet is present, apply the selected specialist's own entry basis:
-  `trd-gen` may proceed from confirmed PM documents with stable scope and
-  feature path, even before an Engineer TRD exists; `feature-implementor`
-  requires same-path PRD, TRD, and confirmed implementation scope; `debugger`,
-  `test-writer`, `delivery`, and `codebase-analyzer` use their own documented
-  expected-behavior, test-basis, completed-work, or project-context gates.
-- Detailed PRD/TRD, repair, plan, and closeout gates live in the selected
-  specialist (`feature-implementor`, `debugger`, `trd-gen`, or `test-writer`);
-  this router points to them instead of copying
-  their full gate text.
+Preserve `request_type`, `change_tier`, feature-path fields, source documents,
+scope, required output, and blockers. For an explicit read-only diagnosis also
+preserve `mode: diagnosis_only`, `allowed_mutations: none`, and the complete
+zero-mutation boundary.
 
-For `diagnosis_only`, route to the existing `debugger` even when PRD/TRD is
-missing. Do not create or suggest a parallel diagnosis specialist. Missing
-expected-behavior documents limit the conclusion to objective facts and
-inference; they do not justify dropping the read-only investigation. Any later
-request to fix leaves this mode and re-enters the normal PM/Engineer and
-debugger repair gates.
+Equivalent specialist bases:
 
-All Engineer document-writing tasks, including TRD and implementation plan
-documents, should be delegated to a fresh document-writing sub-agent when
-sub-agent capabilities are available. The main process keeps source context,
-reviews the document, and owns the final handoff decision.
+- `trd-gen` may proceed from confirmed PM documents, stable scope, and feature
+  path before an Engineer TRD exists;
+- `feature-implementor` requires same-path PRD, TRD, applicable design, and a
+  confirmed implementation plan;
+- `debugger`: its expected-behavior gate, or explicit diagnosis-only mode;
+- `test-writer`: confirmed test basis;
+- `delivery`: completed, verified work and authorized delivery action;
+- `codebase-analyzer`: bounded repository-analysis context.
 
-## Complex Coding Delegation
+Missing entry evidence blocks downstream execution and returns to `pm-agent`.
+Detailed alignment, repair, planning, archive, and closeout gates remain in the
+selected specialist.
 
-For complex coding tasks, keep the main process focused on requirements,
-architecture constraints, repository rules, delivery judgment, and risk
-handling. When sub-agent capabilities are available, prefer splitting the work
-into:
+## Routing Table
 
-1. an implementation sub-agent that owns a clearly scoped set of files or
-   modules
-2. a separate validation sub-agent that reviews the result against source docs,
-   tests, repository rules, and role boundaries
-3. the main process that integrates the findings and produces the final
-   delivery summary
+| Outcome | Specialist |
+| --- | --- |
+| Repository structure, stack, constraints, current patterns | `codebase-analyzer` |
+| Engineer-owned TRD, API document, or ADR | `trd-gen` |
+| Confirmed feature, behavior, UI implementation, or scoped refactor | `feature-implementor` |
+| Unit, integration, or implementation validation coverage | `test-writer` |
+| Read-only diagnosis or gated bug/build/test repair | `debugger` |
+| Branch, commit, push, PR, and delivery wrap-up | `delivery` |
 
-Use this pattern when the request involves multi-file or multi-module changes,
-spec-backed implementation, bug fixes requiring regression validation, or heavy
-context across PM/design docs, code, tests, and delivery risk.
+For a full implementation request, use
+`codebase-analyzer -> trd-gen/alignment -> feature-implementor -> test-writer
+-> QA E2E handoff -> delivery`. Do not force the full chain for a single-stage
+request.
 
-Do not force delegation for single-file small edits, pure explanation, pure
-code reading, route-only planning, or when the user explicitly asks not to use
-sub-agents.
+When the accepted entry basis is already confirmed, begin the ordered route
+with `codebase-analyzer`; do not insert another generic PM-gate step ahead of
+repository context.
 
-## Available Skills
+When that full chain applies, explicitly name each selected Specialist and
+hand its work to that Specialist. The Router must not perform repository
+analysis itself or replace `codebase-analyzer`, `feature-implementor`, or
+`test-writer` with generic phase labels.
 
-- `engineer-agent:codebase-analyzer` - Understand repo structure, stack, conventions, constraints
-- `engineer-agent:trd-gen` - Write or update Engineer-owned TRDs, API docs, and ADRs after PRD confirmation
-- `engineer-agent:feature-implementor` - Implement features, behavior changes, and scoped refactors
-- `engineer-agent:test-writer` - Add or update automated tests and coverage
-- `engineer-agent:debugger` - Perform read-only diagnosis or gated repair for bugs and failing builds/tests
-- `engineer-agent:delivery` - Branch, commit, push, and create PRs for completed work
+The ordered route output for that chain must state both of these items even
+before execution begins:
 
-## Default Routes
+- `feature-implementor` executes against the confirmed TRD, confirmed
+  implementation plan, and existing code;
+- after implementation and deterministic tests, QA receives the PRD, TRD,
+  confirmed implementation plan, changed files, verification commands and
+  results, residual risks, recommendations, and the suggested
+  `docs/qa/e2e/{feature_path}/` directory.
 
-Route by the engineering outcome the user wants, not by literal phrasing.
+Write that suggested directory literally; do not replace it with “the feature
+QA directory”. Do not reduce either item to a generic implementation or QA
+phase label.
 
-| Engineering Outcome | Primary Skill | 信号示例 |
-| --- | --- | --- |
-| 理解仓库、技术栈、约束、现有模式 | `codebase-analyzer` | Repo understanding, technical due diligence, "这个项目怎么组织的", "技术栈是什么", "接手这个仓库" |
-| PRD 确认后的技术计划、TRD/API/ADR 编写或更新 | `trd-gen` | Technical planning from confirmed PRD and product decisions, TRD creation or revision, architecture plan, implementation blueprint, "写 TRD", "技术方案", "技术计划", "工程设计", "API 文档", "接口规范", "ADR", "架构决策" |
-| 实现需求、改行为、按 spec 或设计落地、设计转代码、前端/UI 实现与优化、为需求做重构 | after the existing feature alignment gate passes, `feature-implementor` | Feature implementation, code changes, requirement delivery, design-to-code, frontend code updates, UI implementation, interface optimization, scoped refactors in service of a requirement, "实现功能", "落地设计", "更新前端代码", "改 UI", "优化界面实现", "把这个需求做掉", "改造这块逻辑" |
-| 补测试、补 coverage、把实现转成自动化验证 | `test-writer` | Test coverage, acceptance tests, unit/integration tests, "补测试", "加 coverage", "验证实现" |
-| 只读排障、修 bug、查失败、定位构建/运行/测试异常、线上回归、hotfix | `debugger`; explicit read-only requests preserve `diagnosis_only` / `allowed_mutations: none`, while repair remains after expected behavior alignment | Read-only diagnosis, bug fixing, failing tests, broken builds, runtime regressions, hotfixes, "只诊断不要修", "为什么挂了", "修 bug", "CI 炸了" |
-| commit / push / branch / PR / 交付收尾 | `delivery` | Branching, commits, pushes, PR creation, delivery wrapping, "提交代码", "提 PR", "push 上去" |
+## Blocking and Escalation
 
-If the request is engineering-shaped but underspecified, use these defaults:
+- Approved product expectation changes return to
+  `pm-agent:idea-to-spec`.
+- When the user supplies the current approved behavior, restate that baseline
+  before judging a conflict. A conflicting requested behavior returns through
+  `pm-agent:idea-to-spec`'s `existing-project-update` path before TRD sync.
+- Missing or stale technical design returns to `trd-gen`.
+- Local frontend or UI implementation remains Engineering work owned by
+  `engineer-agent`. Every UI route output must state that ownership explicitly;
+  a temporary Designer handoff does not transfer implementation ownership.
+  Check whether
+  `docs/design/{feature_path}/ui-ux-spec.md` and
+  `docs/design/{feature_path}/visual-system.md` both exist and cover the current
+  UI change. UI structure, interaction, information-architecture, or
+  visual-system gaps go to `designer-agent` with the exact gap and then return
+  to Engineer.
+- Implementation starts only after same-path PRD/TRD/design inputs and the
+  confirmed plan are ready.
+- A diagnosis-only route may collect objective evidence with unaligned
+  expectations, but cannot confirm an implementation deviation or mutate state.
+- QA, DevOps, Security, and Docs responsibilities remain with their role agents.
+- If a target plugin is unavailable, name it, mark the handoff blocked, and do
+  not perform its work.
 
-- if it implies changing production behavior -> run the existing feature
-  alignment gate, then choose `feature-implementor` only when PM scope is
-  already approved
-- if it asks for technical planning or TRD before implementation -> `trd-gen`
-- if it implies a failure or regression -> `debugger`
-- if it explicitly requests read-only diagnosis -> preserve the zero-mutation
-  fields and route to `debugger` without inventing a separate specialist
-- if it implies verification without behavior change -> `test-writer`
-- if it implies shipping already-complete work -> `delivery`
-- if the workspace is empty/new and the user is still defining the product ->
-  hand off to `pm-agent:idea-to-spec`
+## Required Route State
 
-## PM Handoff Guardrail
+Before specialist execution, retain internally:
 
-- If the workspace is empty or near-empty and the user is describing product
-  behavior, layout, flows, scope, initialization, or scaffolding, hand off to
-  `pm-agent` for normal classification.
-- Mentions like "做一个 AI 对话助手", "左边会话列表右边聊天区", or similar app
-  shape requests are PM-first unless the stack and scope are already settled.
+- accepted entry basis and resolved `feature_path`;
+- current delivery stage and selected specialist;
+- required output and the specialist's authoritative gate;
+- missing inputs as explicit blockers.
 
-## Common Multi-Skill Chains
+For implementation chains, retain codebase findings, same-path PRD/TRD,
+applicable design docs, and
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`.
 
-Use these only when the user clearly wants the broader workflow:
+For user-flow changes, retain a `qa_e2e_handoff_package` with exactly these
+fields:
 
-- 现有项目完整开发流程 -> `codebase-analyzer` -> `trd-gen` -> `feature-implementor` -> `test-writer` -> `delivery`
-- bug 修复闭环 -> PRD / TRD expected-behavior alignment -> `debugger` -> `test-writer` -> `delivery`
-- 已完成实现补交付 -> `test-writer` -> `delivery`
+- PRD;
+- TRD;
+- confirmed implementation plan;
+- changed files;
+- verification commands and results;
+- residual risks;
+- recommendations;
+- suggested `docs/qa/e2e/{feature_path}/` directory.
 
-Do not force the full chain when the user only wants one stage.
+A generic QA-context statement does not replace this package.
 
-For complex coding tasks inside these chains, preserve the main process as the
-coordinator and let the selected specialist apply the implementation/validation
-sub-agent split. The final response should state the implementation result,
-validation conclusion, tests run, and residual risks when that split is used.
+## Specialist Pointers
 
-## Escalation Rules
+- Analysis: `../codebase-analyzer/SKILL.md`
+- Technical design: `../trd-gen/SKILL.md`
+- Implementation and plan lifecycle: `../feature-implementor/SKILL.md`
+- Tests: `../test-writer/SKILL.md`
+- Diagnosis and repair: `../debugger/SKILL.md`
+- Delivery: `../delivery/SKILL.md`
 
-- Ask one route-level clarification question only when the request could
-  materially route to different outputs and repo context cannot answer it.
-- If the repo needs understanding before implementation, prefer
-  `codebase-analyzer` first rather than asking broad exploratory questions.
-- If the workspace is empty/new, point the user to `pm-agent` for normal
-  classification.
-- If the user is actually asking for QA validation, security review, design
-  deliverables, or deployment work, route the engineering portion only and make
-  the next handoff explicit to `qa-agent`, `security-agent`,
-  `designer-agent`, or `devops-agent`.
+All Engineer document-writing tasks should use a fresh document-writing
+sub-agent when available. Complex coding should use a scoped implementation
+sub-agent plus an independent validation sub-agent when available; the main
+process retains requirements, integration, and delivery judgment. Do not force
+delegation for small single-file work or when the user forbids it.
 
-## Missing Handoff Target
+## Closeout
 
-If a handoff target skill or agent is not installed or unavailable, tell the
-user which stage is missing and which plugin to install (for example
-`pm-agent` or `designer-agent`), mark that handoff stage as blocked, and do
-not perform the missing agent's responsibilities yourself.
-
-## Output Behavior
-
-When routing is complete:
-
-- carry forward the resolved context so the downstream skill starts with the
-  right implementation target
-- after the routed skill or role stage completes, apply the cross-role
-  safety-net closeout defined in
-  the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
-  (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
-  next step, request confirmation before continuing, and honor user-enabled
-  `auto-continue`
+Carry resolved context into the specialist. After the role stage completes,
+follow
+`_internal/_generated/shared-contracts/closeout-contract.md`: recommend the
+next owner and artifact, ask before continuing unless auto-continue is already
+authorized, and never bypass role boundaries or hard gates.

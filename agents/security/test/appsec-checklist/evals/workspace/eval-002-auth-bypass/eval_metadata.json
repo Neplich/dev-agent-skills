@@ -10,6 +10,7 @@
     "src/api/admin-users.js"
   ],
   "skill_dependencies": [
+    "agents/security/skills/security-agent",
     "agents/product_manager/skills/idea-to-spec"
   ],
   "runtime_isolation": {

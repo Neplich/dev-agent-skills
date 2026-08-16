@@ -150,6 +150,9 @@ Not every project needs the full chain. Each agent can complete its own role-spe
 
 ## Documentation
 
+- [Architecture](./docs/architecture.md): current roles, routing, installation, collaboration, and extension map.
+- [Documentation Governance](./docs/AGENTS.md): document ownership, lifecycle, archives, and link rules.
+- Maintainer cookbooks: [Role Skills](./docs/cookbook/maintain-skills.md), [Skill Evals](./docs/cookbook/run-skill-evals.md), [Release](./docs/cookbook/release.md).
 - [Codex Guide](./docs/README.codex.md): Codex installation model, mirror behavior, troubleshooting, and path-based disabling.
 - [Agents Guide](./AGENTS.md): repository guidance source for agents, document contracts, maintenance workflow, eval rules, and PR checks.
 - [Contributing](./CONTRIBUTING.md): local validation commands and maintainer workflow links.

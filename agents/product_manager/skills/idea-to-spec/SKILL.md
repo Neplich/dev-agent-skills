@@ -163,13 +163,13 @@ impacted modules, compatibility/migration constraints, and rollback risk.
 ## Internal Routing Contract
 
 Use `_internal/_shared/skill-map.md` as the authority for lane selection,
-progressive disclosure, PM internal packet fields, cross-role handoff packet
-fields, generator/validator/iteration routing, document memory, update policy,
-and fallback behavior.
+progressive disclosure, PM internal packet fields, generator/validator/iteration
+routing, document memory, update policy, and fallback behavior. Cross-role
+handoff fields live in `_internal/_shared/handoff-contract.md`.
 
 When the next owner is Designer, Engineer, QA, DevOps, Security, delivery, or
-another non-PM owner, assemble the cross-role PM handoff packet defined in that
-file. If `feature_path` is unresolved, do not hand off as if it were settled;
+another non-PM owner, assemble the cross-role PM handoff packet defined in
+`_internal/_shared/handoff-contract.md`. If `feature_path` is unresolved, do not hand off as if it were settled;
 keep the request in PM clarification or report the blocker.
 
 ## Deliverable Shapes

@@ -924,8 +924,8 @@
       "assertions": [
         {
           "id": "uses_explicit_downstream_capability",
-          "description": "显式点名下游能力优先",
-          "text": "必须使用用户点名的 engineer-agent:codebase-analyzer 及其既有入口 gate，不得因请求内容属于产品命名而绕过、拒绝显式调用或改派其他 specialist。"
+          "description": "显式点名能力的入口 gate 优先",
+          "text": "必须明确承认用户点名的 engineer-agent:codebase-analyzer，并先应用该能力的既有入口 gate；该 gate 将产品命名请求返回 PM 不算改派，不得改选其他 downstream specialist 或直接生成名称。"
         },
         {
           "id": "preserves_existing_entry_gate",

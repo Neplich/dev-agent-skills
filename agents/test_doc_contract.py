@@ -158,6 +158,86 @@ class DocContractTests(unittest.TestCase):
 
         self.assertEqual([], errors)
 
+    def test_markdown_links_reject_missing_target_and_anchor(self):
+        checker = load_doc_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            add_tracked_file(
+                root,
+                "docs/guide.md",
+                "# Guide\n\n[missing](missing.md)\n[anchor](target.md#missing)\n",
+            )
+            add_tracked_file(root, "docs/target.md", "# Present\n")
+
+            errors = []
+            checker.validate_markdown_links(root, errors)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("target does not exist", rendered)
+        self.assertIn("anchor does not exist", rendered)
+
+    def test_markdown_links_accept_percent_encoded_duplicate_heading(self):
+        checker = load_doc_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            add_tracked_file(
+                root,
+                "docs/guide.md",
+                "[encoded](target%20file.md#section-1)\n",
+            )
+            add_tracked_file(
+                root,
+                "docs/target file.md",
+                "# Section\n\n## Section\n",
+            )
+
+            errors = []
+            checker.validate_markdown_links(root, errors)
+
+        self.assertEqual([], errors)
+
+    def test_markdown_links_reject_repository_escape(self):
+        checker = load_doc_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            add_tracked_file(root, "docs/guide.md", "[escape](../../outside.md)\n")
+
+            errors = []
+            checker.validate_markdown_links(root, errors)
+
+        self.assertEqual(1, len(errors))
+        self.assertIn("escapes repository", errors[0].message)
+
+    def test_markdown_links_ignore_code_and_generated_sources(self):
+        checker = load_doc_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            add_tracked_file(
+                root,
+                "docs/guide.md",
+                "```markdown\n[ignored](missing.md)\n```\n"
+                "`[inline](missing.md)`\n",
+            )
+            add_tracked_file(
+                root,
+                "agents/qa/skills/qa-agent/_internal/_generated/"
+                "shared-contracts/example.md",
+                "[ignored](missing.md)\n",
+            )
+
+            errors = []
+            checker.validate_markdown_links(root, errors)
+
+        self.assertEqual([], errors)
+
 
 if __name__ == "__main__":
     unittest.main()

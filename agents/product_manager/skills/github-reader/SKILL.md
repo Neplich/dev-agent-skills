@@ -30,7 +30,7 @@ query results, and any fetched milestone/issue/PR collections used by the
 report. Do not call GitHub or invent missing collections; surface absent or
 incomplete fields with the same completeness rules as a live query.
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 唯一维护源 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 ```bash
 gh repo view --json nameWithOwner,url,defaultBranchRef,description

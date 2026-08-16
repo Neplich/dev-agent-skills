@@ -3,6 +3,8 @@
 `devops-agent` 是部署、交付自动化、配置治理和运行准备的 dispatcher skill。它负责把部署规划、CI/CD、环境审计和故障手册请求路由到合适的 DevOps specialist skill。
 
 > [!NOTE]
+> 仓库架构与文档归属见 [Architecture](../../docs/architecture.md) 和 [Documentation Governance](../../docs/AGENTS.md)。
+>
 > 其他语言：[English](./README.md)
 
 > [!TIP]

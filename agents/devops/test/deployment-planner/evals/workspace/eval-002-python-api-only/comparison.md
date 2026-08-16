@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888` from `agents/devops/test/deployment-planner/evals/workspace/eval-002-python-api-only`.
 - Identity schema: `2`
-- target_skill_sha256: `e850d2052b73e431758456627cb816e0d9a45db383146d1349cf24ca05b2aec1`
+- target_skill_sha256: `ff61dcd9673d160376da3723849f195022899b8e8a38fe78c67e4488f9065a5f`
 - eval_definition_sha256: `f6bee599168504aabc5841db04bc20810e822fd2af8545bc98e19f6298c38285`
-- metadata_sha256: `cd34fc596ce17b79112511df2244a7b68d45546111925715157c8598360bb097`
+- metadata_sha256: `d8b9107459aa74bd3dbadef75ae9d69cc322f1ce75809c991658f0479eee3361`
 - fixture_sha256: `259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `6d6cb805f86354c5ca7fe62a901b9a052b0e2f5bc53f163da17451ac99ca29a5`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `aed4a3cdd1170f44446df97f66f60c0f6ae2151f3522fe982eb11ee05d551389`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,21 +33,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `uses_confirmed_target_matrix` | PASS | with_skill delivers only local, Docker/Compose, and Helm assets under deploy/. |
-| `keeps_api_only_topology` | PASS | Compose contains one api service; snapshots contain no database, Redis, migration, DATABASE_URL, or dependency service. Empty ConfigMap/Secret templates do not add runtime dependencies. |
-| `uses_confirmed_runtime_contract` | PASS | Local start.sh, Dockerfile, Compose healthcheck, and Helm probes consistently use app.main:app, port 8000, and /health. |
-| `stays_within_deployment_scope` | PASS | No CI/CD configuration or execution evidence is present; CI/CD is explicitly marked as handoff/blocked, and no image publish or deployment was performed. |
+| `uses_confirmed_target_matrix` | PASS | with_skill 的 delivery_snapshot 提供 deploy/local、deploy/docker 和 deploy/helm 三类资产，未生成其他部署目标。 |
+| `keeps_api_only_topology` | PASS | Docker Compose 仅定义 api 服务；快照中的 Helm 和 local 配置未包含数据库、Redis、migration 或 DATABASE_URL。 |
+| `uses_confirmed_runtime_contract` | PASS | local/start.sh、Dockerfile 和 Helm Deployment 均使用 app.main:app、默认 8000 端口；Docker healthcheck、Helm probes 及文档均使用 /health。 |
+| `stays_within_deployment_scope` | PASS | 锁定交付文件中没有 CI/CD 配置；git_evidence 显示仅新增 deploy/ 文件，未发生提交、发布或环境部署。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b; fixture_sha256=259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888; output_sha256=b9d3dda7eda1aa20ec060b3d25cd7d7f91ded3a440712d356d652288828121c3; snapshot_sha256=95e60eab5f7a98cd5f6a82e96cd5895b2b6853c3b0fb32f9eb318ea40d3b675a
-- Behavior: Delivered the three confirmed deployment targets with consistent API-only runtime settings and explicit CI/CD boundary.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b; fixture_sha256=259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888; output_sha256=19a82fa787dbb190b041e7523eb8cbfdfbf20591ffceedbcacc90480d4e603e5; snapshot_sha256=fe04c5229f0244a8b9588adefdf0049a8db5adcd03355e3ac02a7fe737472ad7
+- Behavior: 交付了 local、Docker、Helm 部署资产，并明确 CI/CD 与实际发布为范围外事项。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b; fixture_sha256=259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888; output_sha256=34ca0b3723625f420d89a9d48302bdc4aee333b4a6483279b94e704a774e04f5; snapshot_sha256=494a440b02a2d61cb721d0400e9b91353ecd8baf6775b7ec6f9877651d524f76
-- Behavior: Also delivered the three confirmed targets with a simpler Helm chart and no extra ConfigMap, Secret, or HPA templates.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=000bcbda1f774e89fec492193e606a35b1ac2f41c0b29e0c9ac66b491aa38c8b; fixture_sha256=259dab4dbfe64941c0c3fdd5c97b56c6b90abb97168eeb7461bd9a7bf8e30888; output_sha256=cf84978a90f48534a5587be72207ae541cbeb8ee04eb53816c358df9f75d21a5; snapshot_sha256=8a2ff0a9ea150ebb9b2b228e5d76b8ea7ee7dbe8920135ce9e3bfee11f68d15e
+- Behavior: 同样交付了 Docker、Compose 和 Helm 资产，覆盖范围符合 API-only 部署要求。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

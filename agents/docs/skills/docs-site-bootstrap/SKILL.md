@@ -108,4 +108,4 @@ Report:
 - recommended handoff to `formal-docs-sync`, then wait for confirmation
 
 At closeout, follow the safety-net behavior in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `../docs-agent/_internal/_generated/shared-contracts/closeout-contract.md`.

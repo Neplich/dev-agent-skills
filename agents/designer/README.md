@@ -3,6 +3,8 @@
 `designer-agent` is the design-role dispatcher skill. It routes UX flows, page structure, information architecture, wireframes, reference-style analysis, and visual system requests to the right design specialist skill. It produces design deliverables only and does not implement code.
 
 > [!NOTE]
+> Repository architecture and document ownership: [Architecture](../../docs/architecture.md) and [Documentation Governance](../../docs/AGENTS.md).
+>
 > Other languages: [中文](./README_zh.md)
 
 > [!IMPORTANT]

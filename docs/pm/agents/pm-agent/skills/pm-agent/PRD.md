@@ -5,11 +5,11 @@ feature: "skill-pm-agent"
 feature_path: "agents/pm-agent/skills/pm-agent"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
-version: "1.1.0"
-status: Draft
+version: "1.1.1"
+status: Approved
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-14"
+last_updated: "2026-08-15"
 generated_by: "prd-gen"
 related_docs:
   - "agents/product_manager/README.md"
@@ -21,6 +21,9 @@ related_docs:
   - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
   - "docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
+  - version: "1.1.1"
+    date: "2026-08-15"
+    changes: "收敛 marketplace 当前能力镜像状态，确认文档正文对应已发布 Skill 契约"
   - version: "1.1.0"
     date: "2026-08-14"
     changes: "Align intent-based entry and remove mandatory user-visible routing explanation"

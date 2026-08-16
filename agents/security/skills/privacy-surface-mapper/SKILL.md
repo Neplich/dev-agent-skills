@@ -23,13 +23,13 @@ without PM handoff context, confirmed data categories, or a confirmed
 classification.
 
 Use the PM-side packet definition in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
+the plugin-local generated `../security-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
 
 ## Execution Steps
 
 ### Step 1: Understand Data Requirements
 
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the active installed `idea-to-spec` skill's `_internal/_shared/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
+宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the plugin-local generated `../security-agent/_internal/_generated/shared-contracts/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
 
 1. **Resolve feature scope**:
    - For feature-scoped privacy mapping, use the confirmed `feature_path`.
@@ -156,12 +156,12 @@ last_updated: YYYY-MM-DD
 ## Closeout
 
 After reaching a confirmed review conclusion, including on a direct invocation,
-evaluate the `Security Conclusion Escalation to PM` rule in the shared skill
-map. When it triggers, return the conclusion and evidence to `pm-agent` for
+evaluate `../security-agent/_internal/_generated/shared-contracts/security-escalation.md`.
+When it triggers, return the conclusion and evidence to `pm-agent` for
 classification and issue filing; do not hand evidence directly to `docs-agent`,
 file the issue yourself, or modify formal documentation (`docs/site/` or
 documentation owned by other roles). The required Security-owned process report
 under `docs/security/{feature_path}/` remains escalation evidence and is not
-restricted by this prohibition. Then apply `Safety-Net Closeout and
-Auto-Continue` from the shared skill map to recommend the next step and wait for
-user confirmation.
+restricted by this prohibition. Then apply
+`../security-agent/_internal/_generated/shared-contracts/closeout-contract.md`
+to recommend the next step and wait for user confirmation.

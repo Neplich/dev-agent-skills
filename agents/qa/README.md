@@ -3,6 +3,8 @@
 `qa-agent` is an evidence-first QA dispatcher skill. It routes acceptance validation, exploratory testing, bug analysis, and regression verification requests to the right QA specialist skill. Its goal is not to "test more", but to produce traceable quality evidence.
 
 > [!NOTE]
+> Repository architecture and document ownership: [Architecture](../../docs/architecture.md) and [Documentation Governance](../../docs/AGENTS.md).
+>
 > Other languages: [中文](./README_zh.md)
 
 > [!NOTE]

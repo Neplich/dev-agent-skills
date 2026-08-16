@@ -5,11 +5,11 @@ feature: "skill-regression-suite"
 feature_path: "agents/qa-agent/skills/regression-suite"
 parent_feature: "agents/qa-agent/skills"
 feature_level: "4"
-version: "1.0.0"
-status: Draft
+version: "1.0.1"
+status: Approved
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-08-15"
 generated_by: "prd-gen"
 related_docs:
   - "agents/qa/README.md"
@@ -23,6 +23,9 @@ related_docs:
   - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
   - "docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
+  - version: "1.0.1"
+    date: "2026-08-15"
+    changes: "收敛 marketplace 当前能力镜像状态，确认文档正文对应已发布 Skill 契约"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"

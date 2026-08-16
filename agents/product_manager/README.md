@@ -3,6 +3,8 @@
 `pm-agent` is the product-role dispatcher skill. It routes requirement shaping, project status, competitor research, roadmap, changelog, and release communication requests to the right PM specialist skill. It produces product documents and does not implement code.
 
 > [!NOTE]
+> Repository architecture and document ownership: [Architecture](../../docs/architecture.md) and [Documentation Governance](../../docs/AGENTS.md).
+>
 > Other languages: [中文](./README_zh.md)
 
 > [!TIP]

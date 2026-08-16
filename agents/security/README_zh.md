@@ -3,6 +3,8 @@
 `security-agent` 是安全审查角色的 dispatcher skill，负责把发布前安全 gate、应用安全检查、认证授权审查、依赖风险和隐私数据流请求路由到合适的安全 specialist skill。
 
 > [!NOTE]
+> 仓库架构与文档归属见 [Architecture](../../docs/architecture.md) 和 [Documentation Governance](../../docs/AGENTS.md)。
+>
 > 其他语言：[English](./README.md)
 
 > [!NOTE]

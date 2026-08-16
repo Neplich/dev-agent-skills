@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a` from `agents/designer/test/visual-design/workspace/eval-1-minimalist`.
 - Identity schema: `2`
-- target_skill_sha256: `7b149b6fe06b79fc3d427a1960513a2a422e6be13b6ef797018ec31a49be8d0b`
+- target_skill_sha256: `be4ad3e2bd7a045eae2db8cc147a655dcc8a42c01f2783e36539d2888fdcbaaf`
 - eval_definition_sha256: `2ec4f897729f0820b0a7830a10f3f0348db98fac1c3a94d29404427ccb404465`
-- metadata_sha256: `a8c3886c0203449f24edc77c5c3e77a82c91f7ce462169d6c62325194a234222`
+- metadata_sha256: `62c7d6da8c76cef08411a61e2b751af621aaf9f30a6b497961c954ca171c26e0`
 - fixture_sha256: `89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `e8bf769ac89a10c9a014e6b2e125d2d95f024ce8d37a4e4481c16c75936c71a8`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `2dd23a101b1833a5f815a50f0bc085a1d9a95ddf55380df9fcbc12238f06ae99`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,20 +33,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `assertion_1` | PASS | Locked delivery_snapshot contains docs/design/minimalist-productivity-app/visual-system.md, matching the confirmed feature_path minimalist-productivity-app, with explicit color, typography, spacing, and component sections. |
-| `assertion_2` | PASS | The locked document is prose-only visual guidance: no CSS, component implementation, token configuration, engineering task breakdown, or test command is present. |
-| `assertion_3` | PASS | The locked document explicitly states “Next role: engineer-agent,” and the candidate output repeats that handoff. |
+| `assertion_1` | PASS | Locked delivery_snapshot contains the required file at docs/design/minimalist-productivity-app/visual-system.md, matching the confirmed feature_path, with sections covering color, typography, spacing, and component styles. |
+| `assertion_2` | PASS | The locked delivered file is documentation only: no CSS, token implementation code, component implementation, engineering task breakdown, or test commands are present. |
+| `assertion_3` | PASS | The locked file explicitly states: “Next role: engineer-agent,” and the candidate output repeats that handoff. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=e1d38af664c57492f4bac8aeea12dd1a1c3e64654e45ebbf84897601a0ac44f6; snapshot_sha256=dfd4cf0e35ee14ef568ecaa96e95169b11cd7d1cb733ed61975c3ae28e20ffc7
-- Behavior: Delivered the correctly located visual-system document with comprehensive visual rules and an explicit engineer-agent handoff, while stopping at the design boundary.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=759e24f0a3890effc5984e3c789249cbddf7baf54b60e27c36f5eee1664af907; snapshot_sha256=38bb2cee9cf65820b6b8f5fa1259ac35517b7ef5e94decb6aeab6fea77112b7b
+- Behavior: Delivered the required visual-system document at the confirmed path, with visual rules and an explicit engineer-agent handoff.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=30edf91022c03c6ab6ddb23a397eac44949574c63a02c375f04d5eef62da7f43; snapshot_sha256=e9b9313de1f4a8f8accde1d2e14b2d0275bda4c4e3985e0464c3565b047f6158
-- Behavior: Delivered a correctly located visual-system document with the requested visual categories, but did not explicitly identify engineer-agent as the next handoff and included an engineering acceptance checklist.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c3c36cd66b9231c6a2156abc32bf00fb490f5264858737980fadf81d3240530f; fixture_sha256=89d144dafb490a68dbf1ec05d2336c43c874c81e51496b945ac9140ca757080a; output_sha256=dfe15f7e662c2d24cd16ebf5e922c3769119aff37d4d5de91e6064c60d9912ac; snapshot_sha256=3cd97f44f2ad3a38eb5370fb88a83788a4546773f444184d29a057d5be43f007
+- Behavior: Fresh baseline also delivered a visual-system document at the required path and covered the requested visual categories, but did not explicitly identify engineer-agent as the next role.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

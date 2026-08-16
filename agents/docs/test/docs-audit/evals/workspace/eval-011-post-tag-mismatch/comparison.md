@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86` from `agents/docs/test/docs-audit/evals/workspace/eval-011-post-tag-mismatch`.
 - Identity schema: `2`
-- target_skill_sha256: `5b11b38c1c44c386fe19122dfb1ce5918b2bfbc4830ad32aa994d8a7e39f35e7`
+- target_skill_sha256: `dafd53371901dfd724f88c70262b157e59494d29da1c613d0ef130564b6ff4f9`
 - eval_definition_sha256: `dd2f814bca5d9dce6fed31e09545467860903a50efd0252401f17372eb85d63c`
 - metadata_sha256: `44f3e50cd86c78b14f58e8584dc26444f39390cb3ef1d6e88051fdaf94a2e89e`
 - fixture_sha256: `580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `87ef764041bed9ee9555b42ac224112964f5f9e1229cf61ab18c2da424e966e8`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `fecf485e8e3dcaf191b2b221d9cccbddfdea0b72`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `7e61bd8eca6431729aee1f3be4656be0a4348119eb1218623bafd54cfaead2ab`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,22 +33,22 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `uses_immutable_pre_tag_authority` | PASS | 读取并解析 pre-tag authority 的 commit/tree，使用 git show 读取 committed audit/handoff，并将未提交的工作区副本识别为不能覆盖 authority。 |
-| `validates_current_attempt_history` | PASS | 核对 committed audit/handoff 中 attempt 2、直接 superseded attempt 1 及同版本关系；识别 worktree 副本改写 authority 与结果，并保持 blocked。 |
-| `rejects_complete_release_tree_drift` | PASS | 执行 authority 与 tag 的完整树差异检查，核对原始 name-status/patch 中新增 src/catalog/export-v2.py，并因 inventory 不一致保持 blocked。 |
-| `offers_safe_maintainer_recovery` | PASS | 提供同版本修复和改用新版本两种选择，要求维护者确认/处理版本与 tag 边界，并在重新审计前补齐基础、handoff 和完整 pre/post-tag 审计。 |
-| `persists_blocked_without_corrupting_authority` | PASS | 明确 blocked 结果未持久化、post-tag 结果文件不存在；说明恢复写入后先持久化并 readback，且只读期间未修改 authority、tag、ref 或产生成功状态。 |
+| `uses_immutable_pre_tag_authority` | PASS | With_skill directly resolved the pre-tag and tag refs, read committed audit/handoff content from pre-tag authority, and treated the modified worktree audit copy as diagnostic rather than authoritative. |
+| `validates_current_attempt_history` | PASS | With_skill identified committed attempt 2 and its directly superseded same-version attempt 1, rejected the rewritten current worktree copy as authority, and retained blocked status. |
+| `rejects_complete_release_tree_drift` | PASS | With_skill verified the complete pre-tag-to-tag drift and identified the added src/catalog/export-v2.py from the raw tree evidence, while keeping the result blocked. |
+| `offers_safe_maintainer_recovery` | PASS | With_skill offered executable same-version repair and new-version alternatives, with authority reconstruction, maintainer confirmation, and audit rerun prerequisites plus the docs-site-bootstrap responsibility boundary. |
+| `persists_blocked_without_corrupting_authority` | PASS | With_skill reported blocked_record_persistence as not_persisted, specified restore-write, persist, readback, and rerun recovery order, and stated that prior authority and release refs remain unchanged with no success state. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=c665c50086693e3b71a9a85968a4ff14d8d62cc53d06f9a09c136fa5bf05eb9b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 完成只读 post-tag 审计，正确隔离 pre-tag authority 与漂移工作区副本，发现完整 tree/inventory 不一致并保持 blocked，同时给出恢复路径。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=b7e28169387f9caf67d85b16fa14da563adf43471923b111733204556a0547b7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly produced a blocked post-tag audit grounded in immutable authority, complete tree drift, attempt history, safe recovery choices, and non-corrupting persistence handling.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=c4af8bfdd24b1129d4c585d96a9375f39304baf135f044fb6ebb56523d0040cb; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline 识别了主要版本与证据问题并保持未验证，但未完整核对 immutable authority、attempt lineage、完整审计契约及 blocked 持久化恢复条件。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=63cc630aa7fe4e8caac8407e8b4008bbc49c2b73e376868bcef067409538b2ed; fixture_sha256=580d96fbd8d2adf79b801381050e6b3b9bfc58b8f39d636b27ce9f575d873d86; output_sha256=ce5feab00bd36a2e5e531f0ce1996384c4cd7429be5ca1e484112d1351377234; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Detected some release drift and evidence gaps, but did not establish the full protocol-level authority, attempt-history, recovery, and persistence-boundary result.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

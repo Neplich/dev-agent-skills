@@ -12,6 +12,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+try:
+    from generate_shared_contracts import freshness_errors
+except ModuleNotFoundError:  # Imported as scripts.check_repository_contract in tests.
+    from scripts.generate_shared_contracts import freshness_errors
+
 
 SKILL_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LOCK_HASH_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -55,6 +60,16 @@ ACTIVE_PLAN_STATUS_VALUES = {
     "Pending Confirmation",
 }
 ARCHIVE_STATUS_VALUES = {"Archived", "Superseded"}
+FORBIDDEN_ACTIVE_PLAN_STATUSES = {"Implemented", "Archived"}
+ROUTER_BUDGETS = {
+    "agents/product_manager/skills/pm-agent/SKILL.md": (320, 3000),
+    "agents/designer/skills/designer-agent/SKILL.md": (160, 1300),
+    "agents/engineer/skills/engineer-agent/SKILL.md": (160, 1300),
+    "agents/qa/skills/qa-agent/SKILL.md": (160, 1300),
+    "agents/devops/skills/devops-agent/SKILL.md": (160, 1300),
+    "agents/security/skills/security-agent/SKILL.md": (160, 1300),
+    "agents/docs/skills/docs-agent/SKILL.md": (160, 1300),
+}
 PM_PRD_RE = re.compile(
     rf"^docs/pm/"
     rf"(?P<feature_path>{FEATURE_PATH_SEGMENT_PATTERN}"
@@ -972,6 +987,12 @@ def validate_implementation_plan_metadata(root: Path, errors: list[ContractError
                 add_error(errors, path, f"frontmatter {field!r} must be non-empty")
 
         status = metadata.get("status", "")
+        if status in FORBIDDEN_ACTIVE_PLAN_STATUSES:
+            add_error(
+                errors,
+                path,
+                "active implementation plan status must not be 'Implemented' or 'Archived'",
+            )
         if status and status not in ACTIVE_PLAN_STATUS_VALUES:
             allowed_statuses = ", ".join(
                 repr(value) for value in sorted(ACTIVE_PLAN_STATUS_VALUES)
@@ -1712,17 +1733,89 @@ def validate_kimi_plugin(root: Path, errors: list[ContractError]) -> None:
             )
 
 
+def validate_generated_contracts(root: Path, errors: list[ContractError]) -> None:
+    for message in freshness_errors(root):
+        add_error(errors, root / "scripts" / "generate_shared_contracts.py", message)
+
+
+def validate_router_budgets(root: Path, errors: list[ContractError]) -> None:
+    for rel, (line_limit, word_limit) in ROUTER_BUDGETS.items():
+        path = root / rel
+        if not path.exists():
+            add_error(errors, path, "router file does not exist")
+            continue
+        content = path.read_text(encoding="utf-8")
+        lines = len(content.splitlines())
+        words = len(content.split())
+        if lines > line_limit or words > word_limit:
+            add_error(
+                errors,
+                path,
+                f"router budget exceeded: {lines}/{line_limit} lines, "
+                f"{words}/{word_limit} words",
+            )
+
+
+def validate_marketplace_document_status(
+    root: Path, errors: list[ContractError]
+) -> None:
+    marketplace_path = root / ".claude-plugin" / "marketplace.json"
+    payload = load_json(marketplace_path, errors)
+    if not isinstance(payload, dict):
+        return
+    plugins = payload.get("plugins")
+    if not isinstance(plugins, list):
+        return
+
+    for plugin in plugins:
+        if not isinstance(plugin, dict):
+            continue
+        plugin_name = plugin.get("name")
+        source = plugin.get("source")
+        skills = plugin.get("skills")
+        if (
+            not isinstance(plugin_name, str)
+            or not isinstance(source, str)
+            or not isinstance(skills, list)
+        ):
+            continue
+        for skill in skills:
+            if not isinstance(skill, str):
+                continue
+            skill_name = Path(skill).name
+            candidates = (
+                root / "docs" / "pm" / "agents" / plugin_name / "skills" / skill_name / "PRD.md",
+                root / "docs" / "engineer" / "agents" / plugin_name / "skills" / skill_name / "TRD.md",
+            )
+            for path in candidates:
+                if not path.exists():
+                    continue
+                parsed = parse_markdown_frontmatter(path, path.read_text(), errors)
+                if parsed is None:
+                    continue
+                metadata, _ = parsed
+                if metadata.get("status") == "Draft":
+                    add_error(
+                        errors,
+                        path,
+                        "marketplace skill mirror document status must not be 'Draft'",
+                    )
+
+
 def validate_all(root: Path | None = None) -> list[ContractError]:
     root = root or repo_root()
     errors: list[ContractError] = []
     validate_claude_symlink(root, errors)
     validate_marketplace(root, errors)
+    validate_marketplace_document_status(root, errors)
     validate_skill_references(root, errors)
     validate_skill_visibility(root, errors)
     validate_skills_lock(root, errors)
     validate_feature_document_metadata(root, errors)
     validate_implementation_plan_metadata(root, errors)
     validate_archive_plans(root, errors)
+    validate_generated_contracts(root, errors)
+    validate_router_budgets(root, errors)
     validate_legacy_artifact_metadata(root, errors)
     validate_formal_document_author(root, errors)
     validate_tracked_file_policy(root, errors)

@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `e52dc183368f81bf8278941735b98c8f9da85437b60c6dd9736b019d7bf6c9ca` from `agents/qa/test/bug-analyzer/evals/workspace/eval-1-analyze-test-failure`.
 - Identity schema: `2`
-- target_skill_sha256: `0d6c4b717279e8edddeea8100d93e004d25b98b502e0ca114092a3f0c007a52f`
+- target_skill_sha256: `09e738dc9988190b7f79b8aac551bd1674e0642fae4817109cb4551b9f01f0cd`
 - eval_definition_sha256: `35f2f99594df8382cdc242359c30a451a1bdaa89727c7071b5ec00d92699fbf8`
-- metadata_sha256: `e96ab79b6862e4b82cb2cc5b58266d1ce1ed35caa4271d16c371f2d1b6443e6f`
+- metadata_sha256: `8e0e42373ca08b53a19ba642babbf44403e38e8a0315e0e26db92df6ea247617`
 - fixture_sha256: `e52dc183368f81bf8278941735b98c8f9da85437b60c6dd9736b019d7bf6c9ca`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `84f20ca3637061984a451201365104813c56f53ca0b37a9fb14c70d8de0d29b1`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `382c8cd397f8f6526e011c90c1ba36354751b701fabc41ae3a4966bbcf764eb3`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `147ea0edbf82c8ca9a07d9d6ff0b589da90d3fd96bbb89bae4f44faf26cc1243`
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
 Overall result: PASS (partial coverage)
@@ -33,30 +33,30 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `assertion_1` | PASS | Locked delivery snapshot’s Evidence table records the scenario, error message, stack trace status, screenshot status, console, limited network evidence, trace status, and environment/build context before classification. |
-| `assertion_2` | PASS | The artifact uses the required `suspected / needs more evidence` evidence-status vocabulary and separately records `Confidence: Low`; it does not conflate the axes. |
-| `assertion_3` | PASS | The artifact gives High severity with an impact rationale and separately explains Low confidence based on the single observation and missing server-side evidence. |
-| `assertion_4` | PASS | The locked delivery snapshot contains a durable Markdown artifact at `docs/qa/login-refresh/bug-login-form-500.md`; no GitHub issue was created. |
-| `assertion_5` | NOT_EXERCISED | The artifact explicitly states the log documents only one observation and that stable reproducibility is unconfirmed, so the condition requiring reusable E2E coverage is not exercised. |
-| `assertion_6` | PASS | The artifact includes potential user/system impact, implementation/release impact, and evidence references to both fixture files and specific lines. |
-| `non_e2e_report_path` | PASS | The delivered path is `docs/qa/login-refresh/bug-login-form-500.md`, has no date in its filename, and is not under `docs/qa-reports/`; the locked workspace has no E2E tree or versioned E2E execution requirement. |
+| `assertion_1` | PASS | 报告逐项记录了 scenario、错误消息、stack trace、screenshot、trace、console、network 及 environment/build evidence，并标注缺失或部分可用状态。 |
+| `assertion_2` | PASS | 报告使用了 `suspected / needs more evidence`，并分别记录 Evidence status 与 Confidence；单次失败不足以使用 confirmed 分类。 |
+| `assertion_3` | PASS | 报告给出 High severity 及用户/发布阻断理由，并独立给出 Medium confidence 及证据不足说明。 |
+| `assertion_4` | PASS | 已交付本地 Markdown artifact `docs/qa/login-refresh/bug-login-api-500.md`，未创建 GitHub issue。 |
+| `assertion_5` | NOT_EXERCISED | 当前证据仅支持单次观察，未确认可复现的 E2E 场景；仓库也没有 E2E 用例树或版本化执行要求。 |
+| `assertion_6` | PASS | 报告包含 Implementation impact、Release impact，并引用 `logs/test-failure.log` 与 `environment/build.md`。 |
+| `non_e2e_report_path` | PASS | 报告路径为 `docs/qa/login-refresh/bug-login-api-500.md`，位于 `docs/qa/{feature_path}/` 下，文件名不含日期且未使用 `docs/qa-reports/`。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=382c8cd397f8f6526e011c90c1ba36354751b701fabc41ae3a4966bbcf764eb3; fixture_sha256=e52dc183368f81bf8278941735b98c8f9da85437b60c6dd9736b019d7bf6c9ca; output_sha256=e4796a9e34915ff9c2e18b2f170044d99432cd8a08c810965312b326f0b6ad2d; snapshot_sha256=aa2ade1e6f8bba42cd9ac8988702bae2d2bf00991011ee1fda438fa423c18e09
-- Behavior: Created a durable, evidence-grounded Markdown defect report with separated classification, severity, confidence, impact, and references; correctly deferred reusable E2E coverage because reproducibility was unconfirmed.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=382c8cd397f8f6526e011c90c1ba36354751b701fabc41ae3a4966bbcf764eb3; fixture_sha256=e52dc183368f81bf8278941735b98c8f9da85437b60c6dd9736b019d7bf6c9ca; output_sha256=8a0daca43fcc71e8354d4ca2c290edc6700fc5ff2993123aa4e60f3eeca5c62e; snapshot_sha256=8e041df6a9a9472268e6302fe592e4cb814875e994dd42afd325711b4dd73861
+- Behavior: 交付了持久化缺陷报告，完整区分证据状态、严重度、置信度和影响，并保留证据引用；未虚构根因或可复现性。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=382c8cd397f8f6526e011c90c1ba36354751b701fabc41ae3a4966bbcf764eb3; fixture_sha256=e52dc183368f81bf8278941735b98c8f9da85437b60c6dd9736b019d7bf6c9ca; output_sha256=6d4b70654926dee40f8db29f979d0a31b54615c8f2950e9897a171595c236c5e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Produced a useful prose defect report with severity, reproduction, impact, and evidence limitations, but no durable artifact and no explicit separate evidence-status/confidence fields.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=382c8cd397f8f6526e011c90c1ba36354751b701fabc41ae3a4966bbcf764eb3; fixture_sha256=e52dc183368f81bf8278941735b98c8f9da85437b60c6dd9736b019d7bf6c9ca; output_sha256=027b3e338d538ad322db8bc3342e82a64b9c055b4b4cc539deeab56b4a1dc862; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅在最终消息中提供未持久化的缺陷报告，覆盖基本现象和建议，但未交付本地 Markdown artifact，也未按结构化证据状态/置信度完整整理。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Obtain an additional reproduction and the missing server-side stack trace before exercising the reusable E2E coverage assertion.
+- Next: 补充重复执行结果、服务端堆栈、脱敏请求/响应及目标发布环境验证后，再判断是否升级为 confirmed 分类并建立 E2E 回归覆盖。
 
 ## Runtime Artifact Policy
 

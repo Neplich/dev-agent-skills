@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-17-scope-guard-unenabled-general`.
 - Identity schema: `2`
-- target_skill_sha256: `a37bf10fca64a8e15e6213ecdd45b65783814d307c78fd8d8ce6ab45b20effef`
+- target_skill_sha256: `ed93e443692bf05e76aaa38c8a5b8faff57190219ed48b9335316584424e6eb9`
 - eval_definition_sha256: `39faf534f64b30c105514035f054d257cf0f525ae0bd7577eccde10c9d2a879b`
 - metadata_sha256: `7cfea2e7966dabd576a859036c036835a1da1742b99340ebfcd2fcd73e56c60b`
 - fixture_sha256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `393b26839d6ecf3cc396518ba3c28e2288560436d96f6b3eb0b1794c2df40748`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `2c9610bcc27c8c480be3a4506b94682924ad1bb0ce1f3f95bfb12428326c37eb`
-- Repository HEAD: `3f5e81c4837ef85284a7d5381575e40267796c92`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `6f4abf80e411dc3e6124c51093f07046c341195b1b2f0e9981a535c9960cb623`
+- Skill overlay SHA-256: `320ded3db25222eda1be26706a57ed0471cc438157b54925db0b045d15abf8e6`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,18 +33,18 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `rd_intent_enters_without_docs` | PASS | with_skill 输出明确将请求路由至 `pm-agent:idea-to-spec`，标记为 `new_feature`，并开始需求收敛；同时说明工作区为空是待确认上下文，而非拒绝进入 PM。 |
+| `rd_intent_enters_without_docs` | PASS | with_skill output explicitly enters PM discovery, classifies the empty repository as greenfield-discovery, proposes MVP options, and asks for confirmation; it does not refuse PM entry because PRD/TRD/code/enable marker are absent. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2c9610bcc27c8c480be3a4506b94682924ad1bb0ce1f3f95bfb12428326c37eb; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=f5fe51606347181ae7ce95b4b10203fdddcfb15c05339a0ce28100c11720b021; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 进入 PM 需求收敛流程，识别缺少项目上下文，并提出账单来源这一项下一步确认。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2c9610bcc27c8c480be3a4506b94682924ad1bb0ce1f3f95bfb12428326c37eb; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=ce3332f57675bf571547005e2e677fd6175c8697e6c68d756c8785468377e4c8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly routes the billing-notification R&D request into PM discovery despite the empty repository and missing documentation, then requests the next product decision.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2c9610bcc27c8c480be3a4506b94682924ad1bb0ce1f3f95bfb12428326c37eb; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=b6e9fc12e0660d7b2bd1b58af589f59ea1a6b50577599e4f0d919407b1fe4025; snapshot_sha256=caa3c317bb79188eb4b87a9aa6ef924fc04f63f7369d1a188eacf205a293417f
-- Behavior: 直接实现账单通知模块并交付代码，未进入 PM 需求收敛流程。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2c9610bcc27c8c480be3a4506b94682924ad1bb0ce1f3f95bfb12428326c37eb; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=ea36383db5663266b270ebc091bf53643290c725e943548d4d2288c697c194b8; snapshot_sha256=0d351f4f4275aa52caed00df535c435a831966b31a73827e4951ffbcf48e2b68
+- Behavior: Fresh baseline skipped PM discovery and directly implemented a billing-notification module in the empty repository.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

@@ -6,6 +6,8 @@
     "README.md"
   ],
   "skill_dependencies": [
+    "agents/engineer/skills/engineer-agent",
+    "agents/engineer/skills/delivery",
     "agents/product_manager/skills/idea-to-spec"
   ],
   "runtime_isolation": {

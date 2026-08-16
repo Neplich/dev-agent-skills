@@ -3,6 +3,8 @@
 `qa-agent` 是证据优先的 QA dispatcher skill，负责把验收验证、探索测试、缺陷分析和回归复测请求路由到合适的 QA specialist skill。它的目标不是“多测一点”，而是产出可追溯、可交接的质量证据。
 
 > [!NOTE]
+> 仓库架构与文档归属见 [Architecture](../../docs/architecture.md) 和 [Documentation Governance](../../docs/AGENTS.md)。
+>
 > 其他语言：[English](./README.md)
 
 > [!NOTE]

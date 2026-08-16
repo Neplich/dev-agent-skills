@@ -6,188 +6,117 @@ visibility: internal
 
 # Docs Agent Dispatcher
 
-`docs-agent` is the formal-documentation capability entry point. It checks the
-downstream entry basis, selects the narrowest documentation specialist, and
-preserves confirmed scope and evidence through the handoff.
-
-## Routing Decision
-
-Before any write, this router must:
-
-- identify which explicit packet, equivalent confirmed chain, or specialist
-  entry basis was accepted; if incomplete, return to `pm-agent` and name every
-  missing credential or source
-- select exactly one of `docs-site-bootstrap`, `formal-docs-sync`,
-  `manual-gen`, `release-notes-gen`, or `docs-audit`
-- carry the original handoff fields, source evidence, scope, required output,
-  blockers, and authorization state forward unchanged
-- name the selected specialist's authoritative gate without exposing a local
-  filesystem path, copying its protocol, or executing that gate
-
-Preserve these fields in the internal routing decision:
-`selected_specialist`, `accepted_entry_basis`, `request_type`, `change_tier`,
-`feature_path`, `host_repository`, `source_documents`, `confirmed_scope`,
-`evidence_sources`, `required_output`, `blockers_risks`, and
-`execution_boundary`. Preserve every field supplied by the accepted handoff;
-use `N/A` only for a field the handoff truly does not contain. Select exactly
-one specialist and stop at its router boundary. Do not add an unrelated site
-bootstrap prerequisite, second specialist, or PM round-trip after the selected
-specialist's documented entry basis is already complete.
-
-When routing is blocked, name
-each missing credential and the exact credential combination that would make
-the selected specialist entry basis complete. For an explicit site-
-initialization request that lacks only the host path, state that the existing
-explicit request plus a confirmed host repository path completes the
-`docs-site-bootstrap` entry basis; do not merely repeat that the path is
-missing.
-Preserve `missing_credentials`, `unblock_credentials`,
-`entry_basis_after_unblock`, and `return_owner`. For site initialization,
-`entry_basis_after_unblock` must explicitly state whether the combination of an
-explicit site-initialization request and a confirmed host repository path is
-sufficient; `return_owner` remains `pm-agent` while that combination is
-incomplete. Do not replace these fields with a generic request for context.
-
-For a release chain, separately verify the site Release Notes entry basis and
-the previous-tag/base-ref release window before declaring the next Docs owner
-ready. Report both comparison anchors, the signed or immutable evidence used
-to resolve each one, and whether the pair is usable; naming a snapshot without
-checking its previous-tag/base-ref anchor is not validation. Do not accept a
-Release Notes handoff merely because it labels itself `ready`: verify that its
-body records an explicit confirmed status together with the maintainer-confirmed
-version, host checks, supporting evidence, updated surfaces, blockers, and
-external execution boundary. An absent or unconfirmed body status returns to
-the Release Notes owner. Missing release credentials return to their current
-owner; they do not
-authorize this router to write pages, publish, tag, deploy, or audit.
-
-## Role Boundary
-
-`docs-agent` is responsible for:
-
-- checking for a PM handoff packet, an equivalent confirmed document chain, or
-  the selected specialist's documented entry basis
-- routing explicit site initialization to `docs-site-bootstrap`, synchronization
-  or backfill to `formal-docs-sync`, screenshot-evidenced illustrated user
-  manuals to `manual-gen`, site Release Notes delivery to
-  `release-notes-gen`, and release audit to `docs-audit`
-- owning the default formal-document frontmatter contract at
-  `_internal/_shared/frontmatter-contract.md`, which specialist producers and
-  auditors consume together
-- pointing to each specialist's authoritative gate without copying it
-- applying the PM safety-net closeout after the current work finishes
-- preserving a documentation-site deployment-completeness result, its evidence,
-  covered build variants, missing links, drift, and conditional handoff pointer
-
-`docs-agent` is not responsible for:
-
-- executing a specialist's documentation workflow
-- reproducing detailed execution gates from downstream specialists
-- changing PM scope, Engineer decisions, implementation, QA evidence, or
-  deployment facts
+`docs-agent` routes confirmed formal-documentation work to one specialist. It
+preserves scope and evidence; it does not execute or duplicate specialist gates.
 
 ## PM Handoff Entry Gate
 
-Before routing, require one of:
+Require one complete basis:
 
-- an explicit PM cross-role handoff packet
-- an equivalent confirmed document chain appropriate to the requested node
-- the documented entry basis accepted by the selected specialist
+- an explicit PM cross-role handoff packet;
+- an equivalent confirmed document chain accepted by the requested node; or
+- the selected specialist's documented entry basis.
 
-The PM-side packet fields and cross-role behavior are defined in
-the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`.
-Security-originated evidence, including security reports and remediation
-evidence, is not an equivalent confirmed document chain. It may enter Docs only
-with a PM handoff packet after `Security Conclusion Escalation to PM`
-classification and issue filing.
+Direct requests without PM classification return to `pm-agent` for a handoff.
 
-If none of these entry bases is present, softly guide the request through
-`pm-agent` for classification and prerequisite context. A partially satisfied
-specialist entry basis is treated the same as a missing one: for example, an
-explicit site-initialization request without a confirmed host repository path
-is not a valid route entry. Name the missing credential, explain what would
-complete the entry basis, and guide the request through `pm-agent` instead of
-routing first and letting the specialist collect credentials. Do not execute the
-documentation workflow. Preserve the packet's `request_type`, `change_tier`,
-`feature_path`, source documents, scope decision, required output, and
-blockers/risks when present.
+Packet fields are defined in
+`_internal/_generated/shared-contracts/handoff-contract.md`. Preserve all
+supplied fields, including `request_type`, `change_tier`, `feature_path`,
+host repository, source documents, confirmed scope, evidence, required output,
+blockers, and authorization boundary.
 
-The selected specialist owns its complete execution gate. This router only
-checks that a valid route entry exists and points the request to that
-authoritative specialist contract.
+Security evidence alone is not a Docs entry basis. It reaches Docs only through
+the PM classification and issue flow in
+`_internal/_generated/shared-contracts/security-escalation.md`.
 
-## Available Skills
+## Routing Table
 
-- `docs-agent:docs-site-bootstrap` - Explicitly initialize a host project's
-  formal documentation site
-- `docs-agent:formal-docs-sync` - Synchronize confirmed feature, deployment, or
-  release facts, or backfill bounded API, database, design, ops, or product
-  current-state documentation
-- `docs-agent:manual-gen` - Generate or update illustrated user operation
-  manuals from screenshots of the real running interface
-- `docs-agent:release-notes-gen` - Generate, confirm, index, and validate
-  a host site's versioned Release Notes before the GitHub Release handoff
-- `docs-agent:docs-audit` - Use a maintainer-confirmed
-  `target_release_version` for pre-tag audit and unified stamping, returning
-  `ready_for_tag`, then verify the actual tag post-tag and return
-  `release_verified` or `blocked`
+| Documentation outcome | Specialist |
+| --- | --- |
+| Explicit formal-site initialization or scaffold | `docs-site-bootstrap` |
+| Feature/deployment/release fact sync or bounded current-state backfill | `formal-docs-sync` |
+| Illustrated user operation manual from the real running interface | `manual-gen` |
+| Versioned site Release Notes, confirmation, metadata, index, validation | `release-notes-gen` |
+| Pre-tag audit/stamping and post-tag verification | `docs-audit` |
 
-## Routing Signals
+Select exactly one specialist. Do not add a site-bootstrap prerequisite or a
+second route after the chosen specialist's entry basis is already complete.
 
-Route by the requested documentation outcome, not literal phrasing.
+At Router scope, accept maintainer-confirmed facts in the supplied handoff or
+equivalent document chain. Do not rescan the host for evidence owned by the
+specialist, expand the specialist's gate, or turn downstream execution gaps
+into missing Router credentials.
 
-- Explicitly initialize, create, or scaffold the formal documentation site
-  -> `docs-site-bootstrap`
-- Synchronize formal docs after a feature, deployment, or release; update
-  existing API, database, design, ops, or product current-state docs; backfill
-  a bounded batch in an inherited codebase
-  -> `formal-docs-sync`
-- Generate or update an illustrated user operation manual from screenshots of
-  the real running interface
-  -> `manual-gen`
-- Generate or update a versioned page under the host site's Release Notes,
-  confirm its body, update release metadata and indexes, and validate it before
-  the GitHub Release handoff
-  -> `release-notes-gen`
-- Audit formal docs before tag creation or verify the same release facts after
-  the actual tag exists
-  -> `docs-audit`
+A direct site-initialization request without PM classification still returns to
+PM. After that classification, the Specialist entry basis needs only the
+explicit initialization request plus a confirmed host repository path; it does
+not require a second full PM packet. For `formal-docs-sync`, preserve the
+accepted context and point to its gate without emitting sync-decision or
+change-map fields. For `release-notes-gen`, a confirmed version, scope, host,
+evidence sources, and required output is complete Router basis; later site and
+source file checks belong to the specialist.
 
-## Specialist Gate Pointers
+For `manual-gen`, a handoff confirming an existing host repository with a
+`docs/site/` foundation, bounded manual scope, confirmed running-interface
+evidence, and required output is a complete Router basis. Preserve every supplied field, including
+`feature_path`; an unresolved screenshot batch recorded in `blockers_risks`
+belongs to the specialist and does not send this Router back to PM.
 
-- Site creation behavior is authoritative in
-  `docs-site-bootstrap/SKILL.md` and its internal instructions.
-- Synchronization and backfill behavior is authoritative in
-  `formal-docs-sync/SKILL.md` and its internal instructions.
-- Screenshot-evidenced illustrated manual behavior is authoritative in
-  `manual-gen/SKILL.md` and its internal instructions.
-- Site Release Notes behavior is authoritative in
-  `release-notes-gen/SKILL.md` and its internal instructions.
-- Release audit behavior is authoritative in
-  `docs-audit/SKILL.md` and its internal instructions.
+## Blocking Conditions
 
-Do not expand these pointers into duplicated specialist protocols inside this
-router.
+When the basis is incomplete, preserve:
 
-## Missing Handoff Target
+- `missing_credentials`;
+- `unblock_credentials`;
+- `entry_basis_after_unblock`;
+- `return_owner`.
 
-If a required peer agent, plugin, or specialist is unavailable, identify the
-missing stage and required capability, mark that stage blocked, and do not
-perform its responsibilities.
+Name every missing credential and the exact combination that unblocks the
+route, then return to `pm-agent`. For site initialization, an explicit request
+plus a confirmed host repository path is sufficient; until both exist,
+`return_owner` remains PM.
 
-## Output Behavior
+For release work, require the Router basis to name the version, scope, host,
+evidence sources, and required output. Preserve Release Notes confirmation and
+release-window anchor evidence for `release-notes-gen` or `docs-audit` to
+validate under their authoritative gates. A self-declared `ready` packet never
+authorizes this Router to write pages, publish, tag, deploy, or audit.
 
-When routing is complete:
+## Role Boundary
 
-- preserve unresolved evidence or ownership gaps for the selected specialist
-- when a specialist triggers the documentation-site deployment-completeness
-  safety-net, preserve its stable status, evidence paths, covered variants,
-  missing links, drift, user decision, and shared-protocol handoff pointer;
-  report the result and return confirmed remediation to `pm-agent` without
-  editing deployment assets or performing delivery
-- after the current role or specialist finishes, apply the cross-role
-  safety-net closeout in
-  the active installed `idea-to-spec` skill's `_internal/_shared/skill-map.md`
-  (`Safety-Net Closeout and Auto-Continue`): recommend the next owner, explain
-  the expected artifact or action, and wait for user confirmation unless
-  `auto-continue` is already enabled
+The router may check credentials, choose a specialist, preserve the handoff, and
+point to the specialist gate. It must not:
+
+- execute a specialist workflow;
+- copy a specialist's detailed gate;
+- change PM scope, Engineer decisions, implementation, QA evidence, or
+  deployment facts;
+- treat a Security report as direct Docs authorization.
+
+The shared formal-document frontmatter contract remains at
+`_internal/_shared/frontmatter-contract.md`.
+
+## Specialist Pointers
+
+- Site bootstrap: `../docs-site-bootstrap/SKILL.md`
+- Current-state sync/backfill: `../formal-docs-sync/SKILL.md`
+- Illustrated manuals: `../manual-gen/SKILL.md`
+- Site Release Notes: `../release-notes-gen/SKILL.md`
+- Release audit: `../docs-audit/SKILL.md`
+
+Each specialist and its internal instructions are authoritative for its full
+entry, execution, verification, and output contract.
+
+## Missing Targets and Closeout
+
+If a peer agent, plugin, or specialist is unavailable, name the missing stage
+and capability, mark it blocked, and do not perform its responsibilities.
+
+Preserve any documentation-site deployment-completeness status, evidence,
+covered variants, missing links, drift, and user decision. Confirmed remediation
+returns to PM without Docs editing deployment assets.
+
+After the role stage completes, follow
+`_internal/_generated/shared-contracts/closeout-contract.md`: recommend the
+next owner and artifact, wait for confirmation unless auto-continue is already
+enabled, and never bypass role boundaries or hard gates.

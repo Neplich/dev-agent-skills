@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4` from `agents/security/test/authz-reviewer/evals/workspace/eval-003-jwt`.
 - Identity schema: `2`
-- target_skill_sha256: `c5c4e1b3eeeb704a06966dee8397bc4f1df239be6ed5f5799f8d4bd382f23626`
+- target_skill_sha256: `28d6bd56202068b6de6f4e41d3bc74df73f15108b0013486fcd02eaa93f991d8`
 - eval_definition_sha256: `8f6e801f8a45c6ec677bbcaa4a56de6b68c935402a27b9f24ca631ffe0af8504`
-- metadata_sha256: `2db8c4dc18a4712e7dcc4d2c4e3e9c1608e8526019fbff1c3fc3e6ded6f9d1c5`
+- metadata_sha256: `c70211d553dbd5b14945081d1a6afd8ffd4651a9a47e75788bc7a3313ea83fb9`
 - fixture_sha256: `b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `a3c690bb602cdac9c05191ab0581fc35b8fd034dd27825093b3b51de5926404b`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `217840028dda2eba806419edc71588064b0361d1a26fbfdbb7a47693678ccfa6`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,21 +33,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `authorization_model` | PASS | The locked report identifies user/admin roles, protected APIs, the `/api/admin/*` boundary, and the full path from Authorization header through `authenticateJwt` to `canAccessAdminApi`. |
-| `access_control_findings` | PASS | The locked report identifies missing signature verification, algorithm allow-listing, `exp` validation, unverified role trust, and malformed-header handling, with severity and concrete impact. |
-| `evidence_and_impact` | PASS | Each finding includes source locations in `src/auth/jwt.js`, links the defects to PRD requirements, and explains forgery, expiry, and admin-escalation consequences. |
-| `remediation` | PASS | The report provides actionable cryptographic, algorithm, expiry, claim-trust, parsing, integration, and regression-test recommendations, including a release gate. |
+| `authorization_model` | PASS | 报告包含 user/admin/unauthenticated 角色矩阵、受保护 API 与 /api/admin/* 资源边界，并追踪 Authorization header → authenticateJwt → claims.role 授权路径。 |
+| `access_control_findings` | PASS | 报告明确指出未验证签名、算法未约束、exp 未校验，以及 canAccessAdminApi 直接信任未验证 role 导致伪造 admin 越权。 |
+| `evidence_and_impact` | PASS | 报告提供 src/auth/jwt.js 的具体行号证据，说明签名、过期和角色缺陷的影响，包括身份伪造、过期凭证继续有效和管理员权限提升。 |
+| `remediation` | PASS | 报告给出使用成熟 verify API、算法白名单、签名与 exp 校验、可信 claims 授权上下文，以及覆盖篡改 payload、alg:none、过期、角色和真实路由的回归验证建议。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=b56e285d1e4e7a1dc47a2f809c4a96c8af95edeca4f0983032061b933e4af09b; snapshot_sha256=6f5e7f5a27f8e41aa55071232880034016f041d9f491bf95a4f933654114256a
-- Behavior: Produced a structured, evidence-backed JWT authorization review artifact with role matrix, authorization flow, severity-ranked findings, impact, remediation, regression guidance, and explicit limits on route coverage.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=ea439542343a4257e141ef42aa246ee9a2f09154ed05cc0adfeb0a835e0a03d8; snapshot_sha256=ba9b44b00cb162a22c44e7dc813324691c76a2baadd257637b3e6332809e67fe
+- Behavior: 完成结构化 JWT 安全审查并交付报告，覆盖授权模型、缺陷证据、影响和修复验证建议。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=c01dc24b60562b537290851199e10f4e33af2749512ac41705948b039a208b41; snapshot_sha256=6ea88cc9d1575e9b661bf41b9f43d40f0c38c599591775ee2889dfce0f533aac
-- Behavior: Provided a concise baseline review covering the main JWT, expiry, role-escalation, and malformed-header risks plus high-level validation suggestions, with less structured evidence and coverage detail.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=da9ecfe298cdea573f5e2d687f97fd893a94d3dc4b95b345575f1d452f32a2ab; fixture_sha256=b22eea37eaa1e0fa82c96957a5790898e68b0e138db6319e88a5574aee2cf1f4; output_sha256=1c9656331ffced08de2fd223100025f99d6965bf64fabd46c806635a4835870e; snapshot_sha256=87ffba7143275a2fb445630b5c255aff0819fcada840e5677e694d73225c3162
+- Behavior: 同样识别了主要 JWT 缺陷并交付了详细报告，作为比较基线。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

@@ -2,11 +2,16 @@
 
 - release_scope: formal documentation release candidate
 - verified_version_tag: `v0.4.0`
+- previous_version_tag: `v0.3.0`
+- release_range: `v0.3.0..v0.4.0`
+- anchor_evidence: maintainer-confirmed immutable annotated tags for both range anchors
 - changelog: `docs/changelog/changelog-v0.4.0.md` reviewed
+- site_release_notes: `docs/site/release-notes/v0.4.0.md` explicitly confirmed
+- release_notes_evidence: host checks passed; supporting evidence and updated surfaces recorded; blockers none; publication and tagging remain external
 - release_process_evidence: repository checks, documentation checks, and CI pytest reports passed
 - formal_site: `docs/site/` exists
 - requested_node: release documentation audit
 
-The release scope, version, repository checks, documentation checks, CI results,
-and target formal site are confirmed. No release-documentation audit result is
-present yet.
+The release scope, target and previous-tag anchors, repository checks,
+documentation checks, CI results, and target formal site are confirmed. No
+release-documentation audit result is present yet.

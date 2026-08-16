@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-11-change-tier-standard-full-gate`.
 - Identity schema: `2`
-- target_skill_sha256: `a37bf10fca64a8e15e6213ecdd45b65783814d307c78fd8d8ce6ab45b20effef`
+- target_skill_sha256: `ed93e443692bf05e76aaa38c8a5b8faff57190219ed48b9335316584424e6eb9`
 - eval_definition_sha256: `da85ba336c757be6c6ca84ef12c1d1a20655adb3e82559a2c2234b5462387973`
 - metadata_sha256: `6652dce9ab8a85ed09b58d853b1bdac1fd0f6f3e5ccd74f38c1d4aa6171a8cf4`
 - fixture_sha256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `e0fce32f646911cc00fe0709c7d0e934a3657054c9fc5a2efda7653a3ac97ea6`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `2c9f63eba393d7546f89112ce3f1659145dc2f6ca60bdba6ba71df10258a35a4`
-- Repository HEAD: `3f5e81c4837ef85284a7d5381575e40267796c92`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `6f4abf80e411dc3e6124c51093f07046c341195b1b2f0e9981a535c9960cb623`
+- Skill overlay SHA-256: `320ded3db25222eda1be26706a57ed0471cc438157b54925db0b045d15abf8e6`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,20 +33,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `classify_standard` | PASS | with_skill output explicitly sets change_tier to standard and hotfix_disposition to rejected. |
-| `require_prd_trd_alignment` | PASS | with_skill output requires confirmation of scope and approval boundaries, sets confirmation_required to true, and routes the next action to PM alignment before any Engineer handoff; no downstream implementation handoff occurs prematurely. |
-| `request_type_existing_update` | PASS | with_skill output explicitly sets request_type to existing_update and explains the change as modifying the existing refund approval behavior. |
+| `classify_standard` | PASS | With_skill output explicitly sets `change_tier: standard` and `hotfix_disposition: rejected`. |
+| `require_prd_trd_alignment` | PASS | With_skill output keeps `entry_basis: blocked`, requires confirmed PRD/DECISIONS and an Engineer handoff, and identifies missing product/technical evidence before downstream implementation. |
+| `request_type_existing_update` | PASS | With_skill output explicitly sets `request_type: existing_update` and records that the approved expectation changes from automatic approval to administrator confirmation. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2c9f63eba393d7546f89112ce3f1659145dc2f6ca60bdba6ba71df10258a35a4; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=e005ea112e4284f52edcdfbe5e59c9f936284276e43a445b63d9c1c2ef0e5aa2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly classified the request as an existing project update with standard-tier change handling, rejected hotfix treatment, and gated downstream work on PM/product-boundary alignment. No files or repository state were modified.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2c9f63eba393d7546f89112ce3f1659145dc2f6ca60bdba6ba71df10258a35a4; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=4c3300e0aa1beded03b52614cf5159dec866bbd90ae388218a03a644716fe580; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly classified the request, rejected hotfix treatment, preserved the product/technical alignment gate, and blocked downstream implementation pending evidence.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2c9f63eba393d7546f89112ce3f1659145dc2f6ca60bdba6ba71df10258a35a4; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=a28507a7542ad282cf771f598484f0e216141b5e11e524082d8ae2be995709f8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Could not classify or route the product change; it only reported that the workspace was empty and requested a project directory.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2c9f63eba393d7546f89112ce3f1659145dc2f6ca60bdba6ba71df10258a35a4; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=cfcb2e323e83ea272fdb0dfb0dd5ba5dc24efa32b27d885ffbaecbafd560715b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Reported the empty workspace but did not classify the request or apply the PM gating behavior.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

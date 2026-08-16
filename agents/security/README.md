@@ -3,6 +3,8 @@
 `security-agent` is the security-review dispatcher skill. It routes pre-release security gates, application security checks, authorization review, dependency risk, and privacy data-flow requests to the right security specialist skill.
 
 > [!NOTE]
+> Repository architecture and document ownership: [Architecture](../../docs/architecture.md) and [Documentation Governance](../../docs/AGENTS.md).
+>
 > Other languages: [中文](./README_zh.md)
 
 > [!NOTE]

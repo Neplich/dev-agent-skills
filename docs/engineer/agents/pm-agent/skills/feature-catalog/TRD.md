@@ -1,11 +1,11 @@
 ---
 title: "接手项目功能目录与项目画像 TRD"
 type: TRD
-version: "0.1.1"
-status: Draft
+version: "0.1.2"
+status: Approved
 author: "Neplich Codex"
 date: "2026-07-04"
-last_updated: "2026-07-05"
+last_updated: "2026-08-15"
 generated_by: "trd-gen"
 feature: "feature-catalog"
 feature_path: "agents/pm-agent/skills/feature-catalog"
@@ -21,6 +21,9 @@ related_docs:
   - ".claude-plugin/marketplace.json"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.2"
+    date: "2026-08-15"
+    changes: "收敛 marketplace 当前能力镜像状态，确认文档正文对应已发布 Skill 契约"
   - version: "0.1.1"
     date: "2026-07-05"
     changes: "Align feature_path_evidence with shared {source, reason} handoff shape; keep full category evidence in source_catalog"

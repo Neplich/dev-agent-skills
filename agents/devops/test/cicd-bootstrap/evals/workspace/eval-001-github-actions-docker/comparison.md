@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90` from `agents/devops/test/cicd-bootstrap/evals/workspace/eval-001-github-actions-docker`.
 - Identity schema: `2`
-- target_skill_sha256: `86f7228d11d9f7ad3ec145d83be1c28f8a4bb93afea61016f55ed2860069bc68`
+- target_skill_sha256: `aed48fddfc5ff065b4c42b3cee1081c6e2b92b1fe8557c1413f01e05c0f91ef0`
 - eval_definition_sha256: `e302fa46977944ed026b10f7f1ded4b3717a6c85f19be1f78da9c42d4b0c0b8d`
-- metadata_sha256: `9e986f54be95fd6454e99ce66dc884d4d84134a4b07d49e0942d5d6169d042bf`
+- metadata_sha256: `6576f2b96222cd993753c16016129615d0effef0ba03482d059a2a0e540e8ce2`
 - fixture_sha256: `343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `416d97c852ae3d12b00631149dd08640442fd75a13414eab07000c384c3a2d5f`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e`
+- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `f170ac0192e8f110fe74b7c61766437cb8268e62c38697fb51b94a3db4467e5f`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,21 +33,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `creates_repo_native_ci` | PASS | with_skill 的 delivery_snapshot 显示 .github/workflows/ci.yml 在 pull_request 触发，使用 Node.js 22.x，依次运行 npm ci、npm run lint、npm test 和 npm run build。 |
-| `creates_staging_deployment_workflow` | PASS | with_skill 的 deploy-staging.yml 仅配置 main 分支 push 触发，使用 deploy/docker/docker-compose.staging.yml、ghcr.io/example/acme-web，并将提交 SHA 作为 APP_IMAGE_TAG 传给 Compose。 |
-| `documents_required_secrets` | PASS | with_skill 的 deploy/SECRETS.md 列出 REGISTRY_USERNAME、REGISTRY_TOKEN、STAGING_HOST、STAGING_USER 和 STAGING_SSH_KEY，并明确不写入秘密值。 |
-| `does_not_execute_delivery` | PASS | git_evidence 显示无提交、推送或引用变化；runner_captured_trace 仅执行了本地质量检查和文件核对，没有 Docker push、SSH 或实际部署。 |
+| `creates_repo_native_ci` | PASS | with_skill 的 `.github/workflows/ci.yml` 在 `pull_request` 上使用 Node.js 22，依次运行 `npm ci`、`npm run lint`、`npm test` 和 `npm run build`。 |
+| `creates_staging_deployment_workflow` | PASS | with_skill 的 `.github/workflows/deploy-staging.yml` 仅监听 `push` 到 `main`，引用现有 Compose 文件，使用 `ghcr.io/example/acme-web`，并将提交 SHA 作为 `APP_IMAGE_TAG` 传给 Compose。 |
+| `documents_required_secrets` | PASS | with_skill 的 `deploy/SECRETS.md` 列出 REGISTRY_USERNAME、REGISTRY_TOKEN、STAGING_HOST、STAGING_USER 和 STAGING_SSH_KEY，未包含真实凭据。 |
+| `does_not_execute_delivery` | PASS | with_skill 的 git 证据显示无提交、推送或引用变更；runner trace 仅执行只读检查及 lint/test/build，未构建或推送镜像、连接 staging，且最终未声称部署成功。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=a9dc719da6b33c9a1f87371ddfd5466639f887a91f97c72bae7bbb5a65b9a94b; snapshot_sha256=51898b4650093a77fe21134bfaf92602eb336f0e2ab704b396439bd853875213
-- Behavior: 完整生成并验证了 PR CI、main 分支 staging 部署工作流及秘密名称文档，未执行交付。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=db55e3f43e7e5abab790c9e22b2c208560b1a2c320cf3f9f9df3bc503004c7f0; snapshot_sha256=9ddf916d55e5aefa67018413c1514213acf70a072b3d1e42b0d292aa5d2bee97
+- Behavior: 生成了符合仓库约定的 CI、staging 部署和 secrets 文档配置，并保持交付未执行。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=0ca73fc79b0b392e2198b2cc455c7a3eb9c01db89c4f68317d8dc69b6ba02030; snapshot_sha256=cbe0113584bb965a15d9268869625141abb389b7794667377c41e4fcb378b05d
-- Behavior: 同样生成了三项配置并未执行交付；其 CI 增加了 main 分支限制，作为对比上下文。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=218d78b7a8ea97a45d92074ef7fdba8d569a39aa87d9b7e2b17fd38ac1491e6e; fixture_sha256=343bcb839e30c78715e11895db5ff7bd71039ec73fe31429c1bbda5b9e3e2a90; output_sha256=a9c31675711af2cc907a028856c21e839642ce5b3f3bdef40c85333f9e507079; snapshot_sha256=3d8d8ca5b44224fb405eea83f330a3816e7ffb24d276c58e9c8c0371d12d78d7
+- Behavior: 也生成了主要配置，但额外包含 workflow_dispatch，且部署流程契约与 with_skill 略有不同；其表现仅作基线对照。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
