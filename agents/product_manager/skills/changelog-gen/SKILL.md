@@ -1,6 +1,6 @@
 ---
 name: changelog-gen
-description: "Generate or update developer-facing changelogs from merged PRs, tags, or a dated repository release-history export, classifying user-impacting changes semantically. Use after pm-agent routes changelog work."
+description: "Generate developer-facing changelogs from merged PRs, tags, or a dated repository history export. Use after pm-agent routes changelog work."
 visibility: internal
 ---
 

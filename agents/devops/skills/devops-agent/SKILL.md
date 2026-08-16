@@ -1,6 +1,6 @@
 ---
 name: devops-agent
-description: "Classify and route confirmed deployment, runtime packaging, CI/CD, environment-audit, release-readiness, rollback, and runbook requests. Use immediately after a PM operational handoff and before any DevOps specialist executes."
+description: "Route confirmed deployment, runtime packaging, CI/CD, environment audit, release-readiness, rollback, and runbook work. Use after a PM operational handoff."
 visibility: internal
 ---
 

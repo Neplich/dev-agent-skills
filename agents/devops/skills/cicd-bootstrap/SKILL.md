@@ -1,6 +1,6 @@
 ---
 name: cicd-bootstrap
-description: "Add or update CI/CD automation, GitHub Actions, build checks, image workflows, and release workflow configuration from confirmed operational evidence. Use after devops-agent routes the CI/CD scope."
+description: "Add or update CI/CD automation, GitHub Actions, build checks, image workflows, and release configuration from confirmed evidence. Use after devops-agent routes CI/CD work."
 visibility: internal
 ---
 

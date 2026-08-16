@@ -1,6 +1,6 @@
 ---
 name: privacy-surface-mapper
-description: "Map personal-data collection, purpose, retention, third parties, user rights, GDPR/CCPA obligations, and data-flow exposure from confirmed scope. Use after security-agent routes privacy review."
+description: "Map personal-data flows, purposes, retention, third parties, user rights, and regulatory obligations from confirmed scope. Use after security-agent routes privacy review."
 visibility: internal
 ---
 

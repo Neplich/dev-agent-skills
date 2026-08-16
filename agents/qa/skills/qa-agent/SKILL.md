@@ -1,6 +1,6 @@
 ---
 name: qa-agent
-description: "Classify and route confirmed validation requests across spec-based acceptance, exploratory testing, bug analysis, and regression verification. Use immediately after a PM QA handoff and before specialist execution."
+description: "Route confirmed validation work across spec-based acceptance, exploratory testing, bug analysis, and regression verification. Use after a PM QA handoff."
 visibility: internal
 ---
 

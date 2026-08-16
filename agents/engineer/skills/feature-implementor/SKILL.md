@@ -1,6 +1,6 @@
 ---
 name: feature-implementor
-description: "Create or continue the implementation plan for confirmed PRD/TRD/design inputs, wait for approval, then implement and verify the scoped change. Use after engineer-agent routes implementation work."
+description: "Plan, implement, and verify a scoped change from confirmed PRD/TRD/design inputs after plan approval. Use after engineer-agent routes implementation work."
 visibility: internal
 ---
 

@@ -48,9 +48,12 @@ or shared-contract copies.
 2. Scan the impact per `sync-surfaces.md`; the surface set depends on what the
    modification touches (description changes hit discovery, routing changes hit
    router evals, and so on).
-3. Refresh `skills-lock.json` `computedHash` for the skill when any tracked
+3. Keep each frontmatter `description` within 500 Unicode characters. Treat
+   this as a hard ceiling, not a writing target: preserve the minimal discovery
+   contract while moving detailed process and exhaustive lists into the body.
+4. Refresh `skills-lock.json` `computedHash` for the skill when any tracked
    file under its directory changes (SKILL.md, `references/`, `_internal/`).
-4. Route eval-impact analysis to `skill-eval-runner`.
+5. Route eval-impact analysis to `skill-eval-runner`.
 
 ## Rename
 

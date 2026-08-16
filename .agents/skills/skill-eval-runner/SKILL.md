@@ -1,6 +1,6 @@
 ---
 name: skill-eval-runner
-description: Author, review, run, batch, inspect, and diagnose this repository's skill evaluations. Use when Codex needs to create or change evals.json, scenarios, prompts, assertions, eval_metadata.json, fixtures, or comparison.md; select and run fresh paired eval targets with up to 10 workers; inspect summaries; distinguish eval defects from skill defects or infrastructure blockers; or verify eval contracts without model execution. Do not use for ordinary unit tests or QA E2E product testing.
+description: Create, run, inspect, and diagnose this repository's Skill evals and eval contracts. Use for eval definitions, paired runs, result analysis, or eval infrastructure triage; not for unit tests or product QA.
 ---
 
 # Skill Eval Runner

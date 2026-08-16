@@ -259,6 +259,67 @@ def test_skill_description_must_front_load_user_trigger(tmp_path: Path) -> None:
     )
 
 
+@pytest.mark.parametrize(
+    ("relative_path", "length", "should_fail"),
+    [
+        ("agents/engineer/skills/debugger/SKILL.md", 500, False),
+        (".agents/skills/maintain-skills/SKILL.md", 501, True),
+    ],
+)
+def test_skill_description_length_limit_includes_project_skills(
+    tmp_path: Path,
+    relative_path: str,
+    length: int,
+    should_fail: bool,
+) -> None:
+    skill_doc = tmp_path / relative_path
+    skill_doc.parent.mkdir(parents=True)
+    skill_doc.write_text(
+        "---\n"
+        f"name: {skill_doc.parent.name}\n"
+        f'description: "{"x" * length}"\n'
+        "---\n",
+        encoding="utf-8",
+    )
+
+    errors: list[contract.ContractError] = []
+    contract.validate_skill_description_lengths(tmp_path, errors)
+
+    assert bool(errors) is should_fail
+    if should_fail:
+        assert "exceeds 500 characters: 501" in errors[0].message
+
+
+def test_plugin_description_must_match_marketplace(tmp_path: Path) -> None:
+    marketplace_path = tmp_path / ".claude-plugin/marketplace.json"
+    manifest_path = tmp_path / "agents/engineer/.claude-plugin/plugin.json"
+    manifest_path.parent.mkdir(parents=True)
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "name": "engineer-agent",
+                "version": "0.5.1",
+                "description": "Stale plugin description",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    errors: list[contract.ContractError] = []
+    contract.validate_plugin_manifest(
+        manifest_path,
+        marketplace_path,
+        0,
+        "engineer-agent",
+        "0.5.1",
+        "Current marketplace description",
+        errors,
+    )
+
+    assert len(errors) == 1
+    assert "description must match marketplace" in errors[0].message
+
+
 def test_active_plan_status_is_unconditionally_required(tmp_path: Path) -> None:
     root = initialize_repo(tmp_path, base_status=None)
 

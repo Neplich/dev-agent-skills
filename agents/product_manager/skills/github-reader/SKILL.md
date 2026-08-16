@@ -1,6 +1,6 @@
 ---
 name: github-reader
-description: "Summarize GitHub issues, PRs, milestones, backlog health, review queues, release readiness, and recent activity from live data or a dated complete export. Use after pm-agent routes repository-status work."
+description: "Summarize GitHub issues, PRs, milestones, backlog health, release readiness, and recent activity from live data or a dated export. Use after pm-agent routes repository-status work."
 visibility: internal
 ---
 

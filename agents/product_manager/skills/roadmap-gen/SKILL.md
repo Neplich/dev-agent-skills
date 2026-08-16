@@ -1,6 +1,6 @@
 ---
 name: roadmap-gen
-description: "Create or update a roadmap from dated GitHub milestone, issue, PR, and release evidence, using real dates when available and semantic phases otherwise. Use after pm-agent routes roadmap work."
+description: "Create or update a roadmap from dated GitHub milestones, issues, PRs, and releases, using semantic phases when dates are unavailable. Use after pm-agent routes roadmap work."
 visibility: internal
 ---
 

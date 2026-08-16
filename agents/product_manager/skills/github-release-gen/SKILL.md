@@ -1,6 +1,6 @@
 ---
 name: github-release-gen
-description: "Preview, draft, or publish a traceable GitHub Release only after version facts and applicable site Release Notes/audit gates are ready. Use after pm-agent routes GitHub Release work."
+description: "Preview, draft, or publish a traceable GitHub Release after version facts and applicable Release Notes/audit gates are ready. Use after pm-agent routes release work."
 visibility: internal
 ---
 

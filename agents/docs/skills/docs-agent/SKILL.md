@@ -1,6 +1,6 @@
 ---
 name: docs-agent
-description: "Classify and route confirmed formal-documentation requests for site bootstrap, current-state sync/backfill, screenshot-based manuals, site Release Notes, and release audit. Use immediately after a PM docs handoff and preserve its complete context before delegating."
+description: "Route confirmed formal-documentation work for site bootstrap, current-state sync, illustrated manuals, site Release Notes, or release audit. Use after a PM docs handoff."
 visibility: internal
 ---
 

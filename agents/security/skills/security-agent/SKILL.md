@@ -1,6 +1,6 @@
 ---
 name: security-agent
-description: "Classify and route confirmed security requests across AppSec, auth/authz, dependency risk, privacy, and data-flow review, preserving remediation and PM-escalation context. Use immediately after a PM security handoff."
+description: "Route confirmed AppSec, auth/authz, dependency-risk, privacy, and data-flow work while preserving remediation and PM-escalation context. Use after a PM security handoff."
 visibility: internal
 ---
 

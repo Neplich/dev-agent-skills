@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f` from `agents/docs/test/docs-audit/evals/workspace/eval-008-pre-tag-success`.
 - Identity schema: `2`
-- target_skill_sha256: `dafd53371901dfd724f88c70262b157e59494d29da1c613d0ef130564b6ff4f9`
+- target_skill_sha256: `a5e0bb043d61dbbb218e7d7efc08374e0d16a4d7aaa3b31817f2038830c90941`
 - eval_definition_sha256: `4d1aa7f3a07c406f7e925f931c91ea28170bd7650629aa75bcd06b4f58bba0c7`
 - metadata_sha256: `6adbc51a2dc07674edf9fca71addc72bccaccf75ae663c41fbf3725d8c48b107`
 - fixture_sha256: `188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `4cd14ef8cd033d31b5bb9ce50a786ad0b7d18c7ff4f682d88505eac53b634ecf`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `7e61bd8eca6431729aee1f3be4656be0a4348119eb1218623bafd54cfaead2ab`
+- Skill overlay SHA-256: `d7e2242fcdf83209e6c0cb5ec9544aa009e79488a72f81ebd4bf387289fbabec`
 - Behavior result: **FAIL**
 - Coverage result: **PARTIAL**
 Overall result: FAIL
@@ -33,35 +33,39 @@ Overall result: FAIL
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `accepts_confirmed_version_without_tag` | PASS | The with_skill output records base_ref v1.1.0, target_ref release-head, maintainer-confirmed v1.2.0, and explicitly says the v1.2.0 tag is absent and acceptable for pre-tag. |
-| `verifies_complete_set_and_surfaces` | PASS | Locked trace reads the change map, both API pages, release handoff, Release Notes, index, release metadata, package version, and route facts; the output reports the complete affected set as verified. |
-| `normalizes_mixed_version_forms` | PASS | The output states that package.json, Release Notes, index, and .meta/releases.json normalize to the same 1.2.0 identity, with the expected prefixed and unprefixed source forms. |
-| `records_pre_stamp_values` | PASS | The output records the four pre-stamp values: catalog-items and index v1.1.0, catalog-status and Release Notes unverified, and states no baseline_verified_version was added. |
-| `stamps_complete_set_atomically` | PASS | Locked file-change and staged-diff evidence shows all four authorized pages updated together; the output says the unified stamp was verified and .meta/releases.json was not modified. |
-| `builds_isolated_candidate_transaction` | PASS | The trace creates a temporary branch/worktree from release-head, stages the four pages there, and cleanup evidence shows the host branch, index, and worktree restored. |
-| `candidate_record_has_no_ready_result` | NOT_EXERCISED | A candidate record file-change event exists, but its locked content is not exposed, so the required complete schema and absence of forbidden fields cannot be proven. |
-| `validates_two_complete_staged_gates` | FAIL | The first staged-gate evidence shows the candidate path as untracked rather than an A/M 100644 ordinary blob, and no complete second gate is shown; this contradicts the exercised gate requirement. |
-| `confirms_anchor_commit_before_discovery` | NOT_EXERCISED | No anchor commit was created because Git rejected the commit for missing user.name/user.email; the required post-anchor checks were therefore not reached. |
-| `persists_fixed_discovery_handoff` | NOT_EXERCISED | No discovery handoff was written because anchor creation failed; the output explicitly says no handoff remained after rollback. |
-| `returns_ready_only_after_integration` | NOT_EXERCISED | No fast-forward integration or integrated handoff readback occurred because the anchor stage failed. |
-| `returns_ready_for_tag_not_published` | NOT_EXERCISED | The with_skill lane returned blocked after the missing Git identity prevented the later required steps, so the successful ready_for_tag result was not reached. |
+| `accepts_confirmed_version_without_tag` | PASS | Candidate record and handoff record retain the confirmed version, base/target refs, and pending-absent actual tag; final output says the tag was not created. |
+| `verifies_complete_set_and_surfaces` | PASS | Candidate record lists both change-map API pages, all four affected pages, per-page verified results, release-note handoff, metadata, and package version evidence. |
+| `normalizes_mixed_version_forms` | PASS | Version inventory records required raw forms, selectors, extractors, normalized values, and equality across confirmation, package.json, notes, index, and metadata. |
+| `records_pre_stamp_values` | PASS | Candidate record directly records the four pre-stamp values: v1.1.0, unverified, v1.1.0, and unverified, with no baseline_verified_version field. |
+| `stamps_complete_set_atomically` | PASS | Delivery snapshots show all four authorized pages changed only from their prior values to v1.2.0, readback passed, and releases.json was not changed. |
+| `builds_isolated_candidate_transaction` | NOT_EXERCISED | The trace shows the intended isolated worktree/branch flow and delivery evidence shows candidate commits, but the locked raw evidence does not fully prove index initialization and preservation throughout all candidate checks. |
+| `candidate_record_has_no_ready_result` | FAIL | The candidate record has the required schema, page hashes, version inventory, digests, staged inventories, readback, and candidate_verified conclusion, but it also contains target/base commit and target_tree identity fields, which the assertion forbids. |
+| `validates_two_complete_staged_gates` | PASS | Candidate record and commit evidence contain pre- and post-candidate inventories with raw modes/types/statuses, ordinary blobs, single-line stamp changes, fixed paths, and no unauthorized delta; final commit evidence also shows the expected handoff addition. |
+| `confirms_anchor_commit_before_discovery` | PASS | The handoff records anchor commit/tree and post-commit confirmation; commit evidence shows the anchor was created before the handoff and final tree/blob readback was performed. |
+| `persists_fixed_discovery_handoff` | FAIL | The delivered handoff includes schema, attempt, phase, version, refs, ready_for_tag, result time, inventory digest, anchor, candidate path/blob, confirmation, lineage, and digest, but omits the required handoff-path preimage and a current entry for the handoff blob without self-reference. |
+| `returns_ready_only_after_integration` | PASS | Git evidence shows fast-forward integration from target_ref to the final commit, unchanged branch name, clean final status/index/worktree, and final output exposes the handoff for pm-agent:github-release-gen. |
+| `returns_ready_for_tag_not_published` | FAIL | The output returns ready_for_tag and says the tag was not created or published, but it does not explicitly state that the status does not mean release verified. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=86f6eb667ca9f4ef62d6243f06870c18f6ffa055f0d1b34c87cc201f60e19c99; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Performed the bounded pre-tag audit, verified and staged the four-page stamp in an isolated worktree, then correctly blocked and rolled back when anchor commit creation lacked Git identity; candidate/gating evidence was incomplete.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=f716a4a427fc71b2f2c55dd4d612502c11c83a837348c88ed24c1191b63fdaa2; snapshot_sha256=0f2c33a1e171108fb586729ab7f78dd027e5dc7f1e711486289af339fc498127
+- Behavior: Performed the pre-tag audit, stamped and integrated the four-page set, and exposed ready_for_tag, but delivered a nonconforming candidate record and incomplete handoff metadata.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=3f616c531a67a34291981518d58c27bd3dfc41b7990de549b524e94362aff901; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline only checked repository state, basic diff, version/tag facts, and reported blockers without executing the documentation-audit transaction.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=25d3ad05dbf10dd7264c8c644a2d8ed7b4c9c4c08a2ffe5212ec67846dff1698; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline incorrectly blocked pre-tag on metadata, evidence-patch, and scope concerns; it made no repository changes.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- The candidate record remained untracked during the staged-gate evidence, and the complete two-gate validation was not demonstrated.
-- Next: Configure Git user.name and user.email, then rerun the complete pre-tag transaction and its candidate/staged-gate validation.
+- candidate_record_has_no_ready_result
+- persists_fixed_discovery_handoff
+- returns_ready_for_tag_not_published
+- Next: Remove forbidden commit/tree identity fields from the candidate record while retaining required page hashes.
+- Next: Add the handoff path preimage and non-self-referential handoff current entry/digest.
+- Next: Explicitly state that ready_for_tag permits tag creation only and does not mean publication or release verification.
 
 ## Runtime Artifact Policy
 

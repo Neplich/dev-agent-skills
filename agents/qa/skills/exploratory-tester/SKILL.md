@@ -1,6 +1,6 @@
 ---
 name: exploratory-tester
-description: "Explore a confirmed product surface with an evidence-backed charter, explicit environment and timebox, adjacent risks, findings, and follow-up coverage. Use after qa-agent routes exploratory validation."
+description: "Explore a confirmed product surface using an evidence-backed charter, explicit environment and timebox, adjacent risks, findings, and follow-up coverage. Use after qa-agent routes exploratory testing."
 visibility: internal
 ---
 

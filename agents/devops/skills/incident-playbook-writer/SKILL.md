@@ -1,6 +1,6 @@
 ---
 name: incident-playbook-writer
-description: "Write evidence-backed rollback guidance, incident response steps, troubleshooting runbooks, and on-call preparation for a confirmed deployment surface. Use after devops-agent routes the incident-playbook scope."
+description: "Write evidence-backed rollback guidance, incident-response steps, troubleshooting runbooks, and on-call preparation for a confirmed deployment surface. Use after devops-agent routes incident-playbook work."
 visibility: internal
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: docs-site-bootstrap
-description: "Initialize, verify, or safely re-run the formal documentation-site scaffold in a confirmed host repository, including integration choices and idempotency checks. Use after docs-agent routes an explicit bootstrap request."
+description: "Initialize, verify, or safely re-run a formal documentation-site scaffold in a confirmed host repository. Use after docs-agent routes site bootstrap."
 visibility: internal
 ---
 

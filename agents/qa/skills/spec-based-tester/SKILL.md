@@ -1,6 +1,6 @@
 ---
 name: spec-based-tester
-description: "Validate spec-backed requirements from confirmed PM/TRD/plan evidence using the safest executable repository test path and durable acceptance records. Use after qa-agent routes spec-based testing."
+description: "Validate spec-backed requirements from confirmed PM/TRD/plan evidence using the safest executable test path and durable acceptance records. Use after qa-agent routes spec-based testing."
 visibility: internal
 ---
 

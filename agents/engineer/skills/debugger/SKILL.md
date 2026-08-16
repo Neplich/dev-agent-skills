@@ -1,6 +1,6 @@
 ---
 name: debugger
-description: "Diagnose failing tests, builds, runtime errors, and suspected defects without mutation when explicitly requested, or repair confirmed implementation defects after expected-behavior alignment and repair-plan confirmation. Use after engineer-agent supplies the bug basis or a read-only diagnosis handoff."
+description: "Diagnose failures in read-only mode or repair confirmed implementation defects. Use after engineer-agent provides the diagnosis or repair basis required by the selected mode."
 visibility: internal
 ---
 

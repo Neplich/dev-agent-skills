@@ -1,6 +1,6 @@
 ---
 name: competitive-brief
-description: "Produce competitor positioning briefs or sales battlecards from current sourced research, including messaging, gaps, opportunities, threats, and recent developments. Use after pm-agent routes competitive research."
+description: "Produce sourced competitor positioning briefs or sales battlecards covering relevant gaps, opportunities, threats, and recent changes. Use after pm-agent routes competitive research."
 visibility: internal
 argument-hint: "<competitor or market segment>"
 ---

@@ -1,6 +1,6 @@
 ---
 name: maintain-skills
-description: Manage this repository's role-skill lifecycle (add, modify, rename) and new role agents. Use when adding or renaming a role skill, adding a role agent, or changing an existing skill's SKILL.md, frontmatter, structure, description, or shared-contract copies. Use when a role-skill or new-agent lifecycle change requires syncing marketplace.json, skills-lock.json, per-agent or root plugin manifests, router routing, discovery descriptions, agent or root READMEs, process docs, or the PM doc-tree governance scope. Do not use for authoring, running, or diagnosing evals — delegate those to skill-eval-runner. Do not use for version releases or ordinary PRD/TRD/implementation-plan updates that do not touch the role-skill lifecycle.
+description: Manage role Skill and Agent lifecycle changes in this repository, including additions, modifications, renames, and required sync surfaces. Use for Skill contract or registration changes; use skill-eval-runner for eval work.
 ---
 
 # Maintain Skills

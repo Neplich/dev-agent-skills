@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/changelog-gen/evals/workspace/eval-003-prefix-classification`.
 - Identity schema: `2`
-- target_skill_sha256: `53f035563de038125d09b7a8997f87e900d099e00223f427a7c690e11ebbe449`
+- target_skill_sha256: `2ba8dad890b4a470e045fac5a77553d35f40494dd4f5ee0df778eda64ba0f881`
 - eval_definition_sha256: `02c7a6bcc66679fa2f47687ffd7cdba26fff303adab62c4e3435b49f28878db8`
 - metadata_sha256: `7c295252d061c5f27afb73a5d2bc7ec230ac3e0e3896f6109062c7b18ee9cf2e`
 - fixture_sha256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `cc05e28bb9aed099804431e1cee55bda0cec7614cc8c780d6f8ad4d50c137367`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `f75f5f8b8869cc572a0f69646861f4a54c0e1cb5775b8c2dac040f714114c1c9`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,30 +33,30 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `feat_auth_added_add_oauth2_login_support` | PASS | With-skill output places “Add OAuth2 login support” under Added. |
-| `fix_fixed` | PASS | With-skill output places token-expiry crash resolution under Fixed. |
-| `chore_deps` | PASS | With-skill output omits the requests dependency maintenance PR. |
-| `build_deps_skipped` | PASS | With-skill output omits the Vite dependency bump. |
-| `perf_changed` | PASS | With-skill output places API caching under Changed. |
-| `feat_added_breaking` | PASS | With-skill output places the plugin configuration redesign under Changed and marks it BREAKING. |
-| `docs_release_workflow_changed` | PASS | With-skill output includes the release publishing workflow and preflight change under Changed. |
-| `test_release_acceptance_changed` | PASS | With-skill output includes release acceptance coverage and required evidence under Changed. |
-| `ci_release_gate_changed` | PASS | With-skill output includes required repository checks before release under Changed. |
-| `docs_typo_skipped` | PASS | With-skill output omits the README typo/copyediting PR. |
-| `ci_cache_skipped` | PASS | With-skill output omits the CI cache maintenance PR. |
-| `remove_removed` | PASS | With-skill output places Python 3.7 support removal under Removed. |
-| `security_security` | PASS | With-skill output places the XSS vulnerability fix under Security. |
+| `feat_auth_added_add_oauth2_login_support` | PASS | with_skill output places “Add OAuth2 login support” under Added, with an optional auth scope. |
+| `fix_fixed` | PASS | with_skill output places token-expiry crash and mobile alignment fixes under Fixed. |
+| `chore_deps` | PASS | with_skill explicitly skips dependency-only item #103. |
+| `build_deps_skipped` | PASS | with_skill explicitly skips dependency-only item #114. |
+| `perf_changed` | PASS | with_skill output places the caching performance improvement under Changed. |
+| `feat_added_breaking` | PASS | with_skill places the plugin configuration redesign under Changed and marks it BREAKING. |
+| `docs_release_workflow_changed` | PASS | with_skill includes the release publishing workflow update under Changed. |
+| `test_release_acceptance_changed` | PASS | with_skill includes tightened release acceptance coverage under Changed. |
+| `ci_release_gate_changed` | PASS | with_skill includes required repository checks before release under Changed. |
+| `docs_typo_skipped` | PASS | with_skill lists README typo/copyediting item #109 among skipped maintenance items. |
+| `ci_cache_skipped` | PASS | with_skill lists internal cache maintenance item #110 among skipped maintenance items. |
+| `remove_removed` | PASS | with_skill places Python 3.7 support removal under Removed. |
+| `security_security` | PASS | with_skill places the XSS vulnerability patch under Security. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=8d9d87cad7abcb73168e7b8a7cf0eaa982a5e5bbd210ebd142c4deea9ae6eb0a; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly classifies all asserted user-visible changes, skips internal maintenance, and marks the breaking redesign.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=1c3057ec114e98304d8ed4b305043738bc178ffb4a3c2117907388f79ebbe370; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly classifies all user-visible changes, cleans titles, marks the breaking change, and skips the specified maintenance-only items.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=171e5ac5da648635f7d76603c860871f91729c1793192007856c0085b22d4167; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline also satisfies the assertions, providing comparison context only.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9be6d0e23157c436ac95fa175b7c253fc5c8a58bd7930d5f75b8e2f143978496; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=674d41eb6e91b34d48c83598ca0a639a60170d5f0f6a5a7caa9e65a711da79d7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline also produced a substantively correct changelog, with more verbose translations and an explicit empty Deprecated section.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

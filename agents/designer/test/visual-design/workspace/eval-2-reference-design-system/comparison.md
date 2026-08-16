@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `42400da86be636a5c48d6ced7acfe1114f7f3fc84e29109517e26b5a0856067c` from `agents/designer/test/visual-design/workspace/eval-2-reference-design-system`.
 - Identity schema: `2`
-- target_skill_sha256: `be4ad3e2bd7a045eae2db8cc147a655dcc8a42c01f2783e36539d2888fdcbaaf`
+- target_skill_sha256: `61b6f3a42424308b7a04ea0adf2a51b2b68f65f02fd796de4a724f6f357a579d`
 - eval_definition_sha256: `1e9739265f0721cb69546820ef87da3e0b8045e92accd200c449d4a7c5bab7c5`
 - metadata_sha256: `0569508778fe88200b5fb026dabdecd3e642e5d037acfb9bb7196015ba8a9eba`
 - fixture_sha256: `42400da86be636a5c48d6ced7acfe1114f7f3fc84e29109517e26b5a0856067c`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `b207ccfef6c29a46ee4c39ebd7d39f4af35c494d6c841b0789899fe237e9584b`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `092b10f39d07502fd69cfd2b4992b956cec050d77722de8312a6a9dc94160cd6`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `2dd23a101b1833a5f815a50f0bc085a1d9a95ddf55380df9fcbc12238f06ae99`
+- Skill overlay SHA-256: `3beb7f3f01f53d491f571b17a7c7d87e2b0ca9e8ea7417fbcc27feda44e8e283`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,19 +33,19 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `design_system_data` | PASS | 锁定的交付文件明确包含 Design System Data 查询与发现、Reference-Driven Design System、产品类别、推荐模式、风格方向、配色系统、字体体系、UX Quality Rules 和 Anti-patterns to Avoid。 |
-| `assertion_2` | PASS | 锁定的交付文件是视觉系统文档，未包含 CSS/Tailwind/React/shadcn 实现代码、安装命令或工程任务拆解；内容在 Design Handoff 处停止。 |
+| `design_system_data` | PASS | 锁定的 with_skill delivery_snapshot 文档包含“Reference-Driven Design System”、Design System Data 查询与 findings，并明确产品类别、推荐模式、风格方向、配色、字体、UX Quality Rules 和 Anti-patterns。 |
+| `assertion_2` | PASS | 锁定文档是视觉系统 Markdown 规范，未包含 CSS/Tailwind/React/shadcn 实现代码、安装命令或工程任务拆解；文档以设计交接说明结束。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=092b10f39d07502fd69cfd2b4992b956cec050d77722de8312a6a9dc94160cd6; fixture_sha256=42400da86be636a5c48d6ced7acfe1114f7f3fc84e29109517e26b5a0856067c; output_sha256=6df724b47990fb9ecc4e0eb52e54214202d1df23d55906a0c61896172f3b3d13; snapshot_sha256=b72af3147c7029719d2be145a23fdb2097ec8a2d97bea1e92cfa3bc8fe37ea54
-- Behavior: 完成并交付了包含 Design System Data 依据的企业分析平台视觉系统文档，覆盖布局、风格、色彩、字体、UX 规则和反模式，并停在设计交接边界。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=092b10f39d07502fd69cfd2b4992b956cec050d77722de8312a6a9dc94160cd6; fixture_sha256=42400da86be636a5c48d6ced7acfe1114f7f3fc84e29109517e26b5a0856067c; output_sha256=9d74b19ca67910b2df9c0ab5060a411739cc6ae10e14db95ba1adfc213c3dd1d; snapshot_sha256=1ad9cb3219c4005919bd2f3ae12eaf02624f14165231df10e6033bf51072ed89
+- Behavior: 完成并交付包含 Design System Data 驱动内容的企业分析平台视觉系统文档，未生成代码。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=092b10f39d07502fd69cfd2b4992b956cec050d77722de8312a6a9dc94160cd6; fixture_sha256=42400da86be636a5c48d6ced7acfe1114f7f3fc84e29109517e26b5a0856067c; output_sha256=ea157cf8d0cda88574c819e021b5f3b4219c3603cd74de047c6961457906207b; snapshot_sha256=1fa1de0ce4aa7a79f0431e2f3aac8d235ce49423f83624066c7fd57713b616d3
-- Behavior: 交付了较完整的视觉系统文档，但其锁定内容偏向一般设计规范，未呈现 with_skill 交付中的 Design System Data/reference-driven 证据，且包含工程 token 示例与组件命名建议。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=092b10f39d07502fd69cfd2b4992b956cec050d77722de8312a6a9dc94160cd6; fixture_sha256=42400da86be636a5c48d6ced7acfe1114f7f3fc84e29109517e26b5a0856067c; output_sha256=213d4f21bf00a1b31d3a013b502ff524a5f8683d325926e4ff6dd0067f5e0c9e; snapshot_sha256=4ec2e9be0adf3266fd8cbc94e2fc03c3ac10ad581bf8f4826e02586cc74ed878
+- Behavior: 完成视觉系统文档，但交付内容未体现 Design System Data 查询结果及 reference-driven design system 等要求。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

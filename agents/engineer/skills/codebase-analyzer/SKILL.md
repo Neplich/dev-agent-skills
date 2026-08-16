@@ -1,6 +1,6 @@
 ---
 name: codebase-analyzer
-description: "Inspect an existing codebase and produce evidence-backed structure, stack, convention, dependency, and architecture findings. Use after engineer-agent routes a bounded codebase-analysis request."
+description: "Inspect an existing codebase and report evidence-backed structure, stack, conventions, dependencies, and architecture. Use after engineer-agent routes bounded codebase analysis."
 visibility: internal
 ---
 
