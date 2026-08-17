@@ -1110,3 +1110,27 @@ def test_transactional_replace_rollback_removes_created_target(
 
     assert not created.exists()
     assert existing.read_bytes() == b"old-inventory"
+
+
+def test_transactional_replace_rollback_keeps_externally_modified_target(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    created = tmp_path / "comparison.md"
+    existing = tmp_path / "migration-inventory.json"
+    existing.write_bytes(b"old-inventory")
+    real_replace = run_skill_eval.os.replace
+
+    def fail_on_existing(source, destination):
+        if Path(destination) == existing:
+            created.write_bytes(b"external content")
+            raise OSError("injected replace failure")
+        return real_replace(source, destination)
+
+    monkeypatch.setattr(run_skill_eval.os, "replace", fail_on_existing)
+    with pytest.raises(OSError, match="injected"):
+        run_skill_eval._transactional_replace(
+            {created: b"new-comparison", existing: b"new-inventory"}
+        )
+
+    assert created.read_bytes() == b"external content"
+    assert existing.read_bytes() == b"old-inventory"

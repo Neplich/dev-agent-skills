@@ -43,7 +43,8 @@ def transactional_replace(updates: dict[Path, bytes]) -> None:
         for path in reversed(replaced):
             backup = backups[path]
             if backup is None:
-                path.unlink()
+                if path.read_bytes() == updates[path]:
+                    path.unlink()
             else:
                 os.replace(backup, path)
         raise
