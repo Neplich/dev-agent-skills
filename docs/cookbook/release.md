@@ -1,8 +1,11 @@
 # 手动发布
 
 1. 确认发布范围与目标不可变 SemVer。
-2. 把 `.claude-plugin/marketplace.json` 的 `metadata.version` 和
-   `.kimi-plugin/plugin.json` 的 `version` 更新为相同、不带 `v` 前缀的版本。
+2. 把以下版本面更新为相同、不带 `v` 前缀的版本（`check_repository_contract.py`
+   逐项强制一致）：
+   - `.claude-plugin/marketplace.json` 的 `metadata.version`；
+   - 七个角色 Agent 的 `agents/{agent}/.claude-plugin/plugin.json` 的 `version`；
+   - `.kimi-plugin/plugin.json` 的 `version`。
 3. 确认 `docs/changelog/changelog-v{version}.md` 存在，并被根 `CHANGELOG.md` 索引。
 4. 运行生成契约、repository/doc/eval contract、eval artifact、安装与受影响测试；执行
    必需的 fresh eval，并汇总其持久化 comparison。
