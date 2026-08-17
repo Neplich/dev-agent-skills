@@ -1,6 +1,6 @@
 ---
 name: ui-ux-design
-description: "Produce UX flows, page structures, journey maps, screen definitions, and ASCII prototypes from confirmed product scope. Use after designer-agent routes a UI/UX delivery; an unconfirmed direct request returns to the design entry gate."
+description: "Define UX flows, page structures, journeys, screens, and ASCII prototypes for confirmed product scope. Use after designer-agent routes UI/UX work."
 visibility: internal
 ---
 

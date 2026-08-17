@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7` from `agents/devops/test/incident-playbook-writer/evals/workspace/eval-002-mapped-doc-incident-playbook`.
 - Identity schema: `2`
-- target_skill_sha256: `50cae2b4bb9c10d0d200f08d68ca4dd9d27b329f1a2b94cb2b8cb7333b3815ce`
+- target_skill_sha256: `dcee4cc39c2fa28ea4046f8b10ceca0528d9458efc81ffb2c28e21e284fe034f`
 - eval_definition_sha256: `56f66c660609712980bbe29e190d00dff6d36c67cb844c6b5e1aa3d336dcd314`
 - metadata_sha256: `c28ce2010bd179e2122284ba3710d5b5dd600f47e70a10f6ca7f48b43c5aac3a`
 - fixture_sha256: `cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7`
@@ -22,37 +22,37 @@
 - judge_schema_sha256: `6eadf49a93ad15b65779f0737c549d6122220ac6abe8a01622417bb0da199cda`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `27a471d4180c030327b87d22f79174352fdeffbbaace399da8cf913275d6b17e`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `f3eab55f60df9bb2b74211b8616c657af594a2e8a1c83328a335347ab9dd3bf1`
-- Behavior result: **PASS**
-- Coverage result: **PARTIAL**
-Overall result: PASS (partial coverage)
+- Skill overlay SHA-256: `5d95ff5039100f2131c72122b091ff4a172f65d45070290345e8a658862159d4`
+- Behavior result: **FAIL**
+- Coverage result: **FULL**
+Overall result: FAIL
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reads_mapped_docs_first` | NOT_EXERCISED | with_skill stopped at its PM/DevOps handoff gate before inspecting repository documents; read-order execution was not reached. |
-| `verifies_against_code` | NOT_EXERCISED | with_skill did not inspect src/runtime/health.rules or produce threshold guidance because the required handoff context was absent. |
-| `treats_unverified_as_low_trust` | NOT_EXERCISED | with_skill did not reach operational guidance generation, so handling of the unverified document could not be exercised. |
+| `reads_mapped_docs_first` | FAIL | with_skill trace shows multiple skill/handoff scans before the command that reads `docs/site/api/runtime-health.md`; that command reads the change map first, so the required mapped-document-first order is contradicted. |
+| `verifies_against_code` | PASS | The with_skill output explicitly distinguishes the document's 3-failure claim from `src/runtime/health.rules`'s 5-failure threshold and explains that the stale document would delay detection, escalation, and rollback. |
+| `treats_unverified_as_low_trust` | PASS | The with_skill output treats `last_verified_version: unverified` as low-trust navigation, uses the code value for the alert threshold, and refuses to invent rollback commands because no deployment or rollback evidence exists. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=27a471d4180c030327b87d22f79174352fdeffbbaace399da8cf913275d6b17e; fixture_sha256=cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7; output_sha256=f3e2c8a6f1249005a510933f97cb04ee1a8a935c16409c64a874b43e2aa6bd7e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly stopped at the specialist entry gate and requested the required handoff context; no repository mutation occurred.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=27a471d4180c030327b87d22f79174352fdeffbbaace399da8cf913275d6b17e; fixture_sha256=cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7; output_sha256=350a44d322a8f9e88ce0f7cbed4c3fa88bce7639d35c91aceae0c61fc79c70af; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly verified the 3-versus-5 threshold discrepancy, described its operational impact, and treated unverified documentation as low trust, but blocked the runbook and read the mapped document too late.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=27a471d4180c030327b87d22f79174352fdeffbbaace399da8cf913275d6b17e; fixture_sha256=cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7; output_sha256=6cba89a4d0faab106e930c9fd2c42e6ab9754e263f9ec5ab6aecbe08e0063b12; snapshot_sha256=a19e52e9415a4bdaf4bde9822d98b92c8123411d4426e3eeee062e0efca7a1c8
-- Behavior: Read the mapped documentation and code, identified the 3-versus-5 threshold mismatch, and delivered an updated health document with response and rollback guidance.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=27a471d4180c030327b87d22f79174352fdeffbbaace399da8cf913275d6b17e; fixture_sha256=cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7; output_sha256=defc2603df307ceb96e283d7c81fb767936c6a65046cdd420ba2a077bc451819; snapshot_sha256=e249b7f8fdcccc2a1ee0dbf4d498ab29650bd4e844de112e31c6ef0ba315d93a
+- Behavior: Created and delivered an updated health document with threshold correction and minimal incident/rollback guidance; comparison-only context.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- None.
-- Next: Provide the confirmed PM/DevOps handoff packet, then perform the repository verification and documentation update.
+- The with_skill lane violated the required mapped-document-first read order.
+- Next: Read `docs/site/api/runtime-health.md` immediately after identifying the code target, then verify its claims against `src/runtime/health.rules` and available rollback evidence.
 
 ## Runtime Artifact Policy
 

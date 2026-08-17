@@ -1,6 +1,6 @@
 ---
 name: designer-agent
-description: "Classify and route confirmed UX, information-architecture, wireframe, reference-pattern, and visual-system requests before design work begins. Use immediately after a PM handoff; preserve the handoff and delegate to the matching design specialist."
+description: "Route confirmed UX, information-architecture, wireframe, reference-pattern, and visual-system work to the appropriate design specialist. Use after a PM design handoff."
 visibility: internal
 ---
 

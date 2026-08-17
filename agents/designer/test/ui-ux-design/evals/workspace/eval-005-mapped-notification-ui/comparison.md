@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `cc899f673f7067e0f23d4e43273fcee59ea0d49ecc2127d06d0f6831a3eb4d0a` from `agents/designer/test/ui-ux-design/evals/workspace/eval-005-mapped-notification-ui`.
 - Identity schema: `2`
-- target_skill_sha256: `2088a9b7ee00fc1f620b92a5141c4a34a4c48ca289c4be5cea831626687d85b8`
+- target_skill_sha256: `749980e18a4ced3c2a9cbbdaeb6230841130618487b0995560867366d48b7d72`
 - eval_definition_sha256: `25a9beaf5037d128f11073d7bdad29e775b60a170f80ba9b4b2cd556e1ef1469`
 - metadata_sha256: `2df7ffae351f05ff856a7ddf2ab545a06891ad7b1dee1da8ddccd64f5e254eea`
 - fixture_sha256: `cc899f673f7067e0f23d4e43273fcee59ea0d49ecc2127d06d0f6831a3eb4d0a`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `6eadf49a93ad15b65779f0737c549d6122220ac6abe8a01622417bb0da199cda`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `2797a1f8eaaa6ec1663895e21733e03c38b2053355b7534ad87b60c49209372a`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `beec8510dfdfe8132ffae9f12e486d2c527ec9245f5752f40eaeb251a4d63e70`
+- Skill overlay SHA-256: `e26256f2206c322bda9ae81b814ac63fff1a476a818df2afc0a6e339fb00af73`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,26 +33,26 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reads_mapped_docs_first` | PASS | Locked trace shows the candidate read the change-map, identified the single required document, then read that document and the page source; no unrelated formal documents were read. |
-| `verifies_against_code` | PASS | Locked trace and delivery snapshot show direct inspection of the HTML input without `checked`, identification of the documented default-on conflict, and selection of code as current truth. |
-| `treats_unverified_as_low_trust` | PASS | The locked evidence records `last_verified_version: unverified`, reads the document despite that status, and expands verification to the HTML source rather than rejecting or relying solely on the document. |
+| `reads_mapped_docs_first` | PASS | Trace shows the with_skill lane identified the task path, inspected the change map, then read the matched required document `docs/site/api/notification-preferences.md`; no unrelated formal document contents were read. |
+| `verifies_against_code` | PASS | The locked trace and final output both identify that `src/ui/notification-preferences.html` has no `checked` attribute, so the actual static default is unchecked, and explicitly contrast this with the document's enabled-by-default claim. |
+| `treats_unverified_as_low_trust` | PASS | The final output explicitly identifies `last_verified_version: unverified` as low trust and bases the default-state conclusion on the HTML code while retaining the document claim as a conflict. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2797a1f8eaaa6ec1663895e21733e03c38b2053355b7534ad87b60c49209372a; fixture_sha256=cc899f673f7067e0f23d4e43273fcee59ea0d49ecc2127d06d0f6831a3eb4d0a; output_sha256=8b2576987187720a288d91eebfc801871e7321980103212a0c4cf0c36e1c323b; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Verified the mapped document and source code, detected the default-state conflict, treated the document as unverified, and stopped at the required handoff gate.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2797a1f8eaaa6ec1663895e21733e03c38b2053355b7534ad87b60c49209372a; fixture_sha256=cc899f673f7067e0f23d4e43273fcee59ea0d49ecc2127d06d0f6831a3eb4d0a; output_sha256=d9cddf1e30dc5376f4fcbf05aa8ac8f17f546e5a7ad3b883cbb23ed7f07ef438; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Applied the design entry gate, verified the mapped document against the HTML, treated the unverified document as low trust, and stopped with an evidence-based handoff blocker without mutating files.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2797a1f8eaaa6ec1663895e21733e03c38b2053355b7534ad87b60c49209372a; fixture_sha256=cc899f673f7067e0f23d4e43273fcee59ea0d49ecc2127d06d0f6831a3eb4d0a; output_sha256=0671daf8775fa223070ce7d6591c9cc010ff2e773ebda5733a4943e5cc3806f0; snapshot_sha256=220c8d0d4f2d9ce4cb1d4426c94b78604d26ab15ccfe0ee3bc0ab0e32f61b330
-- Behavior: Fresh baseline updated the formal document with a UI/UX specification and correctly recorded the code/document default conflict.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2797a1f8eaaa6ec1663895e21733e03c38b2053355b7534ad87b60c49209372a; fixture_sha256=cc899f673f7067e0f23d4e43273fcee59ea0d49ecc2127d06d0f6831a3eb4d0a; output_sha256=9fde896516f3537b76301db3936387917e1aed6c3aed084a7d3b9f5b051863c8; snapshot_sha256=30379880e94fd1ab46c5f9d28b293c0ddc7f874dbd84b4a2915cc4fbe569b775
+- Behavior: Produced and modified a formal notification-preferences document, correctly noted the HTML default was unchecked, but treated the documented enabled default as the product rule without the required low-trust process.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Provide a confirmed PM/design handoff and feature_path, then create the UI/UX specification.
+- Next: Obtain the PM/design handoff and confirmed feature_path, then create the UI/UX specification.
 
 ## Runtime Artifact Policy
 

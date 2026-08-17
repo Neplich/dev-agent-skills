@@ -1336,6 +1336,7 @@ class EvalContractTests(unittest.TestCase):
                     {
                         "name": "engineer-agent",
                         "version": "1.2.3-rc.10",
+                        "description": "Engineering work",
                     }
                 )
             )
@@ -1358,6 +1359,7 @@ class EvalContractTests(unittest.TestCase):
                         "plugins": [
                             {
                                 "name": "engineer-agent",
+                                "description": "Engineering work",
                                 "source": "./agents/engineer",
                                 "skills": ["./skills/example"],
                             }

@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `1c27cfa2f41ff48338bb4acbfdb7cd16614fdaed5b9fc59cbb0ed2df02c327ad` from `agents/docs/test/docs-audit/evals/workspace/eval-015-manual-page-evidence`.
 - Identity schema: `2`
-- target_skill_sha256: `dafd53371901dfd724f88c70262b157e59494d29da1c613d0ef130564b6ff4f9`
+- target_skill_sha256: `a5e0bb043d61dbbb218e7d7efc08374e0d16a4d7aaa3b31817f2038830c90941`
 - eval_definition_sha256: `aa707a4a153cd14f8630bcfdbc7593482bcfc1de05bf7582ac2eeb6f645afb7d`
 - metadata_sha256: `2b093794d817fa1de245fdac944141cf26e940fab11bd3c871b66f71a9c40eac`
 - fixture_sha256: `1c27cfa2f41ff48338bb4acbfdb7cd16614fdaed5b9fc59cbb0ed2df02c327ad`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `cde7d254babf29e4546bfe9e69c491c81147f2f6aec782f40fd9d10a9dc4b4fd`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `9c90b10bde8bbda672daf3c3fd6d8b4bfbcd80966d8091d82aceff2f385c4210`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `7e61bd8eca6431729aee1f3be4656be0a4348119eb1218623bafd54cfaead2ab`
+- Skill overlay SHA-256: `d7e2242fcdf83209e6c0cb5ec9544aa009e79488a72f81ebd4bf387289fbabec`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,22 +33,22 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `checks_step_screenshot_files` | PASS | With-skill final output states step-2-save-member.png is nonexistent; locked trace records the SVG as a Scalable Vector Graphics image. |
-| `checks_caption_step_correspondence` | PASS | Final output identifies the mismatch between step 1 opening access settings and the caption describing a delete-workspace confirmation dialog. |
-| `checks_manual_navigation_reachability` | PASS | Final output states the page is not navigated to and the sidebar snapshot lacks it; locked trace records the public landing page and manual index lacking the target entry. |
-| `checks_manual_redaction` | PASS | Final output identifies test.user@example.invalid in the page and token-demo-redact-me at SVG line 5 as redaction blockers. |
-| `blocks_manual_stamp` | PASS | Final output concludes blocked and states no version stamp was performed; locked evidence shows last_verified_version remains unverified and no ready_for_tag result. |
+| `checks_step_screenshot_files` | PASS | with_skill 记录确认目标树中仅有可解析的 SVG，且明确指出第二步引用的 step-2-save-member.png 缺失。 |
+| `checks_caption_step_correspondence` | PASS | with_skill 明确指出第一步要求打开访问设置，而图注写成“删除工作区确认框”，并以页面第24行和 SVG 内容为证。 |
+| `checks_manual_navigation_reachability` | PASS | with_skill 依据 public 落地页、manual 根索引及生成侧边栏快照，明确指出 /manual/workspaces/manage-access 不在导航中。 |
+| `checks_manual_redaction` | PASS | with_skill 明确指出正文第18行的 test.user@example.invalid 测试邮箱，以及 SVG 第5行的 token-demo-redact-me 测试令牌，均需脱敏。 |
+| `blocks_manual_stamp` | PASS | with_skill 将审计结论标为 blocked，指出页面原始 last_verified_version 为 unverified，并明确未执行盖章、未返回 ready_for_tag。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9c90b10bde8bbda672daf3c3fd6d8b4bfbcd80966d8091d82aceff2f385c4210; fixture_sha256=1c27cfa2f41ff48338bb4acbfdb7cd16614fdaed5b9fc59cbb0ed2df02c327ad; output_sha256=f66d4334e3999cf060b4aa860c9a0f2857fe1afc676e45068333b9663f96eb48; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly performed the bounded manual audit, identified all required defects, and blocked stamping.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9c90b10bde8bbda672daf3c3fd6d8b4bfbcd80966d8091d82aceff2f385c4210; fixture_sha256=1c27cfa2f41ff48338bb4acbfdb7cd16614fdaed5b9fc59cbb0ed2df02c327ad; output_sha256=2d2dd9615ef1689469607681b4d21c2a09c95230752217150c8c139357553a5f; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完整识别截图完整性、图注对应关系、导航不可达、脱敏问题及阻断盖章条件，并保留 unverified 状态。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9c90b10bde8bbda672daf3c3fd6d8b4bfbcd80966d8091d82aceff2f385c4210; fixture_sha256=1c27cfa2f41ff48338bb4acbfdb7cd16614fdaed5b9fc59cbb0ed2df02c327ad; output_sha256=7d38cbda41fac11d424cb21213b1614938e052e413a4ab3167c88f9b4ec5b868; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline also identified the main defects and blocked release, but provided a less complete audit narrative.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=9c90b10bde8bbda672daf3c3fd6d8b4bfbcd80966d8091d82aceff2f385c4210; fixture_sha256=1c27cfa2f41ff48338bb4acbfdb7cd16614fdaed5b9fc59cbb0ed2df02c327ad; output_sha256=fd0740e2b82b7f0eb7c21c739ceb6b3ba231053d81bcddf71fa320ec58c48b51; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 识别了缺失截图、导航缺失、图注不符和令牌风险，但未明确指出正文测试邮箱，也未完整覆盖导航三类证据和阻断状态要求。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

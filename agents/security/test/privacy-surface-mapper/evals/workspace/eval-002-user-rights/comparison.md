@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8` from `agents/security/test/privacy-surface-mapper/evals/workspace/eval-002-user-rights`.
 - Identity schema: `2`
-- target_skill_sha256: `36470092bada7ef550e554a98c281f2fe94c427f5a20542e3fb5f13c69f3b496`
+- target_skill_sha256: `2d9aa34423715a24783169e774af3c68a95cbc320b5fc5af4b5753bd7785f2a0`
 - eval_definition_sha256: `ba5034d1b895bcb95cc9d848045b869189eec2c98d23c0a5d5ce381059a73047`
 - metadata_sha256: `747c4437caa882844d7f4c740414dcda7c0dbb14392d11ed34230c9d397ac11a`
 - fixture_sha256: `2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `46c6f10cb2ee094e0f2d9b8cf0d9d794ebc801a301eb97187a76e961b4e37fd0`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `04d179782a25ad87f73775d407c14368f4301d86a871528ca2b66e82792a813b`
+- Skill overlay SHA-256: `2eea2d31331dfff7d98326573b856ca9f269bca068d5f182bf99e8b0d5d75219`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,21 +33,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `data_inventory` | PASS | The locked report inventories user profiles, orders, behavioral events, and deletion state, and maps them to the relevant endpoints and purposes. |
-| `sharing_and_retention` | PASS | The locked report identifies analytics, backups, caches, queues, and other replicas as unverified sharing/retention surfaces, with risks and remediation recommendations. |
-| `user_rights` | PASS | The locked report evaluates access, export, deletion, and correction support, including the concrete authorization and completeness failures. |
-| `compliance_gaps` | PASS | The locked report provides prioritized privacy/compliance gaps, impacts, release recommendation, and specific remediation actions. |
+| `data_inventory` | PASS | Locked privacy-map.md inventories user profiles, orders, behavioral events, and deletion markers, with purposes and endpoint/data-flow evidence. |
+| `sharing_and_retention` | PASS | Locked privacy-map.md identifies unknown retention, absent retention/legal-hold policy, unavailable processor/transfer evidence, and risks from incomplete deletion propagation. |
+| `user_rights` | PASS | Locked report evaluates access, export, deletion, rectification, authentication, tracking, and secure delivery; it identifies the IDOR and incomplete rights implementation. |
+| `compliance_gaps` | PASS | Locked report provides prioritized privacy/compliance gaps, impacts, remediation recommendations, testing needs, release decision, and ownership handoff. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0; fixture_sha256=2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8; output_sha256=4fec90ad5171ffa1d71590300bb972d1db736310884a48b2577d188eec3d0711; snapshot_sha256=b0f2c05bdf064b6de3871991b0de177751e9cc6a0afb19a912b77cec7d0f67a1
-- Behavior: Delivered a complete, evidence-based privacy surface report covering inventory, sharing/retention, user rights, compliance gaps, impacts, and remediation.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0; fixture_sha256=2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8; output_sha256=4f1686815c031c0354874ed2e02c4a5fef0e8862ea32de0f297fa15f8b6af614; snapshot_sha256=f4fff6995d67d1a0f1267bce96ae33a88f10531bf94d7ed8c75119eb65d2fbc4
+- Behavior: Delivered a substantive privacy surface map and Security-owned report covering data inventory, flows, rights status, retention/sharing uncertainty, risks, compliance gaps, remediation, testing, and ownership.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0; fixture_sha256=2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8; output_sha256=19592d4e533b772e691eb1faba88cc94920ed2f24d611e4b12328d0f73d62e47; snapshot_sha256=639e6b256cf553b2976000518a3b8f4d3b8cf58bbb6d4b2eedbfc112270658bb
-- Behavior: Produced a solid comparison report covering the principal authorization, export, deletion, retention, and audit gaps, but with less complete inventory and compliance mapping.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=f954f6fb2beee6f446fdaf1e7380f20a7139675884dad90e43a17db9c8bbe9d0; fixture_sha256=2a160ab6ab1065aa7d10a9502c97feefe12d13d5af072b1075181fbf932723d8; output_sha256=60f5e601c0ee402d8d5b0c6c71223b1d3524d376480603718345e5e1bb3f2066; snapshot_sha256=747c584d699b0109b79425e40cb79a3695b477ac37a195b823fcb9d57b261942
+- Behavior: Delivered a shorter security report identifying major authorization, deletion, export, retention, and abuse-control gaps, but with less complete data inventory and privacy-surface mapping.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

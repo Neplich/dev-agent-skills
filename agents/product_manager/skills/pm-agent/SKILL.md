@@ -1,6 +1,6 @@
 ---
 name: pm-agent
-description: "Default entry point for product and engineering R&D requests when the user has not named another agent or skill. Use when the user explicitly names pm-agent, including requests that also name a downstream capability. When another role agent or skill is named without pm-agent, do not activate pm-agent; that named capability applies its own gate. Covers product ideas, features, requirement changes, bugs, implementation, testing, design, deployment, security, formal project docs, delivery, inherited-project catalogs, competitive research, release communication, roadmaps, and GitHub project status."
+description: "Default entry for product and engineering R&D when no other capability is explicitly named. Explicitly naming pm-agent selects it; explicitly naming another agent or skill selects that capability and its own gate."
 ---
 
 # PM Agent Dispatcher

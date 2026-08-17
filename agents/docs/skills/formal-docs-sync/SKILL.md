@@ -1,6 +1,6 @@
 ---
 name: formal-docs-sync
-description: "Synchronize or plan bounded backfill of current-state API, database, design, ops, and product docs from confirmed feature, deployment, or release evidence. Use after docs-agent routes a complete sync basis."
+description: "Synchronize or plan bounded backfill of current API, database, design, ops, and product documentation from confirmed evidence. Use after docs-agent routes formal documentation sync."
 visibility: internal
 ---
 

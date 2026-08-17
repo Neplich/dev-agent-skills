@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `d16b0aba9c42c15bb50cb2e6533059095747e0b241aeb84f42387b57f3c93839` from `agents/product_manager/test/github-release-gen/evals/workspace/eval-002-enforce-release-sequence-gates`.
 - Identity schema: `2`
-- target_skill_sha256: `0c9b1305da43afbfc22e6d563651831ce45be05793224d552c008cc393a37b1e`
+- target_skill_sha256: `ed7c0a44968df88c4831e9abe2b9be4922e4fa2cd6bcbd8dc6dd7e927ff9c87a`
 - eval_definition_sha256: `4ae771ce624f2d4218d5a0892756a08ab5deb5771e2156fa84d9cebf89f45e20`
 - metadata_sha256: `6e1c66d9908de26eec5a81a59cb64d6d09ad4a2d9291406739a3d318995009f5`
 - fixture_sha256: `d16b0aba9c42c15bb50cb2e6533059095747e0b241aeb84f42387b57f3c93839`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `7387039bc0ee52f805d2ca2d9e0306841c5745b2dec693f7be7ed2c655d6f462`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `2a564a9812a9893c6d440f3a82f58d1b6e03bc64e97e5dd9f393ca99e3af9583`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `41bf9818330e1ae365d336932a5653b591537342874ba68ae701f1478bc7b159`
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
 Overall result: PASS (partial coverage)
@@ -33,30 +33,30 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `site_notes_before_github_release` | PASS | With-skill output identifies the confirmed site handoff, the ready_for_tag pre-tag handoff, and PM preview ownership before any write. |
-| `ready_for_tag_allows_preview_only` | PASS | It explicitly limits ready_for_tag to preview, states the target tag is absent or conflicting, and prohibits draft/publish. |
-| `draft_omits_latest_and_publish_rechecks` | NOT_EXERCISED | Preview flags are shown, but no draft or publish write occurred, so draft omission and publish recheck behavior was not exercised. |
-| `blocks_missing_tag_and_post_tag_audit` | PASS | Request A is rejected for absent tag and missing post-tag release_verified, with tag ownership returned to the release owner and audit ownership to docs-agent:docs-audit. |
-| `blocks_missing_independent_approval` | PASS | Request B is rejected despite its claimed tag and release_verified because independent current maintainer publish approval is missing; prior permissions are not reused. |
-| `keeps_preview_or_draft` | PASS | The candidate presents a complete preview and states that GitHub publication, tag creation, draft/publish, and release-create operations were not performed. |
-| `inline_preview_body_and_version_normalization` | PASS | The locked preview contains an inline title, upgrade notes, and change details; it normalizes the version to 1.0.0-rc.1 and derives --prerelease, while no draft command was exercised. |
+| `site_notes_before_github_release` | PASS | With-skill output explicitly gives the chain from release-notes handoff through docs audit `ready_for_tag` to the GitHub release preview. |
+| `ready_for_tag_allows_preview_only` | PASS | It states `ready_for_tag` is pre-tag only, that the target tag is absent, and that it does not authorize publishing. |
+| `draft_omits_latest_and_publish_rechecks` | NOT_EXERCISED | Preview normalization and `--prerelease --latest=false` are stated, but no draft or publish operation occurred, so draft omission and final recheck behavior were not exercised. |
+| `blocks_missing_tag_and_post_tag_audit` | PASS | Request A is blocked for absent tag and missing post-tag audit/release verification, with tag responsibility returned to `release-owner` and audit responsibility to `docs-agent:docs-audit`. |
+| `blocks_missing_independent_approval` | PASS | Request B is blocked despite claimed tag/audit evidence because independent current maintainer publish approval is missing and prior preview permissions cannot be reused. |
+| `keeps_preview_or_draft` | PASS | The delivered result is explicitly preview-only; it states no draft, release, or tag operation was performed. |
+| `inline_preview_body_and_version_normalization` | NOT_EXERCISED | The inline preview includes title, upgrade notes, and change details, and states normalized version `1.0.0-rc.1` with prerelease/latest policy; no draft create/update command was executed. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2a564a9812a9893c6d440f3a82f58d1b6e03bc64e97e5dd9f393ca99e3af9583; fixture_sha256=d16b0aba9c42c15bb50cb2e6533059095747e0b241aeb84f42387b57f3c93839; output_sha256=5ed6e1066d666d2be5d6b531fe03b3b822ab2f3c70816f008890ab2022d0107e; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Produced a complete inline prerelease preview, applied the site and publication gates, rejected both unsafe requests, and performed no forbidden mutation.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2a564a9812a9893c6d440f3a82f58d1b6e03bc64e97e5dd9f393ca99e3af9583; fixture_sha256=d16b0aba9c42c15bb50cb2e6533059095747e0b241aeb84f42387b57f3c93839; output_sha256=e4ed3804d24c03e66f377d0a390a5eecc13674c95d179e509a7ba8a7aa65b0ed; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly produced a complete inline preview, enforced the release gates, and blocked both publish requests without mutations.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2a564a9812a9893c6d440f3a82f58d1b6e03bc64e97e5dd9f393ca99e3af9583; fixture_sha256=d16b0aba9c42c15bb50cb2e6533059095747e0b241aeb84f42387b57f3c93839; output_sha256=c7a1210f40830308f16d0c0ef0008781d86f872e61fff577b7f256f713187a02; snapshot_sha256=ba40c4f003b2a6c842a44ea57bf8a37ffd217c6a9712f5e54632fa8ffd7f12f5
-- Behavior: Fresh baseline also produced a preview and blocked both requests, but lacked the with-skill lane's explicit normalized flag and ownership/recheck boundary details.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=2a564a9812a9893c6d440f3a82f58d1b6e03bc64e97e5dd9f393ca99e3af9583; fixture_sha256=d16b0aba9c42c15bb50cb2e6533059095747e0b241aeb84f42387b57f3c93839; output_sha256=11f88e1791acafff13473b8d6e3a6b90e6d03562d5184e50dd271c3d71c16d28; snapshot_sha256=9d539728499e2a203795d05f1fe41172b4f1de67658d483ea4ad5a902ad23094
+- Behavior: Fresh baseline also produced a preview and avoided publishing, but provided less explicit gate sequencing, ownership handoff, and version-policy detail.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Obtain confirmed tag, post-tag audit, and independent current publish approval before any publish workflow.
+- Next: Obtain the actual target tag, post-tag release verification, and independent current maintainer approval before exercising draft or publish rechecks.
 
 ## Runtime Artifact Policy
 

@@ -193,8 +193,9 @@ def test_pm_entry_uses_explicit_invocation_then_rd_intent():
     )
 
     frontmatter_description = skill_text.split('description: "', 1)[1].split('"', 1)[0]
-    assert "Use when the user explicitly names pm-agent, including requests that also name a downstream capability" in frontmatter_description
-    assert "When another role agent or skill is named without pm-agent, do not activate pm-agent" in frontmatter_description
+    assert frontmatter_description.startswith("Default entry for product and engineering R&D")
+    assert "Explicitly naming pm-agent" in frontmatter_description
+    assert "explicitly naming another agent or skill" in frontmatter_description
     assert "this remains true when the same request also names a downstream capability" in skill_text
 
 

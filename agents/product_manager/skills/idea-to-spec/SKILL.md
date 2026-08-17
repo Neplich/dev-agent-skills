@@ -1,6 +1,6 @@
 ---
 name: idea-to-spec
-description: "Run product discovery and turn a new idea, empty-workspace app, existing-feature update, or spec iteration into confirmed PRD/DECISIONS and downstream handoff scope. Use after pm-agent classifies the request."
+description: "Turn a new idea, empty-workspace app, feature change, or spec iteration into confirmed PRD/DECISIONS and downstream scope. Use after pm-agent classifies product discovery or requirements work."
 visibility: internal
 ---
 

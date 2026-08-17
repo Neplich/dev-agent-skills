@@ -1,6 +1,6 @@
 ---
 name: release-notes-gen
-description: "Generate, preview, confirm, index, and validate a host documentation site's versioned Release Notes before GitHub Release work. Use after docs-agent routes confirmed version facts and release evidence."
+description: "Generate and validate a documentation site's versioned Release Notes, metadata, and index before GitHub Release work. Use after docs-agent routes confirmed release evidence."
 visibility: internal
 ---
 

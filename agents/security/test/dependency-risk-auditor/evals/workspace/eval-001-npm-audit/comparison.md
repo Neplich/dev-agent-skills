@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa` from `agents/security/test/dependency-risk-auditor/evals/workspace/eval-001-npm-audit`.
 - Identity schema: `2`
-- target_skill_sha256: `4936716a99cef8bc1e927ef64eaa0d20fa85f573a00b76c6ef0e6212ccbb3af0`
+- target_skill_sha256: `cd54295a0cbcb90462d5e5533bde1937cc7e871f8f4c9c53d7773ed40ace553e`
 - eval_definition_sha256: `971feaa0f85d14f75fe45df2640551915965f181de289e0a977efb57d2391e3e`
 - metadata_sha256: `b384f8f560614179a0a93d18259ac2f4d1d78a8283a28bd2f5b6097f32a74e67`
 - fixture_sha256: `5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `07345508cc5d326f024163cc8715111c4efeeb1bd80f16886d65b16eb2ef9292`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `41b45499ae9ca5616b92679964200469b31cddbc1797bbf9c8e3a1dc71be48a5`
+- Skill overlay SHA-256: `dede36cbf22736a6194a488a09a7dab4d5a1092bacb831a4913854fdff85a07a`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,21 +33,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `dependency_inventory` | PASS | 交付快照列出 Node.js 生产依赖 lodash@4.17.15 与 minimist@0.0.8，并说明对象路径、命令行参数、传递依赖和供应链风险来源。 |
-| `risk_classification` | PASS | 报告区分原型污染、模板代码注入、ReDoS、过期版本及 lockfile/完整性缺失导致的供应链风险，并标注 Critical/High/Moderate、P0/P1 和影响条件。 |
-| `evidence` | PASS | 报告引用 package.json、具体固定版本、CVE/GHSA 编号、受影响版本范围、修复版本和公开公告链接；同时明确缺少 lockfile 与源码调用点的证据边界。 |
-| `upgrade_plan` | PASS | 报告提出将 lodash 升级至 4.18.0+、minimist 升级至 1.2.8 或移除，生成并提交 lockfile/SBOM，重新扫描和测试，并给出危险键拒绝、静态模板、输入限制、隔离和监控等短期缓解措施。 |
+| `dependency_inventory` | PASS | The locked with_skill report identifies the Node.js ecosystem, both production packages (`minimist` and `lodash`), missing lockfiles, and relevant vulnerability/supply-chain risk sources. |
+| `risk_classification` | PASS | The report distinguishes Critical/High/Moderate vulnerabilities, discusses abandonment and provenance signals, and assigns P0/P1 priorities with impact and exploitability context. |
+| `evidence` | PASS | The locked report cites `package.json`, exact versions, CVE/GHSA identifiers, severity scores, affected ranges, fix versions, and advisory links. |
+| `upgrade_plan` | PASS | The report provides prioritized upgrades, lockfile/npm ci steps, regression checks, short-term input restrictions, and release-blocker guidance. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e; fixture_sha256=5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa; output_sha256=dd7bb5a83769e1e3e2f07af06aa87df11d61ed4de2155e8d8d73bc80097a0339; snapshot_sha256=2b0a24d8ec50a6734839fc7c3b093b23972623c7f0ffe89c04fcc7c9a559eb9b
-- Behavior: 完成了结构化依赖安全审计交付，识别两个直接生产依赖的多项风险，提供证据、严重度、影响、升级和缓解建议，并保留了证据边界。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e; fixture_sha256=5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa; output_sha256=e43366f10812d6448ebf24aac87af8739d8871fc64882f0de5e5e17bccff9bb6; snapshot_sha256=b1913cc5e73d5472a5ce18fd3212e175179dc6d7e153b0811efb2632b0a76a9d
+- Behavior: Delivered a complete structured dependency-risk audit covering inventory, classification, evidence, mitigations, upgrade sequencing, verification, and release readiness.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e; fixture_sha256=5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa; output_sha256=dc9fe1be794fd62e50ae9f1df83cacae866356137554fef7ca2531c4f6d5a6bc; snapshot_sha256=55b108e9918c2c7a37a72620437c75eefd345c67f734b15a7e68a0b45e2db863
-- Behavior: 提供了较简短的审计摘要和交付文件，覆盖主要依赖风险与升级方向，但细节和风险分类不如 with_skill 完整。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=77f74479311f236d7bdd232169db921b777009b1ba418244e6f3905f8b530b3e; fixture_sha256=5d978f8d24e5dad96aba91cd89101e33e9f1a0bda647abfca6c8a768de860caa; output_sha256=8a192e73a47e667892d9f77f06ebb8b4eb66c8ccbdc0cfcfdebe71f7f80d4dbe; snapshot_sha256=6c0fca61d993caf8176594464edb443757caf2531eb102a81b3df77cd32a58e6
+- Behavior: Fresh baseline also delivered a substantively complete audit, but with less detailed provenance and classification coverage.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

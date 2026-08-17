@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/pm-agent/evals/workspace/eval-12-change-tier-hotfix-abuse-blocked`.
 - Identity schema: `2`
-- target_skill_sha256: `ed93e443692bf05e76aaa38c8a5b8faff57190219ed48b9335316584424e6eb9`
+- target_skill_sha256: `e17c69ef6e179644f91ff00df55f141c375753f4668f30aca4e37e8247a60506`
 - eval_definition_sha256: `757872d7dabcbeb5f63781cd39c51a0fbd55c644aaecd2a814401a4e784d4603`
 - metadata_sha256: `5be95630fc657c3ddfcd1eee211fb45bdc7cc20a37cf20c50f58a72635d4712c`
 - fixture_sha256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `05754bc7141a9de585a1127391112d0da97f3c7138eba96f4377a8a50be63d7c`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `320ded3db25222eda1be26706a57ed0471cc438157b54925db0b045d15abf8e6`
+- Skill overlay SHA-256: `15f4acf7caf3d5cd73abf45c67ad35faa887bc8f89f51c7e53854fb1514182b5`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,20 +33,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reject_hotfix_abuse` | PASS | With-skill output explicitly states `hotfix_disposition: rejected`. |
-| `expectation_change_standard` | PASS | With-skill output explicitly states `change_tier: standard` and identifies the delta as a business-rule change. |
-| `block_or_return_pm` | PASS | With-skill output states `entry_basis: blocked`, requires confirmation, routes to `idea-to-spec`, and prevents Engineer/delivery from starting. |
+| `reject_hotfix_abuse` | PASS | with_skill 输出明确写明 `hotfix_disposition: rejected`。 |
+| `expectation_change_standard` | PASS | with_skill 输出将 `change_tier` 设为 `standard`，并说明这是业务预期变化。 |
+| `block_or_return_pm` | PASS | with_skill 输出将 `entry_basis` 设为 `blocked`，选择 PM / idea-to-spec，并要求确认产品范围后再交接 Engineer。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=498cef919e0d4037d4fe7c526d2a446ae08bd882669becb98a963fd98ca882ef; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly rejects hotfix handling, classifies the expectation change as standard, and blocks implementation pending PM scope and expectation confirmation.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=5a2ea6c2d0b0176f2f6e0f8b93db2d2edf9b5aad73db73c2fbc0d324727d5275; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 明确拒绝 hotfix，按 standard 处理业务预期变化，并阻止在范围确认前跳过 PM 进入实现。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=d28d4a275afa76d0d796324d3074de1bfaecd0665fbb29e08d4c4a9f48b26a41; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Reports an empty repository and inability to modify or merge, but does not address hotfix abuse, change tier, or PM gating.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=fd21822d29f9f59daea200bd14c26fadf30442cbe2bd48489976827d9b597907; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=9488a21f0845cbaf4086a01ba2418a7f395050fa76c11363f9419b1e297df4d2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 仅说明空仓库导致无法修改或合并，未提供 PM 路由、hotfix 拒绝或 standard 分类。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

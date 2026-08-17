@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf` from `agents/qa/test/bug-analyzer/evals/workspace/eval-3-mapped-doc-bug-analysis`.
 - Identity schema: `2`
-- target_skill_sha256: `09e738dc9988190b7f79b8aac551bd1674e0642fae4817109cb4551b9f01f0cd`
+- target_skill_sha256: `f7992d17a0646109f134e112dee5a8d92a38fd3d8cf3007564f0979ffbd3929d`
 - eval_definition_sha256: `5055f21aa292e91a955bc3aa635c808239336415cf083aba532e9d19a7985220`
 - metadata_sha256: `98bdccb4e3241d7facbaf94d94c2edbbe1adcec302e237e84c10d586748147c6`
 - fixture_sha256: `7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `6eadf49a93ad15b65779f0737c549d6122220ac6abe8a01622417bb0da199cda`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `147ea0edbf82c8ca9a07d9d6ff0b589da90d3fd96bbb89bae4f44faf26cc1243`
+- Skill overlay SHA-256: `27a39b82b995acb5c798df074b3eb2e54e5b81ea6292feb84f2c09cf3d65fb1c`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,20 +33,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reads_mapped_docs_first` | PASS | with_skill trace reads the change-map and then the mapped `docs/site/api/notification-retry.md`; no unrelated site-document traversal is shown. |
-| `verifies_against_code` | PASS | The locked report records the documentation claim of 3 retries, code value `max_retry_attempts = 2`, their discrepancy, and the unresolved runtime/counting-semantics impact. |
-| `treats_unverified_as_low_trust` | PASS | The locked report explicitly identifies `last_verified_version: unverified`, treats the documents as low-trust, and classifies runtime impact as suspected/needs more evidence with low confidence pending code/runtime evidence. |
+| `reads_mapped_docs_first` | PASS | Raw trace shows the change-map was read first in the targeted evidence command, followed immediately by the mapped notification document; no unrelated site-document contents were traversed. |
+| `verifies_against_code` | PASS | The locked delivery snapshot directly records `max_retry_attempts = 2`, the document statement of up to 3 retries, their numeric inconsistency, and the unresolved counting semantics; it classifies the defect as suspected rather than confirmed. |
+| `treats_unverified_as_low_trust` | PASS | The locked artifact identifies `last_verified_version: unverified` as low-trust evidence and bases the conclusion and medium-low confidence on directly observed source values plus missing runtime/test evidence. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d; fixture_sha256=7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf; output_sha256=18f78302fd7b9479879638e1a84f534c82cd2bc69e4c8aab09ab7ae0737e9039; snapshot_sha256=0c9f3afb59f866bb1696c0d9960ff842de619db7364bbc45054d9578db3567f7
-- Behavior: Created a durable evidence report, followed mapped-document context, verified the rule against code, and avoided overstating the runtime defect.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d; fixture_sha256=7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf; output_sha256=05c2aca7faa7801466c539ea5dafc54c06b4080d2fde76c8c79aef9cad69e5ce; snapshot_sha256=68fadce15e86e1c1eafbf43a3fee6d8cbcc8524b329acc9784967ef71b9d3118
+- Behavior: Produced the required evidence-based diagnosis artifact, verified the mapped documentation against the rule file, and kept the defect classification appropriately unconfirmed.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d; fixture_sha256=7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf; output_sha256=759bbc5ae015a63f06da731a9f2359fbb288fa68b33b7e69bff6d6d80cd80a75; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Produced a strong prose-only comparison analysis identifying the same discrepancy and evidence gaps, without the durable report artifact.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=42efa66a3d947aa438db6985ea7344decf5267623091f1d47b29acd454584b1d; fixture_sha256=7d279cf3b0905050d0b65ec93cd3a19c763df01dd02f4eaadd2d86c46d0a38cf; output_sha256=9da5894c7ee93c50bc9ea87962376063119fea4bc5a7ae2e073dddffe492fe39; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provided a correct prose comparison analysis but delivered no durable artifact; used only as baseline context.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

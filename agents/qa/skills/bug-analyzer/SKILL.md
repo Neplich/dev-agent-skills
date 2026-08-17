@@ -1,6 +1,6 @@
 ---
 name: bug-analyzer
-description: "Analyze a confirmed failing scenario, classify defect confidence, separate observation from inference, and produce durable bug evidence for QA or engineering. Use after qa-agent routes bug analysis."
+description: "Analyze a confirmed failing scenario, separate observation from inference, classify defect confidence, and produce durable bug evidence. Use after qa-agent routes bug analysis."
 visibility: internal
 ---
 

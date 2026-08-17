@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `0c59dd74f98f557b12899cbca54adf5aa4fe8aa94d37037f8495e06f83e726c0` from `agents/docs/test/docs-audit/evals/workspace/eval-009-pre-tag-blocked`.
 - Identity schema: `2`
-- target_skill_sha256: `dafd53371901dfd724f88c70262b157e59494d29da1c613d0ef130564b6ff4f9`
+- target_skill_sha256: `a5e0bb043d61dbbb218e7d7efc08374e0d16a4d7aaa3b31817f2038830c90941`
 - eval_definition_sha256: `d573477cbe6d660b40a0fd1ef0416d1d407e28ca525b29d8ef8303b282fe7f56`
 - metadata_sha256: `2fa243367a1e388253aea518818683b603664720294e82f2ffeeeebe3d5f82e8`
 - fixture_sha256: `0c59dd74f98f557b12899cbca54adf5aa4fe8aa94d37037f8495e06f83e726c0`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `7dbaa3390632c779b209a0992154e3a2f393b139ccab7a74c59a949526e90023`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `542a6dbc4e91378f219fb9c7b639cb7670be62733499a20407d8c4586f25b852`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `7e61bd8eca6431729aee1f3be4656be0a4348119eb1218623bafd54cfaead2ab`
+- Skill overlay SHA-256: `d7e2242fcdf83209e6c0cb5ec9544aa009e79488a72f81ebd4bf387289fbabec`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,21 +33,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `requires_exact_target_tree_blobs` | PASS | With-skill output explicitly binds audit evidence to the immutable `release-head` tree and excludes worktree/index/untracked changes; raw git evidence confirms target-tree inspection and the unchanged target commit. |
-| `blocks_every_in_scope_worktree_delta` | PASS | It identifies all four inventory entries—staged routes, unstaged API page, untracked audit draft, and modified package.json—and explains that each is in scope and blocks the audit. |
-| `performs_zero_audit_writes` | PASS | Raw git evidence shows unchanged HEAD, branch, refs, commits, and reflog, with no result diffs. The output states the audit was blocked without writing a formal report or returning `ready_for_tag`. |
-| `requires_clean_commit_update_ref_and_rerun` | PASS | The output directs the maintainer to commit or remove all scoped changes, update `release-head`, clean the index/worktree, and rerun the complete deterministic impact, documentation, page, and version audit before any success result. |
+| `requires_exact_target_tree_blobs` | PASS | With-skill output explicitly anchors the conclusion to `release-head` commit `4d7edbe...`, states the target tree still has the legacy implementation and version `1.1.0`, and treats workspace/index changes only as diagnostic evidence. |
+| `blocks_every_in_scope_worktree_delta` | PASS | The output identifies staged `src/catalog/routes.txt`, unstaged `docs/site/api/catalog-items.md`, unstaged `package.json`, and untracked `docs/site/.meta/audit/audit-v1.2.0.md`, and concludes the pre-tag audit is `blocked`. Raw fixture status confirms those exact paths and states. |
+| `performs_zero_audit_writes` | PASS | Locked git evidence shows unchanged HEAD, branch, refs, commits, and diffs; the output returns `blocked`, explicitly prohibits `ready_for_tag`, and recommends only read-only diagnosis and cleanup/re-audit steps. |
+| `requires_clean_commit_update_ref_and_rerun` | PASS | The output requires submitting or moving all listed differences, updating `release-head`, confirming clean index/worktree state, and performing a complete pre-tag rerun with explicit refs and rebinding from the inputs. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=542a6dbc4e91378f219fb9c7b639cb7670be62733499a20407d8c4586f25b852; fixture_sha256=0c59dd74f98f557b12899cbca54adf5aa4fe8aa94d37037f8495e06f83e726c0; output_sha256=3e0d3c36da254ceb9429bf300fd8c7aaf1dec6a3cfd039dcb626ae05647a8020; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly blocks the pre-tag audit, distinguishes target-tree facts from uncommitted diagnostics, performs no audit writes, and specifies a complete clean-target rerun.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=542a6dbc4e91378f219fb9c7b639cb7670be62733499a20407d8c4586f25b852; fixture_sha256=0c59dd74f98f557b12899cbca54adf5aa4fe8aa94d37037f8495e06f83e726c0; output_sha256=20282c09caa30ca477b43f86392fa43cede6d7f1bee4cae8c09c494798fe4982; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly returns a blocked pre-tag audit, binds conclusions to the immutable target tree, inventories every in-scope delta, performs no writes, and specifies full cleanup, ref update, and rerun requirements.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=542a6dbc4e91378f219fb9c7b639cb7670be62733499a20407d8c4586f25b852; fixture_sha256=0c59dd74f98f557b12899cbca54adf5aa4fe8aa94d37037f8495e06f83e726c0; output_sha256=8cd622f7525885a6672ce26c16187387c548da8d13cfae5de8a710bcd3c611a5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Also reaches the correct blocked conclusion and gives a useful rerun procedure, but is less explicit about scoped inventory binding and complete audit lineage.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=542a6dbc4e91378f219fb9c7b639cb7670be62733499a20407d8c4586f25b852; fixture_sha256=0c59dd74f98f557b12899cbca54adf5aa4fe8aa94d37037f8495e06f83e726c0; output_sha256=4adad2e66b572d2f605e4de8e07cd0131333531ad722572f5aed4885c715ff91; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Also reaches the correct blocked conclusion and gives target-tree evidence and rerun guidance, but provides a less complete per-path disposition and protocol-specific restart detail than the with_skill lane.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

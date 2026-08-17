@@ -1,6 +1,6 @@
 ---
 name: engineer-agent
-description: "Classify and route confirmed engineering requests across codebase analysis, TRD generation, implementation, tests, debugging, UI work, and delivery. Use immediately after a PM engineering handoff and before specialist execution."
+description: "Route confirmed engineering work across analysis, technical design, implementation, testing, debugging, and delivery. Use after a PM engineering handoff."
 visibility: internal
 ---
 

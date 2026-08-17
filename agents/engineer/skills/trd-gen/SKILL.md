@@ -1,6 +1,6 @@
 ---
 name: trd-gen
-description: "Create or update Engineer-owned TRDs, API technical docs, ADRs, and implementation blueprints from confirmed PM decisions or a TRD gap packet. Use after engineer-agent routes technical-design work."
+description: "Create or update Engineer-owned TRDs, API technical docs, ADRs, and implementation blueprints from confirmed PM decisions or a TRD gap. Use after engineer-agent routes technical design."
 visibility: internal
 ---
 

@@ -13,18 +13,18 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0` from `agents/product_manager/test/competitive-brief/evals/workspace/eval-002-battlecard-mode`.
 - Identity schema: `2`
-- target_skill_sha256: `64a375a1a490fa251e9b252ef3a7787f55ca6a4fd08e5d401228a899b274ed39`
+- target_skill_sha256: `51c78b43ef29524223ad8cd1c217695feb08d840a69aa6efc0357d489d9b1808`
 - eval_definition_sha256: `a7454ae2eccc665064a08c31fc99de3b8f0a596f72811f2e5035b12f267e9fe8`
 - metadata_sha256: `be38b1b419460352b11de0cc1468d57c031f7575d697be3bf617760a456d47f3`
 - fixture_sha256: `580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0`
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `e42897afb6931d7065c6aa9ac71e607d574f057396cd3a30a0419c210f3be3cb`
-- Identity migration: **MIGRATED_WITHOUT_MODEL_RERUN**
-- Identity migration source commit: `4cca644d64c599531542e66ba5a9210c5c6bf40c`
-- Identity migration audit: `docs/engineer/repository-governance/eval-scenario-isolation/eval-identity-v2-migration-audit.json`
-- Repository HEAD: `750d3d7432a4dcfde7dde2624f081fbf388f85f3`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Prompt SHA-256: `e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
+- Skill overlay SHA-256: `7c8d16fe8d7e0a5fcf1eddfd898ed6359958f6d99fba9afbff4d4be1085a6bfd`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,21 +33,21 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `battlecard_fields` | PASS | Locked delivery_snapshot contains Linear and Jira battlecards with Quick Overview, Their Pitch, Strengths, Weaknesses, Objection Handling, Landmines to Set/Defuse, and Win/Loss Themes. |
-| `no_full_brief` | PASS | The locked output is structured as battlecards and does not include a full competitor-brief chapter structure. |
-| `evidence_boundary` | PASS | The locked file states the research date and evidence boundary, identifies source categories, and marks unavailable details as 假设 or 待验证. |
-| `no_battlecard_offer` | PASS | The locked final response delivers the battlecard and does not ask whether to create one later. |
+| `battlecard_fields` | PASS | With_skill 输出分别覆盖 Linear 与 Jira 的 Quick Overview、Their Pitch、Strengths、Weaknesses、Objection Handling、Landmines to Set、Landmines to Defuse、Win/Loss Themes，且包含目标客户、定价模型摘要和近期动态。 |
+| `no_full_brief` | PASS | With_skill 输出保持为两份销售 battlecard，附加的 Our Position、Discovery Questions、Talk Track、POC Guidance 属于销售使用内容，未形成完整竞品 brief 的执行摘要、竞品画像全节、messaging gap 或机会/威胁/行动项章节。 |
+| `evidence_boundary` | PASS | With_skill 明确标注研究日期 2026-08-06、来源记录链接，并将具体价格、企业控制、安全问卷、迁移成本等未确认内容标为“待验证”或“假设”，且未作确定性量化结论。 |
+| `no_battlecard_offer` | PASS | With_skill 输出直接交付 battlecard 内容，没有询问是否需要创建 battlecard，也没有将其作为后续追加项。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2; fixture_sha256=580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0; output_sha256=631fd284e19e45e698d2667fd059bd21b2c78fb2d6595650d9e2f779ccbf9f4d; snapshot_sha256=f3c72f2af5a822ea88f36c6ada3aa4125155dcdb1f2d7692d21c92b7082dc8f7
-- Behavior: Produced a consolidated Linear/Jira battlecard with the required fields and explicit evidence-boundary markings.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2; fixture_sha256=580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0; output_sha256=ce7666f6da33e9b0e7e3db023f520c8515f37b3d27392e960db38d9748a2f4ef; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 完成 Linear 与 Jira 两份结构完整、证据边界清晰的销售 battlecard。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2; fixture_sha256=580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0; output_sha256=7ae60d198f1deaec6fee87630cbc9593f285ff58fb4a94371e42612f4c8b49d4; snapshot_sha256=bb33aadcdaea49ca0db679925408bb7b2c7c50923699816b2f4486459f04ba20
-- Behavior: Produced two sales one-pagers with useful research summaries, but without the required battlecard field structure.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e54579ea27411964e085efe779b45a83156d8efbd3908b273d472904914675a2; fixture_sha256=580131b9961f88dece682fec7455c21af018b400a3742eb37ae40114374aeae0; output_sha256=1daa68dfedc054bfc67a7a1f45b3ed3d583ba31609059d4d8792c9ba862e0beb; snapshot_sha256=c0ddb1c0d8c80fe01d39ef6b8df68cb1c865c83440969e8e0c42fd57bb3796db
+- Behavior: 完成两份销售一页资料并标注假设/待验证，但呈现为较泛化的销售资料，未在最终输出中展示完整 battlecard 字段结构。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

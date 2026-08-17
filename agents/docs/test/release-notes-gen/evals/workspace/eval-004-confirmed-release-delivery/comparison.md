@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `c11c4570536758cb911b613643632dd7b15e8b492fb6a5c6cb788342176462bf` from `agents/docs/test/release-notes-gen/evals/workspace/eval-004-confirmed-release-delivery`.
 - Identity schema: `2`
-- target_skill_sha256: `9d15471128b5c653c03406ba512b69c7510ab64bfd6b1cba8b6458bff7449a16`
+- target_skill_sha256: `3da1a9a1466d6ecd43ed5c082adf803d01b5c2ca25dfee7a882fcc8113f7ce5c`
 - eval_definition_sha256: `6ba71c78dee7f69b879178b4307965fc8b664b773fca948482dc1711c289b5ad`
 - metadata_sha256: `2e15aaf06f83170c681a449f442bd9946bbef263dbea552644182da638b4addc`
 - fixture_sha256: `c11c4570536758cb911b613643632dd7b15e8b492fb6a5c6cb788342176462bf`
@@ -22,39 +22,39 @@
 - judge_schema_sha256: `5f19f02b941db43659fbfb03cc28f127d2b4bbc556ed59290b7811c966f30dc8`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `5d2eb8fee66e709ed28ba5aa53ac1e57295ed25d74500a43d924b8fbc434431e`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `875d94bbeede7fb3f25ae54a8099f5bb996a939530b57c2c2295a2fa54bd46e9`
-- Behavior result: **PASS**
+- Skill overlay SHA-256: `9d7abf20333b60efc8aeaad2d302ecd422e44bb547e52f5a4d9623347a2b048b`
+- Behavior result: **FAIL**
 - Coverage result: **FULL**
-Overall result: PASS
+Overall result: FAIL
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `delivers_confirmed_release_page` | PASS | with_skill delivery_snapshot contains docs/site/release-notes/v1.0.0.md with valid release frontmatter, last_verified_version: unverified, and all six required evidence categories. |
-| `updates_derived_surfaces_after_confirmation` | PASS | with_skill trace completes confirmation review before the file-change event; snapshots show one new v1.0.0 index entry, preserved v0.9.0, preserved manualNote/verifiedDocs, and generated navigation. No source navigation was modified. |
-| `passes_host_docs_checks` | PASS | with_skill runner trace shows cd docs/site && npm run test:docs exiting 0, with 75 tests passed and all checks passed. |
-| `returns_complete_ready_handoff` | PASS | with_skill output provides the confirmed version and sources, page path, confirmation status, docs checks and results, updated surfaces, six evidence sources, blockers, downstream_target, and release_execution_authorized: false. |
-| `preserves_external_release_boundary` | PASS | with_skill git_evidence shows unchanged HEAD, branch, refs, commits, and reflog; delivery content keeps last_verified_version: unverified and explicitly preserves the external release boundary. |
+| `delivers_confirmed_release_page` | PASS | delivery_snapshot contains the v1.0.0 page with valid release frontmatter, last_verified_version: unverified, and all six required evidence categories. |
+| `updates_derived_surfaces_after_confirmation` | PASS | The snapshot preserves v0.9.0, appends v1.0.0 to the index and metadata, preserves manualNote, and leaves last_verified_version unchanged. |
+| `passes_host_docs_checks` | PASS | runner_captured_trace shows npm run test:docs executed in docs/site with 75 tests passing; explicit v1.0.0 version validation also passed. |
+| `returns_complete_ready_handoff` | FAIL | The with_skill output explicitly reports handoff_status: blocked instead of returning a complete ready handoff, despite confirmed version, confirmed body, passing checks, delivered page, and available locked evidence. |
+| `preserves_external_release_boundary` | PASS | git_evidence shows no commit, ref, tag, or external-release mutation; delivery_snapshot keeps last_verified_version: unverified and the output states no tag, GitHub Release, image publication, or deployment. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5d2eb8fee66e709ed28ba5aa53ac1e57295ed25d74500a43d924b8fbc434431e; fixture_sha256=c11c4570536758cb911b613643632dd7b15e8b492fb6a5c6cb788342176462bf; output_sha256=4a7a6da99141cce4d415282b2478d616101e8ba7a4e2d2a69a747c16f1b10a05; snapshot_sha256=f6ba9c0dfa973add46ba44ba728c568df03668ad2cc54e7e5b55a8fe4114293e
-- Behavior: Completed the confirmed v1.0.0 site Release Notes delivery, passed host checks, and returned a complete pre-tag handoff while preserving the release boundary.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5d2eb8fee66e709ed28ba5aa53ac1e57295ed25d74500a43d924b8fbc434431e; fixture_sha256=c11c4570536758cb911b613643632dd7b15e8b492fb6a5c6cb788342176462bf; output_sha256=3cb39ce18b9e76bf7d91c903dd758eb72dfaf7c1d10a223bca35520e09e1e050; snapshot_sha256=e848e49f4c76fa870d2b1867dc636f745d24a85de1020d39b3d147e7f6eeade3
+- Behavior: Delivered a complete confirmed release page, correctly updated derived surfaces, passed host checks, and preserved external boundaries, but incorrectly blocked the final ready handoff.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5d2eb8fee66e709ed28ba5aa53ac1e57295ed25d74500a43d924b8fbc434431e; fixture_sha256=c11c4570536758cb911b613643632dd7b15e8b492fb6a5c6cb788342176462bf; output_sha256=3f7681bf19a89c7cbb8dcd286fce7eba53a31e4f4b43c7647d45ac3c89ce5bac; snapshot_sha256=73277accd98616b361575bcb0c25576ecf715f9bf2c56e12415f404a44b0d16f
-- Behavior: Created the page and some derived surfaces but duplicated the existing v0.9.0 index entry, lacked the structured ready handoff, and its initial docs-check invocation used the wrong working directory.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5d2eb8fee66e709ed28ba5aa53ac1e57295ed25d74500a43d924b8fbc434431e; fixture_sha256=c11c4570536758cb911b613643632dd7b15e8b492fb6a5c6cb788342176462bf; output_sha256=3a4a84710bae0fc7de0b234e15e78d331b8175a738a6e826aded781daf78bc26; snapshot_sha256=c46d65132e287a47c66d18aeae5e4d2e8a8541c990bd624aed48bb314fe80b24
+- Behavior: Delivered a similar page and derived-surface updates, with additional generated build artifacts and less complete metadata preservation; comparison only.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- None.
-- Next: None.
+- The required complete pre-tag ready handoff was not returned; the candidate returned blocked instead.
+- Next: Return the complete docs-agent:docs-audit pre-tag ready handoff with the confirmed version, source, page, checks, updated surfaces, evidence, blockers, downstream_target, and release_execution_authorized: false.
 
 ## Runtime Artifact Policy
 

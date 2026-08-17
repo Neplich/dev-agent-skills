@@ -1,6 +1,6 @@
 ---
 name: docs-audit
-description: "Audit formal documentation against code, tests, Git objects, version surfaces, and raw manual-page evidence for bounded, pre-tag, or post-tag verification. Use after docs-agent supplies a confirmed audit basis and target version."
+description: "Audit formal documentation against code, tests, Git objects, version facts, and raw manual evidence for bounded pre-tag or post-tag verification. Use after docs-agent routes a confirmed version audit."
 visibility: internal
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: manual-gen
-description: "Generate or update illustrated user operation manuals from screenshots and verified navigation in a real running interface. Use after docs-agent confirms the documentation-site and runtime-access gates."
+description: "Create or update illustrated user manuals from screenshots and verified navigation in a running interface. Use after docs-agent confirms the documentation site and runtime access."
 visibility: internal
 ---
 

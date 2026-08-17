@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/engineer/test/feature-implementor/evals/workspace/eval-005-existing-behavior-change-needs-pm`.
 - Identity schema: `2`
-- target_skill_sha256: `248d30c2e10162217ecb1d6a0d7c66973ee945c6f2e9b7e4bf01a677aac7bc3c`
+- target_skill_sha256: `7f71c78ab97a67d477751886a8f46d8cfd865bac113be49568de86ccf5343ee9`
 - eval_definition_sha256: `a4e07ef6b983fa7473b530066460795acade377b6663bfa81c7266e9bd35ec21`
 - metadata_sha256: `027d85ea7f7fbd3354a737527feea7579a00f953a46d0babadd6961e39d20b20`
 - fixture_sha256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `c708196a2509f10ac671d636aa20ae05a664bdf496710d323db28c9149713561`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `8002de5f5ec8cbba9c876b3fa5b95d04da373914039535f254ff8fce02f9cbab`
+- Skill overlay SHA-256: `6ba93c2da62bbbed9ea41d72d153901f8e8bbbbad20322168e3cf7c265e800fd`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,22 +33,22 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `checks_approved_behavior` | PASS | 明确指出当前批准行为是 active 排除 archived，而请求改变该既有预期。 |
-| `stops_before_implementation_plan` | PASS | 明确写出 PM 对齐前禁止创建 IMPLEMENTATION_PLAN.md，且 delivery_snapshot 为空、Git 无变更。 |
-| `hands_off_to_pm_existing_update` | PASS | 要求回到 pm-agent:idea-to-spec，走 existing-project-update 更新 PRD/DECISIONS，之后同步并确认 TRD。 |
-| `blocks_e2e_expected_behavior_change` | PASS | 将 new E2E expectations 列为阻断项，并写明 qa_e2e_tc_create_or_update 在计划确认前 blocked。 |
-| `does_not_implement_directly` | PASS | 输出明确声明本轮未修改文件；Git 证据显示无提交、无工作区或索引变更。 |
+| `checks_approved_behavior` | PASS | With-skill output identifies the request as changing the approved behavior from excluding archived to including archived, not as a simple file edit. |
+| `stops_before_implementation_plan` | PASS | With-skill output explicitly prohibits creating or updating IMPLEMENTATION_PLAN.md; git evidence shows no workspace changes. |
+| `hands_off_to_pm_existing_update` | PASS | With-skill output routes the change to pm-agent:idea-to-spec using existing-project-update, followed by TRD completion or confirmation. |
+| `blocks_e2e_expected_behavior_change` | PASS | With-skill output blocks new E2E expectations and QA cases until the documentation and implementation-plan gates are satisfied. |
+| `does_not_implement_directly` | PASS | With-skill output states that no code or tests may be modified and reports no file changes; git evidence confirms a clean worktree. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=68a02e3f507106eb31fc05e37011d0e4cc2d10e7322f6ea97fc6bb66e0741708; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 识别为已批准行为变更，退回 PM existing-project-update，阻止实施计划、代码/测试和新的 E2E 预期，未执行修改。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=eb6b3d0609e61f182d4fc36276f6484dead8c32f21a19b976137a48208dcbe07; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly recognizes an approved-behavior change, routes it through PM existing-project-update and subsequent TRD alignment, blocks downstream planning/E2E work, and makes no implementation changes.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=c2788f05433c027f2cfe873a3f7a056834fec2875c4d21123d0ac4d09621a098; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 仅基于缺少源码说明无法定位，并提出直接定位过滤逻辑、修改测试等实施建议，未覆盖产品对齐门禁。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5f81869b673853f146ffc9b6b0265765a906f1c4c8ed1c32a5df3f964238d63c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=acbf94d7b03102a51889d5393ce52cb2697276427d3cdaf4fea11ee6bd993206; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Provides a cautious baseline and avoids mutation, but does not route the request through the required PM existing-project-update/TRD process or explicitly block E2E expectations.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

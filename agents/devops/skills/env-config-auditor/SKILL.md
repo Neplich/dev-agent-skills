@@ -1,6 +1,6 @@
 ---
 name: env-config-auditor
-description: "Audit deployment readiness, environment variables, secrets/config references, endpoints, and configuration differences across local, CI/CD, and runtime contexts. Use after devops-agent routes an environment audit."
+description: "Audit deployment readiness and configuration differences across local, CI/CD, and runtime contexts, including variables, secret references, and endpoints. Use after devops-agent routes environment auditing."
 visibility: internal
 ---
 

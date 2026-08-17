@@ -1,6 +1,6 @@
 ---
 name: feature-catalog
-description: "Map an inherited project's routes, pages, APIs, services, data models, tests, and docs into a maintainer-confirmable feature catalog and bounded child-feature proposal. Use after pm-agent routes catalog work."
+description: "Map an inherited project's structure into a confirmable feature catalog and bounded child-feature proposals. Use after pm-agent routes existing-project inventory work."
 visibility: internal
 ---
 

@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` from `agents/product_manager/test/idea-to-spec/workspace/iteration-2/eval-4-greenfield-bootstrap-routing`.
 - Identity schema: `2`
-- target_skill_sha256: `34042e851466ff927567e09fc5777d952f1546cabc96fbe4de98617d27f5b1fb`
+- target_skill_sha256: `62f7a88900be8a0aae1af9e34b28dc32abd76006ca95f89107567b68f5780813`
 - eval_definition_sha256: `8e113c060d578c3d672e422d3214efcf8ef5f3dc4a4d591f825ce19450902064`
 - metadata_sha256: `af73e5b9a9192eb83b6e3ca2d5cae73fe4fd2b14b49ac401fa1a5f606db4bd6c`
 - fixture_sha256: `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a`
@@ -22,38 +22,38 @@
 - judge_schema_sha256: `333e583cf4bb11484925925c3c083e2f295eb8670599a3d04a51d2b749c8668a`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `47f636262c26b6b99c860d59ef8342eebebbd60397f192a193020f82c13fa42c`
-- Repository HEAD: `c13c53a9b6e4cf18215450050bc9e7d0a810b73c`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `55d032569bbd4014a60103aafb1c0773a93ff9dbe0ea681c46297ebeef4a35b3`
-- Behavior result: **PASS**
+- Skill overlay SHA-256: `7b19869a4835a1feeb491815cac7af7bde071247819525989c10dbfbc0acd2f7`
+- Behavior result: **FAIL**
 - Coverage result: **FULL**
-Overall result: PASS
+Overall result: FAIL
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `assertion_1` | PASS | with_skill 输出明确说明 project_status=empty、tech_stack=pending、existing_docs=[]；raw trace 也显示文件扫描为空。 |
-| `pm_first_lane` | PASS | with_skill 输出明确标注 lane 为 greenfield-discovery。 |
-| `pm_first` | PASS | 未执行脚手架或初始化命令；输出先提供 PRD 骨架和产品决策收敛内容，并明确暂不初始化项目。 |
-| `assertion_4` | PASS | 明确推荐先确认产品定位与 MVP，再生成正式 PRD/DECISIONS，并给出 PRD 骨架。 |
+| `assertion_1` | FAIL | The with_skill output says it starts from an empty directory, but does not state that the tech stack is undecided or that existing documents are empty, and it does not begin with an explicit workspace inspection. |
+| `pm_first_lane` | PASS | The output explicitly identifies the lane as `greenfield-discovery`, describing PM-oriented product discovery for the empty workspace. |
+| `pm_first` | PASS | The output explicitly says the current scope does not involve project initialization and routes first through product decisions and PRD/DECISIONS documentation rather than scaffolding. |
+| `assertion_4` | PASS | The output names PRD.md and DECISIONS.md as pending durable documents and recommends drafting them after confirmation. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47f636262c26b6b99c860d59ef8342eebebbd60397f192a193020f82c13fa42c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=13d5a9b47d575cce67c390e7cb2ff200e1aa83e4342e890259da9b5db1e22cb9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 完成空工作区检测，识别 greenfield-discovery PM 路径，先产出 PRD 骨架并推迟工程初始化。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47f636262c26b6b99c860d59ef8342eebebbd60397f192a193020f82c13fa42c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=e54d3a1fa8816350f94e98867274b11c36d9bb0d0e06fd24c26f028576162cdb; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly selected a PM-first greenfield-discovery route, avoided project initialization, and requested one product decision before drafting PRD/DECISIONS documents.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47f636262c26b6b99c860d59ef8342eebebbd60397f192a193020f82c13fa42c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=90a94ee0bffd3d611f3730bf9a76eabbba9962aef2c6107b739db8f1c5715239; snapshot_sha256=a384c388850d198b6ad540e0e876ac36c52e10573d7d4330f980ff94d0d99869
-- Behavior: 直接交付 PRD.md 文件且未初始化项目，但未明确说明空工作区状态或 greenfield-discovery PM 路径。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=47f636262c26b6b99c860d59ef8342eebebbd60397f192a193020f82c13fa42c; fixture_sha256=44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a; output_sha256=bf19bd8e9522c825459dd62f1e9e54989aa729088b1841d72efc2267884035e6; snapshot_sha256=e8dcf5eb94b51a5ce7a1a703cd4ad56072b1a37ea373b9eb24e149e7ef3b7653
+- Behavior: Created a detailed PRD file without initialization, but did not demonstrate explicit PM lane selection or the required initial workspace/technology/document-state framing.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- None.
-- Next: None.
+- The with_skill lane omits the required explicit statement that the tech stack is undecided and existing documentation is empty.
+- Next: After user confirmation, draft the pending PRD/DECISIONS documents.
 
 ## Runtime Artifact Policy
 

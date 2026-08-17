@@ -1,6 +1,6 @@
 ---
 name: visual-design
-description: "Define a reference-backed visual system: aesthetic direction, color, typography, components, copy tone, and UI quality rules. Use after designer-agent confirms the visual-design scope; an unconfirmed direct request returns to the design entry gate."
+description: "Define a reference-backed visual system for confirmed product scope. Use after designer-agent routes visual-design work."
 visibility: internal
 ---
 

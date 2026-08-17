@@ -1,6 +1,6 @@
 ---
 name: regression-suite
-description: "Verify a confirmed fix by reusing the original bug evidence, running direct and adjacent-risk checks, and reporting PASS, FAIL, or BLOCKED with confidence. Use after qa-agent routes regression work."
+description: "Verify a confirmed fix with the original bug evidence plus direct and adjacent-risk checks, reporting PASS, FAIL, or BLOCKED. Use after qa-agent routes regression work."
 visibility: internal
 ---
 

@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `1d05a5ef6eacf2734acacac9c7f138205eacee50a9bb44893b96aa9bb0d64d31` from `agents/docs/test/release-notes-gen/evals/workspace/eval-004-conditional-deployment-recheck`.
 - Identity schema: `2`
-- target_skill_sha256: `9d15471128b5c653c03406ba512b69c7510ab64bfd6b1cba8b6458bff7449a16`
+- target_skill_sha256: `3da1a9a1466d6ecd43ed5c082adf803d01b5c2ca25dfee7a882fcc8113f7ce5c`
 - eval_definition_sha256: `34ab52326e403178b3c65c89903f9ce3ed937721059a083b8dcd35f212e12e18`
 - metadata_sha256: `026d3644999635bf9397130063cb1f65e3467ff790b1fe892aa83df25be7904c`
 - fixture_sha256: `1d05a5ef6eacf2734acacac9c7f138205eacee50a9bb44893b96aa9bb0d64d31`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `f6ca8293d29d78d2f2b85bd613e1f25b3aa93a647c64e21ca6731d5a228a1284`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `5b0a2bb08468867270b5e33622f2c669d7709f2935d65084fe81cdc7c550d3b1`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `875d94bbeede7fb3f25ae54a8099f5bb996a939530b57c2c2295a2fa54bd46e9`
+- Skill overlay SHA-256: `9d7abf20333b60efc8aeaad2d302ecd422e44bb547e52f5a4d9623347a2b048b`
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
 Overall result: PASS (partial coverage)
@@ -33,25 +33,25 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `skips_content_only_recheck` | PASS | with_skill 正确识别 editorial.patch 仅修改 Release Notes 正文，不改变构建产物、导航或运行入口，并判定不会使既有部署结论失效；这等价于保留既有状态。 |
-| `rechecks_material_release_surface` | NOT_EXERCISED | with_skill 正确识别 internal-entry.patch 改变内部构建输出目录、Dockerfile 复制路径及导航入口，并指出必须重新验证 Internal 变体；但因缺少主机站点与确认入口，实际共享检查未运行。 |
+| `skips_content_only_recheck` | PASS | With_skill classifies editorial.patch as wording-only, explicitly says it does not change build targets, navigation, or deployment paths, and reports no host documentation check or deployment-surface write. |
+| `rechecks_material_release_surface` | NOT_EXERCISED | With_skill correctly identifies internal-entry.patch as changing the internal build output, Docker COPY source, and navigation, and says deployment completeness must be revalidated; the required shared check could not proceed because version confirmation and the PM handoff were missing. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5b0a2bb08468867270b5e33622f2c669d7709f2935d65084fe81cdc7c550d3b1; fixture_sha256=1d05a5ef6eacf2734acacac9c7f138205eacee50a9bb44893b96aa9bb0d64d31; output_sha256=2135b15702300b375bef0d2e9dd7710f3e50499f5b81684f3783b3ded7d1cc76; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 正确区分正文变更与发布面变更；在缺少入口证据和主机运行时证据时阻断版本说明收尾，未修改文件或部署配置。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5b0a2bb08468867270b5e33622f2c669d7709f2935d65084fe81cdc7c550d3b1; fixture_sha256=1d05a5ef6eacf2734acacac9c7f138205eacee50a9bb44893b96aa9bb0d64d31; output_sha256=c11b5e19f01f54340415ccdc7dd1d73c3fb597bbbe049c722b70143a24c9eba2; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly distinguished content-only versus material release-surface changes, preserved deployment surfaces, and stopped at the required entry gate.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5b0a2bb08468867270b5e33622f2c669d7709f2935d65084fe81cdc7c550d3b1; fixture_sha256=1d05a5ef6eacf2734acacac9c7f138205eacee50a9bb44893b96aa9bb0d64d31; output_sha256=cfa942ec34d6a8c023b1df1b4b0bcb34acbf43e2dd372a3eea19bff8ee37a88a; snapshot_sha256=c351c62c576411bd39d457753a27d9880ebbcbe72a6ef40b3c416d6a9bc4f4c7
-- Behavior: 完成静态比较并交付 decision.md；作为对照，其识别结果与 with_skill 的变更分类一致。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=5b0a2bb08468867270b5e33622f2c669d7709f2935d65084fe81cdc7c550d3b1; fixture_sha256=1d05a5ef6eacf2734acacac9c7f138205eacee50a9bb44893b96aa9bb0d64d31; output_sha256=6cd0650018d4447bb6ee6817dbe54a9e7f6bd84c946d291bb1c2ae08e6b35213; snapshot_sha256=3ffe430e7edc0db5a60c5cfe755e9c3581fea9f0670a18abf6cb200961cc7e78
+- Behavior: Created a closeout file and correctly classified the content-only patch, but incorrectly concluded that the material internal-entry change did not invalidate the deployment conclusion.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: 补齐已确认的版本、主机、发布范围和证据交接后运行共享文档部署检查。
+- Next: Obtain the missing version confirmation and PM handoff, then run the shared deployment-completeness check for internal-entry.patch.
 
 ## Runtime Artifact Policy
 

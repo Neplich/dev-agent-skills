@@ -1,6 +1,6 @@
 ---
 name: authz-reviewer
-description: "Review authentication, authorization, RBAC, sessions, JWTs, permission models, and access-control implementation against confirmed security scope. Use after security-agent routes auth/authz review."
+description: "Review authentication, authorization, RBAC, sessions, tokens, permission models, and access controls against confirmed scope. Use after security-agent routes auth/authz review."
 visibility: internal
 ---
 

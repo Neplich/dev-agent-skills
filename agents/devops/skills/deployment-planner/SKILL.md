@@ -1,6 +1,6 @@
 ---
 name: deployment-planner
-description: "Plan deployable service units, runtime entry points, local startup, Docker, Kubernetes/Helm, and required deployment assets from confirmed scope. Use after devops-agent routes deployment planning."
+description: "Plan service units, runtime entry points, local startup, Docker, Kubernetes/Helm, and required deployment assets from confirmed scope. Use after devops-agent routes deployment planning."
 visibility: internal
 ---
 

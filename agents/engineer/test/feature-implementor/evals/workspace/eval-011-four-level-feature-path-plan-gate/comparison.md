@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68` from `agents/engineer/test/feature-implementor/evals/workspace/eval-011-four-level-feature-path-plan-gate`.
 - Identity schema: `2`
-- target_skill_sha256: `248d30c2e10162217ecb1d6a0d7c66973ee945c6f2e9b7e4bf01a677aac7bc3c`
+- target_skill_sha256: `7f71c78ab97a67d477751886a8f46d8cfd865bac113be49568de86ccf5343ee9`
 - eval_definition_sha256: `7d6cafded24992611b95dfc908abe3d7611f7857dadb745152c30089566b43d2`
 - metadata_sha256: `ac8b5e53299c534a911d5f2d7efc803c4248334958692a33c9f721328ee2c632`
 - fixture_sha256: `6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `daa05dfde11fd09221d4ad9b38d9b74b58a7b93050ec83c55293e7ca9eae6a7e`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `8002de5f5ec8cbba9c876b3fa5b95d04da373914039535f254ff8fce02f9cbab`
+- Skill overlay SHA-256: `6ba93c2da62bbbed9ea41d72d153901f8e8bbbbad20322168e3cf7c265e800fd`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,23 +33,23 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reads_matching_four_level_docs` | PASS | 计划文件和运行轨迹直接引用并读取 PRD/TRD 路径，并确认二者 feature_path 为 chat-interface/messages/history/search。 |
-| `writes_four_level_plan_path` | PASS | delivery_snapshot 直接包含 docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md，且 git evidence 显示仅该计划文件新增。 |
-| `preserves_feature_metadata` | PASS | 计划 frontmatter 直接包含 feature_path、parent_feature、feature_level、related_prd 和 related_trd。 |
-| `includes_scope_and_checks` | PASS | 计划直接列出两个相关源码/测试文件、workspace 隔离与排序范围，以及 npm test -- tests/chat-interface/messages/history/search-service.test.ts 验证命令。 |
-| `waits_for_user_confirmation` | PASS | 最终输出明确要求用户确认实施计划，确认后才开始编码。 |
-| `does_not_implement_directly` | PASS | locked delivery_snapshot 仅新增 IMPLEMENTATION_PLAN.md；git evidence 无源码或测试修改，最终输出也明确编码尚未开始。 |
+| `reads_matching_four_level_docs` | PASS | Locked plan and trace reference both PRD/TRD paths and confirm matching feature_path metadata. |
+| `writes_four_level_plan_path` | PASS | Delivery snapshot contains docs/engineer/chat-interface/messages/history/search/IMPLEMENTATION_PLAN.md; no forbidden path is present. |
+| `preserves_feature_metadata` | PASS | Plan frontmatter contains feature_path, parent_feature, feature_level, related_prd, and related_trd. |
+| `includes_scope_and_checks` | PASS | Plan snapshot lists implementation scope and the deterministic npm test command relevant to message history search. |
+| `waits_for_user_confirmation` | PASS | Final output explicitly requests confirmation before coding, and the plan confirmation gate blocks source/test edits until confirmation. |
+| `does_not_implement_directly` | PASS | Locked git evidence shows only the implementation plan was added; no source or test implementation occurred, and the candidate states coding is blocked pending confirmation. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=bb4b28dc6fb5cf49654d254683236b67b0a5777c067c6392ea793265500cdeee; snapshot_sha256=9e779ed498b55a0851ec059c5bf19d305c7544cbf037944d7db41fc23da52dfa
-- Behavior: 读取并对齐 PRD/TRD，创建包含完整元数据、范围和验证命令的四级实施计划，并等待用户确认；未直接实施。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=a462289f1cbc608dcb8ef34afe44bbf7f8342e41b4a48b1335b7f969dc7c4676; snapshot_sha256=ffb8c49f0c5d61c315b481e0e570190c846cdb41d0b638030de14d177acac9bf
+- Behavior: Created the correctly nested implementation plan, preserved feature metadata, documented scope and deterministic validation, and paused for explicit confirmation before implementation.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=0e8c697d1b680ea855f1c958a8ce4ce148428cac5ee7b1764c2a49a7aa4a0ef5; snapshot_sha256=873509ee342c4feaa8f57ad29dd6570c19a593223d07cbf677d5b02162416ef6
-- Behavior: 直接实现消息历史搜索并修改源码和测试；未按规划确认流程交付。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=e0c7bd09477fcc6f52d75011fdf516c41f01082c930d49e3864459c1ec60e40b; fixture_sha256=6c438d1edc9a89256655ae36e972b31a4929ddc7fe5b5f285e888975f24e8b68; output_sha256=5eef77b86ac76c9e19023bbc065fbc15a22396d9df178d332b2b152c3f995a39; snapshot_sha256=44880f93d3b1d4c8e6b1a03051f17e9d94494ff92a6c5dcd2dd9693089f8ea85
+- Behavior: Implemented source and tests directly without the required planning checkpoint or confirmation.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps

@@ -1,6 +1,6 @@
 ---
 name: delivery
-description: "Deliver completed work through an intentional branch, commits, push, PR preview or creation, and CI/readback evidence. Use after engineer-agent confirms scope and verification are complete."
+description: "Deliver verified work through an intentional branch, commits, push, PR preview or creation, and CI/readback evidence. Use after engineer-agent confirms scope and verification are complete."
 visibility: internal
 ---
 

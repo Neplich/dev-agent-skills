@@ -20,6 +20,7 @@ except ModuleNotFoundError:  # Imported as scripts.check_repository_contract in 
 
 SKILL_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 LOCK_HASH_RE = re.compile(r"^[0-9a-f]{64}$")
+SKILL_DESCRIPTION_MAX_CHARS = 500
 SEMVER_CORE_PATTERN = r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)"
 SEMVER_PRERELEASE_IDENTIFIER_PATTERN = (
     r"(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)"
@@ -365,6 +366,27 @@ def validate_skill_visibility(root: Path, errors: list[ContractError]) -> None:
             )
 
 
+def validate_skill_description_lengths(
+    root: Path, errors: list[ContractError]
+) -> None:
+    for pattern in ("agents/*/skills/*/SKILL.md", ".agents/skills/*/SKILL.md"):
+        for skill_doc in sorted(root.glob(pattern)):
+            metadata = parse_frontmatter(skill_doc, errors)
+            if metadata is None:
+                continue
+            description = metadata.get("description")
+            if (
+                isinstance(description, str)
+                and len(description) > SKILL_DESCRIPTION_MAX_CHARS
+            ):
+                add_error(
+                    errors,
+                    skill_doc,
+                    "frontmatter description exceeds "
+                    f"{SKILL_DESCRIPTION_MAX_CHARS} characters: {len(description)}",
+                )
+
+
 def prerelease_identifier_key(identifier: str) -> tuple[int, int | str]:
     if identifier.isdigit():
         return 0, int(identifier)
@@ -446,6 +468,7 @@ def validate_plugin_manifest(
     plugin_index: int,
     plugin_name: Any,
     metadata_version: Any,
+    marketplace_description: Any,
     errors: list[ContractError],
 ) -> None:
     if not manifest_path.exists():
@@ -479,6 +502,19 @@ def validate_plugin_manifest(
             errors,
             manifest_path,
             f"version must match marketplace metadata.version {metadata_version!r}",
+        )
+
+    if not isinstance(marketplace_description, str) or not marketplace_description.strip():
+        add_error(
+            errors,
+            marketplace_path,
+            f"plugins[{plugin_index}].description must be a non-empty string",
+        )
+    elif payload.get("description") != marketplace_description:
+        add_error(
+            errors,
+            manifest_path,
+            f"description must match marketplace plugins[{plugin_index}].description",
         )
 
 
@@ -543,6 +579,7 @@ def validate_marketplace(root: Path, errors: list[ContractError]) -> None:
             index,
             plugin.get("name"),
             metadata_version,
+            plugin.get("description"),
             errors,
         )
 
@@ -1810,6 +1847,7 @@ def validate_all(root: Path | None = None) -> list[ContractError]:
     validate_marketplace_document_status(root, errors)
     validate_skill_references(root, errors)
     validate_skill_visibility(root, errors)
+    validate_skill_description_lengths(root, errors)
     validate_skills_lock(root, errors)
     validate_feature_document_metadata(root, errors)
     validate_implementation_plan_metadata(root, errors)

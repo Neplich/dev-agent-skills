@@ -1,6 +1,6 @@
 ---
 name: test-writer
-description: "Add or update deterministic tests from confirmed PM expectations, implementation context, and repository conventions, including mapped-doc evidence when present. Use after engineer-agent routes test-writing work."
+description: "Add or update deterministic tests from confirmed expectations, implementation context, and repository conventions. Use after engineer-agent routes test-writing work."
 visibility: internal
 ---
 

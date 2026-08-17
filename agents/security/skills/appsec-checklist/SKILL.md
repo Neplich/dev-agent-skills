@@ -1,6 +1,6 @@
 ---
 name: appsec-checklist
-description: "Review application code for injection, XSS, auth bypass, secret, upload, and related AppSec risks and produce the protocol-shaped security report. Use after security-agent routes an AppSec scope."
+description: "Review application code for injection, XSS, auth bypass, secret exposure, unsafe uploads, and related AppSec risks. Use after security-agent routes an AppSec review."
 visibility: internal
 ---
 

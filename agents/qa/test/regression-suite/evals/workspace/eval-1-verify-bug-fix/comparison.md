@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `de9aee791f056463d193f05e53c9f483fe312d6ee3aeb7bb4d1f7b0eb008f308` from `agents/qa/test/regression-suite/evals/workspace/eval-1-verify-bug-fix`.
 - Identity schema: `2`
-- target_skill_sha256: `5f00953469c57cd0a924598017d2502b6a836948c3bfa067998cf3e91f7335a1`
+- target_skill_sha256: `0d39fb3d56a0db02711ebbb062de0261e33393ff0e6f5f258b11c870a160c7e5`
 - eval_definition_sha256: `8ca6ea4c46c7a5a2c854d9ff5def7ea0ec612ddbf9888a829e50de270f1b84c4`
 - metadata_sha256: `732278c998a10f6e6333dc13e2fc4edfbaed96da1abb806d2dc29682a3a79f75`
 - fixture_sha256: `de9aee791f056463d193f05e53c9f483fe312d6ee3aeb7bb4d1f7b0eb008f308`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `2c18050b9a27d5dccf92b0604097b9078533d47105266364099eafbf3833aad8`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `c6a22bd6a4c946877c350cf1e3485fb0daa745bafdccb74f798f1fdae43d71c0`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `07500a40de121399595841537e6aef1df4c976254ab123954a243d97bad454fb`
+- Skill overlay SHA-256: `33d70406ae3e91e1a71751cc4087074b666d7c138769b3f1c7b475a5d350ce65`
 - Behavior result: **PASS**
 - Coverage result: **PARTIAL**
 Overall result: PASS (partial coverage)
@@ -33,29 +33,30 @@ Overall result: PASS (partial coverage)
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `assertion_1` | PASS | With-skill trace shows BUG-001, PR-001, and related product, engineering, and QA evidence were read before scoping the regression. |
-| `qa` | PASS | With-skill trace and delivery record show TEST_SUITE.md, FLOW_INDEX.md, the case, script, and absent prior results/_reports were checked; no new TC was needed. |
-| `assertion_3` | NOT_EXERCISED | The report records the run as blocked and explains that original-failure and fixed-behavior checks were not executed because package.json/runtime evidence was unavailable. |
-| `assertion_4` | PASS | The delivery snapshot identifies feature-update scope and covers the original flow plus invalid-credential and locked-account shared-response paths without expanding to release-wide E2E. |
-| `alignment_version_archive` | PASS | The snapshot contains same-feature-path PRD/TRD alignment, a confirmed IMPLEMENTATION_PLAN.md, platform version v1.2.0-fix.1, and the required result.md and testcase.snapshot.md paths; no historical results were overwritten. |
-| `assertion_5` | PASS | The report separates Status: blocked from evidence_confidence: low and gives release_recommendation: needs more verification. |
+| `assertion_1` | PASS | Trace shows BUG-001, PR-001, and same-path PRD/TRD/QA/implementation materials were read; the delivered report preserves the original reproduction and expected behavior. |
+| `qa` | PASS | The delivered result records TEST_SUITE.md, FLOW_INDEX.md, the case, script, prior results/, and prior _reports/ as inspected before execution; no new case or script was needed. |
+| `assertion_3` | NOT_EXERCISED | The locked result explicitly labels original failure recheck, expected fixed behavior, and overall verification as blocked/not executed, but no runtime verification occurred. |
+| `assertion_4` | PASS | The feature-update scope is limited to valid login plus the directly shared invalid-credential and locked-account paths; it does not expand to release-wide E2E coverage. |
+| `alignment_version_archive` | PASS | The locked result documents confirmed PRD/TRD alignment, cites IMPLEMENTATION_PLAN.md, records platform version v1.2.0-fix.1, and delivers append-only result.md and testcase.snapshot.md at the required path. |
+| `assertion_5` | PASS | The delivered regression report separates blocked run status from low evidence confidence and includes a needs more verification release recommendation. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a22bd6a4c946877c350cf1e3485fb0daa745bafdccb74f798f1fdae43d71c0; fixture_sha256=de9aee791f056463d193f05e53c9f483fe312d6ee3aeb7bb4d1f7b0eb008f308; output_sha256=1a6526143196f710b3b7b14394d28717a8cbbdf50ae597a7dcf2e0fa7ce12219; snapshot_sha256=8bc5f1739e2e6b66c92c67afeacd9ac6f7792f8276bc95cee942b7e8f7a48374
-- Behavior: Correctly performs evidence preflight, alignment, scoped regression planning, and append-only blocked-result recording, but cannot execute runtime verification.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a22bd6a4c946877c350cf1e3485fb0daa745bafdccb74f798f1fdae43d71c0; fixture_sha256=de9aee791f056463d193f05e53c9f483fe312d6ee3aeb7bb4d1f7b0eb008f308; output_sha256=167c791c0ff92d4279d2bc6bd2b7eb05d7cb61ce91fd009ffefd1f11f51cc628; snapshot_sha256=62d2379e3506f88d3627f9ae568fafef42331e5a565877dd61ed6cab4cc6bd3c
+- Behavior: Produced the required scoped regression artifacts, explicit blocked statuses, alignment gate, evidence confidence, and release recommendation without claiming the fix was verified.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a22bd6a4c946877c350cf1e3485fb0daa745bafdccb74f798f1fdae43d71c0; fixture_sha256=de9aee791f056463d193f05e53c9f483fe312d6ee3aeb7bb4d1f7b0eb008f308; output_sha256=ccf69c6e6d4125bea57990badb696ec104aa0314987d95d14e9c07dba35c4c95; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline identifies the missing harness and avoids claiming the fix passed, but does not produce the required durable QA result artifacts or alignment/archive report.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c6a22bd6a4c946877c350cf1e3485fb0daa745bafdccb74f798f1fdae43d71c0; fixture_sha256=de9aee791f056463d193f05e53c9f483fe312d6ee3aeb7bb4d1f7b0eb008f308; output_sha256=7e5869aa1af5f6cadf68f45ba7438b61cb0f7ed341905166ca1ebfaf1ab316a4; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Read the documentation and attempted the harness, but produced no regression artifacts and omitted the required evidence-confidence and release-recommendation report structure.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
 - None.
-- Next: Provide the fixed build with package.json or an equivalent runnable harness, then rerun the original login flow and both adjacent credential-state paths.
+- Next: Provide the fixed runnable build or restore the repository test harness and set QA_BASE_URL.
+- Next: Rerun the valid-login, invalid-credential, and locked-account paths, then append updated result.md and testcase.snapshot.md evidence.
 
 ## Runtime Artifact Policy
 

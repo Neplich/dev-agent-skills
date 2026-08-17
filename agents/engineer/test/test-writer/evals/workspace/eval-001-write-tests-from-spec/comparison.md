@@ -13,7 +13,7 @@
 - Judge: third independent fresh judge completed after both candidates were locked.
 - Fixture version/source: canonical manifest `1fc33cc2cafe76721e09e39f06834f83330e227e59b4aed334bc003945dfdf3c` from `agents/engineer/test/test-writer/evals/workspace/eval-001-write-tests-from-spec`.
 - Identity schema: `2`
-- target_skill_sha256: `a2cf1652b5fea887d41dd3a13903616fd86413d7444b667455c1a1628200c5bc`
+- target_skill_sha256: `5f3a5999aa1efa139e50399981290b3134eeec82bfa2eeeccd743979bbb2eb31`
 - eval_definition_sha256: `efd5ef5afb815bd08b4891a7e8121a2425c0d9fa58d54ab02bb52d9e0279793d`
 - metadata_sha256: `d7923bf8ad60a9b78d8f4a2d5a8014a4c03857221ca26433305123c9d484c670`
 - fixture_sha256: `1fc33cc2cafe76721e09e39f06834f83330e227e59b4aed334bc003945dfdf3c`
@@ -22,9 +22,9 @@
 - judge_schema_sha256: `76acf51e56db3c0b81097f6bd3d6543ba266417fd8281a9ea540a61e66eb1dc7`
 - Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `46eea12ac62f02ceb89a8418aeab70d2e5bbf720f6ba0edc42f3a9c58a443a5e`
-- Repository HEAD: `9ea58cf4e8c46064bd1a2c1cb2ca632f0a385fa0`
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
 - Repository worktree state: **DIRTY**
-- Skill overlay SHA-256: `429fc1ef5ebbac055bdbd3fd7863138cf63bfb8f5e1115002085b81b61a4dab5`
+- Skill overlay SHA-256: `74d5ef1ceb04052c742ef9500d8bca484457637293371f2cd945a5336fc8d8e9`
 - Behavior result: **PASS**
 - Coverage result: **FULL**
 Overall result: PASS
@@ -33,20 +33,20 @@ Overall result: PASS
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `test_spec` | PASS | With_skill delivery_snapshot contains four tests covering all four required scenarios, including stored-record return, exact validation errors with no repository call, and unchanged repository error identity. |
-| `test_execution_reported` | PASS | With_skill runner_captured_trace records `npm test` completing with 5 tests passed and 0 failed; the candidate also reports this result. |
-| `project_test_conventions_followed` | PASS | The delivered file is under `test/services/notification-service.test.js` and uses the existing flat `node:test` plus `node:assert/strict` structure. |
+| `test_spec` | PASS | The locked with_skill test file covers all four required scenarios: valid creation/returned record, missing recipientId with exact error and no repository call, blank message with exact error and no repository call, and unchanged repository-error propagation. |
+| `test_execution_reported` | PASS | The locked with_skill trace shows `npm test` completed with exit code 0 and 5 tests passed, 0 failed; the candidate also reports `5/5 通过`. |
+| `project_test_conventions_followed` | PASS | The delivered file is `test/services/notification-service.test.js`, uses `node:test` and `node:assert/strict`, imports the service with the expected relative path, and follows the existing flat test structure. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=46eea12ac62f02ceb89a8418aeab70d2e5bbf720f6ba0edc42f3a9c58a443a5e; fixture_sha256=1fc33cc2cafe76721e09e39f06834f83330e227e59b4aed334bc003945dfdf3c; output_sha256=e9925dd0c6c87ecbe564028192cec1d8e59af565c0aafa4892da723f288f2b8e; snapshot_sha256=822df810d1e24bfe6599247aaaff3d705fcadddbeaabc0ea364e8545f6436bf8
-- Behavior: Added four semantically correct NotificationService tests, matching the spec and project conventions; all five project tests passed.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=46eea12ac62f02ceb89a8418aeab70d2e5bbf720f6ba0edc42f3a9c58a443a5e; fixture_sha256=1fc33cc2cafe76721e09e39f06834f83330e227e59b4aed334bc003945dfdf3c; output_sha256=2725bbd435bfb47cbda14a88c96f59b4e298f21d248460a2fa1a0e80d57101bd; snapshot_sha256=c95b873be710950b10d92f2ae295d1fd8369f938c561e387b5ab444f994577c6
+- Behavior: Added the expected NotificationService test file covering all four spec scenarios and reported a successful full test run.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=46eea12ac62f02ceb89a8418aeab70d2e5bbf720f6ba0edc42f3a9c58a443a5e; fixture_sha256=1fc33cc2cafe76721e09e39f06834f83330e227e59b4aed334bc003945dfdf3c; output_sha256=dc4400567a44b03968af56397d17e9e3d0f518c2293c7e9b0e0635ce668181ad; snapshot_sha256=770c0d017bf5edcb3001edab369d1d6944d47e4f84c9420d850fddc298e6cbdf
-- Behavior: Fresh baseline also added four correct scenarios and reported all five tests passing; behavior is equivalent to with_skill for this task.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=46eea12ac62f02ceb89a8418aeab70d2e5bbf720f6ba0edc42f3a9c58a443a5e; fixture_sha256=1fc33cc2cafe76721e09e39f06834f83330e227e59b4aed334bc003945dfdf3c; output_sha256=ef6e28ba9576d78baa0ae4c083d7cc1533ba23ee12a9d46e9c09da0b9c8bfd02; snapshot_sha256=cf52edc0df87572fc8431399fdbef2667f6dc9ff0544a6067e7fb4a0a2114b16
+- Behavior: Also added equivalent coverage and reported passing tests; behavior is comparable, with an extra explicit repository-call scenario in its prose.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
