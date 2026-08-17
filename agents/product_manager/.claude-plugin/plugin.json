@@ -1,6 +1,6 @@
 {
   "name": "pm-agent",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Default entry plugin for product and engineering R&D requests when no other agent or skill is named. Explicitly naming pm-agent selects it even when a downstream capability is also named; naming another role agent or skill without pm-agent excludes pm-agent and leaves that capability to enforce its own gate. Routes product ideas, features, changes, bugs, implementation, testing, design, deployment, security, formal docs, delivery, planning, and repository status work.",
   "author": {
     "name": "Neplich"
