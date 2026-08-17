@@ -69,7 +69,7 @@ Implementation details and troubleshooting are in the [Codex Guide](./docs/READM
 /plugins install https://github.com/Neplich/dev-agent-skills/tree/main
 ```
 
-The repository ships a `.kimi-plugin/plugin.json` manifest: all seven role skill directories are registered as a single plugin, and `pm-agent` loads automatically at session start via `sessionStart.skill`. The `tree/main` form installs the latest development state, where explicit capability names take priority and otherwise product or engineering R&D intent enters `pm-agent`. Once this policy is released, pin an immutable version with `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/vX.Y.Z`.
+The repository ships a `.kimi-plugin/plugin.json` manifest: all seven role skill directories are registered as a single plugin, and `pm-agent` loads automatically at session start via `sessionStart.skill`. The `tree/main` form installs the latest development state, where explicit capability names take priority and otherwise product or engineering R&D intent enters `pm-agent`. To pin an immutable version instead, install from a release tag: `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/vX.Y.Z`.
 
 Skills previously installed Codex-style into `~/.agents/skills/` are also discovered by Kimi Code automatically; the native plugin above is the recommended path.
 

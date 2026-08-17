@@ -70,7 +70,7 @@ SKILL_ROOT="$PROJECT_ROOT/.agents/skills"
 
 ### 2. Clone Or Update The Repository
 
-Set `TARGET_TAG` to a release tag (for example `v0.3.6`) when this install
+Set `TARGET_TAG` to a release tag (for example `v0.5.1`) when this install
 must match a specific released version, as the Release upgrade instructions
 do. Omit it for a plain latest install.
 
