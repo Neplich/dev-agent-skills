@@ -75,6 +75,12 @@ it. This does not relax the single-runner-process rule for model evals.
 Stop and repair a static contract failure before spending model calls. Do not convert a
 static failure into `BLOCKED` by manually editing `comparison.md`.
 
+One expected pre-run state is not a static failure: for a brand-new eval whose workspace
+has no `comparison.md` yet, `check_eval_contract.py` reports `missing durable
+comparison.md` until the first model run persists it. Proceed with the first run when
+this is the only contract failure for that eval; after the run, every static gate must
+pass.
+
 ## Preserve the Execution Boundary
 
 - Launch one `run_skill_eval.py` process. Let its `--jobs` pool provide concurrency.
