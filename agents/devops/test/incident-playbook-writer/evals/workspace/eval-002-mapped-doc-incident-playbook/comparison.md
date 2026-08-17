@@ -20,40 +20,39 @@
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `6eadf49a93ad15b65779f0737c549d6122220ac6abe8a01622417bb0da199cda`
-- Source lock SHA-256: `c58f04d32c2ca3a22aec96f7ee027af648da5971453d2a5553d7ab2cd9272551`
+- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
 - Prompt SHA-256: `27a471d4180c030327b87d22f79174352fdeffbbaace399da8cf913275d6b17e`
-- Repository HEAD: `60a4b3602dc07f3f6683a8873529bbdba6f8d27d`
-- Repository worktree state: **CLEAN**
+- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
+- Repository worktree state: **DIRTY**
 - Skill overlay SHA-256: `5d95ff5039100f2131c72122b091ff4a172f65d45070290345e8a658862159d4`
-- Behavior result: **PASS**
+- Behavior result: **FAIL**
 - Coverage result: **FULL**
-Overall result: PASS
+Overall result: FAIL
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reads_mapped_docs_first` | PASS | runner_captured_trace shows the mapped health document and code were inspected without traversing unrelated site documents. |
-| `verifies_against_code` | PASS | The with_skill output explicitly contrasts the document's 3-failure claim with the code's 5-failure threshold and explains the effect on alerting, escalation, and rollback timing. |
-| `treats_unverified_as_low_trust` | PASS | The output explicitly treats last_verified_version: unverified as low trust, relies on the code for the threshold, and refuses to invent rollback commands without deployment evidence. |
+| `reads_mapped_docs_first` | FAIL | with_skill trace shows multiple skill/handoff scans before the command that reads `docs/site/api/runtime-health.md`; that command reads the change map first, so the required mapped-document-first order is contradicted. |
+| `verifies_against_code` | PASS | The with_skill output explicitly distinguishes the document's 3-failure claim from `src/runtime/health.rules`'s 5-failure threshold and explains that the stale document would delay detection, escalation, and rollback. |
+| `treats_unverified_as_low_trust` | PASS | The with_skill output treats `last_verified_version: unverified` as low-trust navigation, uses the code value for the alert threshold, and refuses to invent rollback commands because no deployment or rollback evidence exists. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=27a471d4180c030327b87d22f79174352fdeffbbaace399da8cf913275d6b17e; fixture_sha256=cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7; output_sha256=f620455c9a8154e61451ea16fe901f6dd74023c42fbd35ca28c46e7f68362e71; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly performed evidence discovery and threshold verification, then blocked runbook generation pending operational context.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=27a471d4180c030327b87d22f79174352fdeffbbaace399da8cf913275d6b17e; fixture_sha256=cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7; output_sha256=350a44d322a8f9e88ce0f7cbed4c3fa88bce7639d35c91aceae0c61fc79c70af; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Correctly verified the 3-versus-5 threshold discrepancy, described its operational impact, and treated unverified documentation as low trust, but blocked the runbook and read the mapped document too late.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=27a471d4180c030327b87d22f79174352fdeffbbaace399da8cf913275d6b17e; fixture_sha256=cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7; output_sha256=d31dfa6feb000c7bbf99c4963dbae61851a4a1229cf3ec47f4e036d43a6b2792; snapshot_sha256=12185e216614fd50c621cf9e43a2de9f54828f81f5593af3b3de65fdb457548d
-- Behavior: Updated the mapped health document with the code threshold and generic response/rollback guidance.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=27a471d4180c030327b87d22f79174352fdeffbbaace399da8cf913275d6b17e; fixture_sha256=cd9e0e84ed5447d0b5fbaab481b132d7d6de821290e56efdee5b00d1661c9bf7; output_sha256=defc2603df307ceb96e283d7c81fb767936c6a65046cdd420ba2a077bc451819; snapshot_sha256=e249b7f8fdcccc2a1ee0dbf4d498ab29650bd4e844de112e31c6ef0ba315d93a
+- Behavior: Created and delivered an updated health document with threshold correction and minimal incident/rollback guidance; comparison-only context.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- None.
-- Next: Provide the confirmed PM/DevOps handoff packet and select the required playbook(s).
-- Next: Provide deployment and rollback evidence so the operational steps can be completed.
+- The with_skill lane violated the required mapped-document-first read order.
+- Next: Read `docs/site/api/runtime-health.md` immediately after identifying the code target, then verify its claims against `src/runtime/health.rules` and available rollback evidence.
 
 ## Runtime Artifact Policy
 
