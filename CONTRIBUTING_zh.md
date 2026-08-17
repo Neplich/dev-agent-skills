@@ -34,6 +34,7 @@ uv run --with pytest pytest \
   scripts/test_eval_runtime.py \
   scripts/test_run_skill_eval.py \
   scripts/test_check_eval_artifacts.py \
+  scripts/test_generate_shared_contracts.py \
   scripts/test_install_codex_skills.py \
   scripts/test_summarize_eval_results.py \
   scripts/test_check_repository_contract.py
@@ -66,7 +67,7 @@ uv run scripts/run_skill_eval.py --jobs 10
 
 1. 新建或更新 skill 与 eval fixture。
 2. 运行相关确定性检查和已批准的手动 eval。
-3. 将最新持久化结果写入 `comparison.md`。
+3. 由评测 runner 将最新结果事务性持久化到 `comparison.md`，不手工编辑。
 4. 开 PR 前删除运行期产物。
 5. 只提交 eval 定义、metadata、fixture、README 文件和 `comparison.md`。
 
@@ -76,13 +77,12 @@ uv run scripts/run_skill_eval.py --jobs 10
 # Eval Result: <eval-name>
 
 ## Evaluation Target
-## Test Set / Fixture Version
-## Latest Result
-## With Skill
-## Without Skill / Baseline
-## Failures
-## Next Steps
-## Runtime Artifacts Policy
+## Current Result
+## Assertion Results
+## With-Skill Behavior
+## Fresh Without-Skill Baseline
+## Failures and Next Steps
+## Runtime Artifact Policy
 ```
 
 ## 维护索引
