@@ -92,7 +92,4 @@ DevOps Agent 将工作交接给作为独立插件打包并安装的同级 Agent�
 ```bash
 # 安装某个 DevOps skill 到当前项目运行时
 npx skills add ./agents/devops/skills/deployment-planner
-
-# 运行 DevOps eval
-uv run scripts/run_skill_eval.py --agent devops --jobs 10
 ```

@@ -1,6 +1,0 @@
-.github/workflows/docs-image.yml
-deploy/compose.docs.yaml
-deploy/helm/docs-values.yaml
-docs/site/Dockerfile
-docs/site/package.json
-docs/site/scripts/build.mjs

@@ -39,11 +39,10 @@ Router 只拥有入口凭据、路由表、阻塞条件和 Specialist 指针。S
 
 ```text
 agents/{role}/skills/{skill}/    Skill 源文件与私有指令
-agents/{role}/test/              持久化 eval 定义与 comparison
 docs/pm/{feature_path}/          产品需求与决策
 docs/engineer/{feature_path}/    技术设计与活跃实施计划
 docs/qa/e2e/{feature_path}/      持久化 E2E 用例与结果
-scripts/                         契约、安装、eval 与生成工具
+scripts/                         契约、安装与生成工具
 ```
 
 文档树与生命周期规则见 [docs/AGENTS.md](./AGENTS.md)。
@@ -62,6 +61,4 @@ scripts/                         契约、安装、eval 与生成工具
 
 - 新增、修改或重命名 Role Skill：使用仓库 `maintain-skills` Skill 和
   [Skill 维护 cookbook](./cookbook/maintain-skills.md)。
-- 编写或运行 Skill eval：使用 `skill-eval-runner` 和
-  [eval cookbook](./cookbook/run-skill-evals.md)。
 - 准备发布：使用 [release cookbook](./cookbook/release.md)。

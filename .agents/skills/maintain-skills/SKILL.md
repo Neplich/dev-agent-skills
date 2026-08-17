@@ -1,6 +1,6 @@
 ---
 name: maintain-skills
-description: Manage role Skill and Agent lifecycle changes in this repository, including additions, modifications, renames, and required sync surfaces. Use for Skill contract or registration changes; use skill-eval-runner for eval work.
+description: Manage role Skill and Agent lifecycle changes in this repository, including additions, modifications, renames, and required sync surfaces. Use for Skill contract or registration changes.
 ---
 
 # Maintain Skills
@@ -8,9 +8,7 @@ description: Manage role Skill and Agent lifecycle changes in this repository, i
 Manage the repository's role-skill lifecycle without reimplementing its sync
 surfaces. Treat this skill as the operator workflow for skill structure and
 registration, `references/sync-surfaces.md` as the authoritative sync checklist,
-and `references/change-types.md` as the change classification. Eval impact
-analysis, writing, execution, and failure triage belong to the project-level
-`skill-eval-runner`; do not duplicate its workflow here.
+and `references/change-types.md` as the change classification.
 
 Read [references/change-types.md](references/change-types.md) before classifying a
 request. Read [references/sync-surfaces.md](references/sync-surfaces.md) before
@@ -24,19 +22,18 @@ editing anything, and check every surface it lists against the final diff.
   Judge the change tier against the tier contract in `AGENTS.md`（hotfix /
   standard / major）and record it before planning.
 - Treat "重命名 skill 目录" as **rename**. Renames are path-contract changes:
-  marketplace paths, router references, README references, lockfile entries,
-  and eval fixture paths all move together.
+  marketplace paths, router references, README references, and lockfile entries
+  all move together.
 - Classify first, then scan. Do not skip classification because the edit looks
   small.
 
 ## Scan the Impact
 
 - Read `references/sync-surfaces.md` and list every surface the change touches:
-  registration, routing, discovery, agent docs, top-level entry, evals, process
-  docs, and shared-contract copies.
+  registration, routing, discovery, agent docs, top-level entry, process docs,
+  and shared-contract copies.
 - Check the high-risk surfaces named in the reference: discovery metadata,
-  router routing evals, PM entry classification, affected existing evals and
-  durable `comparison.md`, and process-doc/diff consistency.
+  PM entry classification, and process-doc/diff consistency.
 - State the forbidden files or areas for this change explicitly; do not edit
   anything outside the confirmed scope.
 
@@ -84,38 +81,22 @@ scale, stop and re-scope.
 - Process docs: keep PRD/TRD/implementation-plan touch tables and forbidden
   areas consistent with the actual diff.
 
-## Delegate Eval Work
-
-- Send eval impact analysis, authoring, running, rerunning, and failure triage
-  to the project-level `skill-eval-runner`. Do not author or run evals here.
-- New agents register in `scripts/check_eval_contract.py` `VALID_AGENTS` and
-  `.github/workflows/evals.yml` manual targets; include these in the
-  `skill-eval-runner` delegation scope.
-- If the change affects existing eval assertions or durable `comparison.md`,
-  have `skill-eval-runner` identify the affected scope and produce fresh
-  evidence; never reuse or hand-craft old conclusions.
-
 ## Verify the Final State
 
 After the edits, run:
 
 ```bash
 uv run scripts/check_repository_contract.py
-uv run scripts/check_eval_contract.py
-uv run scripts/check_eval_artifacts.py
 uv run scripts/check_doc_contract.py
 uv run --with pytest pytest <affected deterministic tests>
 git diff --check
 ```
 
 Stop and repair a static failure before considering the change done. Run the
-deterministic tests that cover the touched surfaces (e.g. router routing eval
-assertions, lockfile contract tests).
+deterministic tests that cover the touched surfaces (e.g. lockfile contract
+tests).
 
 ## Report
 
 Summarize for handoff: the change type and tier, files changed with the
-sync-surface checklist result, verification results, and any leftover items
-(e.g. eval work delegated to `skill-eval-runner`, fresh-eval targets still
-pending). Do not claim CI ran model evals; model evals are manual through
-`.github/workflows/evals.yml`.
+sync-surface checklist result, verification results, and any leftover items.

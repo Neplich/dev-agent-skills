@@ -15,7 +15,7 @@ All local E2E credentials are stored in:
 ```
 
 The file must stay local and must be ignored by git. Do not create or commit
-real credentials in repository documents, eval fixtures, reports, or scripts.
+real credentials in repository documents, reports, or scripts.
 
 ## Schema
 
@@ -86,12 +86,10 @@ Do not write plaintext usernames, passwords, tokens, cookies, sessions, TOTP
 secrets, SSH passwords, SSH private key contents, or SSH passphrases into:
 
 - `docs/qa/e2e/**`
-- `agents/**/test/**`
 - `cases/`
 - `scripts/`
 - `results/`
 - `_reports/`
-- eval fixture files
 - conversation summaries intended for commit
 
 If a required credential is absent or the requested `credential_ref` cannot be

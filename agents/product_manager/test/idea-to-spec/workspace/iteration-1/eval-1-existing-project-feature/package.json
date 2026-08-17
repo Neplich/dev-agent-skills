@@ -1,9 +1,0 @@
-{
-  "name": "taggable-apps-portal",
-  "private": true,
-  "version": "0.1.0",
-  "description": "Internal application catalog portal",
-  "scripts": {
-    "dev": "next dev"
-  }
-}

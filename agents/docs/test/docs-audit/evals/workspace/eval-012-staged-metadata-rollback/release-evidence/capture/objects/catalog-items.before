@@ -1,7 +1,0 @@
----
-title: Catalog items
-last_verified_version: unverified
----
-# Catalog items
-
-`GET /catalog/items` returns the current catalog page.

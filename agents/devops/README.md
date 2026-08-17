@@ -97,7 +97,4 @@ If a target agent is not installed, the corresponding handoff stage is unavailab
 ```bash
 # Install one DevOps skill into the current project runtime
 npx skills add ./agents/devops/skills/deployment-planner
-
-# Run DevOps eval
-uv run scripts/run_skill_eval.py --agent devops --jobs 10
 ```

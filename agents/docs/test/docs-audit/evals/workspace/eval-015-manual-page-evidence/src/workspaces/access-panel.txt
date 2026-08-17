@@ -1,5 +1,0 @@
-Workspace access settings
-
-1. Open the access settings panel.
-2. Select a member and save the access level.
-3. Confirm the updated access level in the member list.

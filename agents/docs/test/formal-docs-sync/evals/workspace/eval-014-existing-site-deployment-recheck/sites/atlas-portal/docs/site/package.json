@@ -1,8 +1,0 @@
-{
-  "name": "atlas-portal-docs",
-  "private": true,
-  "scripts": {
-    "build:public": "vitepress build --outDir .generated/public",
-    "build:internal": "DOCS_VARIANT=internal vitepress build --outDir .generated/internal"
-  }
-}

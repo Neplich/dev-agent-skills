@@ -55,7 +55,7 @@ Router 的 `_internal/_generated/shared-contracts/` 是只读派生物。修改 
 `scripts/generate_shared_contracts.py`，禁止手改副本。
 
 版本 changelog 位于 `docs/changelog/changelog-v{version}.md`，根 `CHANGELOG.md`
-只维护索引。冻结归档、changelog 历史、生成契约和 eval workspace 都不是当前规则源。
+只维护索引。冻结归档、changelog 历史和生成契约都不是当前规则源。
 
 ## 链接与检查
 

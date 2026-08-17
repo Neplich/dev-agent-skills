@@ -1,5 +1,0 @@
-documentation:
-  public:
-    enabled: true
-  internal:
-    enabled: false

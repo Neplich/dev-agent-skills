@@ -107,7 +107,4 @@ If a target agent is not installed, the corresponding handoff stage is unavailab
 ```bash
 # Install one Designer skill into the current project runtime
 npx skills add ./agents/designer/skills/visual-design
-
-# Run Designer eval
-uv run scripts/run_skill_eval.py --agent designer --jobs 10
 ```

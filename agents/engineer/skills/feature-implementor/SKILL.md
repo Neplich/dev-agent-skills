@@ -98,8 +98,7 @@ plan. Runtime outputs never enter Git.
 
 The closeout summary explicitly records `changed_files`, `commands_and_results`,
 `residual_risks`, and `runtime_artifacts_removed`. The last field confirms that
-transcripts, diagnostics, outputs, timing, run status, and
-`comparison.auto.md` remain outside Git.
+transcripts, diagnostics, outputs, timing, and run status remain outside Git.
 
 ## PM Handoff Entry Gate
 
@@ -233,8 +232,8 @@ when the user opts out; the plan gate still applies.
 ## Closeout And QA Handoff
 
 After implementation and deterministic checks, update or confirm closeout.
-Closeout records final status, changed files, commands run or skipped, skill /
-fresh subagent eval status when applicable, residual risks, and next owner.
+Closeout records final status, changed files, commands run or skipped,
+residual risks, and next owner.
 
 If frontmatter says `status: "Implemented"`, the body must not keep unresolved
 planning wording such as "waiting for confirmation", "not started", or
@@ -245,7 +244,7 @@ decision is in scope, the user-visible checkpoint also states that
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` remains the fixed active
 entry and archives go only under
 `docs/engineer/{feature_path}/archive/`.
-Runtime eval artifacts must not be committed.
+Runtime artifacts must not be committed.
 
 When user-facing flows, acceptance paths, permissions, login, data setup, or
 regression coverage may be affected, produce a QA E2E handoff package. Do not

@@ -105,7 +105,4 @@ Designer Agent 将工作交接给作为独立插件打包并安装的同级 Agen
 ```bash
 # 安装某个 Designer skill 到当前项目运行时
 npx skills add ./agents/designer/skills/visual-design
-
-# 运行 Designer eval
-uv run scripts/run_skill_eval.py --agent designer --jobs 10
 ```

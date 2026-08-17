@@ -54,12 +54,7 @@ delivery:
    results.
 4. For commands not run, record skipped or blocked reasons instead of leaving
    them as pending.
-5. If skill eval or fresh subagent validation ran, cite the durable
-   `comparison.md` paths. If it did not run, record the skipped or blocked
-   reason.
-6. Do not commit runtime eval artifacts such as transcripts, diagnostics,
-   outputs, timing data, run status files, or `comparison.auto.md`.
-7. A completed plan must not keep unresolved planning-state wording such as
+5. A completed plan must not keep unresolved planning-state wording such as
    "waiting for confirmation", "not started", "pending execution", or "model
    eval not executed" unless the same section clearly marks it as historical and
    records the current resolved result.

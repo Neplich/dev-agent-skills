@@ -25,7 +25,7 @@ def test_history_dependent_ci_jobs_fetch_full_history() -> None:
         Path(__file__).resolve().parents[1] / ".github/workflows/ci.yml"
     ).read_text(encoding="utf-8")
 
-    for job_name in ("eval-contract", "python-tests"):
+    for job_name in ("python-tests",):
         match = re.search(
             rf"^  {re.escape(job_name)}:\n(?P<body>.*?)(?=^  [a-z][a-z-]+:\n|\Z)",
             workflow,

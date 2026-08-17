@@ -15,7 +15,7 @@ Execute the implementation plan step by step, writing code that follows project 
 - For complex coding tasks: implementation sub-agent scope, forbidden areas,
   expected behavior, and verification commands
 - Closeout evidence to collect: changed files, deterministic commands run,
-  command results, commands not run with reasons, eval status, and residual risks
+  command results, commands not run with reasons, and residual risks
 
 ## Entry Gate
 
@@ -97,10 +97,9 @@ implementation:
 - files created or modified
 - deterministic check commands run and their results
 - commands skipped or blocked, with reasons
-- skill eval or fresh subagent validation status, when applicable
 - residual risks, open issues, or follow-up owners
 
-Do not write runtime eval artifacts into the repository. Transcript,
+Do not write runtime artifacts into the repository. Transcript,
 diagnostic, output, timing, and run-status files are temporary only.
 
 ### 5. Progress update

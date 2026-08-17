@@ -112,7 +112,4 @@ QA Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
 ```bash
 # 安装某个 QA skill 到当前项目运行时
 npx skills add ./agents/qa/skills/spec-based-tester
-
-# 运行 QA eval
-uv run scripts/run_skill_eval.py --agent qa --jobs 10
 ```

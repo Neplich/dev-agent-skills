@@ -1,2 +1,0 @@
-maximum_upload_mb: 10
-mode: single_request

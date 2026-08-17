@@ -74,9 +74,9 @@ confirmed, keep the date-free heading; never substitute the current date.
 - Put the complete compare link after the curated detail section.
 - Do not paste the full PR or commit feed as the user-facing narrative.
 - Do not add a product claim that is absent from the applicable confirmed fact source.
-- Keep internal quality evidence, including skill eval results, assertion counts,
-  review rounds, and QA evidence summaries, only in the repository changelog's
-  Skill Eval summary. Do not include it in the user-facing GitHub Release body,
+- Keep internal quality evidence, including review rounds and QA evidence
+  summaries, only in the repository changelog. Do not include it in the
+  user-facing GitHub Release body,
   and do not let adjacent Release presentation habits introduce sections beyond
   this outline's four sections: 重点更新, 其他改进, 升级说明, and 变更明细.
 - If GitHub evidence contradicts or materially extends the fact source, block.

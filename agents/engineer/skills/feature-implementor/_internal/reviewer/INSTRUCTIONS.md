@@ -85,10 +85,6 @@ For each P0 acceptance criterion in PRD:
       "model eval not executed"
 - [ ] Deterministic checks that ran are listed with actual commands and results
 - [ ] Commands not run are listed with skipped or blocked reasons
-- [ ] Skill eval or fresh subagent validation that ran links to durable
-      `comparison.md`; if it did not run, the reason is explicit
-- [ ] Runtime eval artifacts such as transcripts, diagnostics, outputs, timing
-      data, and run-status files are not committed
 - [ ] Closeout confirmation strength follows the `change_tier` contract in
       `AGENTS.md` (变更分级契约): `hotfix` merges closeout and any archive
       approval into one confirmation; `standard` / `major` keep independent

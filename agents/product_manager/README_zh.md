@@ -113,7 +113,4 @@ PM Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
 ```bash
 # 安装某个 PM skill 到当前项目运行时
 npx skills add ./agents/product_manager/skills/idea-to-spec
-
-# 运行 idea-to-spec 的本地测试
-uv run --with pytest pytest agents/product_manager/test/idea-to-spec
 ```
