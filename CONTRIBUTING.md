@@ -34,6 +34,7 @@ uv run --with pytest pytest \
   scripts/test_eval_runtime.py \
   scripts/test_run_skill_eval.py \
   scripts/test_check_eval_artifacts.py \
+  scripts/test_generate_shared_contracts.py \
   scripts/test_install_codex_skills.py \
   scripts/test_summarize_eval_results.py \
   scripts/test_check_repository_contract.py
@@ -66,7 +67,8 @@ The repository keeps only eval definitions and the latest persisted conclusions;
 
 1. Create or update the skill and eval fixtures.
 2. Run the relevant deterministic checks and the approved manual evals.
-3. Write the latest persisted result into `comparison.md`.
+3. Let the eval runner transactionally persist the latest result into `comparison.md`;
+   do not hand-edit it.
 4. Remove runtime artifacts before opening a PR.
 5. Commit only eval definitions, metadata, fixtures, README files, and `comparison.md`.
 
@@ -76,13 +78,12 @@ The repository keeps only eval definitions and the latest persisted conclusions;
 # Eval Result: <eval-name>
 
 ## Evaluation Target
-## Test Set / Fixture Version
-## Latest Result
-## With Skill
-## Without Skill / Baseline
-## Failures
-## Next Steps
-## Runtime Artifacts Policy
+## Current Result
+## Assertion Results
+## With-Skill Behavior
+## Fresh Without-Skill Baseline
+## Failures and Next Steps
+## Runtime Artifact Policy
 ```
 
 ## Maintenance Index

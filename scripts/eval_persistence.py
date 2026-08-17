@@ -29,22 +29,27 @@ def _stage_file(path: Path, content: bytes) -> Path:
 
 def transactional_replace(updates: dict[Path, bytes]) -> None:
     staged: dict[Path, Path] = {}
-    backups: dict[Path, Path] = {}
+    backups: dict[Path, Path | None] = {}
     replaced: list[Path] = []
     try:
         for path, content in updates.items():
             staged[path] = _stage_file(path, content)
         for path in updates:
-            backups[path] = _stage_file(path, path.read_bytes())
+            backups[path] = _stage_file(path, path.read_bytes()) if path.exists() else None
         for path in updates:
             os.replace(staged[path], path)
             replaced.append(path)
     except Exception:
         for path in reversed(replaced):
-            os.replace(backups[path], path)
+            backup = backups[path]
+            if backup is None:
+                if path.read_bytes() == updates[path]:
+                    path.unlink()
+            else:
+                os.replace(backup, path)
         raise
     finally:
-        for temporary in (*staged.values(), *backups.values()):
+        for temporary in (*staged.values(), *(b for b in backups.values() if b is not None)):
             if temporary.exists():
                 temporary.unlink()
 

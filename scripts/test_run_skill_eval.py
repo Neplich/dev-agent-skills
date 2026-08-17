@@ -1079,3 +1079,58 @@ def test_transaction_cleans_staged_files_when_staging_fails(
     assert all(not path.exists() for path in created)
     assert first.read_bytes() == b"old-first"
     assert second.read_bytes() == b"old-second"
+
+
+def test_transactional_replace_creates_missing_target(tmp_path: Path) -> None:
+    target = tmp_path / "comparison.md"
+
+    run_skill_eval._transactional_replace({target: b"initial durable content"})
+
+    assert target.read_bytes() == b"initial durable content"
+
+
+def test_transactional_replace_rollback_removes_created_target(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    created = tmp_path / "comparison.md"
+    existing = tmp_path / "migration-inventory.json"
+    existing.write_bytes(b"old-inventory")
+    real_replace = run_skill_eval.os.replace
+
+    def fail_on_existing(source, destination):
+        if Path(destination) == existing:
+            raise OSError("injected replace failure")
+        return real_replace(source, destination)
+
+    monkeypatch.setattr(run_skill_eval.os, "replace", fail_on_existing)
+    with pytest.raises(OSError, match="injected"):
+        run_skill_eval._transactional_replace(
+            {created: b"new-comparison", existing: b"new-inventory"}
+        )
+
+    assert not created.exists()
+    assert existing.read_bytes() == b"old-inventory"
+
+
+def test_transactional_replace_rollback_keeps_externally_modified_target(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    created = tmp_path / "comparison.md"
+    existing = tmp_path / "migration-inventory.json"
+    existing.write_bytes(b"old-inventory")
+    real_replace = run_skill_eval.os.replace
+
+    def fail_on_existing(source, destination):
+        if Path(destination) == existing:
+            created.write_bytes(b"external content")
+            raise OSError("injected replace failure")
+        return real_replace(source, destination)
+
+    monkeypatch.setattr(run_skill_eval.os, "replace", fail_on_existing)
+    with pytest.raises(OSError, match="injected"):
+        run_skill_eval._transactional_replace(
+            {created: b"new-comparison", existing: b"new-inventory"}
+        )
+
+    assert created.read_bytes() == b"external content"
+    assert existing.read_bytes() == b"old-inventory"
