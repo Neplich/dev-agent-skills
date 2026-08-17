@@ -6,8 +6,8 @@ architecture is documented in [docs/architecture.md](docs/architecture.md).
 
 ## Always-Loaded Invariants
 
-- Each Agent lives under `agents/{agent-name}/` with role README files,
-  `skills/`, and tests.
+- Each Agent lives under `agents/{agent-name}/` with role README files and
+  `skills/`.
 - `SKILL.md` is the public Skill contract. Optional private staged instructions
   live under `_internal/`; generated contracts under `_internal/_generated/`
   are read-only.

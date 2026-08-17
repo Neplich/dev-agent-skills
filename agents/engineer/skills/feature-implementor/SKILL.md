@@ -232,8 +232,8 @@ when the user opts out; the plan gate still applies.
 ## Closeout And QA Handoff
 
 After implementation and deterministic checks, update or confirm closeout.
-Closeout records final status, changed files, commands run or skipped, skill /
-fresh subagent eval status when applicable, residual risks, and next owner.
+Closeout records final status, changed files, commands run or skipped,
+residual risks, and next owner.
 
 If frontmatter says `status: "Implemented"`, the body must not keep unresolved
 planning wording such as "waiting for confirmation", "not started", or
