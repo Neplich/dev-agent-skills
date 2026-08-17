@@ -125,7 +125,4 @@ If a target agent is not installed, the corresponding handoff stage is unavailab
 ```bash
 # Install one Engineer skill into the current project runtime
 npx skills add ./agents/engineer/skills/trd-gen
-
-# Inspect engineering eval definitions
-find agents/engineer/test -path '*/evals/evals.json' -print
 ```

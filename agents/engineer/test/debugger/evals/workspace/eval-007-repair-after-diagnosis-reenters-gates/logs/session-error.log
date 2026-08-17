@@ -1,3 +1,0 @@
-2026-08-12T18:42:13Z ERROR POST /api/session/refresh 500
-SessionStoreError: missing session table
-request_id=req-session-042

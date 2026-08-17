@@ -1,9 +1,0 @@
-diff --git a/docs/site/api/catalog-items.md b/docs/site/api/catalog-items.md
---- a/docs/site/api/catalog-items.md
-+++ b/docs/site/api/catalog-items.md
-@@ -6,5 +6,5 @@ owners:
- related_code:
-   - src/catalog/routes.ts
--last_verified_version: unverified
-+last_verified_version: v1.8.0
- ---

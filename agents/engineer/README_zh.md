@@ -122,7 +122,4 @@ Engineer Agent 将工作交接给作为独立插件打包并安装的同级 Agen
 ```bash
 # 安装某个 Engineer skill 到当前项目运行时
 npx skills add ./agents/engineer/skills/trd-gen
-
-# 查看工程 eval 定义
-find agents/engineer/test -path '*/evals/evals.json' -print
 ```

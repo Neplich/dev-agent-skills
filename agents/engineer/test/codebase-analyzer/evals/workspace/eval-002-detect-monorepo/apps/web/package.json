@@ -1,7 +1,0 @@
-{
-  "name": "@acme/web",
-  "private": true,
-  "dependencies": {
-    "next": "15.4.4"
-  }
-}

@@ -1,4 +1,0 @@
-services:
-  api:
-    image: registry.example/billing-api:v4.2.0
-    ports: ["8080:8080"]

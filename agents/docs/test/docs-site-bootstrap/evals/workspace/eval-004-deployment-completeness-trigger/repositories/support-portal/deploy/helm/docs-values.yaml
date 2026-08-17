@@ -1,5 +1,0 @@
-public:
-  imageTarget: public
-internal:
-  imageTarget: internal
-  artifactPath: .generated/internal

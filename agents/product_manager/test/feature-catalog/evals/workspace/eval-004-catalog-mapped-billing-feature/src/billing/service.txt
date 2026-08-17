@@ -1,2 +1,0 @@
-supported_plan: monthly
-operation: create_subscription

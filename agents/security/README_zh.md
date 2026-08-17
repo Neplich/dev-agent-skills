@@ -92,7 +92,4 @@ Security Agent 将工作交接给作为独立插件打包并安装的同级 Agen
 ```bash
 # 安装某个 Security skill 到当前项目运行时
 npx skills add ./agents/security/skills/appsec-checklist
-
-# 查看安全 eval 定义
-find agents/security/test -path '*/evals/evals.json' -print
 ```

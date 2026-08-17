@@ -72,10 +72,6 @@ or unavailable targets.
 - Role Skill or Agent lifecycle changes use the repository
   `maintain-skills` Skill and
   [maintenance cookbook](docs/cookbook/maintain-skills.md).
-- Eval creation, modification, execution, diagnosis, and durable comparison use
-  `skill-eval-runner` and the
-  [eval cookbook](docs/cookbook/run-skill-evals.md).
-
 Each implementation plan states expected code-size magnitude and exact
 verification. Iterate until the approved requirements, plan, tests, and diff
 agree. Remove runtime artifacts before delivery.
@@ -108,12 +104,10 @@ Run checks proportional to the change and any stronger plan-specific list:
 uv run scripts/generate_shared_contracts.py --check
 uv run scripts/check_repository_contract.py
 uv run scripts/check_doc_contract.py
-uv run scripts/check_eval_contract.py
-uv run scripts/check_eval_artifacts.py
 git diff --check
 ```
 
-Repository Skills define additional lifecycle and eval checks; do not duplicate
+Repository Skills define additional lifecycle checks; do not duplicate
 their full protocols here.
 
 ## 开发工作流
@@ -128,11 +122,6 @@ their full protocols here.
 
 Git、PR 和 release 权限边界见上文及
 [release cookbook](docs/cookbook/release.md)。
-
-## Skill 测试
-
-Skill eval 统一使用 `skill-eval-runner` 与
-[eval cookbook](docs/cookbook/run-skill-evals.md)。
 
 ## QA E2E 测试用例持久化
 

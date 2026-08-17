@@ -96,7 +96,4 @@ If a target agent is not installed, the corresponding handoff stage is unavailab
 ```bash
 # Install one Security skill into the current project runtime
 npx skills add ./agents/security/skills/appsec-checklist
-
-# Inspect security eval definitions
-find agents/security/test -path '*/evals/evals.json' -print
 ```

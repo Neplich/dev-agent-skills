@@ -119,7 +119,4 @@ If a target agent is not installed, the corresponding handoff stage is unavailab
 ```bash
 # Install one PM skill into the current project runtime
 npx skills add ./agents/product_manager/skills/idea-to-spec
-
-# Run idea-to-spec tests
-uv run --with pytest pytest agents/product_manager/test/idea-to-spec
 ```

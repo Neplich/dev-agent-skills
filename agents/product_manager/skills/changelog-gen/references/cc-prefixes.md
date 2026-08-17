@@ -26,7 +26,7 @@
 Include these PRs when the content changes:
 
 - skill behavior, routing, handoff, gates, or collaboration boundaries
-- eval fixtures, assertions, durable `comparison.md`, fresh validation, or required checks
+- required checks
 - marketplace registry, skill metadata, installation, packaging, or lockfile semantics
 - release workflow, changelog preflight, tags, draft releases, or publishing flow
 - public README, reference, or skill documentation that changes how users operate the project

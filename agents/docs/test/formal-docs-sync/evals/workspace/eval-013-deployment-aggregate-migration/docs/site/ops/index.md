@@ -1,3 +1,0 @@
-# Operations
-
-- [Deployment](./deployment.md)

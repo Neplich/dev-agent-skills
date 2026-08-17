@@ -392,7 +392,7 @@ pass" is not sufficient. Before the first formal page or change-map write,
 persist that matrix, its generation time, and the pre-write changed-path state
 to a runtime-only `sync-report.md` outside `docs/site/`. Do not overwrite this
 pre-write evidence after formal writes begin, and never submit it as a durable
-eval or repository artifact. If any cell or this ordering evidence is absent,
+repository artifact. If any cell or this ordering evidence is absent,
 conflicting, failed, skipped without explanation, or unverifiable, report the
 failed item, owner, and next action and make zero changes to that design page
 and its atomic mapping closure (change-map entry, changed ancestor indexes,

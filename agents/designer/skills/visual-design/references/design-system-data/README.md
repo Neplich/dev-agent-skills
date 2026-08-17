@@ -17,7 +17,7 @@ Allowed:
 
 - Run design-system lookup to choose product pattern, style direction, colors, typography, key effects, and anti-patterns.
 - Search product, style, color, typography, UX, chart, and landing references as design evidence.
-- Save raw lookup output as eval diagnostics when needed.
+- Save raw lookup output as diagnostics when needed.
 
 Forbidden:
 

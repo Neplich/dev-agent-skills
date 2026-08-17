@@ -1,2 +1,0 @@
-match_mode: exact
-entrypoint: search

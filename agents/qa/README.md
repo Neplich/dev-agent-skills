@@ -112,7 +112,4 @@ If a target agent is not installed, the corresponding handoff stage is unavailab
 ```bash
 # Install one QA skill into the current project runtime
 npx skills add ./agents/qa/skills/spec-based-tester
-
-# Run QA eval
-uv run scripts/run_skill_eval.py --agent qa --jobs 10
 ```

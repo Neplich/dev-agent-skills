@@ -1,6 +1,0 @@
-services:
-  docs-public:
-    image: registry.example/support-docs:public-v2.3.0
-  docs-internal:
-    image: registry.example/support-docs:internal-v2.3.0
-    command: [nginx, -g, daemon off;]

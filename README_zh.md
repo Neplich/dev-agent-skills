@@ -28,7 +28,7 @@
 - Claude Code marketplace 配置
 - Codex 原生 skill discovery 安装入口
 - Kimi Code 原生插件 manifest
-- Agent 级 eval fixtures 与本地验证脚本
+- 本地验证脚本
 
 > [!NOTE]
 > 这些 Agent 通过 Markdown 文档和项目资产协作，不依赖共享运行时或固定状态机。直接用户入口只推荐 `pm-agent`；下游 role plugin 只在 PM handoff 需要对应能力时安装。
@@ -146,9 +146,9 @@ PRD/TRD 对齐、实现计划确认和 QA E2E handoff 等工程门禁见 [Engine
 
 - [架构](./docs/architecture.md)：当前角色、路由、安装、协作和扩展关系。
 - [文档治理](./docs/AGENTS.md)：文档归属、生命周期、归档和链接规则。
-- 维护 cookbook：[Role Skill](./docs/cookbook/maintain-skills.md)、[Skill Eval](./docs/cookbook/run-skill-evals.md)、[发布](./docs/cookbook/release.md)。
+- 维护 cookbook：[Role Skill](./docs/cookbook/maintain-skills.md)、[发布](./docs/cookbook/release.md)。
 - [Codex Guide](./docs/README.codex.md)：Codex 安装模型、镜像机制、排障和按路径禁用。
-- [Agents Guide](./AGENTS.md)：agent 仓库指导、文档契约、维护流程、eval 规则和 PR 检查的唯一事实源。
+- [Agents Guide](./AGENTS.md)：agent 仓库指导、文档契约、维护流程和 PR 检查的唯一事实源。
 - [Contributing](./CONTRIBUTING_zh.md)：本地验证命令和维护流程链接。
 - [Changelog Index](./CHANGELOG.md)：版本化 release changelog 入口。
 - Agent 文档：[PM](./agents/product_manager/README_zh.md)、[Designer](./agents/designer/README_zh.md)、[Engineer](./agents/engineer/README_zh.md)、[QA](./agents/qa/README_zh.md)、[DevOps](./agents/devops/README_zh.md)、[Security](./agents/security/README_zh.md)、[Docs](./agents/docs/README_zh.md)。

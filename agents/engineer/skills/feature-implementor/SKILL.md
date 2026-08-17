@@ -98,8 +98,7 @@ plan. Runtime outputs never enter Git.
 
 The closeout summary explicitly records `changed_files`, `commands_and_results`,
 `residual_risks`, and `runtime_artifacts_removed`. The last field confirms that
-transcripts, diagnostics, outputs, timing, run status, and
-`comparison.auto.md` remain outside Git.
+transcripts, diagnostics, outputs, timing, and run status remain outside Git.
 
 ## PM Handoff Entry Gate
 

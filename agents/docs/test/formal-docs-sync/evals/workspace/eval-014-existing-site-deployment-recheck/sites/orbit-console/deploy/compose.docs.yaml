@@ -1,3 +1,0 @@
-services:
-  docs-public:
-    image: registry.example/orbit-docs:public-v3.1.0

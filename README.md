@@ -28,7 +28,7 @@ It includes:
 - Claude Code marketplace configuration
 - Codex native skill discovery installation instructions
 - Kimi Code native plugin manifest
-- Agent-level eval fixtures and local validation scripts
+- Local validation scripts
 
 > [!NOTE]
 > These agents collaborate through Markdown documents and project assets. They do not require a shared runtime or fixed state machine. Use `pm-agent` as the direct user entry; install downstream role plugins only when PM handoff should have those capabilities available.
@@ -152,9 +152,9 @@ Not every project needs the full chain. Each agent can complete its own role-spe
 
 - [Architecture](./docs/architecture.md): current roles, routing, installation, collaboration, and extension map.
 - [Documentation Governance](./docs/AGENTS.md): document ownership, lifecycle, archives, and link rules.
-- Maintainer cookbooks: [Role Skills](./docs/cookbook/maintain-skills.md), [Skill Evals](./docs/cookbook/run-skill-evals.md), [Release](./docs/cookbook/release.md).
+- Maintainer cookbooks: [Role Skills](./docs/cookbook/maintain-skills.md), [Release](./docs/cookbook/release.md).
 - [Codex Guide](./docs/README.codex.md): Codex installation model, mirror behavior, troubleshooting, and path-based disabling.
-- [Agents Guide](./AGENTS.md): repository guidance source for agents, document contracts, maintenance workflow, eval rules, and PR checks.
+- [Agents Guide](./AGENTS.md): repository guidance source for agents, document contracts, maintenance workflow, and PR checks.
 - [Contributing](./CONTRIBUTING.md): local validation commands and maintainer workflow links.
 - [Changelog Index](./CHANGELOG.md): versioned release changelog entrypoint.
 - Agent guides: [PM](./agents/product_manager/README.md), [Designer](./agents/designer/README.md), [Engineer](./agents/engineer/README.md), [QA](./agents/qa/README.md), [DevOps](./agents/devops/README.md), [Security](./agents/security/README.md), [Docs](./agents/docs/README.md).

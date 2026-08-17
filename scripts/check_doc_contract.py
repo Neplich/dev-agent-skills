@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate documentation contracts not owned by repository/eval checkers."""
+"""Validate documentation contracts not owned by repository checkers."""
 
 from __future__ import annotations
 
@@ -45,8 +45,6 @@ ATX_HEADING_RE = re.compile(r"^#{1,6}\s+(.+?)\s*#*\s*$")
 LINK_SOURCE_EXCLUSIONS = (
     "/archive/",
     "docs/changelog/",
-    "/evals/fixtures/",
-    "/evals/workspace/",
     "/assets/",
     "/test/",
     "/_internal/_generated/",

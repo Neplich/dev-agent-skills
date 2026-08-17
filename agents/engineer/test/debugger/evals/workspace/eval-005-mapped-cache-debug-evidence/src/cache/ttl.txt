@@ -1,2 +1,0 @@
-ttl_seconds: 60
-expiry_mode: fixed

@@ -24,12 +24,12 @@
     "changelog-gen": {
       "source": "agents/product_manager/skills/changelog-gen",
       "sourceType": "local",
-      "computedHash": "df5da596144229f49001d7516aa7d85b956aed27cdeecc1d1c8a0af1429f3f94"
+      "computedHash": "aeb46e4a4f875df107fb3386227b96a415b2f9521b8569e3b9cbe8b3fb98b010"
     },
     "github-release-gen": {
       "source": "agents/product_manager/skills/github-release-gen",
       "sourceType": "local",
-      "computedHash": "0fcb5115287d7d3e335adbb0a3765f00db28d756d5603060d112da9c557279d8"
+      "computedHash": "ec82015558ce45e3569d34ea24fd6be27a91e34543940b81bd04359ade35503f"
     },
     "release-notes-gen": {
       "source": "agents/docs/skills/release-notes-gen",
@@ -64,7 +64,7 @@
     "feature-implementor": {
       "source": "agents/engineer/skills/feature-implementor",
       "sourceType": "local",
-      "computedHash": "42590aa733d69255fb21c998c7a8d34d560d11d5321057fe7da137bada1662c2"
+      "computedHash": "fd880928a4233cff31cc7de80b12fdf1e9a6a440bd624b01fbda04f701e20d41"
     },
     "test-writer": {
       "source": "agents/engineer/skills/test-writer",
@@ -84,7 +84,7 @@
     "qa-agent": {
       "source": "agents/qa/skills/qa-agent",
       "sourceType": "local",
-      "computedHash": "99ba7935c43fa34646757c046a4ccfd7c610fe935b0637a41bf1251c0ca6a57c"
+      "computedHash": "cf4242e1487b403b4393e0d5b583d854902502723b917b959ac537b0a8c30c4d"
     },
     "exploratory-tester": {
       "source": "agents/qa/skills/exploratory-tester",
@@ -144,7 +144,7 @@
     "visual-design": {
       "source": "agents/designer/skills/visual-design",
       "sourceType": "local",
-      "computedHash": "cc3237f77a3024a4fc95e8877c2de2a51b402d9e68bfc09d744e53e7d682a854"
+      "computedHash": "76a1a8e2180ef4bbedce4cbbfb8481f87f4200b35e48a50014bb1121cf467d0d"
     },
     "security-agent": {
       "source": "agents/security/skills/security-agent",
@@ -184,7 +184,7 @@
     "formal-docs-sync": {
       "source": "agents/docs/skills/formal-docs-sync",
       "sourceType": "local",
-      "computedHash": "41c2b55701d1d501e5de64c9f9fde8e03b8c70fb4c234d9daea787f79844795b"
+      "computedHash": "78f4ad426788738b5edb10a734813e1f19c415833dd23afe26e0017fd27be79e"
     },
     "manual-gen": {
       "source": "agents/docs/skills/manual-gen",

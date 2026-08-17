@@ -1,3 +1,0 @@
-public:
-  host: docs.orbit.example
-  tlsSecret: docs-orbit-tls

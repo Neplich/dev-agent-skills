@@ -1,9 +1,0 @@
-{
-  "name": "ai-hub-app",
-  "private": true,
-  "type": "module",
-  "version": "1.4.0",
-  "scripts": {
-    "test:api": "node tests/search-api.test.ts"
-  }
-}
