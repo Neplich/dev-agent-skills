@@ -201,8 +201,8 @@ stale 文件。生成目标和源映射写死在脚本常量中，不新增 mani
 Claude 验证按 `.claude-plugin/marketplace.json` 的七个 plugin `source` 与 `skills` 精确
 复制到临时目录，确认六个下游 Router 的生成副本存在、Router 与 Specialist 的相对引用
 均留在各自 plugin 根内。Codex 使用 `scripts/install_codex_skills.py --target <tmp>` 建立
-完整 mirror，并另测 `--routers-only`；两种模式均确认生成副本可读且没有指向 checkout
-之外的路径。现有 marketplace 注册、Skill 名称、source 路径和安装名不变。
+完整 mirror，确认生成副本可读且没有指向 checkout 之外的路径。现有 marketplace 注册、
+Skill 名称、source 路径和安装名不变。
 
 ## 6. Router 收窄与机器预算
 
@@ -324,7 +324,7 @@ slug（含重复标题序号）验证锚点存在。URL percent-decoding 后再�
 | 文档契约 | frontmatter、本地链接与锚点、归档路径 | `uv run scripts/check_doc_contract.py` | PASS |
 | Eval 静态契约 | eval schema 与持久化产物 | `uv run scripts/check_eval_contract.py`；`uv run scripts/check_eval_artifacts.py` | PASS |
 | 定向单测 | 生成、repository/doc checker、安装镜像 | `uv run --with pytest pytest scripts/test_generate_shared_contracts.py scripts/test_check_repository_contract.py scripts/test_check_doc_contract.py scripts/test_install_codex_skills.py` | 全部通过 |
-| Codex 安装 | 完整与 routers-only 临时目标 | `uv run scripts/install_codex_skills.py --target <tmp>`；追加 `--routers-only --force` | 引用可读、生成副本存在 |
+| Codex 安装 | 全量安装临时目标 | `uv run scripts/install_codex_skills.py --target <tmp>` | 引用可读、生成副本存在 |
 | Claude 打包 | marketplace 七 plugin 临时复制测试 | pytest 内按 manifest source/skills 复制并解析引用 | 六个 plugin 自包含 |
 | 行为回归 | 受影响 Router/Specialist eval | metadata 显式声明同插件 Router dependency；fresh paired 结果与 durable comparison | overlay 与安装拓扑一致；既有行为差异 0 |
 | Diff | 范围、空白、净行数 | `git diff --check`；`git diff --stat`；精确路径 review | 无越界；人工维护内容净删 1,000–2,500 行，生成副本单列 |

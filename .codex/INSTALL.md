@@ -6,12 +6,11 @@ the Codex skill directory.
 
 ## Before You Install
 
-Ask the user two questions and wait for both answers:
+Ask the user one question and wait for the answer:
 
 1. Should this be a `personal` install or a `project` install?
-2. Should Codex install all skills by default, or use the restricted `routers-only` mode?
 
-Default all-skills install includes the role routers:
+The install includes the role routers:
 
 - `pm-agent` - direct user entry for product planning, request classification, docs, GitHub status, and downstream handoff
 - `engineer-agent` - downstream engineering capability for PM handoff after scope is confirmed
@@ -21,12 +20,8 @@ Default all-skills install includes the role routers:
 - `security-agent` - downstream security capability for PM handoff after security scope is confirmed
 - `docs-agent` - downstream formal documentation bootstrap, synchronization, and release-audit capability for PM handoff
 
-The default all-skills install also includes every specialist skill so `pm-agent`
-and role-router orchestration can call downstream specialist workflows. Select
-`routers-only` only when the user explicitly wants the minimal entry
-classification surface; specialist skills are not linked at the target root in
-that mode, so PM and role-router orchestration cannot call downstream
-specialists.
+The install also includes every specialist skill so `pm-agent`
+and role-router orchestration can call downstream specialist workflows.
 
 ## Why Mirror Instead Of Clone Symlinks
 
@@ -127,18 +122,6 @@ Default all skills:
 ```bash
 python3 "$CLONE_ROOT/scripts/install_codex_skills.py" --target "$SKILL_ROOT"
 ```
-
-Restricted role routers only:
-
-```bash
-python3 "$CLONE_ROOT/scripts/install_codex_skills.py" --target "$SKILL_ROOT" --routers-only
-```
-
-`--routers-only` prints a warning because only the seven role router symlinks are
-created at the target root, so `pm-agent` / role-router orchestration cannot
-call downstream specialist workflows. The hidden mirror still contains the full
-`agents/` tree so shared instruction references remain available. Use this mode
-only for minimal entry classification.
 
 The installer owns only two target shapes:
 
