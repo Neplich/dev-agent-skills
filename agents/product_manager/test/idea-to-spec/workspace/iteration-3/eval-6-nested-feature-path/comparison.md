@@ -20,40 +20,40 @@
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `4fbce5299edbfab7f3f9e314d3ad852d562878858c404b524820ab2f7613136e`
-- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Source lock SHA-256: `c58f04d32c2ca3a22aec96f7ee027af648da5971453d2a5553d7ab2cd9272551`
 - Prompt SHA-256: `c1a9a695ac306d56eb35a4b41b4c84d037d6f92a7cc3a09d8d7f11f8de78d818`
-- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
+- Repository HEAD: `60a4b3602dc07f3f6683a8873529bbdba6f8d27d`
 - Repository worktree state: **DIRTY**
 - Skill overlay SHA-256: `7b19869a4835a1feeb491815cac7af7bde071247819525989c10dbfbc0acd2f7`
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **FULL**
-Overall result: FAIL
+Overall result: PASS
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `scan_existing_prds` | PASS | With_skill output lists the three existing PRDs, including Chat Interface, Message History, and the nested history PRD. |
-| `nested_feature_path` | PASS | With_skill output explicitly specifies feature_path `chat-interface/messages/history/search` and the corresponding nested PRD path. |
-| `no_parallel_top_level` | PASS | With_skill recommends the nested history/search path and explicitly advises against updating the top-level Chat Interface or Messages PRDs. |
-| `handoff_fields` | FAIL | The output includes feature_path, feature, parent_feature, and feature_level, but does not provide a handoff packet or feature_path_evidence field. |
+| `scan_existing_prds` | PASS | with_skill 输出列出并引用 Chat Interface PRD、Messages PRD 和 Message History PRD。 |
+| `nested_feature_path` | PASS | with_skill 输出明确 `feature_path: chat-interface/messages/history/search`，并列出对应 Search PRD 路径。 |
+| `no_parallel_top_level` | PASS | with_skill 输出将搜索归入 history 子能力，明确建议保持父级 PRD 不变，未提出并列或截断路径。 |
+| `handoff_fields` | PASS | Mandatory Lane Checkpoint 中包含 `feature`、`feature_path`、`parent_feature`、`feature_level` 和 `feature_path_evidence`。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c1a9a695ac306d56eb35a4b41b4c84d037d6f92a7cc3a09d8d7f11f8de78d818; fixture_sha256=7749eb192d7baaaa2204b646c198e25edb560363b060536f8cc66b5b6a90c8e7; output_sha256=7aabb4b1c64807c9a17656bd454118364fe31641704ef43f8a91be327de2c6be; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Correctly scans existing PRDs and identifies the nested history/search child path while preserving the parent-child structure; handoff metadata is incomplete.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c1a9a695ac306d56eb35a4b41b4c84d037d6f92a7cc3a09d8d7f11f8de78d818; fixture_sha256=7749eb192d7baaaa2204b646c198e25edb560363b060536f8cc66b5b6a90c8e7; output_sha256=6205b83e02a622046ee6403404178431d1e04024c60f17a406f3ea055fee7887; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 扫描现有 PRD 后，将消息历史搜索正确定位为四级子功能，并提供完整路径及交接字段；未执行写入。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c1a9a695ac306d56eb35a4b41b4c84d037d6f92a7cc3a09d8d7f11f8de78d818; fixture_sha256=7749eb192d7baaaa2204b646c198e25edb560363b060536f8cc66b5b6a90c8e7; output_sha256=6e0d891dc5df7dd87015aa4b9e86643824f6b1387e9828ae28b9b723975432f7; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline also identifies the existing PRDs and correct nested search path, but provides no handoff packet fields.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c1a9a695ac306d56eb35a4b41b4c84d037d6f92a7cc3a09d8d7f11f8de78d818; fixture_sha256=7749eb192d7baaaa2204b646c198e25edb560363b060536f8cc66b5b6a90c8e7; output_sha256=9d29c1b4e351862f6c622340297fec84351401569bc9878687b5c835d8d414b8; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: 正确识别现有 PRD 和嵌套路径，但以建议形式输出，未提供结构化 handoff 字段或 feature_path_evidence。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- The with_skill lane omits the required handoff packet field `feature_path_evidence` and does not present the required fields as a handoff packet.
-- Next: Add a handoff packet containing feature_path, feature, parent_feature, feature_level, and feature_path_evidence.
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 

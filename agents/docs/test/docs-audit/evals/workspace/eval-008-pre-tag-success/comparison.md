@@ -20,52 +20,49 @@
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `4cd14ef8cd033d31b5bb9ce50a786ad0b7d18c7ff4f682d88505eac53b634ecf`
-- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Source lock SHA-256: `c58f04d32c2ca3a22aec96f7ee027af648da5971453d2a5553d7ab2cd9272551`
 - Prompt SHA-256: `c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3`
-- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
-- Repository worktree state: **DIRTY**
+- Repository HEAD: `60a4b3602dc07f3f6683a8873529bbdba6f8d27d`
+- Repository worktree state: **CLEAN**
 - Skill overlay SHA-256: `d7e2242fcdf83209e6c0cb5ec9544aa009e79488a72f81ebd4bf387289fbabec`
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **PARTIAL**
-Overall result: FAIL
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `accepts_confirmed_version_without_tag` | PASS | Candidate record and handoff record retain the confirmed version, base/target refs, and pending-absent actual tag; final output says the tag was not created. |
-| `verifies_complete_set_and_surfaces` | PASS | Candidate record lists both change-map API pages, all four affected pages, per-page verified results, release-note handoff, metadata, and package version evidence. |
-| `normalizes_mixed_version_forms` | PASS | Version inventory records required raw forms, selectors, extractors, normalized values, and equality across confirmation, package.json, notes, index, and metadata. |
-| `records_pre_stamp_values` | PASS | Candidate record directly records the four pre-stamp values: v1.1.0, unverified, v1.1.0, and unverified, with no baseline_verified_version field. |
-| `stamps_complete_set_atomically` | PASS | Delivery snapshots show all four authorized pages changed only from their prior values to v1.2.0, readback passed, and releases.json was not changed. |
-| `builds_isolated_candidate_transaction` | NOT_EXERCISED | The trace shows the intended isolated worktree/branch flow and delivery evidence shows candidate commits, but the locked raw evidence does not fully prove index initialization and preservation throughout all candidate checks. |
-| `candidate_record_has_no_ready_result` | FAIL | The candidate record has the required schema, page hashes, version inventory, digests, staged inventories, readback, and candidate_verified conclusion, but it also contains target/base commit and target_tree identity fields, which the assertion forbids. |
-| `validates_two_complete_staged_gates` | PASS | Candidate record and commit evidence contain pre- and post-candidate inventories with raw modes/types/statuses, ordinary blobs, single-line stamp changes, fixed paths, and no unauthorized delta; final commit evidence also shows the expected handoff addition. |
-| `confirms_anchor_commit_before_discovery` | PASS | The handoff records anchor commit/tree and post-commit confirmation; commit evidence shows the anchor was created before the handoff and final tree/blob readback was performed. |
-| `persists_fixed_discovery_handoff` | FAIL | The delivered handoff includes schema, attempt, phase, version, refs, ready_for_tag, result time, inventory digest, anchor, candidate path/blob, confirmation, lineage, and digest, but omits the required handoff-path preimage and a current entry for the handoff blob without self-reference. |
-| `returns_ready_only_after_integration` | PASS | Git evidence shows fast-forward integration from target_ref to the final commit, unchanged branch name, clean final status/index/worktree, and final output exposes the handoff for pm-agent:github-release-gen. |
-| `returns_ready_for_tag_not_published` | FAIL | The output returns ready_for_tag and says the tag was not created or published, but it does not explicitly state that the status does not mean release verified. |
+| `accepts_confirmed_version_without_tag` | PASS | Candidate record and handoff record v1.2.0, base_ref v1.1.0, target_ref release-head, and actual-tag pending_expected_absent; final output is ready_for_tag. |
+| `verifies_complete_set_and_surfaces` | PASS | Candidate record lists both change-map API pages and all four affected surfaces as verified, with release handoff, release notes, index, metadata, and package version inventory entries. |
+| `normalizes_mixed_version_forms` | PASS | Inventory records v-prefixed release forms, unprefixed package.json version, normalized SemVer 1.2.0, and equal comparisons. |
+| `records_pre_stamp_values` | PASS | Candidate pages record pre-stamp values v1.1.0, unverified, v1.1.0, and unverified; no baseline_verified_version field is present. |
+| `stamps_complete_set_atomically` | PASS | Delivered blobs show all four pages stamped v1.2.0, with readback hashes; the workspace manifest preserves the metadata blob. |
+| `builds_isolated_candidate_transaction` | PASS | Trace shows a temporary worktree and branch from release-head, while git evidence shows the host main HEAD, branch, index, and worktree remained unchanged during candidate construction. |
+| `candidate_record_has_no_ready_result` | PASS | Candidate blob contains candidate_verified, complete page/version/convergence inventories, hashes, digests, selectors/extractors, and commands; it contains no ready_for_tag, success time, containing commit/tree identity, or post-commit confirmation. |
+| `validates_two_complete_staged_gates` | NOT_EXERCISED | The trace shows staged-gate-related commands and the candidate inventories describe both pre- and post-candidate deltas, but locked evidence does not fully prove that every required raw metadata and full-patch check was executed identically at both gates. |
+| `confirms_anchor_commit_before_discovery` | NOT_EXERCISED | Anchor and handoff blobs are delivered and the trace shows anchor/handoff commits, but locked raw evidence does not fully prove the complete target_ref-to-anchor raw metadata/content gate in the required order. |
+| `persists_fixed_discovery_handoff` | PASS | The fixed handoff blob is directly delivered and reachable, with required schema, refs, ready_for_tag result, digest, anchor/candidate identities, confirmation, preimage, lineage, and current entry; trace shows only the handoff path staged and committed. |
+| `returns_ready_only_after_integration` | NOT_EXERCISED | Git evidence shows release-head fast-forwarded from target_ref to the handoff commit and the integrated discovery/candidate blobs are readable, but exact captured fingerprint/CAS proof and downstream package delivery are not independently complete in the locked evidence. |
+| `returns_ready_for_tag_not_published` | PASS | Final output and handoff state are pre-tag ready_for_tag, explicitly directing creation of the tag next and requiring a later post-tag audit; the tag is still absent. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=f716a4a427fc71b2f2c55dd4d612502c11c83a837348c88ed24c1191b63fdaa2; snapshot_sha256=0f2c33a1e171108fb586729ab7f78dd027e5dc7f1e711486289af339fc498127
-- Behavior: Performed the pre-tag audit, stamped and integrated the four-page set, and exposed ready_for_tag, but delivered a nonconforming candidate record and incomplete handoff metadata.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=c3b163b8ec77a4de819ac619ff12a555d4950207da41ac08404605016be97217; snapshot_sha256=52afed544dd8b78abd3457312d3fdbc84faf5182ed870e4d214fc23a2748290c
+- Behavior: Produces and integrates a pre-tag candidate with verified documentation surfaces, normalized version inventory, four-page stamps, candidate record, anchor, and fixed handoff; returns ready_for_tag while leaving tag publication pending.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=25d3ad05dbf10dd7264c8c644a2d8ed7b4c9c4c08a2ffe5212ec67846dff1698; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline incorrectly blocked pre-tag on metadata, evidence-patch, and scope concerns; it made no repository changes.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=c716eb0f2d2753ceb3a2258e2367701a57faeef420e346b4fa18dc3a1677c0e3; fixture_sha256=188f1d4d85d9c539fa3ce7acd636673ee316e8a8c7f692533cb806966484f84f; output_sha256=8f7fcc5230ccf51bcff4037c96c40022ffdf8aa9bf657a4c1cb6b757a5d6cff5; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline stops as blocked on a perceived release-metadata contradiction and does not produce a candidate, stamps, anchor, handoff, or ready result.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- candidate_record_has_no_ready_result
-- persists_fixed_discovery_handoff
-- returns_ready_for_tag_not_published
-- Next: Remove forbidden commit/tree identity fields from the candidate record while retaining required page hashes.
-- Next: Add the handoff path preimage and non-self-referential handoff current entry/digest.
-- Next: Explicitly state that ready_for_tag permits tag creation only and does not mean publication or release verification.
+- None.
+- Next: Complete or capture the full identical staged-gate and anchor-gate evidence, including raw metadata, type/mode/path, and full binary patch checks.
+- Next: Capture immutable worktree/index fingerprints, CAS integration checks, and the external downstream handoff package if those are required for final coverage.
 
 ## Runtime Artifact Policy
 

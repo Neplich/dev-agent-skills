@@ -20,44 +20,41 @@
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `2e68facf61317de81b206f59b17f3e724dc3951afae11b2a8c4aad6ddba91a26`
-- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Source lock SHA-256: `c58f04d32c2ca3a22aec96f7ee027af648da5971453d2a5553d7ab2cd9272551`
 - Prompt SHA-256: `bed66a02e7102d84cc8988d8318b854a858b57d12888f0168cc60650b6d45cd2`
-- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
+- Repository HEAD: `60a4b3602dc07f3f6683a8873529bbdba6f8d27d`
 - Repository worktree state: **DIRTY**
 - Skill overlay SHA-256: `84e19c3e634cfde176d2ff20ba8e9d25a4838db3ed1deb5def94a8d0f1d2ddd9`
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **PARTIAL**
-Overall result: FAIL
+Overall result: PASS (partial coverage)
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `creates_three_class_page_tree` | PASS | The with_skill delivery snapshot contains all ten required deployment pages, the shared environment reference, three class indexes, and root navigation. |
-| `cross_checks_environment_reference` | FAIL | The environment matrix covers the required fields and evidence sources, but LEGACY_TIMEOUT is recorded without its fixture default value of 30, so the per-variable default requirement is incomplete. |
-| `separates_class_specific_contracts` | PASS | The with_skill snapshot provides separate Development, Docker Compose, and Kubernetes/Helm pages with class-specific prerequisites, commands, success criteria, rollback, troubleshooting, image sources, and values/chart references. |
-| `maps_each_class_atomically` | FAIL | The change map preserves src/product/** and custom_owner_field, and maps all three deployment classes, but the scripts/dev/** row omits the Development image-build page, leaving that class mapping incomplete as an atomic scope. |
-| `runs_nested_docs_checks` | NOT_EXERCISED | The raw trace proves npm run test:docs passed 3/3, but does not prove the required docs/site working directory or a public/internal recursive build check; those later/hidden checks are not exercised. |
+| `creates_three_class_page_tree` | PASS | Locked delivery snapshot contains all 10 required pages, shared environment reference, three class indexes, child pages, and an entry index with navigation. |
+| `cross_checks_environment_reference` | PASS | The locked environment-reference snapshot has a per-variable table covering purpose/format, requiredness/default, class applicability, safe example, secret/lifecycle status, effect, and evidence for APP_PORT, LOG_LEVEL, DATABASE_URL, and LEGACY_TIMEOUT; it explicitly marks LEGACY_TIMEOUT deprecated. |
+| `separates_class_specific_contracts` | PASS | Locked pages separate Development, Docker Compose, and Kubernetes/Helm prerequisites, commands, success criteria, rollback, troubleshooting, image sources, values, secrets, hooks, rollout, and chart structure; unsupported Helm mappings are explicitly left unasserted. |
+| `maps_each_class_atomically` | PASS | The locked change-map preserves the unrelated src/product entry and custom_owner_field, adds exact scripts/dev, deploy/docker, deploy/helm, and shared configuration mappings, and raw trace command evidence re-reads the map and generated pages after writing. |
+| `runs_nested_docs_checks` | NOT_EXERCISED | Raw trace proves npm run test:docs ran in docs/site with exit code 0 and 3/3 tests passed; locked pages have internal visibility, unverified version markers, and resolving nested links. The final audit handoff is blocked/does not prove a completed docs-agent:docs-audit handoff because target release evidence is missing. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bed66a02e7102d84cc8988d8318b854a858b57d12888f0168cc60650b6d45cd2; fixture_sha256=4d8408c1113f0b188f486ff52a1805928dda107a5b4bcef41d15ff086a7d524c; output_sha256=cfb0182e15803a002174518ea9de0a5b378cc20f8b108c29448a0540011e70af; snapshot_sha256=2da5eb5af030a545ce74da425d662d578c6bcc2e76320f46961b1a6f3af0ccc2
-- Behavior: Delivered a complete ten-page deployment tree with substantially richer evidence-backed class pages and an environment matrix; the locked snapshot has the two noted coverage defects, while the locked trace shows the nested docs test passing 3/3.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bed66a02e7102d84cc8988d8318b854a858b57d12888f0168cc60650b6d45cd2; fixture_sha256=4d8408c1113f0b188f486ff52a1805928dda107a5b4bcef41d15ff086a7d524c; output_sha256=497c7a5382d61c4024143d3411e5328bcc663b4f7d2f550caee80fd895ef5e87; snapshot_sha256=859210120066a7ab28897f0ab768ef71f230ec59fd2c95c2d032c7ee85bd867b
+- Behavior: Delivered the complete 10-page deployment documentation tree, cross-source environment reference, scoped change-map updates, and passing nested documentation checks; recorded the release-context and documentation-site completeness limitations.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bed66a02e7102d84cc8988d8318b854a858b57d12888f0168cc60650b6d45cd2; fixture_sha256=4d8408c1113f0b188f486ff52a1805928dda107a5b4bcef41d15ff086a7d524c; output_sha256=ccdb373573c1b37b5a6f1ad514267a1ca145f818f03abc4636b53fcd734244cb; snapshot_sha256=c4c0f9ed92351e471b3ea82b69afaaf3ddba61ffb13807ff2969d88887bad69c
-- Behavior: Produced the same page tree and a passing nested-docs test, but with substantially thinner class contracts, a four-column environment table, and less complete change-map coverage; this is comparison context only.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bed66a02e7102d84cc8988d8318b854a858b57d12888f0168cc60650b6d45cd2; fixture_sha256=4d8408c1113f0b188f486ff52a1805928dda107a5b4bcef41d15ff086a7d524c; output_sha256=133b0ff54020cfd366b66495da4b5bb27e7ee8a50151da53f85497cd33a2252f; snapshot_sha256=b0494708d509df0c769a589d12bbebd2663aaaba6747750014e9619e0f4e44b7
+- Behavior: Fresh baseline also claimed a completed tree and passing checks, but its locked evidence showed an initial nested-link test failure before a later correction and less explicit evidence-boundary handling.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- The environment reference omits LEGACY_TIMEOUT's actual default value.
-- The scripts/dev/** change-map entry does not include development/image-build.md.
-- Next: Add LEGACY_TIMEOUT=30 and its deprecated/unused status to the environment matrix.
-- Next: Add development/image-build.md to the scripts/dev/** required_docs mapping.
-- Next: Run any host-defined public/internal documentation checks if they become available, recording their working directory and results.
+- None.
+- Next: Confirm the target release version and complete the docs-agent:docs-audit handoff.
 
 ## Runtime Artifact Policy
 

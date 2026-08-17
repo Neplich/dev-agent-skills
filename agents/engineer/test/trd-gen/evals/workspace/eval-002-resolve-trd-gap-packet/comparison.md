@@ -20,40 +20,40 @@
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `3fb0bf5bc301ce78a33402f806b0b810ed122ae2263b6d9be14f49634de42f79`
-- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Source lock SHA-256: `c58f04d32c2ca3a22aec96f7ee027af648da5971453d2a5553d7ab2cd9272551`
 - Prompt SHA-256: `bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482`
-- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
+- Repository HEAD: `60a4b3602dc07f3f6683a8873529bbdba6f8d27d`
 - Repository worktree state: **DIRTY**
 - Skill overlay SHA-256: `efd5278a6dcac3b779ffc2f7bc7fbcdcc73c391218f35b1bba7e6f95759a7887`
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **FULL**
-Overall result: FAIL
+Overall result: PASS
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `accepts_gap_packet_as_trd_work` | PASS | TRD.md identifies the finder as reporting gaps, assigns resolution to engineer-agent:trd-gen, and states code implementation is outside the TRD. |
-| `resolves_named_gap_categories` | PASS | TRD.md directly covers component ownership, event/data flow and API contract, validation strategy, rollout/rollback risks, error classification, observability, and security. |
-| `keeps_finder_trd_gen_boundary` | PASS | TRD.md explicitly states that the finder reports gaps and engineer-agent:trd-gen resolves them in Engineer documents. |
-| `unresolved_gap_blocks_e2e` | FAIL | TRD.md still contains an open-questions section with implementation and operational dependencies, while the delivery summary reports blocked_downstream: [] and describes those items as non-blocking. |
-| `no_implementation_plan_or_code` | PASS | Locked git evidence shows only new TRD/API/ADR documents; no IMPLEMENTATION_PLAN.md, source-code, or test-file changes were delivered. |
+| `no_implementation_plan_or_code` | PASS | With-skill delivery contains only TRD/API/ADR documents and explicitly states no implementation, implementation plan, or QA E2E work was performed. |
+| `accepts_gap_packet_as_trd_work` | PASS | The delivered TRD explicitly treats TRD_GAP_PACKET.md as source context and resolves the six technical gaps in Engineer-owned documents. |
+| `resolves_named_gap_categories` | PASS | The TRD covers component ownership, event/API and data contracts, validation commands, rollout/rollback risks, error classification, observability, and security/organization isolation. |
+| `keeps_finder_trd_gen_boundary` | PASS | The TRD states that the gap finder reports missing decisions and engineer-agent:trd-gen resolves them in the Engineer document set. |
+| `unresolved_gap_blocks_e2e` | PASS | The candidate explicitly lists feature-implementor, debugger, and qa-e2e as blocked, and states that implementation-plan handoff has not occurred; no implementation-plan or QA E2E file is delivered. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482; fixture_sha256=d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a; output_sha256=6842265a43a73d69dc6bc27a589b2d9c856ce620aa300fc85a153acf9da029cc; snapshot_sha256=5756a8c1367c157a7c52e4025f616dc72888de68d00c8ddf2584dbe569df7dc6
-- Behavior: Produces Engineer-owned TRD, API, and ADR documents with broad gap coverage and no code changes, but incorrectly reports downstream as unblocked despite remaining open questions.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482; fixture_sha256=d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a; output_sha256=67b9b3e212496c9e1034dfeb15f46c5f3b723c3013b9467ffbb02efdc46f3309; snapshot_sha256=369506b4eddc5a36de8482c419d944197e40ae8ef6822058af41b3bafe7d77bb
+- Behavior: Accepted the gap packet as Engineer TRD work, produced TRD/API/ADR artifacts covering the named categories, preserved the finder/trd-gen boundary, and kept downstream implementation/debugger/QA work blocked without writing code or an implementation plan.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482; fixture_sha256=d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a; output_sha256=d486a6e70c7821b1572e0cbf3bc0569c7f11d004dd6553534d7e30e96856e6b2; snapshot_sha256=dfd6f23da61eb21129b391f7df626bc0297f81b3bf8088c673a38f697d7ffb1d
-- Behavior: Rewrites the gap packet directly and summarizes the technical topics, but does not establish the canonical trd-gen boundary or Engineer document handoff.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=bc732b2f79cac8748a3ffddfa2548eb3ee6c28a29e001f66a5d7af673ecfa482; fixture_sha256=d58240709fd95e80376991be4d5ae0d8785faa7c898ac347279a20ad514acd7a; output_sha256=9d6f398b612f5c76ff2d6c2a18c5e23f95736977bfd3b329f452ad1d89fe6d5a; snapshot_sha256=32222d39283b3ff074c03195ab42f071afe89d03763ba5576c6a42640aa8d7c5
+- Behavior: Produced a detailed gap-packet rewrite but did not establish the trd-gen role boundary or downstream blocking behavior in its final delivery.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- The with_skill lane leaves documented open technical/configuration questions but does not block feature-implementor, debugger, or QA E2E downstream work.
+- None.
 - Next: None.
 
 ## Runtime Artifact Policy
