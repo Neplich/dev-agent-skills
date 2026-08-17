@@ -20,10 +20,10 @@
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `218cecf9b4e5893cf80d7edfea7d7877463de8efad846bf62ba5cba015ad2ed5`
-- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Source lock SHA-256: `c58f04d32c2ca3a22aec96f7ee027af648da5971453d2a5553d7ab2cd9272551`
 - Prompt SHA-256: `8d4dbdcc2ce0268c7dd2fa59f4c946f0acad002c9675a3357ceee8b115ffded1`
-- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
-- Repository worktree state: **DIRTY**
+- Repository HEAD: `60a4b3602dc07f3f6683a8873529bbdba6f8d27d`
+- Repository worktree state: **CLEAN**
 - Skill overlay SHA-256: `d7e2242fcdf83209e6c0cb5ec9544aa009e79488a72f81ebd4bf387289fbabec`
 - Behavior result: **FAIL**
 - Coverage result: **FULL**
@@ -33,29 +33,27 @@ Overall result: FAIL
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `includes_mapped_page` | PASS | with_skill 输出明确写明 change-map 命中 `src/catalog/**` → `docs/site/api/catalog.md`，并列出影响页面。 |
-| `classifies_direct_conflict_mismatch` | FAIL | with_skill 保留了文档 `POST`、代码 `GET` 及影响，但最终将页面标为 `stale`，不是断言要求的字面状态 `mismatch`。 |
-| `blocks_with_conflict_evidence` | FAIL | with_skill 返回 `blocked` 并列出冲突证据，但待办仅要求修正文档，没有明确提出确认修文档还是修代码。 |
-| `does_not_stamp_blocked_set` | PASS | with_skill 明确报告未写入；原始 trace 仅显示读取命令，没有文件变更、版本盖章或 `.meta/releases.json` 同步事件。 |
+| `includes_mapped_page` | PASS | with_skill 报告明确将 `src/catalog/routes.txt` 命中 change-map 的 `src/catalog/**`，并将 `docs/site/api/catalog.md` 列为受影响正式页面。 |
+| `classifies_direct_conflict_mismatch` | FAIL | 报告保留了文档 `POST /catalog/items`、代码 `GET /catalog/items`、文件/行号和影响，但将页面最终分类为 `stale`，未按断言要求分类为 `mismatch`。 |
+| `blocks_with_conflict_evidence` | PASS | 报告结果为 `blocked`（pre-tag），列出方法冲突及修正文档、提交后重新审计等待办，且未返回 `ready_for_tag`。 |
+| `does_not_stamp_blocked_set` | PASS | 锁定报告明确写明未盖章任何页面，未创建 candidate、anchor、handoff 或 tag；并记录目标树不存在 `.meta/releases.json`，没有对阻塞集合进行局部盖章。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8d4dbdcc2ce0268c7dd2fa59f4c946f0acad002c9675a3357ceee8b115ffded1; fixture_sha256=dc67ea3252d72d2cb1006bd586833469bce9e6071957244105d8c4e3b86358a2; output_sha256=7bca237baf686ce37996b88eb0d514c57b8b826e0cb7d27106d6415f9a8666fd; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 识别了 change-map 影响页面、POST/GET 冲突并阻断 pre-tag，且未盖章；但分类和冲突修复待办不完全符合断言。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8d4dbdcc2ce0268c7dd2fa59f4c946f0acad002c9675a3357ceee8b115ffded1; fixture_sha256=dc67ea3252d72d2cb1006bd586833469bce9e6071957244105d8c4e3b86358a2; output_sha256=e0925172e489e3fd9bbab7496e3ea8ef30123bcc3050783052fc86ff5babc340; snapshot_sha256=a5aeee4356e215326b5f683f6990071e2c147ad95eeba09d146597e9513d2d9a
+- Behavior: 完成了基于 change-map 的影响域识别、代码与文档冲突证据、blocked 阶段结论及不盖章处理，但冲突分类标签不符合断言要求。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8d4dbdcc2ce0268c7dd2fa59f4c946f0acad002c9675a3357ceee8b115ffded1; fixture_sha256=dc67ea3252d72d2cb1006bd586833469bce9e6071957244105d8c4e3b86358a2; output_sha256=5137b6df2bd3507ab326d15368a06539bdf9b44b36a4fbf1a1000955b060bd83; snapshot_sha256=17dbfa812c6103318bfc92a2497947d0b84e774b593de57a5256bcccc533ab77
-- Behavior: 保存了审计报告并以 POST/GET 冲突阻断发布，但未明确呈现完整影响域和规范化阻塞流程。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8d4dbdcc2ce0268c7dd2fa59f4c946f0acad002c9675a3357ceee8b115ffded1; fixture_sha256=dc67ea3252d72d2cb1006bd586833469bce9e6071957244105d8c4e3b86358a2; output_sha256=957c522c4caafc6b22e13ab36b33116fd3e3d0c4519aa297e54aa0a6a2a0fa0c; snapshot_sha256=38d1eedad6fba2558ddca5a3eeaf1e150d2558d63a04f0ac16b964f5037f41ff
+- Behavior: 识别出 POST/GET 冲突和过期核验版本并给出不通过结论，但未形成结构化 blocked/pre-tag 审计结果。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- 直接冲突的最终分类为 `stale` 而非断言要求的 `mismatch`。
-- 阻塞待办未明确要求确认修正文档还是修代码。
-- Next: 将直接冲突页面的最终状态按要求明确标为 `mismatch`。
-- Next: 在阻塞待办中明确要求维护者确认修正文档还是修代码后再复审。
+- with_skill 将直接冲突的页面分类为 `stale`，而断言要求分类为 `mismatch`。
+- Next: 将直接文档与代码冲突的最终分类改为 `mismatch`，同时保留现有冲突证据和 blocked 结论。
 
 ## Runtime Artifact Policy
 

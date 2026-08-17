@@ -20,41 +20,40 @@
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `8fdd554bf7008e1addc7b92301444335139887034f2813ab539445a1df4b82d6`
-- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Source lock SHA-256: `c58f04d32c2ca3a22aec96f7ee027af648da5971453d2a5553d7ab2cd9272551`
 - Prompt SHA-256: `cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8`
-- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
-- Repository worktree state: **DIRTY**
+- Repository HEAD: `60a4b3602dc07f3f6683a8873529bbdba6f8d27d`
+- Repository worktree state: **CLEAN**
 - Skill overlay SHA-256: `a8511777e6b4f31217e6a6c17f2c1dc2d5abd375ef6253072404dae037d7bae7`
-- Behavior result: **FAIL**
+- Behavior result: **PASS**
 - Coverage result: **FULL**
-Overall result: FAIL
+Overall result: PASS
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `creates_local_runtime_assets` | FAIL | FAIL：`deploy/local/.env.example` 提供了 `DATABASE_URL` 和 `REDIS_URL`，但 `deploy/local/README.md` 与 `start.sh` 均执行 `npm run dev`，未使用仓库契约要求的 `npm run start`。 |
-| `creates_complete_compose_topology` | PASS | PASS：Dockerfile 存在；Compose 定义 `app`、`postgres`、`redis`，并通过 `/api/health` 配置应用健康检查。 |
-| `creates_application_helm_chart` | PASS | PASS：Helm Chart、values 和 Deployment 模板均存在；Deployment 使用 `.Values.replicaCount`，并通过 values 中的外部数据库和 Redis 地址注入依赖。 |
-| `documents_each_target_without_delivery` | FAIL | FAIL：Docker 和 Helm 说明基本符合契约且未执行部署，但 local README/start.sh 使用 `npm run dev`，与要求的 `npm run start` 不一致；未发现 CI/CD 或生产凭据交付。 |
+| `creates_local_runtime_assets` | PASS | with_skill 交付了 deploy/local/.env.example、README.md 和 start.sh；包含 DATABASE_URL、REDIS_URL、3000 端口，并由脚本执行 npm run start。 |
+| `creates_complete_compose_topology` | PASS | with_skill 的 Compose 直接编排 app、postgres、redis；app 使用 3000 端口，并以 /api/health 作为健康检查。 |
+| `creates_application_helm_chart` | PASS | with_skill 提供 Chart.yaml、values.yaml 和 Deployment 模板；Deployment 使用 replicaCount，并通过 env values/Secret 注入 DATABASE_URL 与 REDIS_URL，同时仅部署应用相关资源。 |
+| `documents_each_target_without_delivery` | PASS | with_skill 为 local、Docker、Helm 均提供 README；内容使用占位配置、说明外部依赖，未新增 CI/CD 或生产凭据，也未声称已部署。 |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8; fixture_sha256=06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d; output_sha256=abbdd47b7c88459bd651dc133daf88fedf9834c2c4375e9fc34fccb0e73643af; snapshot_sha256=7282db80bda8a3d830f4caaeaed333f6253fba7a441db3dc2695ca57453925ec
-- Behavior: 交付了 local、Docker Compose 和 Helm 文件；Docker 拓扑及 Helm 应用配置满足要求，但 local 启动命令错误。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8; fixture_sha256=06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d; output_sha256=010f346115799d6b080660c7c9f8d7806581f5f6a7f323d391c74b7f3341bd22; snapshot_sha256=563e278cf58623878e1c281d27276fd888ec5f76f39c186fc6740d3c0e30c2c3
+- Behavior: 完整交付三类部署资产，并明确未执行实际部署；Local 启动脚本、Compose 拓扑和 Helm 外部依赖注入均符合契约。
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8; fixture_sha256=06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d; output_sha256=71493a2f06f788965adde72326c4b8ab1c3bc88cd368a263be53e370d1468b01; snapshot_sha256=4a0f091490ea1a339eb077ce792d5666be5198073e4e86a72b535849b7e1ec9d
-- Behavior: 也交付了三类配置；Docker 和 Helm 基本满足要求，但 local README 同样使用 `npm run dev` 且未提供启动脚本。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=cd186dfdcf8b04b4e66f71faf5fd0b7ea6c6616c86ae2015f0fd5d6d730418e8; fixture_sha256=06f8a5807d1130b7a91a700b2074192e6dfed0933a071ce16642b27aa050360d; output_sha256=525ab20de64189aa99d4565500a1ca4b205693cdf81146b336ac1586958bb7c9; snapshot_sha256=ee13f59195c7054b05e83f85dce8cb5578ef8c0bda791ad7ac6c9f2254aec265
+- Behavior: 也交付了基本的 local、Docker 和 Helm 配置；相较之下缺少 Local 启动脚本，但 README 提供了 npm run start 的生产式运行说明。该 lane 仅作为比较基线。
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- with_skill 的 local 启动说明和脚本使用 `npm run dev`，未满足仓库约束中的 `npm run start`。
-- 因此 local 目标说明也不完全与仓库契约一致。
-- Next: 将 `deploy/local/README.md` 和 `deploy/local/start.sh` 改为使用 `npm run start`，并确保说明仍覆盖端口 3000、DATABASE_URL 和 REDIS_URL。
+- None.
+- Next: None.
 
 ## Runtime Artifact Policy
 

@@ -20,9 +20,9 @@
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `4b8356273a26d14ecc55ebfe7a9a2e541bdc3539a06437a0f30fb3a0dc7cbd4b`
-- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Source lock SHA-256: `c58f04d32c2ca3a22aec96f7ee027af648da5971453d2a5553d7ab2cd9272551`
 - Prompt SHA-256: `1fa72144e806cf52f8fd8fbc5b8cac36763c1b6d96e197c5c1ebe4dd6e004c69`
-- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
+- Repository HEAD: `60a4b3602dc07f3f6683a8873529bbdba6f8d27d`
 - Repository worktree state: **DIRTY**
 - Skill overlay SHA-256: `84e19c3e634cfde176d2ff20ba8e9d25a4838db3ed1deb5def94a8d0f1d2ddd9`
 - Behavior result: **FAIL**
@@ -33,26 +33,28 @@ Overall result: FAIL
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `reports_existing_site_integrated` | PASS | With-skill output enumerates Atlas Public/Internal build and startup artifacts, cites configuration evidence, reports no deployment execution, and the locked git evidence shows no changes. |
-| `detects_partial_variant_coverage` | PASS | With-skill output identifies Orbit Console as Public-only and lists missing Internal Docker, Compose, Helm, authentication, and CI coverage; this is a semantic partial-coverage determination. |
-| `returns_gap_to_pm_read_only` | FAIL | With-skill output recommends that pm-agent generate the repo-wide deployment handoff and confirms no deployment-asset changes or deployment execution, but it does not actually ask whether to proceed. |
+| `reports_existing_site_integrated` | FAIL | With_skill correctly lists Atlas's Public/Internal build, Docker, Compose, Helm, and auth evidence, but does not report the existing integrated chain as `integrated`; it instead flags CI and deployment gaps. |
+| `detects_partial_variant_coverage` | PASS | With_skill identifies Orbit's Public build as publishable while Internal is only an isolated build script, and enumerates missing Internal Docker, Compose, Helm, and CI coverage without claiming completeness. |
+| `returns_gap_to_pm_read_only` | FAIL | With_skill states the review was zero-write and excludes Dockerfiles, workflows, Compose, Helm, and deployment execution, but does not ask whether pm-agent should generate a repo-wide deployment handoff. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1fa72144e806cf52f8fd8fbc5b8cac36763c1b6d96e197c5c1ebe4dd6e004c69; fixture_sha256=af01acec7b20eeddc434bb03589d582f709819c1284ea057c0edd1ee4d701107; output_sha256=f00f081f772fcfabebdfdd08266d9623029812ccfc07240064bf896b77180f78; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Read-only evidence review accurately distinguishes Atlas Public/Internal coverage from Orbit Public-only coverage and reports no mutations, but does not explicitly ask for confirmation before the pm-agent handoff.
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1fa72144e806cf52f8fd8fbc5b8cac36763c1b6d96e197c5c1ebe4dd6e004c69; fixture_sha256=af01acec7b20eeddc434bb03589d582f709819c1284ea057c0edd1ee4d701107; output_sha256=bfa0fcee968246bf742ce85c44167e12f921e3b61c4274d5c3434fb414d5f670; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Performed a detailed read-only configuration review, accurately distinguishing Atlas's two configured variants from Orbit's Public-only publishable coverage, but missed two required user-visible conclusions.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1fa72144e806cf52f8fd8fbc5b8cac36763c1b6d96e197c5c1ebe4dd6e004c69; fixture_sha256=af01acec7b20eeddc434bb03589d582f709819c1284ea057c0edd1ee4d701107; output_sha256=a3701278307073b4e68f69c75487c17af55fe73ce454727e69ef82e8a1e6b2c9; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: Fresh baseline also identifies Atlas as having Public/Internal configuration and Orbit as Public-only, with several deployment gaps, but provides less structured handoff handling.
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=1fa72144e806cf52f8fd8fbc5b8cac36763c1b6d96e197c5c1ebe4dd6e004c69; fixture_sha256=af01acec7b20eeddc434bb03589d582f709819c1284ea057c0edd1ee4d701107; output_sha256=af43e86260e1f44482bef187077ed1d0733067e59f30563d2ef7b02053f58cd3; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Fresh baseline also correctly identified Atlas as dual-entry and Orbit as Public-only, with a concise evidence-backed read-only report; used only as comparison context.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- The with-skill lane recommends a pm-agent handoff but omits the required user-facing confirmation question.
-- Next: Ask the user whether pm-agent should generate the repo-wide deployment handoff.
+- The with_skill output omits the required integrated report for the existing site chain.
+- The with_skill output omits the required pm-agent repo-wide deployment handoff question.
+- Next: Add an explicit `integrated` conclusion for the existing site chain when supported by evidence.
+- Next: Explicitly ask whether pm-agent should generate the repo-wide deployment handoff.
 
 ## Runtime Artifact Policy
 

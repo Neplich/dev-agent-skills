@@ -20,43 +20,41 @@
 - execution_protocol_sha256: `200345aa2aedf0447e58b604f9f2382b58f87ecf9869be32cc5612b56da6eede`
 - runtime_protocol_sha256: `c9f6932614910136df4a1018c716abaa7cd683b922d01459d7f2079e709ce6cb`
 - judge_schema_sha256: `56b98af2f6fc5a04535db999157836236eb69830528cbecc99ca00f23b4d8d9e`
-- Source lock SHA-256: `3ebae34325936f4e2e3c026a791153749d1badc2d4c3b3ad70f2bd4ca2256b13`
+- Source lock SHA-256: `c58f04d32c2ca3a22aec96f7ee027af648da5971453d2a5553d7ab2cd9272551`
 - Prompt SHA-256: `8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2`
-- Repository HEAD: `f7c125e9c3f465c6345737b1b5941915ca530ba1`
+- Repository HEAD: `60a4b3602dc07f3f6683a8873529bbdba6f8d27d`
 - Repository worktree state: **DIRTY**
 - Skill overlay SHA-256: `84e19c3e634cfde176d2ff20ba8e9d25a4838db3ed1deb5def94a8d0f1d2ddd9`
 - Behavior result: **FAIL**
-- Coverage result: **FULL**
+- Coverage result: **PARTIAL**
 Overall result: FAIL
 
 ## Assertion Results
 
 | Assertion | Result | Evidence |
 | --- | --- | --- |
-| `limits_release_to_affected_product_ops` | FAIL | with_skill 提议了正确的两个页面及映射范围，但 delivery_snapshot 为空、git_status 为空，未实际同步。 |
-| `reconciles_confirmed_version_facts` | FAIL | with_skill 正确列出 25、v1.5.0 和证据绑定，但未交付更新后的文件；其声称缺少正式证据与 fixture 中已提供的 handoff/evidence 相矛盾。 |
-| `preserves_release_notes_surfaces` | PASS | delivery_snapshot 为空且 git_status 为空；输出明确将 Release Notes 列为排除项。 |
-| `keeps_release_pages_unverified` | PASS | 未发生文件变更，原始 fixture 中 product 与 ops 页面仍为 last_verified_version: unverified。 |
-| `runs_release_host_checks_and_handoffs` | FAIL | with_skill 明确报告 host_checks 未运行、audit_handoff 为 blocked，未记录真实 npm run test:docs 通过结果或完成 docs-agent:docs-audit handoff。 |
+| `limits_release_to_affected_product_ops` | PASS | delivery_snapshot contains only the two affected pages and their change-map file; no API, database, design, or unrelated site files. |
+| `reconciles_confirmed_version_facts` | PASS | Locked files and release evidence show dashboard limit 25, image registry.example/ai-hub:v1.5.0, and no v1.5.1 content. |
+| `preserves_release_notes_surfaces` | PASS | Locked delivery and git evidence show no Release Notes surfaces were modified; the handoff explicitly excludes them. |
+| `keeps_release_pages_unverified` | FAIL | Both locked delivered pages set last_verified_version: v1.5.0, contradicting the required unverified state. |
+| `runs_release_host_checks_and_handoffs` | NOT_EXERCISED | The with_skill lane stopped at a claimed release-evidence gate, so npm run test:docs and the completed docs-agent:docs-audit handoff were not exercised; no unsupported successful-check claim was made. |
 
 ## With-Skill Behavior
 
-- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75; output_sha256=dfb0db33b645390e64c4a00ca62930732b6fb87d10c539fa830e3406a51fcd49; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-- Behavior: 识别了正确范围和版本事实，并避免了 Release Notes 变更，但因不受证据支持的前置门禁阻断，未完成文档同步、宿主检查和 handoff。
+- Run source: fresh with_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75; output_sha256=2837fffe86223ab53cfcf35f35e5feb2509d8e77b556393f1bc3a9fd80b362bc; snapshot_sha256=4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+- Behavior: Bounded the release scope and reconciled version facts, but wrote pages with v1.5.0 verification stamps and stopped before host checks and audit handoff.
 - The with-skill context was created only after the baseline evidence was locked and destroyed.
 
 ## Fresh Without-Skill Baseline
 
-- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75; output_sha256=088d9cc7bc57991fbe90052f648b80571c4ea010a7c0a2a2e174678371f89f05; snapshot_sha256=b8c49129916021af6ae10e243fb213fba462e65c14b359e2cbb5e59ded5d38f0
-- Behavior: 实际更新了目标页面和 change-map，且报告测试通过，但错误地将两个页面的 last_verified_version 写为 v1.5.0。
+- Run source: fresh without_skill candidate; model=gpt-5.6-luna; effort=medium; returncode=0; timed_out=False; prompt_sha256=8feaf10d86a83aace4d8ae6456c2cfec394b2d1dd27b83a16d97b82d9a82c1f2; fixture_sha256=88db6a4117456e7d2f0e14115ea2a173ee0022fedba47576986e4b24262edb75; output_sha256=bbdd1a1c2d82e33314f12fca6ca500411cd43cd324efb4fc744a990ab587e6f0; snapshot_sha256=ca7408c1107c440491a4a042a66258034bd8ba6213cad15f714e26ecb18d08a4
+- Behavior: Updated the affected pages and mapping, ran npm run test:docs, and reported successful checks, but did not provide the release-mode gate and audit handoff discipline shown by the skilled lane.
 - The baseline was generated fresh first, its output and delivery snapshot were locked, then its context was destroyed.
 
 ## Failures and Next Steps
 
-- 未交付两个受影响页面及 change-map 的实际更新。
-- 未运行宿主检查或完成 pre-tag handoff。
-- Next: 移除无依据的 changelog/release-process/audit context 阻断，更新两个目标页面及其 change-map。
-- Next: 在 docs/site/ 执行 npm run test:docs 并记录 cwd、命令和退出状态，随后完成 docs-agent:docs-audit handoff。
+- Both delivered product and ops pages were stamped v1.5.0 instead of remaining unverified.
+- Next: Keep both affected pages unverified and complete the required host checks and docs-agent:docs-audit handoff once the release evidence gate is satisfied.
 
 ## Runtime Artifact Policy
 
