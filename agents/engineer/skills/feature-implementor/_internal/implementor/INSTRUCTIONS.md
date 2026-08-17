@@ -15,7 +15,7 @@ Execute the implementation plan step by step, writing code that follows project 
 - For complex coding tasks: implementation sub-agent scope, forbidden areas,
   expected behavior, and verification commands
 - Closeout evidence to collect: changed files, deterministic commands run,
-  command results, commands not run with reasons, eval status, and residual risks
+  command results, commands not run with reasons, and residual risks
 
 ## Entry Gate
 
