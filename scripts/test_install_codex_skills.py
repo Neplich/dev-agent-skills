@@ -89,10 +89,6 @@ def marketplace_skill_names() -> list[str]:
     return sorted(marketplace_skill_map())
 
 
-def router_skill_names() -> list[str]:
-    return sorted(plugin["name"] for plugin in marketplace_data()["plugins"])
-
-
 def skill_source_rel(skill_name: str) -> Path:
     try:
         return marketplace_skill_map()[skill_name]
@@ -388,31 +384,24 @@ def test_reinstall_removes_dangling_obsolete_mirror_symlink(tmp_path: Path) -> N
     assert not obsolete.is_symlink()
 
 
-def test_routers_only_links_only_router_skills_but_keeps_full_hidden_mirror(tmp_path: Path) -> None:
-    target = tmp_path / "skills"
-
-    result = run_installer(target, "--routers-only")
-
-    assert result.returncode == 0, result.stderr + result.stdout
-    assert "WARNING: --routers-only installed only role router skills." in result.stdout
-    assert scanned_skill_entries(target) == router_skill_names()
-    assert not (target / "debugger").exists()
-    assert (target / MIRROR_DIR / skill_source_rel("debugger") / "SKILL.md").is_file()
-
-
-def test_switching_to_routers_only_removes_previously_managed_specialist_links(tmp_path: Path) -> None:
+def test_default_install_upgrades_managed_routers_only_layout_to_all_skills(
+    tmp_path: Path,
+) -> None:
     target = tmp_path / "skills"
 
     first = run_installer(target)
     assert first.returncode == 0, first.stderr + first.stdout
 
-    second = run_installer(target, "--routers-only")
+    router_names = sorted(plugin["name"] for plugin in marketplace_data()["plugins"])
+    for entry in target.iterdir():
+        if entry.is_symlink() and entry.name not in router_names:
+            entry.unlink()
+    assert scanned_skill_entries(target) == router_names
+
+    second = run_installer(target)
 
     assert second.returncode == 0, second.stderr + second.stdout
-    assert "Removed unselected managed skills for --routers-only:" in second.stdout
-    assert scanned_skill_entries(target) == router_skill_names()
-    assert not (target / "debugger").exists()
-    assert (target / MIRROR_DIR / skill_source_rel("debugger") / "SKILL.md").is_file()
+    assert scanned_skill_entries(target) == marketplace_skill_names()
 
 
 def test_idempotent_reinstall_rebuilds_stale_hidden_mirror(tmp_path: Path) -> None:
@@ -511,20 +500,6 @@ def test_force_errors_on_unowned_selected_directory_without_partial_changes(tmp_
     assert result.returncode == 1
     assert "--force target contains skill names that are not owned by this installer" in result.stderr
     assert (unowned / "SKILL.md").read_text(encoding="utf-8") == "user skill"
-    assert not (target / MIRROR_DIR).exists()
-
-
-def test_force_errors_on_unowned_unselected_directory_without_partial_changes(tmp_path: Path) -> None:
-    target = tmp_path / "skills"
-    unowned = target / "debugger"
-    unowned.mkdir(parents=True)
-    (unowned / "SKILL.md").write_text("user debugger", encoding="utf-8")
-
-    result = run_installer(target, "--routers-only", "--force")
-
-    assert result.returncode == 1
-    assert "--force target contains skill names that are not owned by this installer" in result.stderr
-    assert (unowned / "SKILL.md").read_text(encoding="utf-8") == "user debugger"
     assert not (target / MIRROR_DIR).exists()
 
 
@@ -647,7 +622,7 @@ def test_shared_skill_map_reference_is_reachable_inside_mirror_without_rewrite(t
     assert (target / MIRROR_DIR / "agents/engineer/skills/trd-gen/SKILL.md").is_file()
 
 
-def test_generated_shared_contracts_are_reachable_in_full_and_router_mirrors(
+def test_generated_shared_contracts_are_reachable_in_mirror(
     tmp_path: Path,
 ) -> None:
     expected = {
@@ -658,24 +633,23 @@ def test_generated_shared_contracts_are_reachable_in_full_and_router_mirrors(
         "security": "security-agent",
         "docs": "docs-agent",
     }
-    for mode in ((), ("--routers-only",)):
-        target = tmp_path / ("full" if not mode else "routers")
-        result = run_installer(target, *mode)
-        assert result.returncode == 0, result.stderr + result.stdout
+    target = tmp_path / "skills"
+    result = run_installer(target)
+    assert result.returncode == 0, result.stderr + result.stdout
 
-        for agent, router in expected.items():
-            contract_dir = (
-                target
-                / MIRROR_DIR
-                / f"agents/{agent}/skills/{router}"
-                / "_internal/_generated/shared-contracts"
-            )
-            assert sorted(path.name for path in contract_dir.glob("*.md")) == [
-                "closeout-contract.md",
-                "consumption-contract.md",
-                "handoff-contract.md",
-                "security-escalation.md",
-            ]
+    for agent, router in expected.items():
+        contract_dir = (
+            target
+            / MIRROR_DIR
+            / f"agents/{agent}/skills/{router}"
+            / "_internal/_generated/shared-contracts"
+        )
+        assert sorted(path.name for path in contract_dir.glob("*.md")) == [
+            "closeout-contract.md",
+            "consumption-contract.md",
+            "handoff-contract.md",
+            "security-escalation.md",
+        ]
 
 
 def test_claude_plugin_copies_keep_generated_contracts_inside_plugin_root(

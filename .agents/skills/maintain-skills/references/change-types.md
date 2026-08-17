@@ -26,9 +26,7 @@ New agent:
 1. Create `agents/{agent-name}/{skills,test}`.
 2. Create `agents/{agent-name}/README.md` following an existing agent.
 3. Create each skill's SKILL.md and eval per the new-skill steps. The entry
-   router skill name must equal the marketplace plugin name:
-   `scripts/install_codex_skills.py` `--routers-only` recognizes routers by
-   that equality, and a mismatch silently excludes the new agent.
+   router skill name must equal the marketplace plugin name.
 4. Register the agent in `.claude-plugin/marketplace.json` with
    `"source": "./agents/{agent-name}"` and `"strict": true` (every existing
    plugin uses both), refresh `skills-lock.json`, create

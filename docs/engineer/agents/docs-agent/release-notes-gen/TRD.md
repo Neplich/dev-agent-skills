@@ -233,7 +233,7 @@ issue #116 在 docs-agent 注册 `release-notes-gen` 时，issue #120 尚未把 
 - 同一 plugin 内部的重复 basename 仍视为配置错误并阻塞；
 - issue #120 完成 PM skill 重命名后，两套能力恢复为不同顶层名称，不再触发该解析。
 
-安装器回归必须断言普通安装、routers-only、幂等、force、旧 symlink 迁移和 mirror
+安装器回归必须断言普通安装、幂等、force、旧 symlink 迁移和 mirror
 扫描均保持通过，并显式确认顶层 `release-notes-gen` 指向 Docs source。
 
 ## 11. 验证策略

@@ -55,8 +55,6 @@ class ExistingTarget:
 class PreflightPlan:
     selected_existing: list[ExistingTarget]
     selected_skipped: list[ExistingTarget]
-    unselected_remove: list[ExistingTarget]
-    unselected_skipped: list[ExistingTarget]
     legacy_remove: list[Path]
     legacy_skipped: list[Path]
     collision_legacy_remove: list[Path]
@@ -181,12 +179,10 @@ def parse_skill_specs(root: Path) -> list[SkillSpec]:
     return specs
 
 
-def select_skill_specs(specs: list[SkillSpec], routers_only: bool) -> list[SkillSpec]:
-    selected = [spec for spec in specs if not routers_only or spec.skill_name == spec.plugin_name]
-    if not selected:
-        mode = "--routers-only" if routers_only else "all"
-        raise ValueError(f"no skills selected for install mode {mode}")
-    return selected
+def select_skill_specs(specs: list[SkillSpec]) -> list[SkillSpec]:
+    if not specs:
+        raise ValueError("no skills selected for install")
+    return specs
 
 
 def remove_existing(path: Path) -> None:
@@ -283,14 +279,10 @@ def build_preflight_plan(
     all_specs: list[SkillSpec],
     selected_specs: list[SkillSpec],
     target_root: Path,
-    routers_only: bool,
     force: bool,
 ) -> PreflightPlan:
-    selected_names = {spec.install_name for spec in selected_specs}
     selected_existing: list[ExistingTarget] = []
     selected_skipped: list[ExistingTarget] = []
-    unselected_remove: list[ExistingTarget] = []
-    unselected_skipped: list[ExistingTarget] = []
     force_conflicts: list[Path] = []
 
     for spec in selected_specs:
@@ -306,24 +298,6 @@ def build_preflight_plan(
             force_conflicts.append(target)
         else:
             selected_skipped.append(existing)
-
-    if routers_only:
-        for spec in all_specs:
-            if spec.install_name in selected_names:
-                continue
-
-            target = target_root / spec.install_name
-            if not (target.exists() or target.is_symlink()):
-                continue
-
-            owned = is_owned_skill_target(target, target_root)
-            existing = ExistingTarget(skill=spec, target=target, owned=owned)
-            if owned:
-                unselected_remove.append(existing)
-            elif force:
-                force_conflicts.append(target)
-            else:
-                unselected_skipped.append(existing)
 
     if force_conflicts:
         raise ValueError(
@@ -380,7 +354,6 @@ def build_preflight_plan(
     if mirror.exists() or mirror.is_symlink():
         planned_removals.append(mirror)
     planned_removals.extend(existing.target for existing in selected_existing)
-    planned_removals.extend(existing.target for existing in unselected_remove)
     planned_removals.extend(legacy_remove)
     planned_removals.extend(collision_legacy_remove)
     planned_removals.extend(obsolete_managed_remove)
@@ -389,8 +362,6 @@ def build_preflight_plan(
     return PreflightPlan(
         selected_existing=selected_existing,
         selected_skipped=selected_skipped,
-        unselected_remove=unselected_remove,
-        unselected_skipped=unselected_skipped,
         legacy_remove=legacy_remove,
         legacy_skipped=legacy_skipped,
         collision_legacy_remove=collision_legacy_remove,
@@ -565,7 +536,6 @@ def render_results(
     results: list[InstallResult],
     target_root: Path,
     manifests: list[Path],
-    routers_only: bool,
     plan: PreflightPlan,
     referenced_test_paths: list[Path],
 ) -> None:
@@ -635,28 +605,6 @@ def render_results(
         for path in plan.obsolete_managed_remove:
             print(f"- removed: {path}")
 
-    if routers_only:
-        print()
-        print("WARNING: --routers-only installed only role router skills.")
-        print(
-            "Specialist skills were not linked at the target root, so pm-agent / "
-            "role router orchestration cannot call downstream specialist workflows."
-        )
-        print("The hidden mirror still contains the full agents tree for shared instructions.")
-        print("Use this mode only for minimal entry classification.")
-
-        if plan.unselected_remove:
-            print()
-            print("Removed unselected managed skills for --routers-only:")
-            for existing in plan.unselected_remove:
-                print(f"- removed: {existing.skill.install_name} ({existing.skill.plugin_name}) -> {existing.target}")
-
-        if plan.unselected_skipped:
-            print()
-            print("WARNING: skipped unowned unselected skill names for --routers-only:")
-            for existing in plan.unselected_skipped:
-                print(f"- skipped: {existing.skill.install_name} -> {existing.target}")
-
     if manifests:
         print()
         print("WARNING: target ancestor chain contains plugin manifests.")
@@ -677,11 +625,6 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="target skill directory (default: ~/.agents/skills)",
     )
     parser.add_argument(
-        "--routers-only",
-        action="store_true",
-        help="link only role router skills at the target root; specialist orchestration will be unavailable",
-    )
-    parser.add_argument(
         "--force",
         action="store_true",
         help="rebuild the mirror and replace owned target symlinks; never deletes unowned entries",
@@ -696,13 +639,12 @@ def main(argv: list[str]) -> int:
 
     try:
         all_specs = parse_skill_specs(root)
-        specs = select_skill_specs(all_specs, routers_only=args.routers_only)
+        specs = select_skill_specs(all_specs)
         plan = build_preflight_plan(
             root,
             all_specs,
             specs,
             target_root,
-            routers_only=args.routers_only,
             force=args.force,
         )
         target_root.mkdir(parents=True, exist_ok=True)
@@ -713,9 +655,6 @@ def main(argv: list[str]) -> int:
             remove_existing(path)
         for path in plan.obsolete_managed_remove:
             remove_existing(path)
-        for existing in plan.unselected_remove:
-            remove_existing(existing.target)
-
         referenced_test_paths = rebuild_mirror(root, target_root)
         results = [
             install_selected_skill(
@@ -735,7 +674,6 @@ def main(argv: list[str]) -> int:
         results,
         target_root,
         manifests,
-        routers_only=args.routers_only,
         plan=plan,
         referenced_test_paths=referenced_test_paths,
     )
