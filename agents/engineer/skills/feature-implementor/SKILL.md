@@ -244,7 +244,7 @@ decision is in scope, the user-visible checkpoint also states that
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` remains the fixed active
 entry and archives go only under
 `docs/engineer/{feature_path}/archive/`.
-Runtime eval artifacts must not be committed.
+Runtime artifacts must not be committed.
 
 When user-facing flows, acceptance paths, permissions, login, data setup, or
 regression coverage may be affected, produce a QA E2E handoff package. Do not
