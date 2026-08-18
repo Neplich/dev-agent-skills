@@ -9,7 +9,7 @@ visibility: internal
 ## Entry Gate
 
 Require a PM handoff packet or an equivalent confirmed document chain that
-defines the host repository, bounded manual scope, evidence sources, and
+defines the host repository, confirmed manual scope, evidence sources, and
 required output. The PM packet definition lives in
 the plugin-local generated `../docs-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
 Direct invocation does not waive this gate.
@@ -20,6 +20,36 @@ return product ambiguity to `pm-agent` or technical-impact gaps to the owning
 engineering role. If the site foundation or standards entry is missing, return
 a `docs-site-bootstrap` handoff with zero site writes; this specialist must not
 initialize the site.
+
+## Scope and Directory Classification
+
+Before inventory or writing, record two independent decisions:
+
+- `scope_mode: bounded` for explicitly named pages, roles, features, or flows;
+- `scope_mode: full-manual` for the complete user-visible product manual; or
+- `scope_mode: full-site` only when a PM plan has already separated the manual
+  slice from other formal-documentation surfaces. Otherwise return the whole-
+  site request to `pm-agent` for decomposition.
+
+Requests to complete a manual, cover the whole product, or audit all current
+user-visible functionality select `full-manual`. Do not narrow that scope to
+the existing manual directories or to one implementation batch.
+
+Separately record `change_mode`:
+
+- `extend` when the maintainer asks to add, complete, or update documentation
+  without explicitly replacing it. Preserve existing paths only where current
+  code and interface evidence still support them; add leaf pages or split
+  subdirectories when new independent tasks require it.
+- `rewrite` when the maintainer explicitly asks to discard old content,
+  rewrite, rebuild, or derive the information architecture anew from the
+  current product. Treat the existing tree as comparison evidence, not the
+  target skeleton.
+
+Full scope does not imply `rewrite`, and bounded scope does not imply `extend`.
+If the supplied evidence already makes both decisions clear, record them
+without asking again. Return a materially ambiguous scope decision to
+`pm-agent`; do not use the old directory tree to decide scope by default.
 
 ## Running Environment Negotiation
 

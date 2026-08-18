@@ -57,10 +57,21 @@ evidence sources, and required output is complete Router basis; later site and
 source file checks belong to the specialist.
 
 For `manual-gen`, a handoff confirming an existing host repository with a
-`docs/site/` foundation, bounded manual scope, confirmed running-interface
-evidence, and required output is a complete Router basis. Preserve every supplied field, including
-`feature_path`; an unresolved screenshot batch recorded in `blockers_risks`
-belongs to the specialist and does not send this Router back to PM.
+`docs/site/` foundation, confirmed manual scope, running-interface evidence,
+and required output is a complete Router basis. Preserve every supplied field,
+including `feature_path`, `scope_mode`, and `change_mode` when present; an
+unresolved screenshot batch recorded in `blockers_risks` belongs to the
+specialist and does not send this Router back to PM.
+
+Route both a bounded manual request and a complete user-visible manual to
+`manual-gen`. Do not convert a complete-manual request into a bounded batch.
+A request for the complete documentation site can contain outputs owned by
+several Docs specialists: if its manual slice is not already separated, return
+to `pm-agent` for cross-specialist decomposition; once separated, route only
+the confirmed manual slice here. Completeness and directory treatment are
+independent: preserve an explicit request to extend the current tree or to
+rewrite it, and do not infer a rewrite merely because the manual scope is
+complete.
 
 ## Blocking Conditions
 
