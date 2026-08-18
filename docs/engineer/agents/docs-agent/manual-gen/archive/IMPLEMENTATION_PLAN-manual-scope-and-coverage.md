@@ -1,8 +1,8 @@
 ---
 title: "Manual Gen 全量与增量手册治理实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.1.0"
-status: Draft
+version: "0.2.0"
+status: Archived
 author: "Neplich Codex"
 date: "2026-08-18"
 last_updated: "2026-08-18"
@@ -13,6 +13,9 @@ feature_level: "3"
 change_type: "modify"
 change_tier: "major"
 implementation_scope: "manual-scope-and-coverage"
+archived_at: "2026-08-18"
+archive_approved_by: "Neplich"
+source_plan: "docs/engineer/agents/docs-agent/manual-gen/IMPLEMENTATION_PLAN.md"
 previous_plan_archive: "docs/engineer/agents/docs-agent/manual-gen/archive/IMPLEMENTATION_PLAN-manual-gen.md"
 related_prd: "docs/pm/agents/docs-agent/manual-gen/PRD.md"
 related_trd: "docs/engineer/agents/docs-agent/manual-gen/TRD.md"
@@ -53,3 +56,11 @@ related_trd: "docs/engineer/agents/docs-agent/manual-gen/TRD.md"
 
 验证命令：`uv run scripts/generate_shared_contracts.py --check`；`uv run scripts/check_repository_contract.py`；`uv run scripts/check_doc_contract.py`；`uv run --with pytest pytest agents/test_doc_contract.py scripts/test_generate_shared_contracts.py scripts/test_install_codex_skills.py scripts/test_check_repository_contract.py`；`git diff --check`。
 成功标准：全部命令 PASS；最终 diff 严格匹配精确触点且禁止区零 diff；四种范围/目录组合、写前覆盖与拆页、全量分批不缩范围、写后校验、Chrome 真实窗口/内容视口与截图自然比例都能从权威契约直接定位；独立复核无遗漏。
+
+## 实施结果
+
+- B1 过程对齐：PRD v1.1.0、TRD v0.2.0 与本计划的 FR、模式、视口与完成定义已对齐，无冲突旧规则。
+- B2 执行契约：Router、`manual-gen` 入口与执行指令已更新；`scope_mode`（bounded / full-manual / full-site 手册切片）与 `change_mode`（extend / rewrite）正交可用。
+- B3 宿主与派生同步：`doc-granularity.md` Manual 粒度、双语 Docs README 已更新；`docs-agent`、`manual-gen`、`docs-site-bootstrap` 三个 Skill 的 `computedHash` 已刷新，禁止区零 diff。
+- B4 验证与独立复核：三项契约检查与 `git diff --check` 全部 PASS；pytest 112 passed；与实施上下文分离的只读独立复核 PASS，无必须修复项。
+- 交付：PR #307（`neplich-codex/manual-gen-scope-coverage` → `main`）。
