@@ -826,7 +826,11 @@ test('theme fixes a centered documentation frame below the top navigation', asyn
   const css = await readFile(resolve(SITE_SOURCE, '.vitepress/theme/custom.css'), 'utf8');
   assert.match(css, /--docs-layout-max-width:\s*1440px/);
   assert.match(css, /--docs-sidebar-width:\s*240px/);
+  assert.match(css, /--docs-content-column-width:\s*752px/);
   assert.match(css, /--docs-outline-width:\s*224px/);
+  assert.match(css, /--docs-outline-column-width:\s*256px/);
+  assert.match(css, /\.VPNav\s*\{[^}]*z-index:\s*var\(--vp-z-index-nav\)/);
+  assert.match(css, /\.VPSidebar\s*\{[^}]*z-index:\s*var\(--vp-z-index-sidebar\)/);
   assert.match(css, /\.VPNavBar\.has-sidebar[\s\S]*background-color:\s*var\(--vp-nav-bg-color\)/);
   assert.match(css, /\.VPSidebar[\s\S]*left:\s*max\(0px,[\s\S]*docs-layout-max-width/);
   assert.match(css, /#VPContent\.has-sidebar[\s\S]*margin:[^;]*auto[\s\S]*max-width:\s*var\(--docs-layout-max-width\)/);
