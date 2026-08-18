@@ -1,6 +1,6 @@
 {
   "name": "dev-agent-skills",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "PM-first agent skill marketplace with one public pm-agent entry and downstream PM-orchestrated engineering, QA, DevOps, design, security, and documentation capabilities",
   "keywords": [
     "agent-skills",
