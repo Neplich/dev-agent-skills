@@ -21,7 +21,7 @@ issue #122 的 change-map 工具链。
 
 ## 2. 完整 Inventory
 
-静态 inventory 是下方资产索引中的 42 个文件。另加一个仅运行时目标：
+静态 inventory 是下方资产索引中的 44 个文件。另加一个仅运行时目标：
 
 - `docs/site/.meta/bootstrap-manifest.json`
 
@@ -87,7 +87,7 @@ manifest 形状如下；`createdAt` 只在首次创建时写入，zero-change �
 
 ## 5. 写入顺序
 
-1. 从下方索引构建 42 个静态目标，加上运行时 manifest，形成完整 inventory。
+1. 从下方索引构建 44 个静态目标，加上运行时 manifest，形成完整 inventory。
 2. 读取或在内存建立 manifest；解析失败时停止。
 3. 对全部静态目标完成 missing / identical / kept-as-is / conflict 分类。
 4. 汇总全部冲突并取得逐项决定；未授权的差异文件不得写入。
@@ -128,6 +128,8 @@ manifest 形状如下；`createdAt` 只在首次创建时写入，zero-change �
 | `assets/docs/site/.vitepress/config.shared.ts` | `docs/site/.vitepress/config.shared.ts` |
 | `assets/docs/site/.vitepress/config.public.ts` | `docs/site/.vitepress/config.public.ts` |
 | `assets/docs/site/.vitepress/config.internal.ts` | `docs/site/.vitepress/config.internal.ts` |
+| `assets/docs/site/.vitepress/navigation.public.json` | `docs/site/.vitepress/navigation.public.json` |
+| `assets/docs/site/.vitepress/navigation.internal.json` | `docs/site/.vitepress/navigation.internal.json` |
 | `assets/docs/site/.vitepress/theme/index.ts` | `docs/site/.vitepress/theme/index.ts` |
 | `assets/docs/site/.vitepress/theme/Mermaid.vue` | `docs/site/.vitepress/theme/Mermaid.vue` |
 | `assets/docs/site/.vitepress/theme/custom.css` | `docs/site/.vitepress/theme/custom.css` |

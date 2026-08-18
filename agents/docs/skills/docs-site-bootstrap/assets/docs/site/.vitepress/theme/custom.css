@@ -1,6 +1,86 @@
 :root {
   --vp-c-brand-1: #2563eb;
   --vp-c-brand-2: #1d4ed8;
+  --docs-layout-max-width: 1440px;
+  --docs-sidebar-width: 240px;
+  --docs-content-column-width: 752px;
+  --docs-outline-width: 224px;
+  --docs-outline-column-width: 256px;
+  --vp-layout-max-width: var(--docs-layout-max-width);
+  --vp-sidebar-width: var(--docs-sidebar-width);
+}
+
+@media (min-width: 960px) {
+  .VPNav {
+    z-index: var(--vp-z-index-nav);
+    background-color: var(--vp-nav-bg-color);
+  }
+
+  .VPNavBar.has-sidebar,
+  .VPNavBar.has-sidebar .title,
+  .VPNavBar.has-sidebar .content-body {
+    background-color: var(--vp-nav-bg-color);
+  }
+
+  #app .VPSidebar {
+    left: max(0px, calc((100vw - var(--docs-layout-max-width)) / 2));
+    z-index: var(--vp-z-index-sidebar);
+    padding-right: 24px;
+    padding-left: 24px;
+    width: var(--docs-sidebar-width);
+  }
+
+  #app .VPSidebar .curtain {
+    margin-right: -24px;
+    margin-left: -24px;
+  }
+
+  #VPContent.has-sidebar {
+    margin: var(--vp-layout-top-height, 0px) auto 0;
+    padding-right: 0;
+    padding-left: var(--docs-sidebar-width);
+    width: 100%;
+    max-width: var(--docs-layout-max-width);
+  }
+
+  .VPDoc.has-sidebar:not(.has-aside) .container,
+  .VPDoc.has-sidebar:not(.has-aside) .content {
+    max-width: var(--docs-content-column-width);
+  }
+}
+
+@media (min-width: 1280px) {
+  .VPDoc.has-sidebar.has-aside .container {
+    max-width: calc(var(--docs-content-column-width) + var(--docs-outline-column-width));
+  }
+
+  .VPDoc.has-sidebar:not(.has-aside) .container {
+    justify-content: flex-start;
+    max-width: calc(var(--docs-content-column-width) + var(--docs-outline-column-width));
+  }
+
+  .VPDoc.has-sidebar.has-aside .content {
+    flex: 0 1 var(--docs-content-column-width);
+    min-width: 0;
+  }
+
+  .VPDoc .aside {
+    flex: 0 0 var(--docs-outline-column-width);
+  }
+
+  .VPDoc .aside-container,
+  .VPDoc .aside-curtain {
+    width: var(--docs-outline-width);
+  }
+
+  .VPDoc.has-aside:not(:has(.VPDocAsideOutline.has-outline)) .aside {
+    display: none;
+  }
+
+  .VPDoc.has-aside:not(:has(.VPDocAsideOutline.has-outline)) .container,
+  .VPDoc.has-aside:not(:has(.VPDocAsideOutline.has-outline)) .content {
+    max-width: var(--docs-content-column-width);
+  }
 }
 
 .mermaid-diagram {
