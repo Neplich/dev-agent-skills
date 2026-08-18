@@ -16,7 +16,7 @@ related_issues:
 related_docs:
   - "docs/pm/agents/docs-agent/PRD.md"
   - "docs/engineer/agents/docs-agent/docs-site-layout/TRD.md"
-  - "docs/engineer/agents/docs-agent/docs-site-layout/IMPLEMENTATION_PLAN.md"
+  - "docs/engineer/agents/docs-agent/docs-site-layout/archive/IMPLEMENTATION_PLAN-docs-site-layout.md"
 changelog:
   - version: "1.0.0"
     date: "2026-08-18"

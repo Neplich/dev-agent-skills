@@ -87,7 +87,7 @@ manifest 形状如下；`createdAt` 只在首次创建时写入，zero-change �
 
 ## 5. 写入顺序
 
-1. 从下方索引构建 42 个静态目标，加上运行时 manifest，形成完整 inventory。
+1. 从下方索引构建 44 个静态目标，加上运行时 manifest，形成完整 inventory。
 2. 读取或在内存建立 manifest；解析失败时停止。
 3. 对全部静态目标完成 missing / identical / kept-as-is / conflict 分类。
 4. 汇总全部冲突并取得逐项决定；未授权的差异文件不得写入。
