@@ -836,6 +836,7 @@ test('theme fixes a centered documentation frame below the top navigation', asyn
   assert.match(css, /#VPContent\.has-sidebar[\s\S]*margin:[^;]*auto[\s\S]*max-width:\s*var\(--docs-layout-max-width\)/);
   assert.match(css, /\.VPDoc\.has-sidebar:not\(\.has-aside\)/);
   assert.match(css, /\.VPDoc\.has-sidebar\.has-aside/);
+  assert.match(css, /\.VPDoc\.has-sidebar:not\(\.has-aside\) \.container\s*\{[^}]*justify-content:\s*flex-start[^}]*max-width:\s*calc\(var\(--docs-content-column-width\) \+ var\(--docs-outline-column-width\)\)/);
   assert.match(css, /:has\(\.VPDocAsideOutline\.has-outline\)/);
 });
 

@@ -54,6 +54,11 @@
     max-width: calc(var(--docs-content-column-width) + var(--docs-outline-column-width));
   }
 
+  .VPDoc.has-sidebar:not(.has-aside) .container {
+    justify-content: flex-start;
+    max-width: calc(var(--docs-content-column-width) + var(--docs-outline-column-width));
+  }
+
   .VPDoc.has-sidebar.has-aside .content {
     flex: 0 1 var(--docs-content-column-width);
     min-width: 0;
