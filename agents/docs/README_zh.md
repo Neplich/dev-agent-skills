@@ -27,7 +27,7 @@
 | `docs-agent` | 正式文档请求路由 | Specialist 选择或有明确边界的 blocked handoff |
 | `docs-site-bootstrap` | 维护者明确要求初始化正式文档站点 | 技术中立的 `docs/site/` 基础和标准 |
 | `formal-docs-sync` | 已确认的功能、部署、发布或现有系统需要同步或回填正式文档 | 当前状态的 API、数据库、设计、运维和产品文档及其 `change-map.yaml` 更新；v0.3.0 仅限 API 自动化 |
-| `manual-gen` | 已确认的有限范围需要基于真实运行界面生成图文用户操作手册 | 手册页面、同级截图资产和可交给文档审计的 change-map 更新 |
+| `manual-gen` | 已确认的局部或完整手册范围需要基于当前代码和真实运行界面生成图文用户操作手册 | 覆盖矩阵、按任务设计的页面树、手册页面、同级截图、写后覆盖校验和可交给文档审计的 change-map 更新 |
 | `release-notes-gen` | 已确认的发布需要在准备 GitHub Release 之前，在宿主文档站点中生成版本化页面 | 已确认的 `vX.Y.Z.md`、发布元数据/索引更新、成功的文档检查，以及面向 `docs-agent:docs-audit` pre-tag 审计的站点就绪证据 handoff；`pm-agent:github-release-gen` 仍是下游 GitHub Release 所有者 |
 | `docs-audit` | 发布就绪要求在创建 tag 前后进行正式文档覆盖度与事实核验 | 在维护者确认 `target_release_version` 后，pre-tag 在完成完整集合标记后返回 `ready_for_tag`；post-tag 在检查实际 tag 后返回 `release_verified` 或 `blocked` |
 

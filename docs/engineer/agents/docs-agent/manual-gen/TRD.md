@@ -1,11 +1,11 @@
 ---
 title: "Manual Gen TRD"
 type: TRD
-version: "0.1.6"
+version: "0.2.0"
 status: Approved
 author: "Neplich Claude Code"
 date: "2026-08-05"
-last_updated: "2026-08-06"
+last_updated: "2026-08-18"
 generated_by: "trd-gen"
 feature: "manual-gen"
 feature_path: "agents/docs-agent/manual-gen"
@@ -16,18 +16,15 @@ related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/226"
 related_code:
   - "agents/docs/skills/manual-gen/**"
-  - "agents/docs/test/manual-gen/**"
   - "agents/docs/skills/docs-agent/SKILL.md"
-  - "agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md"
-  - "agents/docs/skills/docs-audit/_internal/INSTRUCTIONS.md"
-  - "agents/docs/skills/docs-site-bootstrap/assets/docs/site/scripts/lib/pages.mjs"
-  - "agents/docs/skills/docs-site-bootstrap/assets/docs/site/scripts/lib/sidebar.mjs"
-  - "agents/docs/skills/docs-site-bootstrap/assets/docs/site/scripts/scaffold-doc.mjs"
-  - "agents/docs/skills/docs-site-bootstrap/assets/docs/site/standards/templates/manual-guide.md"
-  - "agents/docs/skills/docs-site-bootstrap/assets/docs/site/manual/index.md"
-  - ".claude-plugin/marketplace.json"
+  - "agents/docs/skills/docs-site-bootstrap/assets/docs/site/standards/doc-granularity.md"
+  - "agents/docs/README.md"
+  - "agents/docs/README_zh.md"
   - "skills-lock.json"
 changelog:
+  - version: "0.2.0"
+    date: "2026-08-18"
+    changes: "实现局部/全量范围与增量/重写目录策略分离，增加写前覆盖矩阵、任务级拆页、写后全量覆盖门禁，并按真实窗口与内容视口修正截图契约"
   - version: "0.1.6"
     date: "2026-08-06"
     changes: "对齐 PRD v1.0.3：正向 eval 运行期注入具体流程、认证与安全事实，并将初始范围授权和候选页面/截图确认分离"
@@ -55,11 +52,11 @@ changelog:
 
 ## 1. 来源、范围与分级
 
-本 TRD 把 `docs/pm/agents/docs-agent/manual-gen/PRD.md`（v1.0.3，FR-M01~M16）转换为可实施设计。PRD 由 issue #226 及其维护者决策记录蒸馏而来。
+本 TRD 把 `docs/pm/agents/docs-agent/manual-gen/PRD.md`（v1.1.0，FR-M01~M20）转换为可实施设计。v0.2.0 依据维护者提供的全量手册失败 Case 与确认批注，修正已发布的执行协议。
 
-本 feature 新增一个 specialist、扩展 `docs-agent` 拥有的共享 frontmatter 契约、修改 `docs-site-bootstrap` 交付给宿主的脚本资产，并改动 marketplace 注册表，按仓库「变更分级契约」判定为 `change_tier: major`。
+本轮修改既有 `docs-agent` Router、`manual-gen` Specialist 和 `docs-site-bootstrap` 交付的宿主粒度标准，并同步三个 Skill 哈希，按仓库「变更分级契约」判定为 `change_tier: major`、`change_type: modify`。
 
-范围内的两条独立工作面：**类型层扩展**（`doc_type: manual` 与站点资产）与 **skill 本体**。前者是后者的写入前置，必须先落地。
+范围内的三条工作面是：**范围与目录分类**、**写前/写后覆盖门禁**、**真实视口截图契约**。既有 `doc_type: manual`、模板、站点脚本和其他 Docs Specialist 不在本轮修改范围。
 
 ## 2. 技术结构
 
@@ -70,11 +67,15 @@ flowchart TB
     Env -->|域名| Exec["_internal/INSTRUCTIONS.md<br/>执行契约"]
     Env -->|本地已同意| Exec
     Env -->|无环境 / 未同意| Blocked["blocked"]
-    Exec --> Entry["三级执行入口<br/>AGENTS.md 执行入口优先级"]
-    Entry --> Shot["视口设定 → 回读校验 → 采集"]
+    Exec --> Mode["scope_mode + change_mode"]
+    Mode --> Inventory["代码 / 路由 / 真实界面盘点<br/>+ 覆盖矩阵"]
+    Inventory --> Plan["任务级页面树<br/>+ 已确认实施批次"]
+    Plan --> Entry["三级执行入口<br/>AGENTS.md 执行入口优先级"]
+    Entry --> Shot["窗口设定 → 窗口/内容视口回读<br/>→ 自然比例采集"]
     Shot --> Write["写入 docs/site/manual/**<br/>+ 同级截图资产"]
-    Write --> Checks["宿主 docs checks<br/>+ 渲染目视验收"]
-    Checks --> Audit["docs-agent:docs-audit"]
+    Write --> Checks["单页 / 宿主 / 导航检查<br/>+ 覆盖矩阵双向校验"]
+    Checks --> Review["渲染目视验收<br/>+ 独立覆盖复核"]
+    Review --> Audit["docs-agent:docs-audit"]
     Tmpl["docs-site-bootstrap<br/>manual 模板 / 根索引 / 类型注册"] -.唯一模板源.-> Write
 ```
 
@@ -155,22 +156,53 @@ agents/docs/skills/manual-gen/
 
 `SKILL.md` frontmatter：`name: manual-gen`、`visibility: internal`、`description` 按仓库约定写明「Internal documentation specialist—not a direct entry point」并避免用户触发语（`check_doc_contract.py` 校验该项）。
 
-**职责切分**：`SKILL.md` 只承载入口门禁与环境协商协议（这两步决定是否继续，必须在加载执行契约前完成）；`_internal/INSTRUCTIONS.md` 承载采集、写入、验收、报告的完整执行契约。
+**职责切分**：`SKILL.md` 承载入口门禁、范围模式、目录变更模式与环境协商协议；`_internal/INSTRUCTIONS.md` 承载盘点、覆盖矩阵、页面规划、采集、写入、验收和报告的完整执行契约。
 
 `_internal/INSTRUCTIONS.md` 的执行步骤：
 
 1. 读宿主标准入口与 `change-map.yaml`，确认站点基础存在（缺失则返回 `docs-site-bootstrap` handoff，零站点写入）
-2. 读 manual 模板与既有 `docs/site/manual/**` 结构
-3. 在已确认环境中梳理角色、业务场景与操作流程
-4. 展示候选范围与页面树，等待确认（未确认零写入）
-5. 设定视口 → 回读校验 → 采集截图（含卫生处理）
+2. 读 manual 模板与既有 `docs/site/manual/**`，把旧页面当作待验证证据而非默认目标树
+3. 分类 `scope_mode` / `change_mode`，按范围盘点代码、路由、角色和真实界面，建立覆盖矩阵与任务归属
+4. `bounded` 确认有限批次；`full-manual` 一次确认完整矩阵、页面树和全部批次，之后逐批持续执行
+5. 设置桌面窗口 → 回读实际窗口和内容视口 → 确认桌面布局 → 按自然比例采集截图
 6. 写入手册页与截图资产，生长 change-map 条目
-7. 运行宿主 docs 检查 + 渲染目视验收
+7. 运行单页、宿主、导航和矩阵双向检查，做渲染目视验收；完整手册再做独立覆盖复核
 8. handoff 至 `docs-audit`，`last_verified_version` 保持 `unverified`
 
-## 7. 环境协商与视口回读的指令层设计
+## 7. 范围、目录与视口的指令层设计
 
-这两条是 PRD 中最容易被模型「推断掉」的约束，需要在指令层用可观察产物固定。
+这些是最容易被模型「推断掉」的约束，需要在指令层用可观察产物固定。
+
+### 7.1 范围与目录使用正交状态
+
+`scope_mode` 只回答覆盖边界：
+
+| 值 | 判定 | 盘点边界 |
+|---|---|---|
+| `bounded` | 明确命名的页面、角色、流程或功能 | 只盘点确认范围及其必要父级导航 |
+| `full-manual` | 完整手册、整个产品、所有可见用户功能 | 在写任何页面前盘点所有确认角色、代码入口、路由和真实界面 |
+| `full-site` | 所有正式文档面 | Router / PM 先拆分 Specialist；`manual-gen` 只消费其中已确认的手册范围 |
+
+`change_mode` 只回答如何处理既有目录：
+
+| 值 | 判定 | 目录处理 |
+|---|---|---|
+| `extend` | 用户未要求舍弃或重建，目标是新增、补齐或更新 | 保留有当前证据支持的路径，并按独立任务新增叶子页或拆分子目录 |
+| `rewrite` | 用户明确要求舍弃旧内容、整体重写、重建或按当前产品重新梳理 | 从当前产品功能模型推导目标树；旧目录只参与差异核对 |
+
+因此 `full-manual + extend` 和 `bounded + rewrite` 都是合法组合。全量范围不自动要求新目录，增量范围也不能把旧目录视为天然正确。
+
+### 7.2 覆盖矩阵与页面所有权
+
+`full-manual` 写入前必须完成一张矩阵，至少包含：角色、路由或入口、可见功能、独立用户目标、操作与预期结果、权限或前置条件、目标父页、唯一归属叶子页、代码/界面证据、截图需求。`bounded` 使用同一字段结构覆盖受影响范围。
+
+先把可见控件映射为用户任务：一个按钮或对话框可以只是任务中的步骤，不机械地各建一页；每个独立任务必须有且只有一个归属叶子页。满足任一条件时默认拆页：独立入口或按钮、可单独完成、独立结果、独立权限/前置条件/风险、独立异常处理、独立截图证据、不同更新节奏。必须连续完成同一目标且共享入口和结果的动作可以合并。
+
+父级 `index.md` 只说明范围、角色、关系与导航，不承载用于替代叶子页的操作步骤。叶子页必须满足 manual 模板的全部可复现字段。
+
+### 7.3 完整计划与分批执行
+
+`bounded` 仍只确认一个有限批次。`full-manual` 先一次展示并确认完整覆盖矩阵、目标页面树、迁移/新增/拆分清单、全部实施批次和显式排除项；这次确认授权依序执行所列批次。每次只写一个批次，但完成后继续下一个已确认批次，不重新把它解释为新的范围确认。只有范围、树或副作用边界变化时才暂停并重新确认。
 
 **环境协商（FR-M02）。** 协商顺序写成带前置条件的分支，而非并列选项：
 
@@ -178,67 +210,63 @@ agents/docs/skills/manual-gen/
 - 本地启动分支的进入条件是「无可用域名环境」或「用户明确要求本地」二者之一成立，否则不得询问；
 - 启动命令的执行条件是用户对本地启动的明确同意，指令层写为「未获明确同意前不得执行任何启动命令」，并要求报告中回显同意来源。
 
-**视口回读（FR-M03）。** 要求产出两条独立证据而非一条：
+### 7.4 视口回读
 
-- 设定证据：设定命令与目标值 1920×1080；
-- 回读证据：从运行环境读回的实际视口尺寸数值。
+要求产出三条独立证据：
 
-指令层明确「回读结果必须来自运行环境的实际读数，不得由设定值推断」，并要求回读数值与 1920×1080 不符时停止采集。报告模板中这两项是分列字段，缺任一项即视为未完成该步骤。此约束的来源是实测：浏览器工具的 `desktop` 预设落到 691×837 视口并触发站点响应式移动布局。
+- 设定证据：设置浏览器桌面窗口的命令或操作及目标尺寸；维护者未指定时可将 1920×1080 用作窗口目标；
+- 窗口回读证据：从运行环境读回的实际浏览器窗口宽高；
+- 内容视口回读证据：从页面读取实际内容视口宽高，例如运行环境提供的 layout viewport 或 `window.innerWidth` / `window.innerHeight`。
 
-**执行入口（FR-M04）。** 直接引用 `AGENTS.md` 「QA E2E 测试用例持久化」节中的执行入口优先级条目与 QA 三个 skill 中的权威副本，不复制判定细则，不新增第四种契约。指令层只要求说明所选入口为何覆盖当前采集需求。
+回读结果不得由设定值推断。窗口与内容视口不同是正常现象；阻塞条件是无法回读，或内容视口触发了非预期的移动/响应式布局，而不是内容视口没有等于窗口目标。截图保存采集后的自然像素比例；正文样式不得同时强制不同比例的宽度和高度，不把 1920×907 等实际内容截图拉伸为 1920×1080 或 16:9。
 
-## 8. 注册与计数
+### 7.5 执行入口
+
+直接引用 `AGENTS.md` 「QA E2E 测试用例持久化」节中的执行入口优先级条目与 QA 三个 skill 中的权威副本，不复制判定细则，不新增第四种契约。指令层只要求说明所选入口为何覆盖当前采集需求。
+
+### 7.6 写后校验与完成门禁
+
+写后校验分两层，不用构建成功替代覆盖判断：
+
+1. **页面层**：每个叶子页含适用角色、前置条件、编号步骤、可见界面与截图、预期结果、异常处理；父级索引只做范围和导航；图片可见且未变形。
+2. **范围层**：矩阵中的每个独立任务恰好映射到一个叶子页，每个叶子页也能反向映射到矩阵证据；所有页面从导航可达；可见路由、菜单动作、按钮、对话框和角色均有已覆盖、任务步骤、明确排除或证据阻塞结论。
+
+`bounded` 只要求受影响矩阵闭环。`full-manual` 还要求非作者执行独立覆盖复核，结论必须是无未解释遗漏。对于 public / internal 等受影响站点变体，分别抽查首页、目录页和内容页的顶部区域、侧栏、图片与正文布局；样式不一致或图片失真阻止完成。
+
+## 8. 本轮同步面
 
 | 文件 | 改动 |
 |---|---|
-| `.claude-plugin/marketplace.json` | `docs-agent` 的 `skills` 数组增加 `./skills/manual-gen`；agent `description` 加图文手册能力 |
-| `agents/docs/.claude-plugin/plugin.json` | per-agent plugin `description` 加图文手册能力 |
-| `skills-lock.json` | 增加 manual-gen 条目；`computedHash` 由契约脚本随 SKILL.md 改动刷新，属同一变更 |
-| `agents/docs/skills/docs-agent/SKILL.md` | Available Skills、Routing Signals、Specialist Gate Pointers 三处各加一条；frontmatter `description` 与 Role Boundary 列举句同步 |
-| `agents/docs/README.md` / `README_zh.md` | 能力摘要与主要输出补图文手册；skills 表、Specialist skills 计数 4 → 5、Routing Rules 小节同步 |
-| `AGENTS.md` | `docs-agent` skill 数 4 → 5，Specialist skills 总数 31 → 32，根路由指针句加手册分流 |
-| 根 `README.md` / `README_zh.md` | Skills 徽章 38 → 39、概览 specialist 总数 31 → 32；顶层 Agent 表的 Docs Agent 行 `5 (1 + 4)` → `6 (1 + 5)` 并补图文手册能力 |
-| `agents/product_manager/skills/pm-agent/SKILL.md` | Downstream Role Handoff Targets、User Entry Coverage、`formal_docs` 分类行、Default Routes 四处补图文手册 |
+| `agents/docs/skills/docs-agent/SKILL.md` | 完整手册直接路由 `manual-gen`；完整站点的非手册面返回 PM 拆分；保留范围与目录模式 |
+| `agents/docs/skills/manual-gen/SKILL.md` | 入口加入 `scope_mode` / `change_mode` 分类及 `full-site` 边界 |
+| `agents/docs/skills/manual-gen/_internal/INSTRUCTIONS.md` | 八步执行契约加入覆盖矩阵、目录策略、拆页、分批持续执行、真实视口和完成门禁 |
+| `agents/docs/skills/docs-site-bootstrap/assets/docs/site/standards/doc-granularity.md` | 向新 bootstrap 宿主交付手册粒度和目录策略 |
+| `agents/docs/README.md` / `README_zh.md` | 能力表同步局部与完整手册输入 |
+| `skills-lock.json` | 刷新 `docs-agent`、`manual-gen`、`docs-site-bootstrap` 的 `computedHash` |
 
-`docs-agent` 路由信号措辞：按「基于运行界面截图生成或更新站内图文用户操作手册」分流，与 `formal-docs-sync` 的「同步当前事实」在证据链上区分，避免两者路由重叠。
+不修改 marketplace 注册、插件描述、PM 默认入口、共享 frontmatter、`formal-docs-sync`、`docs-audit`、Release Notes 或站点运行脚本。现有宿主不会自动获得更新后的 `doc-granularity.md`；需要重跑 `docs-site-bootstrap` 或显式合并该标准文件。
 
-## 9. eval 组织
+## 9. 行为验证场景
 
-```text
-agents/docs/test/manual-gen/evals/
-├── evals.json
-└── workspace/
-    ├── eval-001-domain-provided/（#245 单一通用正向测试，平台与场景不绑定）
-    ├── eval-002-local-start-consent/
-    └── eval-003-no-environment-blocked/
-```
+本轮不新增 eval 框架或固定业务 fixture。实现审查至少逐项验证：
 
-每个 workspace 含 `eval_metadata.json`、`comparison.md` 与环境描述文件；平台相关采集脚本只在运行期按所选入口准备，不作为固定场景资产提交。
-
-共享契约变更的依赖 eval 同批同步：`docs-agent` router 增加 manual 路由用例；`docs-audit` 增加 manual 事实审计并更新 frontmatter 枚举用例；`docs-site-bootstrap` 更新资产计数、枚举断言及旧 comparison 的待重跑状态。manual-gen fixture 的 `docs/site/package.json` 只声明 fixture 内可直接运行的自包含 `test:docs`，不引用未物化的宿主 `scripts/` 树。
-
-**执行入口**：按采集入口优先级执行——repo harness > Chrome 插件 / browser connector > Playwright fallback（对齐 `manual-gen/_internal/INSTRUCTIONS.md` 采集入口契约），保证 with-skill 与新生成的 `without_skill` baseline 都能在同一入口下运行。
-
-**运行期采集脚本形态**：需要 Playwright fallback 时按 QA 既有约定在隔离 scratch workspace 准备 `*.spec.md`，保证重复执行一致且不含明文凭据；repo harness 或 Chrome 插件 / browser connector 可直接使用其入口。采集脚本不提交到 eval fixture。
-
-**产物边界**：截图、手册页与采集脚本都是运行期产物，写隔离 scratch workspace，不入库。fixture 只保留环境描述与期望的手册结构骨架。`evals.json` 不声明截图类 runner output。
-
-**断言取向**：一律语义判断，不比对具体目录名，也不规定业务模块的数量或命名；但平台层、业务层、操作层三类语义是强制契约。eval-001 必须分别核验平台定位/适用对象/角色边界、业务场景/能力目的/模块关系，以及操作步骤可复现性，目录落点随宿主既有信息架构自适应。
-
-**外部数据源**：按 #235 / #245 契约，eval 运行环境由维护者在每轮执行前确认注入：平台名、可访问 URL、本地代码路径，以及一条具体有限用户流程的适用角色、排除项、认证条件与安全执行依据。eval 定义不固定外部站点或业务场景，但 lane 不能在缺少本轮具体流程时自行选题。站点或平台改版导致断言无触发条件时记 `NOT EXERCISED`，计入 Coverage result，不计入 Behavior result 的 `FAIL`。环境相关标识脱敏由 eval-001 通用断言覆盖，不绑定分享场景。
-
-**正向执行前提**：eval-001 的 runner 必须支持候选范围提出后的多轮确认，并选择可证明非写入的核心流程，或使用具备测试账号、测试数据与重置权限的可丢弃环境。维护者对初始业务边界的授权不能替代候选页面树、逐页证据与截图计划的 follow-up 确认；缺少任一前提时整体记 `BLOCKED`，不得跳过核心步骤后继续判定正向路径。
+1. `bounded + extend`：新增功能在仍有效的现有目录中新增叶子页，满足条件时拆分子目录，不盘点无关后台。
+2. `full-manual + extend`：写前覆盖所有确认角色和可见功能，保留有效路径，完整计划确认后逐批持续执行，最终矩阵双向闭环。
+3. `full-manual + rewrite`：旧目录只作差异证据，目标树从当前产品任务模型推导。
+4. `full-site`：Router 不把所有正式文档面交给 `manual-gen`，而是要求 PM 拆分并只路由手册子范围。
+5. 1920×1080 浏览器窗口、1920×907 内容视口：允许截图，报告两组实际值，图片不被拉伸成 16:9；内容进入移动布局或无法回读时阻塞。
+6. 构建和链接通过但覆盖矩阵仍有无归属任务：结果保持 incomplete / blocked，不得报告完成。
 
 ## 10. 验证策略
 
 | 层 | 手段 | 命令 |
 |---|---|---|
-| 仓库契约 | 注册表、skill 结构、lock hash、eval 定义、文档 frontmatter | `uv run scripts/check_repository_contract.py` → `check_eval_contract.py` → `check_eval_artifacts.py` → `check_doc_contract.py` |
-| 确定性测试 | 现有 pytest 套件不回归 | 仓库既有 pytest 命令 |
-| 宿主脚本 | manual 类型在宿主校验链中可用 | 在临时 bootstrap 出的站点上创建手册页并运行宿主 docs 检查 |
-| skill 行为 | 3 个 eval 场景（001 通用正向 / 002 / 003） | fresh subagent validation + 本轮新生成的 `without_skill` baseline |
-
-宿主脚本层改动（`pages.mjs`、`sidebar.mjs`、`scaffold-doc.mjs`）属于交付给宿主的资产，本仓库的 pytest 不直接覆盖其运行时行为，需在临时站点上实测一次并记录结果。
+| 共享契约 | 确认未误改生成副本 | `uv run scripts/generate_shared_contracts.py --check` |
+| 仓库契约 | skill 结构、活跃计划、lock hash | `uv run scripts/check_repository_contract.py` |
+| 文档契约 | frontmatter、本地链接与实施计划触点 | `uv run scripts/check_doc_contract.py` |
+| 确定性测试 | 现有 checker 与安装测试不回归 | `uv run --with pytest pytest agents/test_doc_contract.py scripts/test_generate_shared_contracts.py scripts/test_install_codex_skills.py scripts/test_check_repository_contract.py` |
+| 行为语义 | 第 9 节六个场景逐条审读，确认增量/重写与局部/全量组合无矛盾 | 独立 diff review |
+| 补丁卫生 | 空白、冲突标记与越界改动 | `git diff --check` + `git diff --stat` |
 
 ## 11. 实施约束与非目标
 
@@ -247,17 +275,17 @@ agents/docs/test/manual-gen/evals/
 - 不实现浏览器自动化框架、应用启动脚本或部署环境。
 - 不为截图过期新增告警机制或第二套变更检测协议。
 - 不在本 feature 内统一仓库 `-generator` 后缀命名（issue #230）。
-- 量级预期：净新增约 800–1100 行，不新增抽象层。实际偏离明显时先停下核对范围。
+- 量级预期：净新增约 180–280 行，不新增抽象层。实际偏离明显时先停下核对范围。
 
 ## 12. 风险与假设
 
 | 项 | 类型 | 内容 | 影响 |
 |---|---|---|---|
-| 枚举五处同步 | 风险 | 任一处遗漏会让手册页在宿主 `check:frontmatter` 中失败 | 类型层作为独立批次先落地并单独验证 |
+| 范围和目录模式被混为一谈 | 风险 | 完整手册被强制换目录，或增量补写盲从旧目录 | 两组枚举正交定义，并用四种组合审读 |
 | 存量宿主脚本升级 | 假设 | 已 bootstrap 宿主通过重跑 `docs-site-bootstrap` 获得 manual 支持，复用其幂等与 keep/overwrite 机制 | 宿主本地改过脚本时进入既有冲突决策流程，不新增机制 |
 | 截图引用被 `referencedAssets` 拒绝 | 风险 | 引用路径若指向站外或排除区，截图不会进入构建产物 | 落点定为页面同级，天然在 `docs/site` 内；`warnSkippedAsset` 输出纳入渲染验收检查项 |
-| 视口回读被推断 | 风险 | 模型以「已设定」代替实际读数 | 报告模板分列设定与回读两个字段，缺任一项视为未完成 |
-| eval 依赖被测平台可访问 | 假设 | 维护者确认注入的平台在 eval 执行期可访问且界面稳定 | 不可访问时该轮记 blocked；平台改版导致断言无触发条件时记 `NOT EXERCISED` |
+| 窗口尺寸被推断为内容视口 | 风险 | Chrome 外壳导致实际内容更矮，图片再被固定 16:9 拉伸 | 报告分列窗口设定、窗口回读和内容视口回读，图片保持自然比例 |
+| 覆盖门禁退化为构建门禁 | 风险 | 页面可运行但独立任务缺页 | 完整手册强制矩阵双向校验和非作者覆盖复核 |
 
 ## 13. 开放技术问题
 
@@ -268,4 +296,4 @@ agents/docs/test/manual-gen/evals/
 
 ## 14. Handoff 条件
 
-TRD 经维护者确认后移交 `engineer-agent:feature-implementor`，基于本文件编写 `docs/engineer/agents/docs-agent/manual-gen/IMPLEMENTATION_PLAN.md`，确认后再进入实现。实施计划需按第 3 节到第 9 节的工作面切分批次，类型层扩展排在 skill 本体之前。
+本 TRD 与同路径 `IMPLEMENTATION_PLAN.md` 对齐后进入 `maintain-skills` 实施。完成条件是第 8 节触点全部同步、第 9 节场景无契约矛盾、第 10 节命令全部通过；不得用静态检查替代人工范围审读。
