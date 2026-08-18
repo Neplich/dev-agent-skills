@@ -16,7 +16,9 @@ import {
 import { parseArgs as parseFrontmatterArgs } from '../check-frontmatter.mjs';
 import { explicitVersion, validateReleaseMetadata } from '../check-version.mjs';
 import { attachChildLifecycle, shouldPrepareForChange } from '../dev-site.mjs';
-import { collectMarkdown } from '../lib/pages.mjs';
+import {
+  collectMarkdown, readNavigation, renderHomeNavigation
+} from '../lib/pages.mjs';
 import { buildSidebar } from '../lib/sidebar.mjs';
 import { replaceGeneratedDirectory, validateGeneratedRoot } from '../prepare-site.mjs';
 import {
@@ -745,6 +747,92 @@ test('buildSidebar preserves a flat page alongside a same-named subtree index', 
     text: 'Workspace Roles',
     link: '/design/workspace-access/roles'
   }]);
+});
+
+test('public and internal sites render their own ordered navigation on the root home', async () => {
+  const navigation = {
+    public: await readNavigation('public', { siteRoot: SITE_SOURCE }),
+    internal: await readNavigation('internal', { siteRoot: SITE_SOURCE })
+  };
+  assert.deepEqual(navigation.public, [
+    { text: '产品', link: '/product/' },
+    { text: '操作手册', link: '/manual/' },
+    { text: '发布说明', link: '/release-notes/' }
+  ]);
+  assert.deepEqual(navigation.internal, [
+    { text: '规范', link: '/standards/' },
+    { text: '产品', link: '/product/' },
+    { text: '操作手册', link: '/manual/' },
+    { text: '设计', link: '/design/' },
+    { text: 'API', link: '/api/' },
+    { text: '数据库', link: '/database/' },
+    { text: '运维', link: '/ops/' },
+    { text: '发布说明', link: '/release-notes/' }
+  ]);
+
+  for (const target of ['public', 'internal']) {
+    const source = await readFile(resolve(SITE_SOURCE, `index.${target}.md`), 'utf8');
+    const rendered = renderHomeNavigation(source, navigation[target]);
+    const entries = [...rendered.matchAll(/^- \[([^\]]+)\]\(([^)]+)\)$/gm)]
+      .map((match) => ({ text: match[1], link: match[2] }));
+    assert.deepEqual(entries, navigation[target]);
+    assert.doesNotMatch(rendered, /docs-site-navigation/);
+  }
+});
+
+test('site navigation rejects a missing target and root homes require one marker', async (context) => {
+  const siteRoot = await mkdtemp(join(tmpdir(), 'docs-navigation-'));
+  context.after(() => rm(siteRoot, { recursive: true, force: true }));
+  await mkdir(resolve(siteRoot, '.vitepress'));
+  await writeFile(
+    resolve(siteRoot, '.vitepress/navigation.internal.json'),
+    JSON.stringify([]),
+    'utf8'
+  );
+  await assert.rejects(
+    readNavigation('internal', { siteRoot }),
+    /navigation\.internal must be a non-empty array/
+  );
+  assert.throws(
+    () => renderHomeNavigation('# Home\n', [{ text: '产品', link: '/product/' }]),
+    /must contain exactly one/
+  );
+});
+
+test('VitePress configs consume the shared target navigation definition', async () => {
+  for (const target of ['public', 'internal']) {
+    const config = await readFile(
+      resolve(SITE_SOURCE, `.vitepress/config.${target}.ts`),
+      'utf8'
+    );
+    assert.match(config, new RegExp(`import navigation from ['"]\\.\\/navigation\\.${target}\\.json['"]`));
+    assert.match(config, /nav:\s*navigation/);
+    assert.doesNotMatch(config, /nav:\s*\[/);
+  }
+});
+
+test('root and section homes hide the document outline', async () => {
+  for (const path of [
+    'index.public.md', 'index.internal.md', 'standards/index.md', 'product/index.md',
+    'manual/index.md', 'design/index.md', 'api/index.md', 'database/index.md',
+    'ops/index.md', 'release-notes/index.md'
+  ]) {
+    const source = await readFile(resolve(SITE_SOURCE, path), 'utf8');
+    assert.equal(matter(source).data.aside, false, path);
+  }
+});
+
+test('theme fixes a centered documentation frame below the top navigation', async () => {
+  const css = await readFile(resolve(SITE_SOURCE, '.vitepress/theme/custom.css'), 'utf8');
+  assert.match(css, /--docs-layout-max-width:\s*1440px/);
+  assert.match(css, /--docs-sidebar-width:\s*240px/);
+  assert.match(css, /--docs-outline-width:\s*224px/);
+  assert.match(css, /\.VPNavBar\.has-sidebar[\s\S]*background-color:\s*var\(--vp-nav-bg-color\)/);
+  assert.match(css, /\.VPSidebar[\s\S]*left:\s*max\(0px,[\s\S]*docs-layout-max-width/);
+  assert.match(css, /#VPContent\.has-sidebar[\s\S]*margin:[^;]*auto[\s\S]*max-width:\s*var\(--docs-layout-max-width\)/);
+  assert.match(css, /\.VPDoc\.has-sidebar:not\(\.has-aside\)/);
+  assert.match(css, /\.VPDoc\.has-sidebar\.has-aside/);
+  assert.match(css, /:has\(\.VPDocAsideOutline\.has-outline\)/);
 });
 
 test('attachChildLifecycle closes the watcher and propagates the child exit code', () => {

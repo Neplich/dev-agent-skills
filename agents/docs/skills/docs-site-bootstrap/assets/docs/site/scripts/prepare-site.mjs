@@ -3,7 +3,9 @@ import { cp, lstat, mkdir, realpath, rename, rm, stat } from 'node:fs/promises';
 import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import fg from 'fast-glob';
-import { collectMarkdown, visibleFor } from './lib/pages.mjs';
+import {
+  collectMarkdown, readNavigation, renderHomeNavigation, visibleFor
+} from './lib/pages.mjs';
 import {
   GENERATED_ROOT, NAV_ROOT, SITE_ROOT, readText, validatePathInside, writeText
 } from './lib/paths.mjs';
@@ -151,6 +153,7 @@ export async function replaceGeneratedDirectory(output, build) {
 export async function prepareSite(target) {
   if (!TARGETS.has(target)) throw new Error('Target must be public or internal');
   await validateGeneratedRoot(GENERATED_ROOT, SITE_ROOT);
+  const navigation = await readNavigation(target);
   await prepareNav();
   const output = resolve(GENERATED_ROOT, target);
   await replaceGeneratedDirectory(output, async (staging) => {
@@ -162,7 +165,7 @@ export async function prepareSite(target) {
       includedPages.push(page);
     }
     const home = resolve(SITE_ROOT, `index.${target}.md`);
-    const homeSource = await readText(home);
+    const homeSource = renderHomeNavigation(await readText(home), navigation);
     await writeText(resolve(staging, 'index.md'), homeSource);
     includedPages.push({ relativePath: `index.${target}.md`, source: homeSource });
 
@@ -178,6 +181,7 @@ export async function prepareSite(target) {
     const referenced = await referencedAssets(includedPages);
     const vitepressAssets = await fg([
     '.vitepress/config.shared.ts', `.vitepress/config.${target}.ts`,
+    `.vitepress/navigation.${target}.json`,
     '.vitepress/theme/**'
   ], {
     cwd: SITE_ROOT,

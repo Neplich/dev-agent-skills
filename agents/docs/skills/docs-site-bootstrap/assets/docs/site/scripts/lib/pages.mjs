@@ -15,6 +15,34 @@ export const IGNORE_GLOBS = [
   '**/.meta/**', '**/.generated/**', '**/.vitepress/cache/**',
   '**/.vitepress/dist/**', '**/node_modules/**'
 ];
+export const HOME_NAVIGATION_MARKER = '<!-- docs-site-navigation -->';
+
+export async function readNavigation(target, { siteRoot = SITE_ROOT } = {}) {
+  if (!['public', 'internal'].includes(target)) {
+    throw new Error('navigation target must be public or internal');
+  }
+  const source = await readText(resolve(siteRoot, `.vitepress/navigation.${target}.json`));
+  const entries = JSON.parse(source);
+  if (!Array.isArray(entries) || entries.length === 0) {
+    throw new Error(`navigation.${target} must be a non-empty array`);
+  }
+  for (const [index, entry] of entries.entries()) {
+    if (!entry || typeof entry.text !== 'string' || !entry.text.trim()
+      || typeof entry.link !== 'string' || !/^\/[\w/-]*\/$/.test(entry.link)) {
+      throw new Error(`navigation.${target}[${index}] must define text and a root-relative link`);
+    }
+  }
+  return entries;
+}
+
+export function renderHomeNavigation(source, entries) {
+  const markerCount = source.split(HOME_NAVIGATION_MARKER).length - 1;
+  if (markerCount !== 1) {
+    throw new Error(`home page must contain exactly one ${HOME_NAVIGATION_MARKER} marker`);
+  }
+  const list = entries.map(({ text, link }) => `- [${text}](${link})`).join('\n');
+  return source.replace(HOME_NAVIGATION_MARKER, list);
+}
 
 export function routeFor(relativePath) {
   const value = toPosix(relativePath).replace(/\.md$/i, '');

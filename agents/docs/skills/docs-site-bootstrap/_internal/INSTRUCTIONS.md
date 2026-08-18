@@ -21,7 +21,7 @@ issue #122 的 change-map 工具链。
 
 ## 2. 完整 Inventory
 
-静态 inventory 是下方资产索引中的 42 个文件。另加一个仅运行时目标：
+静态 inventory 是下方资产索引中的 44 个文件。另加一个仅运行时目标：
 
 - `docs/site/.meta/bootstrap-manifest.json`
 
@@ -128,6 +128,8 @@ manifest 形状如下；`createdAt` 只在首次创建时写入，zero-change �
 | `assets/docs/site/.vitepress/config.shared.ts` | `docs/site/.vitepress/config.shared.ts` |
 | `assets/docs/site/.vitepress/config.public.ts` | `docs/site/.vitepress/config.public.ts` |
 | `assets/docs/site/.vitepress/config.internal.ts` | `docs/site/.vitepress/config.internal.ts` |
+| `assets/docs/site/.vitepress/navigation.public.json` | `docs/site/.vitepress/navigation.public.json` |
+| `assets/docs/site/.vitepress/navigation.internal.json` | `docs/site/.vitepress/navigation.internal.json` |
 | `assets/docs/site/.vitepress/theme/index.ts` | `docs/site/.vitepress/theme/index.ts` |
 | `assets/docs/site/.vitepress/theme/Mermaid.vue` | `docs/site/.vitepress/theme/Mermaid.vue` |
 | `assets/docs/site/.vitepress/theme/custom.css` | `docs/site/.vitepress/theme/custom.css` |

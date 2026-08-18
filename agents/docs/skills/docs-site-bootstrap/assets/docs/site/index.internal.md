@@ -8,6 +8,7 @@ owners:
 related_code:
   - docs/site
 last_verified_version: unverified
+aside: false
 ---
 
 # 内部正式文档
@@ -17,11 +18,4 @@ last_verified_version: unverified
 
 ## 内容入口
 
-- [文档规范](/standards/)
-- [产品说明](/product/)
-- [操作手册](/manual/)
-- [系统设计](/design/)
-- [API 文档](/api/)
-- [数据库](/database/)
-- [运维](/ops/)
-- [发布说明](/release-notes/)
+<!-- docs-site-navigation -->
