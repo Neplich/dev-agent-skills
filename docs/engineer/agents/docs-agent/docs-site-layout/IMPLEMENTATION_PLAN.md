@@ -1,8 +1,8 @@
 ---
 title: "Docs Site Kimi Layout 实施计划"
 type: IMPLEMENTATION_PLAN
-version: "0.3.0"
-status: Approved
+version: "0.3.1"
+status: Pending Confirmation
 author: "Neplich Codex"
 date: "2026-08-19"
 last_updated: "2026-08-19"
@@ -11,9 +11,13 @@ feature_path: "agents/docs-agent/docs-site-layout"
 parent_feature: "agents/docs-agent"
 feature_level: "3"
 implementation_scope: "docs-site-kimi-layout"
+previous_plan_archive: "docs/engineer/agents/docs-agent/docs-site-layout/archive/IMPLEMENTATION_PLAN-docs-site-layout.md"
 related_prd: "docs/pm/agents/docs-agent/docs-site-layout/PRD.md"
 related_trd: "docs/engineer/agents/docs-agent/docs-site-layout/TRD.md"
 changelog:
+  - version: "0.3.1"
+    date: "2026-08-19"
+    changes: "补充上一轮归档计划链接并对齐活跃计划状态契约"
   - version: "0.3.0"
     date: "2026-08-19"
     changes: "无目录页面补 256px 空目录列保持正文居中"
