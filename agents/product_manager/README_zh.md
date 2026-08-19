@@ -1,6 +1,6 @@
 # Product Manager Agent
 
-`pm-agent` 是产品角色的 dispatcher skill，负责把需求、项目状态、竞品、路线图和发布沟通类请求路由到合适的 PM specialist skill。它面向文档化产出，不直接进入代码实现。
+`pm-agent` 是产品角色的 dispatcher skill，负责把需求、项目状态、竞品、路线图和发布沟通类请求路由到合适的 PM specialist skill。面向真实读者的文档还可以共同加载 `human-writing`。PM 负责文档化产出，不直接进入代码实现。
 
 > [!NOTE]
 > 仓库架构与文档归属见 [Architecture](../../docs/architecture.md) 和 [Documentation Governance](../../docs/AGENTS.md)。
@@ -15,7 +15,7 @@
 | 项目 | 内容 |
 | --- | --- |
 | 入口 skill | `pm-agent` |
-| Specialist skills | 7 个 |
+| 附加 skills | 8 个：7 个 PM specialist 加 `human-writing` |
 | 主要输入 | 用户想法、本地 `docs/`、代码库现状、GitHub Issues / PRs / Milestones / Releases |
 | 主要输出 | `docs/pm/{feature_path}/`、`docs/roadmap.md`、`docs/changelog/changelog-v{version}.md` |
 | 下游协作 | `designer-agent`、`engineer-agent`、`qa-agent`、`devops-agent`、`security-agent`、`docs-agent` |
@@ -32,6 +32,7 @@
 | `github-release-gen` | 已确认站内版本说明和发版审计后的 GitHub Release 工作 | 可追溯预览或 draft；实际 tag 与 post-tag 审计通过后经批准发布 |
 | `roadmap-gen` | milestone、issue、版本计划整理 | `docs/roadmap.md` |
 | `github-reader` | 项目状态、backlog、PR 队列、release blocker | GitHub 项目健康报告 |
+| `human-writing` | 与主文档 Skill 共同生成自然、面向读者的正文 | 保留事实和交付规则的主任务文档 |
 
 ## 路由规则
 
@@ -47,6 +48,7 @@
   `docs-agent:release-notes-gen`
 - 路线图、milestone 规划：使用 `roadmap-gen`
 - GitHub 项目状态、PR/Issue 队列、release blocker：使用 `github-reader`
+- 面向真实读者的正文：保留已选择的主 Skill，同时加载 `human-writing`；它不是替代路由，也不是单独的润色阶段
 - 明确要求只读、不修复的缺陷诊断：分类为 `bug_report`，携带
   `mode: diagnosis_only` 与 `allowed_mutations: none` 交给 Engineer；普通修复仍需先对齐预期行为
 
@@ -60,6 +62,7 @@ flowchart LR
     PM --> Spec["idea-to-spec"]
     PM --> GitHub["github-reader"]
     PM --> Release["changelog / GitHub Release"]
+    PM -. "面向读者的正文" .-> Writing["human-writing"]
     Spec --> Designer["designer-agent"]
     Spec --> Engineer["engineer-agent"]
 ```

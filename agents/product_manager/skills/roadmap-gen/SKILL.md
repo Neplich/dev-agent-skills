@@ -12,6 +12,13 @@ This skill has two modes:
 1. **Generate**: create a fresh roadmap from current GitHub state
 2. **Update**: read existing `docs/roadmap.md`, sync with latest GitHub data, preserve manual annotations
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Roadmap Classification
 
 Classify roadmap position from milestone semantics, dependencies, release

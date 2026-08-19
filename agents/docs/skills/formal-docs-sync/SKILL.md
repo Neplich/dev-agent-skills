@@ -11,6 +11,13 @@ formal documentation site. This file owns only the entry gate and mode
 selection. After they pass, load `_internal/INSTRUCTIONS.md`; that entry tells
 you which single type module to load for each target page.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Mode Checkpoint
 
 Resolve the active installed `formal-docs-sync` skill directory and load its

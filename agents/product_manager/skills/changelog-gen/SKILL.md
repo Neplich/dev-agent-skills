@@ -16,6 +16,13 @@ Classify by semantic impact after stripping the prefix: a breaking redesign of
 existing behavior belongs under `Changed` even when its source title uses
 `feat` or another additive prefix.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Modes
 
 Choose the mode based on what the user asks for:

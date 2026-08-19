@@ -11,6 +11,13 @@ read-only evidence without mutation, while `repair` aligns expected behavior,
 reproduces the failure, analyzes the root cause, obtains repair-plan
 confirmation, then fixes minimally and verifies.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mode Selection
 
 Select the mode before applying the repair checkpoint:

@@ -13,6 +13,13 @@ before code exploration. Treat `unverified` as low-trust navigation only,
 verify every behavior claim against code or executable evidence, and preserve
 the document/code difference in the exploratory report.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Shared QA Directory Contract
 
 For E2E or feature-scoped QA, use the function-tree directory as durable QA

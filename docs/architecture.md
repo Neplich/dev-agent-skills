@@ -35,6 +35,24 @@ Router 只拥有入口凭据、路由表、阻塞条件和 Specialist 指针。S
 文档消费契约只在 `agents/product_manager/skills/idea-to-spec/_internal/_shared/`
 人工维护一次；六个下游插件消费生成的本地副本。
 
+## 面向读者的写作组合层
+
+`human-writing` 位于 PM 插件，但保持独立 Skill。任一 Router 选定会生成读者向正文的
+主 Specialist 后，按注册名共同加载它；每个 Specialist 也保留同一触发条件，直接调用时
+不依赖 Router。两个 Skill 在同一上下文中共同产出文档，不交接草稿，也不增加后处理阶段。
+
+```mermaid
+flowchart LR
+    U["用户请求"] --> R["Router 或直接调用"]
+    R --> P["主 Specialist\n事实、结构、路径、验证"]
+    R -. "读者向正文" .-> H["human-writing\n读者视角、顺序、表达"]
+    P --> A["同一份 artifact"]
+    H --> A
+```
+
+代码、配置、schema、lockfile 和数据输出不触发该组合层。主 Specialist 的 entry gate、
+事实归属、产物路径、验证和 closeout 保持不变。
+
 ## 仓库布局
 
 ```text

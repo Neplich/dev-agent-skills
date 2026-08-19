@@ -5,20 +5,34 @@ feature: "agent-pm-agent"
 feature_path: "agents/pm-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.1.1"
+child_features:
+  - "agents/pm-agent/skills/changelog-gen"
+  - "agents/pm-agent/skills/competitive-brief"
+  - "agents/pm-agent/skills/feature-catalog"
+  - "agents/pm-agent/skills/github-reader"
+  - "agents/pm-agent/skills/github-release-gen"
+  - "agents/pm-agent/skills/human-writing"
+  - "agents/pm-agent/skills/idea-to-spec"
+  - "agents/pm-agent/skills/pm-agent"
+  - "agents/pm-agent/skills/roadmap-gen"
+version: "1.2.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-06"
+last_updated: "2026-08-19"
 generated_by: "prd-gen"
 related_docs:
   - "agents/product_manager/README.md"
   - "agents/product_manager/README_zh.md"
   - ".claude-plugin/marketplace.json"
   - "agents/product_manager/skills/pm-agent/SKILL.md"
+  - "docs/pm/agents/pm-agent/skills/human-writing/PRD.md"
   - "skills-lock.json"
   - "agents/product_manager/test/pm-agent/evals/evals.json"
 changelog:
+  - version: "1.2.0"
+    date: "2026-08-19"
+    changes: "登记 human-writing 子功能与面向读者的辅助写作能力"
   - version: "1.1.1"
     date: "2026-06-23"
     changes: "Clarified feature_path routing as multi-level"
@@ -42,6 +56,7 @@ changelog:
 2. 保持 route matrix 与 README、dispatcher `SKILL.md`、marketplace 和 skill 目录一致。
 3. 在需要跨角色协作时说明 owning agent、输入包和期望产物。
 4. 支持后续维护者通过 related docs 和 eval fixture 追踪行为漂移。
+5. 为面向真实读者的文档按需共同加载独立写作能力，同时保留主 Skill 的事实和交付契约。
 
 ## 非目标
 
@@ -64,6 +79,7 @@ changelog:
 | US-A01 | 作为用户，我想通过 `pm-agent` 进入产品需求、范围收敛、项目状态、竞品、路线图和发布沟通流程，以便获得最小足够的 specialist 处理。 | P0 | 给定匹配请求，输出一个主 route、选择理由和下一步产物。 |
 | US-A02 | 作为维护者，我想确认 route matrix 不自路由、不全量执行，以便和 eval 保持一致。 | P0 | 流程图只从 dispatcher 指向 specialist：`idea-to-spec`, `competitive-brief`, `changelog-gen`, `github-release-gen`, `roadmap-gen`, `github-reader`。 |
 | US-A03 | 作为下游 Agent，我想收到明确 handoff，以便继续工作时不重猜上下文。 | P1 | handoff 包含 target、source docs、blocked reason 或 expected output。 |
+| US-A04 | 作为文档读者，我希望生成内容按我的任务组织，而不是暴露 Agent 的执行过程。 | P0 | 面向读者的文档生成可共同加载 `human-writing`，且不改变主 Skill 的事实、流程和格式。 |
 
 ## 功能需求
 
@@ -75,6 +91,7 @@ changelog:
 | FR-A03 | Artifact Ownership | 下游 specialist 拥有具体产物写入和验证责任；PM 主输出路径必须覆盖 `docs/pm/{feature_path}/`、`docs/roadmap.md` 和 `docs/changelog/changelog-v{version}.md`。站内 Release Notes 归 `docs-agent:release-notes-gen`（`docs/site/release-notes/`），PM 侧 `github-release-gen` 只消费已确认的版本事实。 | P0 | Dispatcher 输出预期产物路径和类型，不伪装成 specialist report。 |
 | FR-A04 | Handoff | UI/UX 产物交给 designer-agent；PM 范围稳定后通过 engineer-agent:trd-gen 进入工程；非 PM 范围按 owning agent 转交。 | P0 | Handoff 指向 owning skill/agent，并说明输入包、`feature_path` 证据和期望输出。 |
 | FR-A05 | Feature Path Routing | 当请求需要 PRD/DECISIONS/design.md 时，PM 入口必须把请求交给 `idea-to-spec` 解析合法多级 `feature_path`。 | P0 | 子功能不直接生成并列顶层 PM 目录；父功能不清楚时 blocked 或澄清。 |
+| FR-A06 | Writing Composition | 当目标是生成或实质更新面向真实读者的文档时，可在主文档 Skill 之外共同加载独立 `human-writing`；它只负责读者视角、组织和表达。 | P0 | `human-writing` 不成为主 route、不接管事实或 artifact owner，也不形成后处理消费链。 |
 
 ## 当前实现对齐
 
@@ -88,6 +105,12 @@ changelog:
 | `github-release-gen` | 站内 Release Notes 与审计门禁完成后的 GitHub Release preview、draft、publish |
 | `roadmap-gen` | roadmap、milestone、version planning、后续优先级同步 |
 | `github-reader` | GitHub repo health、issue/PR/milestone/backlog/release blockers |
+
+### 辅助能力
+
+| Capability | Current Implementation Trigger |
+| --- | --- |
+| `human-writing` | 生成或实质更新面向真实读者的文档，或用户直接要求改写、润色、去除机器感；与主 Skill 共同加载，不作为替代 route |
 
 ## 验收标准
 

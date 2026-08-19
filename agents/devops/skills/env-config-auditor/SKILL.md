@@ -8,6 +8,13 @@ visibility: internal
 
 Validate environment configuration completeness and security across all deployment environments.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Environment Evidence
 
 Build a per-environment and per-runtime-variant matrix covering DNS/TLS,

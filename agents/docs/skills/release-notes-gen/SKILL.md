@@ -12,6 +12,13 @@ the host release metadata and indexes and runs the host documentation checks.
 This file owns the entry, feature-scope, confirmation, and role-boundary gates.
 Load `_internal/INSTRUCTIONS.md` only after the entry basis is complete.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Release-Notes Checkpoint
 
 An ambiguous or unconfirmed version returns to `pm-agent`; a missing site or

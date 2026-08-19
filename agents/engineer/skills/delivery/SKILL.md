@@ -8,6 +8,13 @@ visibility: internal
 
 Manage the Git workflow for delivering completed code: branch creation, meaningful commits, PR creation with proper references, and CI status verification.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Delivery Checkpoint
 
 Before mutating Git, verify that the working tree contains the claimed scoped

@@ -4,6 +4,13 @@ description: "Audit dependencies for vulnerabilities, abandonment, licensing, pr
 visibility: internal
 ---
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Evidence Escalation
 
 Explicitly record mapped-document freshness; `unverified` is low-trust

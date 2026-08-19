@@ -10,6 +10,13 @@ Initializes a host repository's formal documentation foundation under the fixed
 root `docs/site/`. This file owns the entry, opt-in, idempotency, and conflict
 gates. Load `_internal/INSTRUCTIONS.md` only after every gate below passes.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Bootstrap Decision
 
 Resolve the complete authoritative asset inventory before writing. If any

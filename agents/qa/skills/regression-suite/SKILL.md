@@ -8,6 +8,13 @@ visibility: internal
 
 Verify that a fix actually resolves the original failure and that nearby surfaces still behave correctly. This skill is about fix verification plus adjacent risk review, not replaying one bug in isolation.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Shared QA Directory Contract
 
 For E2E or feature-scoped regression work, prefer the function-tree directory as
