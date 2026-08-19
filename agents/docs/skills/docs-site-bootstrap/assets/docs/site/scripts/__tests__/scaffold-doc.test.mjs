@@ -822,22 +822,26 @@ test('root and section homes hide the document outline', async () => {
   }
 });
 
-test('theme fixes a centered documentation frame below the top navigation', async () => {
+test('theme preserves colors and Mermaid while reserving the empty outline column', async () => {
   const css = await readFile(resolve(SITE_SOURCE, '.vitepress/theme/custom.css'), 'utf8');
-  assert.match(css, /--docs-layout-max-width:\s*1440px/);
-  assert.match(css, /--docs-sidebar-width:\s*240px/);
-  assert.match(css, /--docs-content-column-width:\s*752px/);
-  assert.match(css, /--docs-outline-width:\s*224px/);
-  assert.match(css, /--docs-outline-column-width:\s*256px/);
-  assert.match(css, /\.VPNav\s*\{[^}]*z-index:\s*var\(--vp-z-index-nav\)/);
-  assert.match(css, /\.VPSidebar\s*\{[^}]*z-index:\s*var\(--vp-z-index-sidebar\)/);
-  assert.match(css, /\.VPNavBar\.has-sidebar[\s\S]*background-color:\s*var\(--vp-nav-bg-color\)/);
-  assert.match(css, /\.VPSidebar[\s\S]*left:\s*max\(0px,[\s\S]*docs-layout-max-width/);
-  assert.match(css, /#VPContent\.has-sidebar[\s\S]*margin:[^;]*auto[\s\S]*max-width:\s*var\(--docs-layout-max-width\)/);
-  assert.match(css, /\.VPDoc\.has-sidebar:not\(\.has-aside\)/);
-  assert.match(css, /\.VPDoc\.has-sidebar\.has-aside/);
-  assert.match(css, /\.VPDoc\.has-sidebar:not\(\.has-aside\) \.container\s*\{[^}]*justify-content:\s*flex-start[^}]*max-width:\s*calc\(var\(--docs-content-column-width\) \+ var\(--docs-outline-column-width\)\)/);
-  assert.match(css, /:has\(\.VPDocAsideOutline\.has-outline\)/);
+  assert.match(css, /--vp-c-brand-1:\s*#2563eb/);
+  assert.match(css, /--vp-c-brand-2:\s*#1d4ed8/);
+  assert.match(
+    css,
+    /\.VPDoc\.has-sidebar:not\(\.has-aside\) \.content-container\s*\{\s*max-width:\s*688px;/
+  );
+  assert.match(
+    css,
+    /\.VPDoc\.has-sidebar:not\(\.has-aside\) > \.container::after\s*\{\s*content:\s*"";\s*order:\s*2;\s*flex:\s*0 0 256px;/
+  );
+  assert.equal((css.match(/\.VPDoc/g) ?? []).length, 2);
+  assert.match(css, /\.mermaid-diagram\s*\{/);
+  assert.match(css, /\.mermaid-diagram svg\s*\{/);
+  assert.match(css, /\.mermaid-diagram--error\s*\{/);
+  assert.doesNotMatch(css, /--docs-/);
+  assert.doesNotMatch(css, /--vp-(?:layout-max-width|sidebar-width)/);
+  assert.doesNotMatch(css, /\.(?:VPNav|VPNavBar|VPSidebar)\b/);
+  assert.doesNotMatch(css, /#VPContent\b/);
 });
 
 test('attachChildLifecycle closes the watcher and propagates the child exit code', () => {

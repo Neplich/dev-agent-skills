@@ -1,11 +1,11 @@
 ---
 title: "Docs Site Layout TRD"
 type: TRD
-version: "0.1.0"
+version: "0.4.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-18"
-last_updated: "2026-08-18"
+last_updated: "2026-08-19"
 feature: "docs-site-layout"
 feature_path: "agents/docs-agent/docs-site-layout"
 parent_feature: "agents/docs-agent"
@@ -15,6 +15,15 @@ related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/303"
   - "https://github.com/Neplich/dev-agent-skills/issues/304"
 changelog:
+  - version: "0.4.0"
+    date: "2026-08-19"
+    changes: "无目录页面使用 256px 空目录占位列保持正文居中"
+  - version: "0.3.0"
+    date: "2026-08-19"
+    changes: "为无右侧目录页面补充与 Kimi 一致的 688px 正文阅读列"
+  - version: "0.2.0"
+    date: "2026-08-19"
+    changes: "撤销自定义栏位覆盖，采用 Kimi 文档站的 VitePress 默认骨架并保留配色"
   - version: "0.1.0"
     date: "2026-08-18"
     changes: "定义双站点导航来源、页面骨架、固定列宽、层级和验证设计"
@@ -24,10 +33,9 @@ changelog:
 
 ## 1. 来源与范围
 
-本 TRD 将已批准的同路径 PRD、issue #303/#304 和维护者确认的布局数值转换为
-`docs-site-bootstrap` 工程设计。变更为 `change_type: modify`、
-`change_tier: major`：修改 Skill 交付的站点资产、Bootstrap inventory、测试与
-lock hash，但不改变发现描述、路由、注册、宿主 CI 或依赖。
+本 TRD 将已批准的同路径 PRD 转换为 `docs-site-bootstrap` 工程设计。变更为
+`change_type: modify`、`change_tier: major`：修改 Skill 交付的主题资产、测试与
+lock hash，但不改变导航、页面内容、发现描述、路由、注册、宿主 CI 或依赖。
 
 ## 2. 技术概览
 
@@ -37,13 +45,14 @@ flowchart LR
     NI["navigation.internal.json"] --> CI["Internal 顶部导航与根首页"]
     P["根页与一级分区页 aside:false"] --> S["文档页骨架"]
     H["具体文档 h2/h3"] --> O["右侧本页目录"]
-    L["固定 CSS 尺寸与层级"] --> S
-    L --> O
+    V["VitePress 1.6.4 默认主题"] --> S
+    V --> O
+    C["品牌色与 Mermaid 样式"] --> S
 ```
 
-实现沿用 VitePress 1.6.4 默认主题 DOM、断点和移动端交互。两套入口分别由目标
-专属 JSON 提供；页面用 frontmatter 和主题现有 outline class 区分；桌面尺寸集中在
-`custom.css`。
+实现使用 VitePress 1.6.4 默认主题的桌面栏位、层级、断点和移动端交互。两套入口
+继续由目标专属 JSON 提供；页面用 frontmatter 区分目录状态；`custom.css` 保留
+品牌色和 Mermaid 样式，并只限制无右侧目录页面的正文阅读列。
 
 ## 3. 组件与路径
 
@@ -55,9 +64,8 @@ flowchart LR
 | `scripts/lib/pages.mjs` | 校验 JSON，按 marker 确定性渲染 Markdown 列表 | #303 |
 | `scripts/prepare-site.mjs` | 为目标首页渲染入口并复制 JSON 到生成树 | #303 |
 | 八个一级分区 `index.md` | 显式设 `aside: false` | #304 |
-| `.vitepress/theme/custom.css` | 固定宽度、居中、空目录隐藏和顶部/侧栏层级 | #304 |
-| `scripts/__tests__/scaffold-doc.test.mjs` | 增补导航、首页、分区与 CSS 契约测试 | #303、#304 |
-| `_internal/INSTRUCTIONS.md` | inventory 从 42 更新为 44 并登记两份 JSON | Skill 同步契约 |
+| `.vitepress/theme/custom.css` | 无目录页限制正文为 688px，并补 256px 空目录列 | 用户确认 |
+| `scripts/__tests__/scaffold-doc.test.mjs` | 锁定正文宽度与空目录占位规则 | 用户确认 |
 | `skills-lock.json` | 刷新 `docs-site-bootstrap` hash | Skill 同步契约 |
 
 ## 4. 双站点导航契约
@@ -80,45 +88,49 @@ Sidebar 继续由 `SECTION_ORDER` 和页面可见性生成，其“文档规范�
 根首页和八个一级分区首页显式写入 `aside: false`。根首页没有 sidebar；一级分区
 首页仍命中现有 sidebar，因此使用“顶部栏 + 左侧栏 + 主内容”的文档页骨架。
 
-具体文档继续使用共享 `outline.level: [2, 3]`。1280px 以上仅当默认主题生成
-`.VPDocAsideOutline.has-outline` 时显示 aside；无可用 `h2/h3` 时通过 `:has()`
-隐藏空 aside，并回到无目录正文宽度。960–1279px 和移动端继续沿用 VitePress
-既有目录与折叠行为，不增加组件或断点。
+具体文档继续使用共享 `outline.level: [2, 3]`。一级分区首页通过 `aside: false`
+隐藏目录；其余目录显隐、宽度和折叠行为由 VitePress 默认主题处理。桌面断点下，
+只对 `.VPDoc.has-sidebar:not(.has-aside) .content-container` 设置 `max-width: 688px`，
+使无目录页面与 Kimi 的正文阅读列一致；960px 以下不覆盖流式宽度。1280px 以上在
+`.container::after` 渲染一个无内容的 256px flex 占位列，模拟缺省的右侧目录 box，
+让默认 flex 布局保持正文中心线；不新增 Vue 组件。
 
-## 6. 桌面布局契约
+## 6. 默认栏位与主题契约
 
-| 项目 | 数值 | CSS 落点 |
-| --- | ---: | --- |
-| 整体最大宽度 | 1440px | `--docs-layout-max-width` / `--vp-layout-max-width` |
-| 左侧栏 | 240px | `--docs-sidebar-width` / `--vp-sidebar-width` |
-| 正文内容 | 约 688px | 752px content 列扣除左右各 32px padding |
-| 目录可视内容 | 224px | `.aside-container` |
-| Aside 列 | 约 256px | 224px 内容加既有 32px 间距 |
+`.vitepress/theme/custom.css` 删除以下覆盖：
 
-桌面 `#VPContent.has-sidebar` 在 1440px 容器内居中，左栏从该容器左边界开始；
-超宽屏只增加外侧空白。无 aside 和有 aside 页面都保持约 752px content 列，避免
-拉宽正文。顶部栏高度继续取 `--vp-nav-height`；`.VPNav` 使用 nav 层级和不透明
-背景，`.VPSidebar` 使用 sidebar 层级，使顶部栏覆盖侧栏顶部区域并保持可点击。
+- `--docs-*` 布局变量，以及 `--vp-layout-max-width`、`--vp-sidebar-width` 覆盖；
+- `.VPNav`、`.VPNavBar.has-sidebar`、`.VPSidebar` 的背景、位置和层级覆盖；
+- `#VPContent.has-sidebar`、`.VPDoc`、`.container`、`.content` 和 `.aside` 的尺寸覆盖；
+- 依赖 `:has(.VPDocAsideOutline.has-outline)` 的自定义目录布局。
+
+删除后由 VitePress 默认主题负责顶部栏、侧栏、正文外层和目录的宽度、偏移、层级及
+断点。布局例外只有无目录正文的 `688px` 最大宽度和 1280px 以上的 256px 空目录列；
+不直接计算正文偏移，也不调整顶栏、侧栏、外层边距或层级。
+`--vp-c-brand-1: #2563eb`、`--vp-c-brand-2: #1d4ed8` 和全部 Mermaid 样式原样保留。
 
 ## 7. 验证策略
 
 Node 测试覆盖两套固定入口、JSON 反向场景、唯一 marker、生成首页逐项一致、根页
-和八个分区 `aside: false`，以及 1440/240/752/224/256 与关键层级选择器。
+和八个分区 `aside: false`。主题测试断言品牌色、Mermaid、无目录正文宽度和空目录列
+规则存在，并拒绝重新加入自定义栏位变量或 `.VPNav`、`.VPSidebar`、`#VPContent`
+以及其他 `.VPDoc` 布局规则。
 Public/internal build 证明 JSON 和主题进入两套生成树。
 
 真实 Chrome 在 1280×900、2560×1440 检查双站点 `/`、`/product/` 及 internal
-`/standards/doc-lifecycle`：测量整体、左栏、正文和目录，确认目录显隐、两侧空白、
-顶部导航点击、sidebar、目录、上一页/下一页。390px 仅做既有移动端折叠烟测。
+`/standards/doc-lifecycle`：确认顶部栏内容从左栏右侧开始、滚动条顶部完整可见，
+并检查顶部导航、sidebar、目录和上一页/下一页；同时确认无目录页面正文不超过
+688px、空目录占位为 256px，正文中心与屏幕中心偏差不超过 8px。
+390px 仅做移动端折叠烟测。
 
 ## 8. 影响面、禁改范围与风险
 
-代码与测试预计净增约 120–220 行，不新增依赖；三份文档预计约 250–350 行。只
-允许触碰组件表内当前 Skill 文件、`skills-lock.json` 和同 feature 三份文档。
+在已完成的默认骨架调整上再新增约 7 行 CSS、5 行测试和少量文档，不新增依赖。
+只允许触碰主题 CSS、对应测试、`skills-lock.json` 和同 feature 三份文档。
 禁止修改 marketplace、Router、其他 Skill、README、`AGENTS.md`、宿主 CI、
 `package.json`、`package-lock.json`、模板、脚手架和发布配置。`.generated/`、
 `node_modules/`、截图及临时服务文件不得提交。
 
-主要风险是 VitePress 类名或 `:has()` 关系变化，以及新 JSON 漏入 Bootstrap
-inventory。锁定 1.6.4，并以 Node 数值断言、双 build、真实浏览器测量、44 项
-inventory 与 Skill hash 检查共同阻塞漂移。既有宿主需按原冲突 gate 重新执行
-bootstrap；不得静默覆盖。当前无阻塞技术开放问题。
+主要风险是未来重新加入宿主级顶部栏覆盖。锁定 VitePress 1.6.4，并以默认栏位保护
+断言、双 build、真实浏览器检查和 Skill hash 阻塞漂移。既有宿主需按原冲突 gate
+重新执行 bootstrap 并明确合并 `custom.css`；不得静默覆盖。当前无阻塞技术开放问题。
