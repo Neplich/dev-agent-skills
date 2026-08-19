@@ -42,6 +42,7 @@ changelog:
 - 功能位置固定为 `agents/product_manager/skills/human-writing/`。
 - `human-writing` 是独立组合能力，随 PM 插件发布，不并入 `pm-agent`，不新增根 `/share`。
 - 第一批 Skill 本体与 PM 发现面已完成；本计划继续承接第二批周边引用适配。
+- 分批是撰写与确认顺序，不是提交边界：两批改动随同一 PR 一并交付，第 2 节的禁止清单只约束第二批相对第一批的增量改动。
 
 ## 2. 规模与边界
 
