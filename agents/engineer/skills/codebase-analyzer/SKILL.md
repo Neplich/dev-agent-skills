@@ -8,6 +8,13 @@ visibility: internal
 
 Scan an existing codebase and produce a structured Project Profile. This profile serves as context for all downstream engineer skills (feature-implementor, test-writer, etc.) so they can follow existing conventions.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## When to Use
 
 - Before starting any work on an existing project

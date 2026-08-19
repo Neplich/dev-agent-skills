@@ -8,6 +8,13 @@ visibility: internal
 
 Write tests based on PM Test Spec documents and implemented code. Identifies the project's testing framework and conventions, writes tests that verify the implementation meets acceptance criteria, and runs them to confirm they pass.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## When to Use
 
 - After `feature-implementor` completes a feature implementation

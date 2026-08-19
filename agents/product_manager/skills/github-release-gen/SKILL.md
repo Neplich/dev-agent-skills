@@ -30,6 +30,13 @@ applicability and degraded-gate rules take precedence over site-only wording in
 the references. All reference mutation, tag-safety, latest, prerelease, and
 readback protections remain in force on both paths.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Release Gate Summary
 
 Before any mutation, report the ordered authority chain and current state:

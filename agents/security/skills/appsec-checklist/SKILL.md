@@ -4,6 +4,13 @@ description: "Review application code for injection, XSS, auth bypass, secret ex
 visibility: internal
 ---
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Report And Escalation
 
 Write the Security-owned report under `docs/security/{feature_path}/` with

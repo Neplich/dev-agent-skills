@@ -4,13 +4,13 @@
     "name": "Neplich"
   },
   "metadata": {
-    "description": "PM-first agent skill marketplace with one public pm-agent entry and downstream PM-orchestrated engineering, QA, DevOps, design, security, and documentation capabilities",
+    "description": "PM-first agent skill marketplace with one public pm-agent entry, reader-facing human writing composition, and downstream PM-orchestrated engineering, QA, DevOps, design, security, and documentation capabilities",
     "version": "0.6.2"
   },
   "plugins": [
     {
       "name": "pm-agent",
-      "description": "Default entry plugin for product and engineering R&D requests when no other agent or skill is named. Explicitly naming pm-agent selects it even when a downstream capability is also named; naming another role agent or skill without pm-agent excludes pm-agent and leaves that capability to enforce its own gate. Routes product ideas, features, changes, bugs, implementation, testing, design, deployment, security, formal docs, delivery, planning, and repository status work.",
+      "description": "Default entry plugin for product and engineering R&D requests when no other agent or skill is named. Explicitly naming pm-agent selects it even when a downstream capability is also named; naming another role agent or skill without pm-agent excludes pm-agent and leaves that capability to enforce its own gate. Routes product ideas, features, changes, bugs, implementation, testing, design, deployment, security, formal docs, delivery, planning, and repository status work, with human-writing composition for reader-facing documents.",
       "source": "./agents/product_manager",
       "strict": true,
       "skills": [
@@ -21,7 +21,8 @@
         "./skills/changelog-gen",
         "./skills/github-release-gen",
         "./skills/roadmap-gen",
-        "./skills/github-reader"
+        "./skills/github-reader",
+        "./skills/human-writing"
       ]
     },
     {

@@ -10,6 +10,10 @@ visibility: internal
 the narrowest design skill while preserving the strict boundary that design
 stops at design handoff and does not continue into code.
 
+## Reader-Facing Writing Composition
+
+After selecting a Specialist, co-load `human-writing` for substantial reader-facing prose; it is not a route or later pass. The Specialist retains evidence, facts, structure, paths, gates, and verification. Skip code-, config-, schema-, lockfile-, and data-only output.
+
 ## Routing Decision
 
 Before producing design work, confirm the accepted entry basis, resolved

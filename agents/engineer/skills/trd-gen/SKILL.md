@@ -15,6 +15,13 @@ interface contracts or architecture decisions, it also owns
 confirmed Engineer document set to `feature-implementor` for an implementation
 plan and code execution.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Engineer-Document Checkpoint
 
 State that Engineer owns the TRD/API/ADR work, identify the confirmed PM entry

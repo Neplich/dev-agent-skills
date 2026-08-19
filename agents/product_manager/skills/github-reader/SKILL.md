@@ -12,6 +12,13 @@ This skill serves two purposes:
 1. **Direct answer**: respond to the user's question about the repo
 2. **Data feed**: provide structured input for downstream skills like `roadmap-gen` or `weekly-report`
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Status Shape
 
 Full status includes a milestone progress table with percentages, separate PR

@@ -5,7 +5,7 @@
 Multi-agent skills for the full software delivery lifecycle.
 
 [![Agents](https://img.shields.io/badge/agents-7-blue)](#agents)
-[![Skills](https://img.shields.io/badge/skills-39-green)](#agents)
+[![Skills](https://img.shields.io/badge/skills-40-green)](#agents)
 [![License](https://img.shields.io/badge/license-Apache%202.0-orange)](LICENSE)
 
 `pm-agent` • `designer-agent` • `engineer-agent` • `qa-agent` • `devops-agent` • `security-agent` • `docs-agent`
@@ -24,7 +24,7 @@ This repository publishes seven role-based agents from one marketplace/source, c
 It includes:
 
 - 1 public PM entry skill plus 6 downstream role routers
-- 32 internal specialist skills across product, engineering, QA, DevOps, design, security, and formal documentation work
+- 33 internal specialist and composition skills across product, engineering, QA, DevOps, design, security, and formal documentation work
 - Claude Code marketplace configuration
 - Codex native skill discovery installation instructions
 - Kimi Code native plugin manifest
@@ -103,7 +103,7 @@ Downstream role routers and specialist skills remain installed as PM-orchestrate
 
 | Agent | Focus | Skills | Invocation | Docs |
 | --- | --- | :---: | --- | --- |
-| `pm-agent` | Requirements, specs, competitor research, roadmap, gated GitHub Release generation, GitHub project status | 8 (`1 + 7`) | Direct entry: `/pm-agent` | [product_manager](./agents/product_manager/README.md) |
+| `pm-agent` | Requirements, specs, competitor research, roadmap, gated GitHub Release generation, GitHub project status, reader-facing human writing | 9 (`1 + 8`) | Direct entry: `/pm-agent` | [product_manager](./agents/product_manager/README.md) |
 | `designer-agent` | UX flows, information architecture, wireframes, visual systems, design handoff | 3 (`1 + 2`) | PM handoff only | [designer](./agents/designer/README.md) |
 | `engineer-agent` | Codebase analysis, TRD generation, feature implementation, tests, debugging, delivery | 7 (`1 + 6`) | PM handoff only | [engineer](./agents/engineer/README.md) |
 | `qa-agent` | Spec validation, exploratory testing, bug analysis, regression verification | 5 (`1 + 4`) | PM handoff only | [qa](./agents/qa/README.md) |

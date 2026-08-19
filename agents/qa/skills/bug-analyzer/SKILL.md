@@ -13,6 +13,13 @@ observed error message, stack trace, screenshot, console output, network
 evidence, trace, environment, and reproduction result. Missing evidence stays
 `missing` or `unavailable`; never omit the field or infer it existed.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Shared QA Directory Contract
 
 For feature-scoped E2E or reusable regression artifacts, prefer the function

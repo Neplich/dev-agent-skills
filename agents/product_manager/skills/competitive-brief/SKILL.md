@@ -17,6 +17,13 @@ Weaknesses, Objection Handling, Landmines to Set, Landmines to Defuse, Win/Loss
 Themes, Discovery Questions, Talk Track, and POC Guidance. Do not replace this
 page contract with a generic comparison narrative.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Trigger
 
 User runs `/competitive-brief` or asks for a competitive analysis, competitor research, or market comparison.

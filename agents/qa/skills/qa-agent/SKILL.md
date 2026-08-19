@@ -15,6 +15,10 @@ evidence outcome the user wants, the repository context available, and whether
 the work is documented acceptance, exploratory discovery, failure reproduction,
 or fix verification.
 
+## Reader-Facing Writing Composition
+
+After selecting a Specialist, co-load `human-writing` for substantial reader-facing prose; it is not a route or later pass. The Specialist retains evidence, facts, structure, paths, gates, and verification. Skip code-, config-, schema-, lockfile-, and data-only output.
+
 ## Routing Decision
 
 This router selects one primary QA specialist before any test artifact or

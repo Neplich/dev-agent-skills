@@ -10,6 +10,10 @@ visibility: internal
 based on whether the user needs broad application review, focused auth review,
 dependency risk analysis, or privacy/data-handling mapping.
 
+## Reader-Facing Writing Composition
+
+After selecting a Specialist, co-load `human-writing` for substantial reader-facing prose; it is not a route or later pass. The Specialist retains evidence, facts, structure, paths, gates, and verification. Skip code-, config-, schema-, lockfile-, and data-only output.
+
 ## Routing Decision
 
 Before any review, preserve the accepted security entry basis, selected specialist

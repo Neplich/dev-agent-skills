@@ -10,6 +10,13 @@ Generate deployment configurations for the confirmed target matrix. Local
 development, Docker containerization, and Kubernetes (Helm) orchestration are
 available targets, not defaults.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Deployment Matrix
 
 For each confirmed variant, record the complete unit chain: build target,

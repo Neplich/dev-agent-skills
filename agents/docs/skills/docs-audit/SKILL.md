@@ -11,6 +11,13 @@ pass followed by fact verification. This file owns the entry and release gates;
 load `_internal/INSTRUCTIONS.md` only after the entry basis and version baseline
 are resolved.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Audit Transaction
 
 Resolve the active installed `docs-audit` skill and load

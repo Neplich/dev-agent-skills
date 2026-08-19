@@ -91,6 +91,20 @@ exception for product feature work.
 For PM-owned work, immediately continue into the selected specialist. Do not
 stop at a meta-routing answer or ask the user to invoke a sub-skill manually.
 
+## Reader-Facing Writing Composition
+
+After selecting the primary owner, also load `human-writing` when the requested
+artifact contains substantial prose for real readers, including PRDs, product
+documents, briefs, changelogs, GitHub Release copy, handoff documents, and
+formal documentation routed to another role. The same Agent reads both Skills
+and produces one artifact; `human-writing` is not a primary route, consumer, or
+post-processing stage.
+
+The primary Skill continues to own evidence, facts, required structure,
+artifact paths, gates, and verification. `human-writing` only guides reader
+perspective, information order, paragraphs, and sentences. Do not load it for
+code-, config-, schema-, lockfile-, or data-only output.
+
 ## Downstream Routes
 
 | Request type or outcome | Owner | Ready condition |
@@ -173,6 +187,7 @@ scope and do not reopen settled decisions. If a handoff target skill or agent is
 - GitHub Release: `../github-release-gen/SKILL.md`
 - Roadmap: `../roadmap-gen/SKILL.md`
 - Repository status: `../github-reader/SKILL.md`
+- Reader-facing writing composition: `../human-writing/SKILL.md`
 
 ## Closeout
 

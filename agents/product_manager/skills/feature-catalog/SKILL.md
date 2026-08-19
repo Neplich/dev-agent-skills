@@ -18,6 +18,13 @@ get one confirmed feature map instead of ad-hoc names invented per request.
 
 Detailed execution guidance lives in `_internal/INSTRUCTIONS.md`.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Catalog Checkpoint
 
 Confirm repository/workspace scope before scanning a monorepo. If the requested

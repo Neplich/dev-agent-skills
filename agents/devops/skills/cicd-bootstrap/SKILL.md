@@ -8,6 +8,13 @@ visibility: internal
 
 Generate CI/CD pipeline configurations that automate testing, building, and deployment based on the deployment strategy (local/docker/helm).
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Automation Evidence
 
 When a change map exists, record the mapped documents read first, their

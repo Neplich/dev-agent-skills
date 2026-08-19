@@ -17,6 +17,13 @@ load `_internal/implementor/INSTRUCTIONS.md`. For self-review and closeout,
 load `_internal/reviewer/INSTRUCTIONS.md` and
 `_internal/_shared/output-conventions.md`.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Planning Checkpoint
 
 Before code or test changes, produce one observable checkpoint that:

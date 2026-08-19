@@ -11,6 +11,10 @@ request is about deployment setup, delivery automation, configuration
 governance, or operational readiness, then routes to the narrowest downstream
 DevOps skill.
 
+## Reader-Facing Writing Composition
+
+After selecting a Specialist, co-load `human-writing` for substantial reader-facing prose; it is not a route or later pass. The Specialist retains evidence, facts, structure, paths, gates, and verification. Skip code-, config-, schema-, lockfile-, and data-only output.
+
 ## Routing Decision
 
 Before any specialist work, preserve the accepted entry basis, selected DevOps

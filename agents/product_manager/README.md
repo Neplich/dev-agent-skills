@@ -1,6 +1,6 @@
 # Product Manager Agent
 
-`pm-agent` is the product-role dispatcher skill. It routes requirement shaping, project status, competitor research, roadmap, changelog, and release communication requests to the right PM specialist skill. It produces product documents and does not implement code.
+`pm-agent` is the product-role dispatcher skill. It routes requirement shaping, project status, competitor research, roadmap, changelog, and release communication requests to the right PM specialist skill. Reader-facing documents can also load `human-writing` as a composition capability. PM produces product documents and does not implement code.
 
 > [!NOTE]
 > Repository architecture and document ownership: [Architecture](../../docs/architecture.md) and [Documentation Governance](../../docs/AGENTS.md).
@@ -15,7 +15,7 @@
 | Item | Details |
 | --- | --- |
 | Entry skill | `pm-agent` |
-| Specialist skills | 7 |
+| Additional skills | 8: 7 PM specialists plus `human-writing` |
 | Main inputs | User ideas, local `docs/`, repository state, GitHub Issues / PRs / Milestones / Releases |
 | Main outputs | `docs/pm/{feature_path}/`, `docs/roadmap.md`, `docs/changelog/changelog-v{version}.md` |
 | Downstream agents | `designer-agent`, `engineer-agent`, `qa-agent`, `devops-agent`, `security-agent`, `docs-agent` |
@@ -32,6 +32,7 @@
 | `github-release-gen` | GitHub Release work after confirmed site Release Notes and release audits | Traceable preview or draft; approved publication after the tag and post-tag audit |
 | `roadmap-gen` | Milestones, issues, and version planning | `docs/roadmap.md` |
 | `github-reader` | Project status, backlog, PR queue, release blockers | GitHub project health report |
+| `human-writing` | Natural, reader-first prose composed with the primary document Skill | The primary artifact with facts and delivery rules preserved |
 
 ## Routing Rules
 
@@ -51,6 +52,8 @@ only after PM entry.
   `docs-agent:release-notes-gen`.
 - Roadmap and milestone planning: use `roadmap-gen`
 - GitHub project status, PR/Issue queues, release blockers: use `github-reader`
+- Reader-facing prose: keep the selected primary Skill and co-load
+  `human-writing`; it is not a replacement route or a separate polishing stage.
 - Explicit read-only bug diagnosis: classify as `bug_report` and hand off to
   Engineer with `mode: diagnosis_only` and `allowed_mutations: none`; ordinary
   repair requests still require expected-behavior alignment.
@@ -65,6 +68,7 @@ flowchart LR
     PM --> Spec["idea-to-spec"]
     PM --> GitHub["github-reader"]
     PM --> Release["changelog / GitHub Release"]
+    PM -. "reader-facing prose" .-> Writing["human-writing"]
     Spec --> Designer["designer-agent"]
     Spec --> Engineer["engineer-agent"]
 ```

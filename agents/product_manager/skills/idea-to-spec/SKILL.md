@@ -16,6 +16,13 @@ Always read `_internal/_shared/skill-map.md` before loading any other internal
 resource or assembling a handoff packet. Load only the narrowest internal
 `INSTRUCTIONS.md` needed for the current next step.
 
+## Reader-Facing Writing Composition
+
+For substantial reader-facing prose, co-load `human-writing` even on direct
+invocation; use the same context, not a later pass. This Skill retains evidence,
+facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+lockfile-, and data-only output.
+
 ## Mandatory Lane Checkpoint
 
 Resolve `_internal/_shared/skill-map.md` from the active installed
