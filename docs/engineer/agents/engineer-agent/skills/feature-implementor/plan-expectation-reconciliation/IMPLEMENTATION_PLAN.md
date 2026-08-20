@@ -12,6 +12,7 @@ feature_path: "agents/engineer-agent/skills/feature-implementor/plan-expectation
 parent_feature: "agents/engineer-agent/skills/feature-implementor"
 feature_level: "5"
 implementation_scope: "plan-expectation-reconciliation"
+change_tier: "major"
 related_prd: "docs/pm/agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation/PRD.md"
 related_trd: "docs/engineer/agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation/TRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/315"

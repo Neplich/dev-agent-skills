@@ -58,8 +58,8 @@ related_issue: "https://github.com/Neplich/dev-agent-skills/issues/316"
 | FR-003 | Independent Context | 自动审查者与撰写者不共享会话，只读产物及 PRD、DECISIONS、TRD 等上游文档。 | P0 | 同一会话自审不能形成有效批准凭据。 |
 | FR-004 | Explicit Boundaries | 自动审查 prompt 必须携带来自 PRD `non_goals` 的「有意不做」清单。 | P0 | 缺少该清单时不得按授权自动审查者放行。 |
 | FR-005 | Finding Severity | 每条发现必须标注 `P0`、`P1` 或 `P2`。 | P0 | 未定级发现不能参与收敛判定。 |
-| FR-006 | Convergence | 某轮零确认缺陷，或达到轮数上限且当轮无 `P1` 时，可以放行。 | P0 | 收敛结果能追溯到该轮发现列表。 |
-| FR-007 | Escalation | 达到轮数上限仍有未收敛 `P1` 时，转为一个待人工回答的问题。 | P0 | 自动审查者不得自行放行。 |
+| FR-006 | Convergence | 某轮零确认缺陷，或达到轮数上限且当轮无未解决 `P0` 或 `P1` 时，可以放行。 | P0 | 收敛结果能追溯到该轮发现列表。 |
+| FR-007 | Escalation | 达到轮数上限仍有未收敛 `P0` 或 `P1` 时，转为一个待人工回答的问题。 | P0 | 自动审查者不得自行放行。 |
 | FR-008 | Plan Baseline | 实施计划自动审查输入包含预期改动声明。 | P0 | 审查后的声明成为实施完成时预期与实际对账的基线。 |
 | FR-009 | TRD Criteria | TRD 自动审查只使用定性改动面清单。 | P0 | 清单覆盖涉及模块、数据结构变化和新增依赖；TRD 侧轮数上限给足。 |
 
@@ -73,9 +73,9 @@ flowchart TD
     D --> E["携带 non_goals 并将发现定级"]
     E --> F{"本轮是否收敛?"}
     F -->|零确认缺陷| G["形成批准凭据"]
-    F -->|达到上限且无 P1| G
+    F -->|达到上限且无 P0/P1| G
     F -->|仍可继续| D
-    F -->|达到上限且仍有 P1| H["升级为待人工回答的问题"]
+    F -->|达到上限且仍有 P0/P1| H["升级为待人工回答的问题"]
     C --> I["门禁放行或继续修订"]
     G --> I
     H --> C
@@ -100,7 +100,7 @@ flowchart TD
 | Constraint | 只有 handoff packet 显式声明 `authorized_auto_reviewer` 才能启用自动批准。 | 所有门禁先读取对应字段，缺省按 `user`。 |
 | Constraint | 计划层和 TRD 层分别授权。 | `plan_approval` 与 `trd_approval` 不互相继承。 |
 | Risk | 自动审查忽略 non-goals，误把有意不做判为缺陷。 | 缺少「有意不做」清单时不接受自动批准。 |
-| Risk | 轮数上限被误用为无条件放行。 | 上限轮仍有未收敛 `P1` 时强制升级人工问题。 |
+| Risk | 轮数上限被误用为无条件放行。 | 上限轮仍有未收敛 `P0` 或 `P1` 时强制升级人工问题。 |
 | Risk | TRD 审查套用实施层量化判据。 | 明确定性改动面、较低确定性和独立轮数要求。 |
 
 ## 依赖
