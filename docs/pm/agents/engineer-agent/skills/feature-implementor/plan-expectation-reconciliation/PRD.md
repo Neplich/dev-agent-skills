@@ -11,8 +11,13 @@ feature: "plan-expectation-reconciliation"
 feature_path: "agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation"
 parent_feature: "agents/engineer-agent/skills/feature-implementor"
 feature_level: "5"
+child_features: "N/A"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/315"
 related_trd: "docs/engineer/agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation/TRD.md"
+changelog:
+  - version: "0.1.0"
+    date: "2026-08-20"
+    changes: "初始版本：定义实施计划预期改动声明与收尾对账"
 ---
 
 # 实施计划预期改动声明与收尾对账 PRD

@@ -73,9 +73,10 @@ delivery:
    `estimate_wrong` deviations need only one closeout record and do not create
    an ADR.
 7. `scope_up` and `design_gap` default to `split_to_issue`. The new Issue must
-   record `parent_issue_id` pointing to the original Issue. Keep the deviation
-   in the current scope only when excluding it would make the confirmed scope
-   undeliverable, and record that resolution explicitly.
+   record `parent_issue_id` pointing to the original Issue. When the work did
+   not originate from an Issue, record `parent_issue_id: N/A`. Keep the
+   deviation in the current scope only when excluding it would make the
+   confirmed scope undeliverable, and record that resolution explicitly.
 8. Create an ADR for a material deviation decision when an accepted `scope_up`,
    a new dependency, a new abstraction layer, or a completed `design_gap`
    changes the technical design. Use the structured deviation frontmatter from

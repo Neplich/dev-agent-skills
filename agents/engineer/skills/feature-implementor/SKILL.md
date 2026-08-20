@@ -12,8 +12,11 @@ out the plan. This entry file owns the gates that must run immediately when the
 skill is triggered; execution details live in `_internal/`.
 
 Before plan confirmation, load only `_internal/planner/INSTRUCTIONS.md` plus
-`_internal/_shared/coding-rules.md`. After the user confirms the exact plan,
-load `_internal/implementor/INSTRUCTIONS.md`. For self-review and closeout,
+`_internal/_shared/coding-rules.md`. After the exact plan receives valid
+approval—user confirmation, or approval by an automated reviewer that meets the
+handoff contract's minimum requirements when the handoff packet explicitly sets
+`plan_approval: authorized_auto_reviewer`—load
+`_internal/implementor/INSTRUCTIONS.md`. For self-review and closeout,
 load `_internal/reviewer/INSTRUCTIONS.md` and
 `_internal/_shared/output-conventions.md`.
 

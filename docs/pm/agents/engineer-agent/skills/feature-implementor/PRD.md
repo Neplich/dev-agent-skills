@@ -5,11 +5,16 @@ feature: "skill-feature-implementor"
 feature_path: "agents/engineer-agent/skills/feature-implementor"
 parent_feature: "agents/engineer-agent/skills"
 feature_level: "4"
+child_features:
+  - "agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate"
+  - "agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate"
+  - "agents/engineer-agent/skills/feature-implementor/gate-approver-authorization"
+  - "agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation"
 version: "1.5.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-15"
+last_updated: "2026-08-20"
 generated_by: "prd-gen"
 related_docs:
   - "docs/pm/agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate/PRD.md"

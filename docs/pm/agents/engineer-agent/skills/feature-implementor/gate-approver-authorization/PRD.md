@@ -13,6 +13,10 @@ parent_feature: "agents/engineer-agent/skills/feature-implementor"
 feature_level: "5"
 child_features: "N/A"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/316"
+changelog:
+  - version: "0.1.0"
+    date: "2026-08-20"
+    changes: "初始版本：定义计划与 TRD 门禁批准者授权"
 ---
 
 # 计划与 TRD 门禁批准者授权 PRD

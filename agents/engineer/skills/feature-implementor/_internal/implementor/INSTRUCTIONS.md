@@ -98,7 +98,7 @@ If the build fails, fix it before moving to the next step.
 Track the evidence needed to update the confirmed `IMPLEMENTATION_PLAN.md` after
 implementation:
 
-- files created or modified
+- files created, modified, or deleted
 - actual file count and line-count magnitude
 - actual new dependency, configuration item, and abstraction or base-class counts
 - actual added-test count and its relationship to PRD acceptance points
