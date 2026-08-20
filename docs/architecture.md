@@ -41,11 +41,15 @@ Router 只拥有入口凭据、路由表、阻塞条件和 Specialist 指针。S
 主 Specialist 后，按注册名共同加载它；每个 Specialist 也保留同一触发条件，直接调用时
 不依赖 Router。两个 Skill 在同一上下文中共同产出文档，不交接草稿，也不增加后处理阶段。
 
+写作前先判断工作方式（创建、改写、审查）和修改范围（句子、单篇、文档集合、文档站）。
+`human-writing` 可以在授权范围内调整文档的现有分组与归类，但保留的始终是主 Specialist
+规定的必要结构与真实流程；权限、数据边界等高风险事实存在疑问时返回主 Specialist 核验。
+
 ```mermaid
 flowchart LR
     U["用户请求"] --> R["Router 或直接调用"]
-    R --> P["主 Specialist\n事实、结构、路径、验证"]
-    R -. "读者向正文" .-> H["human-writing\n读者视角、顺序、表达"]
+    R --> P["主 Specialist\n事实、必要结构、路径、验证"]
+    R -. "读者向正文" .-> H["human-writing\n读者视角、取舍、组织、表达"]
     P --> A["同一份 artifact"]
     H --> A
 ```

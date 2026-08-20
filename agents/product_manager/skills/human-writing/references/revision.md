@@ -17,6 +17,12 @@ explains how the Agent gathered or masked evidence, selected a Skill, passed a
 gate, prepared a handoff, or checked its own generation. Keep it when the actual
 reader is the maintainer or operator who performs that work.
 
+Also remove maintenance history, compatibility shims kept for old readers, and
+handoff narration that leaked into the body, unless the reader needs them.
+Watch for role generalization ("everyone can"), scope generalization ("works in
+all environments"), and idealized product claims that the evidence does not
+support.
+
 ## 3. Progress
 
 Mark each paragraph as fact, action, result, reason, distinction, constraint,
@@ -42,5 +48,21 @@ Preserve correct paragraphs and useful local voice. Do not add slang, fake
 uncertainty, first-person claims, metaphors, jokes, deliberate roughness, FAQs,
 summaries, or future outlook unless the reader needs them. Do not attach a
 writing score or list of removed AI phrases.
+
+## 6. Scope and Structure
+
+Confirm the actual change scope matches the request. A passage request should
+not have grown into a site rewrite; a site request should not have shrunk into
+rewording a few sentences.
+
+Check whether restraint hid a structural problem: if chapters are grouped by
+code module or authoring order instead of reader tasks, say so rather than
+polishing around it.
+
+After any restructuring, verify the content invariants: pages, images, steps,
+warnings, and recovery notes all survived, and no information was lost to
+reclassification. Then confirm whether the primary Skill still needs to run
+link, build, rendering, or independent review verification, and hand that back
+instead of claiming it yourself.
 
 Stop when the document is accurate, useful, coherent, and appropriately voiced.
