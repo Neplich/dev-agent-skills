@@ -12,8 +12,11 @@ out the plan. This entry file owns the gates that must run immediately when the
 skill is triggered; execution details live in `_internal/`.
 
 Before plan confirmation, load only `_internal/planner/INSTRUCTIONS.md` plus
-`_internal/_shared/coding-rules.md`. After the user confirms the exact plan,
-load `_internal/implementor/INSTRUCTIONS.md`. For self-review and closeout,
+`_internal/_shared/coding-rules.md`. After the exact plan receives valid
+approval—user confirmation, or approval by an automated reviewer that meets the
+handoff contract's minimum requirements when the handoff packet explicitly sets
+`plan_approval: authorized_auto_reviewer`—load
+`_internal/implementor/INSTRUCTIONS.md`. For self-review and closeout,
 load `_internal/reviewer/INSTRUCTIONS.md` and
 `_internal/_shared/output-conventions.md`.
 
@@ -47,11 +50,19 @@ Before code or test changes, produce one observable checkpoint that:
    and no-active-plan states exactly as the archive gate specifies
 5. writes or updates `IMPLEMENTATION_PLAN.md` with current frontmatter version,
    status, alignment, file scope, order, verification, forbidden areas, and an
-   explicit implementation/independent-validation split decision; the main
-   process retains repository rules, source context, integration, and final
-   delivery judgment, while each delegated scope forbids unrelated changes
-6. presents the exact plan and waits for user confirmation before coding,
-   including for hotfixes and small bug fixes
+   expected change declaration covering `expected_files`,
+   `expected_new_dependencies`, `expected_new_config`,
+   `expected_new_abstractions`, `expected_loc_magnitude`, and
+   `expected_tests_vs_acceptance`, plus an explicit
+   implementation/independent-validation split decision; the declaration is a
+   later reconciliation baseline and inquiry trigger, not an admission limit;
+   the main process retains repository rules, source context, integration, and
+   final delivery judgment, while each delegated scope forbids unrelated changes
+6. presents the exact plan and waits for approval before coding, including for
+   hotfixes and small bug fixes; approval comes from the user by default, or
+   from an authorized automated reviewer only when the PM handoff packet
+   explicitly sets `plan_approval: authorized_auto_reviewer` and the reviewer
+   meets the handoff contract's minimum requirements
 
 For a substantive continuation of a draft or other non-`Implemented` active
 plan, the checkpoint states the new `version` and `last_updated` together; a
@@ -74,8 +85,9 @@ Render that checkpoint with explicit fields: `feature_path`, `parent_feature`,
 `active_plan_path`, `active_plan_status`, `active_plan_scope_before`,
 `replacement_plan_scope`, `archive_directory`, `active_entry_rule`,
 `archive_state`, `decision`, `receiving_owner`, `gap_packet`, `planned_files`,
-`verification_commands`, `subagent_split`, `blocked_downstream_actions`, and
-`confirmation_required`. Use `N/A` only when the field is genuinely
+`expected_change_declaration`, `verification_commands`, `subagent_split`,
+`blocked_downstream_actions`, and `confirmation_required`. Use `N/A` only when
+the field is genuinely
 inapplicable. A gap packet always preserves the feature metadata and expected
 document paths. A blocked checkpoint names every prohibited next action that
 matters, including implementation, new E2E expectations, QA handoff, delivery,
@@ -98,10 +110,14 @@ record that exact user-supplied confirmation as the `prd_alignment` and
 that an unavailable source tree supplied the confirmation.
 
 After implementation, reconcile the active plan body and frontmatter with the
-actual result before any handoff. The final summary must list changed files,
-verification, residual risks, runtime-artifact deletion, and—when user-facing
-paths may change—the complete QA E2E handoff package based on the confirmed
-plan. Runtime outputs never enter Git.
+actual result before any handoff. Compare every expected change declaration
+field with its actual value and record every deviation using `trigger`,
+`expected`, `actual`, `kind`, `explanation`, and `resolution` as defined in the
+output conventions. A deviation is not itself a defect; an unexplained
+deviation is. The final summary must list changed files, verification, residual
+risks, runtime-artifact deletion, and—when user-facing paths may change—the
+complete QA E2E handoff package based on the confirmed plan. Runtime outputs
+never enter Git.
 
 The closeout summary explicitly records `changed_files`, `commands_and_results`,
 `residual_risks`, and `runtime_artifacts_removed`. The last field confirms that
@@ -224,8 +240,13 @@ The active plan path remains fixed at
 1. Gather PRD, DECISIONS, TRD, relevant design docs, repo structure, and active
    plan/archive state.
 2. Write or update the plan with file list, order, verification, alignment
-   result, feature metadata, and sub-agent split decision.
-3. Present the exact plan and wait for user confirmation.
+   result, feature metadata, expected change declaration, and sub-agent split
+   decision.
+3. Present the exact plan and wait for user approval, or use an authorized
+   automated reviewer only when the PM handoff packet explicitly sets
+   `plan_approval: authorized_auto_reviewer`. The automated review input must
+   include the expected change declaration as the closeout reconciliation
+   baseline and meet every minimum requirement in the handoff contract.
 4. Implement only the confirmed scope, reading each file before editing.
 5. Verify with deterministic commands.
 6. Self-review against PRD/TRD/design docs, repo rules, security basics, and
@@ -240,7 +261,10 @@ when the user opts out; the plan gate still applies.
 
 After implementation and deterministic checks, update or confirm closeout.
 Closeout records final status, changed files, commands run or skipped,
-residual risks, and next owner.
+residual risks, next owner, and the item-by-item reconciliation between the
+expected change declaration and actual values. Record every deviation with the
+required structured fields and resolution; follow the output conventions for
+Issue splitting and ADR handling.
 
 If frontmatter says `status: "Implemented"`, the body must not keep unresolved
 planning wording such as "waiting for confirmation", "not started", or

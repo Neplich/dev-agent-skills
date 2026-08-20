@@ -15,7 +15,20 @@ author: <generation requester display name + agent platform name>
 date: <YYYY-MM-DD>
 superseded_by: <ADR number or "N/A">
 related_docs: []
+# Optional for ordinary ADRs; required together for deviation-driven ADRs.
+feature_path: <canonical feature path>
+trigger: <declaration field>
+expected: <declared value>
+actual: <measured value>
+kind: scope_up | scope_down | estimate_wrong | design_gap
+resolution: accepted | split_to_issue | reverted
+spawned_issue: <Issue number or "N/A">
 ```
+
+The seven deviation fields are optional for ordinary ADRs. They are all
+required when an ADR records an accepted `scope_up`, a new dependency, a new
+abstraction layer, or completion of a `design_gap`. Pure `estimate_wrong`
+deviations stay in implementation-plan closeout and do not require an ADR.
 
 ### 2. Title
 

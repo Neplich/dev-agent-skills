@@ -125,7 +125,7 @@ flowchart LR
     Handoff --> PathGate["Resolve feature_path from docs/pm/{feature_path}/PRD.md"]
     PathGate --> TRD["trd-gen writes docs/engineer/{feature_path}/TRD.md"]
     TRD --> OptionalDocs["API.md / ADR-*.md when in scope"]
-    OptionalDocs --> Review["Maintainer confirms Engineer docs"]
+    OptionalDocs --> Review["User or authorized automated reviewer confirms Engineer docs"]
     Review --> Plan["Explicit handoff to feature-implementor"]
     Plan --> ImplPlan["feature-implementor writes docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md"]
     ImplPlan --> Code["Implementation / tests / delivery"]
@@ -137,8 +137,17 @@ Use this checkpoint language:
 PRD 已确认，当前进入 Engineer TRD 阶段。
 我会基于 PRD、产品决策记录和仓库上下文解析 `feature_path`，并编写
 `docs/engineer/{feature_path}/TRD.md`。
-Engineer 文档确认后，再移交给 `feature-implementor` 编写实现计划文档并进入实现。
+Engineer 文档由用户确认；只有 handoff packet 显式携带
+`trd_approval: authorized_auto_reviewer` 时，才可由满足最低要求的自动审查者确认。
+确认后再移交给 `feature-implementor` 编写实现计划文档并进入实现。
 ```
+
+TRD review has no quantitative reconciliation object. Its review basis is a
+qualitative change-surface list: affected modules, whether data structures
+change, and whether new dependencies are introduced. Give the TRD review enough
+rounds to examine those surfaces. Its judgments are less certain than
+implementation-plan review, so do not extrapolate implementation-level
+validation experience to the TRD gate.
 
 ## TRD Gap Packet Handling
 
@@ -325,11 +334,17 @@ Before handoff, verify:
    designs, endpoints, or parameters kept with status annotations, and every
    removal is recorded in the changelog.
 10. The next step is `feature-implementor` only after the Engineer document set
-    is confirmed.
+    is confirmed by the user, or by an automated reviewer when the handoff
+    explicitly sets `trd_approval: authorized_auto_reviewer` and the reviewer
+    meets every minimum requirement in the handoff contract. Automated TRD
+    review uses only the qualitative change-surface list—affected modules, data
+    structure changes, and new dependencies—with a sufficient round limit; its
+    lower certainty must not be inferred from implementation review results.
 
 ## Handoff
 
-After the TRD is confirmed:
+After the TRD is confirmed by the user, or by a qualified automated reviewer
+when the handoff explicitly sets `trd_approval: authorized_auto_reviewer`:
 
 ```text
 Engineer 文档已确认，当前移交给 `feature-implementor`。
@@ -337,5 +352,7 @@ Engineer 文档已确认，当前移交给 `feature-implementor`。
 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`，确认后再进入代码实现。
 ```
 
-Do not continue into implementation unless the user explicitly confirms the TRD
-or asks to proceed despite open technical questions.
+Do not continue into implementation unless the user explicitly confirms the
+TRD, the handoff explicitly authorizes a qualified automated reviewer and that
+reviewer approves it, or the user asks to proceed despite open technical
+questions.
