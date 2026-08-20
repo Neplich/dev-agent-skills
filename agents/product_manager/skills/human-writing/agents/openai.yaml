@@ -1,4 +1,4 @@
 interface:
   display_name: "Human Writing"
   short_description: "Write natural, clear Chinese prose for real readers while preserving facts"
-  default_prompt: "Use $human-writing together with the primary document skill to write or revise content for its actual readers while preserving facts, structure, and delivery requirements."
+  default_prompt: "Use $human-writing together with the primary document skill to write or revise content for its actual readers while preserving facts, required structure, and delivery requirements."

@@ -11,7 +11,7 @@ preserves scope and evidence; it does not execute or duplicate specialist gates.
 
 ## Reader-Facing Writing Composition
 
-After selecting a Specialist, co-load `human-writing` for substantial reader-facing prose; it is not a route or later pass. The Specialist retains evidence, facts, structure, paths, gates, and verification. Skip code-, config-, schema-, lockfile-, and data-only output.
+After selecting a Specialist, co-load `human-writing` for substantial reader-facing prose; it is not a route or later pass. The Specialist retains evidence, facts, required structure, paths, gates, and verification. Skip code-, config-, schema-, lockfile-, and data-only output.
 
 ## PM Handoff Entry Gate
 

@@ -85,3 +85,24 @@ affects ordinary use.
 Put the decision-relevant conclusion first, then evidence, uncertainty, trade-offs,
 and recommended action. Preserve source dates. Do not present inference as fact.
 Use a table for repeated comparisons and prose for causality or judgment.
+
+## Document Set and Documentation Site
+
+Use this pattern when the scope spans multiple documents. It covers content
+organization only; product UX information architecture and navigation
+implementation stay with their owners.
+
+1. Identify the primary readers and their roles.
+2. List the tasks each role comes to complete.
+3. Map role -> task -> entry page -> permission, so every task has a visible
+   starting point the reader can actually open.
+4. Check whether the current chapter grouping supports finding those tasks.
+   Grouping by code module, Agent workflow, or evidence-collection order is a
+   mismatch signal.
+5. Adjust page responsibilities and grouping before editing prose within pages.
+6. Keep content invariants through reclassification: every page, image,
+   operation step, warning, and recovery note survives the move.
+
+Hand navigation, link, image, build, and rendering verification back to the
+primary Skill. Do not reclassify, split, merge, or move files without
+authorization from the user or the primary Skill.

@@ -102,8 +102,9 @@ post-processing stage.
 
 The primary Skill continues to own evidence, facts, required structure,
 artifact paths, gates, and verification. `human-writing` only guides reader
-perspective, information order, paragraphs, and sentences. Do not load it for
-code-, config-, schema-, lockfile-, or data-only output.
+perspective, content selection, information organization, emphasis, paragraphs,
+and sentences. Do not load it for code-, config-, schema-, lockfile-, or
+data-only output.
 
 ## Downstream Routes
 

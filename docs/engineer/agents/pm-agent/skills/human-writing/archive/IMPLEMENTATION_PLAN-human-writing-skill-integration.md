@@ -7,10 +7,13 @@ parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
 implementation_scope: "human-writing-skill-integration"
 version: "0.4.0"
-status: Pending Confirmation
+status: Archived
+archived_at: "2026-08-20"
+archive_approved_by: "Neplich"
+source_plan: "docs/engineer/agents/pm-agent/skills/human-writing/IMPLEMENTATION_PLAN.md"
 author: "Neplich Codex"
 date: "2026-08-19"
-last_updated: "2026-08-19"
+last_updated: "2026-08-20"
 related_prd: "docs/pm/agents/pm-agent/skills/human-writing/PRD.md"
 related_trd: "docs/engineer/agents/pm-agent/skills/human-writing/TRD.md"
 changelog:

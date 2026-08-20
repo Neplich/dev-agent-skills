@@ -16,7 +16,7 @@ This skill serves two purposes:
 
 For substantial reader-facing prose, co-load `human-writing` even on direct
 invocation; use the same context, not a later pass. This Skill retains evidence,
-facts, structure, paths, gates, and verification. Skip code-, config-, schema-,
+facts, required structure, paths, gates, and verification. Skip code-, config-, schema-,
 lockfile-, and data-only output.
 
 ## Mandatory Status Shape

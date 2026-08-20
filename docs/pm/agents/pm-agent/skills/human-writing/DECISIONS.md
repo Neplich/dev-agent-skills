@@ -5,15 +5,18 @@ feature: "skill-human-writing"
 feature_path: "agents/pm-agent/skills/human-writing"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
-version: "1.1.0"
+version: "1.2.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-19"
-last_updated: "2026-08-19"
+last_updated: "2026-08-20"
 generated_by: "idea-to-spec"
 related_docs:
   - "docs/pm/agents/pm-agent/skills/human-writing/PRD.md"
 changelog:
+  - version: "1.2.0"
+    date: "2026-08-20"
+    changes: "记录编写范围判断、必要结构权限、高风险事实回传和整站模式归属等决策（Issue #313）"
   - version: "1.1.0"
     date: "2026-08-19"
     changes: "确认周边 Router 与 Specialist 的直接调用适配范围"
@@ -43,6 +46,13 @@ changelog:
 | D-013 | Specialist 在生成或大幅更新读者向正文时自行加载；纯代码、配置、schema、lockfile 和数据输出不触发。 | 直接调用不会降级，也不会把所有写文件任务都变成写作任务。 |
 | D-014 | 主 Skill 与 `human-writing` 在同一上下文中共同生效，不交接草稿，不增加后处理轮次。 | 延续已确认的组合关系。 |
 | D-015 | 下游插件按注册名引用 `human-writing`，不写跨插件相对路径。 | Claude 插件复制边界内不存在可靠的跨插件相对目录。 |
+| D-016 | `human-writing` 覆盖创建、改写和审查三种工作方式，并在写作前判断范围（句子或段落、单篇文档、文档集合、文档站）。 | LLM Wiki 案例证明整站任务会被"只改命中段落"缩减成局部润色；范围判断同时防止局部任务被迫全站盘点。 |
+| D-017 | 范围判断写入 `SKILL.md` 主体，不拆分新参考文件。 | 当前体量未到拆分程度；范围判断是每次写作的必经动作，应在主契约内。 |
+| D-018 | "保留结构"统一指主 Skill 规定的必要结构与真实流程，不等于保留现有信息布局；用户或主 Skill 授权时可重分类、拆分、合并或移动文档内容，结构性修改交回主 Skill 验证。 | 消除"必要结构"被读成"现有结构"的歧义，同时固定主 Skill 对真实流程、必需章节和验证的所有权。 |
+| D-019 | 权限、数据边界、自动行为、删除影响面、失败恢复等高风险事实存在疑问时，停止润色并返回主 Skill 核验。 | 不确定描述不能被润色成更肯定的说法；事实研究和确认始终归主 Skill。 |
+| D-020 | 文档集合与整站写作指导作为 `document-patterns.md` 的一个模式，不新增文档架构或网站架构 Skill。 | 整站优化是多文档写作的尺度之一，不值得独立 Skill；也避免接管 Designer 的产品 UX 信息架构职责。 |
+| D-021 | 周边 Router 与 Specialist 共同加载条款中的 "structure" 统一改为 "required structure"，一词同步。 | 保持所有权表述与 D-018 一致，改动最小且语义自洽。 |
+| D-022 | 验收继续依赖真实项目案例和人工语义验收，不恢复已移除的 Skill eval 体系，也不新增写作评分或禁词统计。 | 延续 #301 的移除结论；能力质量由真实用户体验判定。 |
 
 ## 约束
 

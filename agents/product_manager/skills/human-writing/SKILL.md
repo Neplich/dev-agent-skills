@@ -1,6 +1,6 @@
 ---
 name: human-writing
-description: "Write or revise reader-facing documents in natural, purposeful Chinese while preserving the primary Skill’s facts, workflow, terminology, structure, formatting, and delivery contract. Use alongside document-generation Skills for manuals, product and technical docs, reports, release notes, READMEs, or other prose. Also applies to requests to rewrite, polish, humanize, or remove AI, machine, report, or agent tone. Do not use for code-, config-, schema-, or data-only output."
+description: "Write, revise, or audit reader-facing documents in natural, purposeful Chinese while preserving the primary Skill’s facts, real workflow, terminology, required structure, formatting, and delivery contract. Use alongside document-generation Skills for manuals, product and technical docs, reports, release notes, READMEs, or other prose. Also applies to requests to rewrite, polish, humanize, or remove AI, machine, report, or agent tone. Do not use for code-, config-, schema-, or data-only output."
 visibility: internal
 ---
 
@@ -8,7 +8,8 @@ visibility: internal
 
 Write for the people who will use the document. Keep the primary Skill's facts
 and delivery rules intact, then make the content read like a knowledgeable
-person chose what to explain, in what order, and in what words.
+person chose what to explain, how to organize it, in what order, and in what
+words.
 
 This Skill is a composition capability. Load it in the same turn as the primary
 document Skill. It is not an upstream producer, downstream consumer, or final
@@ -39,8 +40,8 @@ corresponding primary Skill as well.
 1. Follow the user's explicit facts, audience, tone, language, and delivery request.
 2. Follow the primary Skill's evidence, workflow, safety, required structure,
    artifact path, formatting, and verification contract.
-3. Apply this Skill to reader perspective, information order, paragraphs,
-   sentences, and rhythm.
+3. Apply this Skill to reader perspective, content selection, information
+   organization, emphasis, explanation, paragraphs, sentences, and rhythm.
 
 Never trade correctness for fluency. This Skill may move an explanation closer
 to the step that needs it; it must not reorder a real operation. It may replace
@@ -68,6 +69,24 @@ Determine internally:
 Ask one concise question only when different answers would materially change
 the facts selected, the procedure, the audience, or the deliverable. Otherwise,
 make the smallest reasonable assumption and continue.
+
+## Determine Mode and Scope
+
+Before writing, decide two things internally:
+
+- mode: create, revise, or audit;
+- scope: passage, single document, document set, or documentation site.
+
+| Scope | Focus |
+| --- | --- |
+| Passage (sentences or paragraphs) | actor, action, meaning, repetition, and rhythm |
+| Single document | reader goal, content selection, information order, and emphasis |
+| Document set | page responsibilities, duplicated content, cross-references, and role entry points |
+| Documentation site | reader paths, chapter grouping, navigation, orphan pages, and content invariants |
+
+Work at the smallest scope that covers the request. A local edit does not scan
+the whole site. A site-wide request is not fulfilled by rewording a few
+sentences: review chapter grouping and reader paths before touching prose.
 
 ## Protect the Source of Truth
 
@@ -129,10 +148,41 @@ Organize around the reader's task, not the Agent's collection order.
 Background, summaries, lists, tables, and callouts are valid when they reduce
 reader effort. Do not force them into every document.
 
+## Required Structure, Not Existing Layout
+
+Preserve the primary Skill's required structure and real workflow — not the
+existing information layout by default. This Skill may regroup and reorder
+existing explanations when that serves the reader's task.
+
+With explicit authorization from the user or the primary Skill, it may also
+reclassify, split, merge, or move document content across sections or pages.
+It must never change the real operation order, required sections, or the
+formal artifact contract. Hand structural changes back to the primary Skill
+for navigation, link, build, or rendering verification.
+
+## Return High-Risk Facts for Verification
+
+Stop polishing and ask the primary Skill to verify when any of these are in
+doubt:
+
+- roles and permissions;
+- user-, workspace-, and instance-level boundaries;
+- the authoritative source of data;
+- whether sync, import, or pull takes effect automatically;
+- the blast radius of delete, overwrite, or publish;
+- failure conditions and recovery;
+- login, assignment, and waiting states;
+- the real behavior of APIs, commands, and configuration.
+
+This Skill identifies risk signals; fact research and final confirmation stay
+with the primary Skill. Never rewrite an uncertain statement into a more
+confident one.
+
 ## Load Only the Needed References
 
 - Read `references/document-patterns.md` for the target document type and its
-  information order.
+  information order, including the document-set and site pattern when the
+  scope spans multiple documents.
 - Read `references/chinese-prose.md` when writing or substantially revising
   Chinese prose.
 - After the draft exists, read `references/revision.md` for a silent final pass.
@@ -140,23 +190,31 @@ reader effort. Do not force them into every document.
 For a small local edit, load only the reference that addresses the problem. Do
 not read every reference as a ritual.
 
-## Create or Revise
+## Create, Revise, or Audit
 
 When creating a document:
 
 1. establish the reader's task and the primary Skill's immutable contract;
 2. gather enough material for the requested scope;
 3. select the document pattern;
-4. draft in the order the reader needs information;
-5. revise silently, then run the primary Skill's verification.
+4. choose and organize content around the reader's tasks before drafting;
+5. draft in the order the reader needs information;
+6. revise silently, then run the primary Skill's verification.
 
 When revising an existing document:
 
 1. preserve correct content, local terminology, working links, and valid voice;
-2. identify the exact reader, organization, sentence, or repetition problem;
-3. change only affected paragraphs and the transitions they require;
-4. compare the result against the source for fact and format drift;
-5. avoid whole-document synonym replacement or a new house style unless asked.
+2. match the scope of the request: a passage edit changes only affected
+   paragraphs and the transitions they require, while a document-set or site
+   request first reviews page responsibilities and grouping;
+3. avoid whole-document synonym replacement or a new house style unless asked;
+4. keep content invariants through any restructuring: pages, images, steps,
+   warnings, and recovery notes survive reclassification;
+5. compare the result against the source for fact and format drift, and hand
+   structural changes back to the primary Skill for verification.
+
+When auditing, report findings against the same reader-task standard without
+rewriting: name the scope, the gap, and the owner of each fix.
 
 ## Delivery
 
