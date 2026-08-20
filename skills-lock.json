@@ -49,7 +49,7 @@
     "human-writing": {
       "source": "agents/product_manager/skills/human-writing",
       "sourceType": "local",
-      "computedHash": "949c37b1fd367416eeefe5c910eec7d245a20c572b160a3885770ac7e5ece382"
+      "computedHash": "013cc5079055cf0877b2009b39e7a17452d8c341b4add881decc1d9f7fe6a222"
     },
     "engineer-agent": {
       "source": "agents/engineer/skills/engineer-agent",

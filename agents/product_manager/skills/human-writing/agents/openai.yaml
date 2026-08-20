@@ -1,4 +1,4 @@
 interface:
-  display_name: "活人感写作"
-  short_description: "为面向真实读者的文档提供自然、清楚且保留事实的中文写作规则"
+  display_name: "Human Writing"
+  short_description: "Write natural, clear Chinese prose for real readers while preserving facts"
   default_prompt: "Use $human-writing together with the primary document skill to write or revise content for its actual readers while preserving facts, structure, and delivery requirements."
