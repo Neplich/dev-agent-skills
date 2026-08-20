@@ -161,7 +161,7 @@ flowchart LR
 5. 技术文档样例保留术语、字段、命令、表格和必要章节，不因“活人感”被改成口语文章。
 6. 改稿样例只修改有问题的段落，不制造新事实，不附加写作过程报告。
 7. Skill、注册、README、lock 和仓库检查保持一致。
-8. 六个下游 Router 和三十二个 Specialist 均能检索到 `human-writing` 共同加载条款，`pm-agent` 保留上一批实现。
+8. 六个下游 Router 和三十二个 Specialist 均能检索到 `human-writing` 共同加载条款，`pm-agent` 组合关系不变，仅同步 `human-writing` 职责描述。
 9. 纯代码、配置、schema、lockfile 或数据输出不会仅因 Skill 被直接调用而加载写作能力。
 10. Skill 明确支持创建、改写和审查三种工作方式，不被描述为后处理润色。
 11. Skill 能判断局部、单篇、多篇和整站范围；局部改稿不被迫整站盘点，整站优化不停留在局部措辞替换。

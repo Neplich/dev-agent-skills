@@ -282,6 +282,7 @@ schema、lockfile 或数据输出不加载。
 | `human-writing/agents/openai.yaml` | 默认提示中的 “structure” 同步为 “required structure” |
 | `references/document-patterns.md` | 新增”文档集合与文档站”模式 |
 | `references/revision.md` | 静默复核补充范围一致性、结构遗漏、维护历史泄漏、角色泛化、内容不变量和主 Skill 验证需求 |
+| `agents/product_manager/skills/pm-agent/SKILL.md` | `human-writing` 职责描述从“读者视角、信息顺序、段落和句子”同步扩展为作者决策链（读者视角、内容选择、信息组织、重点、段落和句子） |
 | 38 个周边 `SKILL.md` 共同加载条款 | “retains evidence, facts, structure, paths, gates, and verification” 统一为 “required structure” |
 | `skills-lock.json` | 刷新全部被修改 Skill 的 `computedHash` |
 | `docs/architecture.md` | 写作组合层一节补充范围判断与必要结构表述 |
