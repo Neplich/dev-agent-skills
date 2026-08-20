@@ -85,6 +85,9 @@ For each P0 acceptance criterion in PRD:
       "model eval not executed"
 - [ ] Deterministic checks that ran are listed with actual commands and results
 - [ ] Commands not run are listed with skipped or blocked reasons
+- [ ] Every expected change declaration field has been reconciled with its
+      actual value, and each deviation records `trigger`, `expected`, `actual`,
+      `kind`, `explanation`, and `resolution`
 - [ ] Closeout confirmation strength follows the `change_tier` contract in
       `AGENTS.md` (变更分级契约): `hotfix` merges closeout and any archive
       approval into one confirmation; `standard` / `major` keep independent

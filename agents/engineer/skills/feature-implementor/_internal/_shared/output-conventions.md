@@ -54,7 +54,33 @@ delivery:
    results.
 4. For commands not run, record skipped or blocked reasons instead of leaving
    them as pending.
-5. A completed plan must not keep unresolved planning-state wording such as
+5. Compare each expected change declaration field with its actual value:
+   `expected_files`, `expected_new_dependencies`, `expected_new_config`,
+   `expected_new_abstractions`, `expected_loc_magnitude`, and
+   `expected_tests_vs_acceptance`.
+6. For every deviation, record:
+
+   ```yaml
+   trigger: <declaration field>
+   expected: <declared value>
+   actual: <measured value>
+   kind: scope_up | scope_down | estimate_wrong | design_gap
+   explanation: <why the result differs>
+   resolution: accepted | split_to_issue | reverted
+   ```
+
+   A deviation is not itself a defect; an unexplained deviation is. Pure
+   `estimate_wrong` deviations need only one closeout record and do not create
+   an ADR.
+7. `scope_up` and `design_gap` default to `split_to_issue`. The new Issue must
+   record `parent_issue_id` pointing to the original Issue. Keep the deviation
+   in the current scope only when excluding it would make the confirmed scope
+   undeliverable, and record that resolution explicitly.
+8. Create an ADR for a material deviation decision when an accepted `scope_up`,
+   a new dependency, a new abstraction layer, or a completed `design_gap`
+   changes the technical design. Use the structured deviation frontmatter from
+   the ADR schema. Do not create an ADR for a pure estimate correction.
+9. A completed plan must not keep unresolved planning-state wording such as
    "waiting for confirmation", "not started", "pending execution", or "model
    eval not executed" unless the same section clearly marks it as historical and
    records the current resolved result.

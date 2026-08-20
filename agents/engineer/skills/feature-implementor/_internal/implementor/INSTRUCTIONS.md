@@ -8,7 +8,7 @@ Execute the implementation plan step by step, writing code that follows project 
 
 ## Input
 
-- User-confirmed implementation plan document (from planner)
+- Approved implementation plan document (from planner)
 - Project Profile
 - PM documents for reference
 - Confirmed Engineer TRD for reference
@@ -20,9 +20,13 @@ Execute the implementation plan step by step, writing code that follows project 
 ## Entry Gate
 
 Do not implement unless the main process has already presented the exact
-implementation plan to the user and the user has confirmed it. If the plan is
-missing, has only been drafted, or has not been confirmed, stop and ask for plan
-confirmation. Do not write code, update tests, or apply fixes while waiting.
+implementation plan and obtained approval from the user, or the PM handoff
+packet explicitly sets `plan_approval: authorized_auto_reviewer` and an
+automated reviewer meeting every minimum requirement in the handoff contract
+has approved it. The automated review input must include the expected change
+declaration as the closeout reconciliation baseline. If the plan is missing,
+has only been drafted, or lacks a valid approval, stop and ask for plan
+approval. Do not write code, update tests, or apply fixes while waiting.
 
 For existing-feature behavior changes, the confirmed plan must also include the
 PRD alignment result. If the plan says PRD or product decisions must be updated,
@@ -95,6 +99,9 @@ Track the evidence needed to update the confirmed `IMPLEMENTATION_PLAN.md` after
 implementation:
 
 - files created or modified
+- actual file count and line-count magnitude
+- actual new dependency, configuration item, and abstraction or base-class counts
+- actual added-test count and its relationship to PRD acceptance points
 - deterministic check commands run and their results
 - commands skipped or blocked, with reasons
 - residual risks, open issues, or follow-up owners

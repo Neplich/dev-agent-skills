@@ -46,6 +46,34 @@ not confirm an `implementation_deviation`, produce a repair plan, or mutate
 state. Any later fix request leaves this extension and re-enters the normal PM
 and Engineer repair gates.
 
+### Gate Approver Optional Extension
+
+To authorize an automated reviewer for an implementation-plan or TRD approval
+gate, extend the handoff with either optional field:
+
+```yaml
+plan_approval: user | authorized_auto_reviewer   # default: user
+trd_approval: user | authorized_auto_reviewer    # default: user
+```
+
+Omitting a field preserves user approval for that gate. An
+`authorized_auto_reviewer` is valid only when all of these conditions hold:
+
+1. The reviewer has an independent context: it does not share a session with
+   the author, reads only the artifact and upstream PRD, DECISIONS, and TRD
+   documents, and does not inherit the author's drafting reasoning. Self-review
+   in the same session is not independent review.
+2. The review prompt carries the explicit intentionally-not-done list from the
+   PRD `non_goals`.
+3. Every finding is graded `P0`, `P1`, or `P2`.
+4. Review converges when a round has zero confirmed defects, or when the round
+   limit is reached and the current round has no `P1` finding.
+5. If the round limit is reached with any unresolved `P1`, the reviewer must not
+   approve. It escalates exactly one question for a user to answer.
+
+These fields change only who may provide approval. They do not remove either
+gate or lower its acceptance standard.
+
 `feature_path_evidence` must always use this shape:
 
 ```yaml

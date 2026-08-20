@@ -136,8 +136,9 @@ For each component in TRD, determine:
 Do not force the implementation/validation sub-agent split for single-file small
 edits, pure explanation, pure code reading, or explicit user opt-out. This only
 controls delegation. It does not remove the requirement to write
-`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` and wait for explicit
-user confirmation.
+`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` and obtain explicit plan
+approval from the user by default, or from a qualified automated reviewer when
+the handoff explicitly authorizes one.
 
 ### 3. Order by dependency
 
@@ -177,8 +178,8 @@ Plan form strength follows the `change_tier` contract in `AGENTS.md`
 (变更分级契约). Record the resolved `change_tier` (from the handoff packet or
 self-assessed) in the plan. `hotfix` may use the lightweight plan form defined
 there — append a scope entry to the existing active plan or use a simplified
-template — and still needs one user confirmation with the verification command
-and result recorded; `standard` and `major` keep the full plan flow. A request
+template — and still needs one valid approval with the verification command and
+result recorded; `standard` and `major` keep the full plan flow. A request
 that changes approved PRD/TRD expectations must not be planned as `hotfix`;
 treat it as `standard` and route through the PRD alignment gate.
 
@@ -222,6 +223,14 @@ Output format:
 - PRD 对齐: <已覆盖 / 需要 PM 更新 / 文档缺失或不清 / TRD gap>
 - 预估文件数: <N> 个新建, <M> 个修改
 
+### 预期改动声明
+- expected_files: <按 change_tier 给出预期改动文件数量级>
+- expected_new_dependencies: <预期新增依赖数，常见预期值 0>
+- expected_new_config: <预期新增配置项数，常见预期值 0>
+- expected_new_abstractions: <预期新增抽象层或基类数，常见预期值 0>
+- expected_loc_magnitude: <预期代码行数量级或区间>
+- expected_tests_vs_acceptance: <预期新增测试数与 PRD 验收点数的关系，常见预期为相当>
+
 ### 步骤
 
 1. **创建 `<path>`** — <description> (来自 <doc> §<section>)
@@ -242,6 +251,14 @@ Output format:
 ## Output
 
 An implementation plan document plus a short summary with exact file paths,
-descriptions, and document references. Wait for user confirmation before coding.
-Do not start implementation in the same turn after writing the plan unless the
-user has already confirmed this exact plan.
+descriptions, document references, and the expected change declaration. The
+declaration is a reconciliation baseline and inquiry trigger, not an admission
+limit. A `hotfix` may simplify the declaration without removing plan approval.
+
+Wait for user approval before coding by default. When the PM handoff packet
+explicitly sets `plan_approval: authorized_auto_reviewer`, approval may instead
+come from an automated reviewer that meets every minimum requirement in the
+handoff contract. Its review prompt must include the expected change declaration
+as the closeout reconciliation baseline. Do not start implementation in the same
+turn after writing the plan unless this exact plan has already received a valid
+approval.
