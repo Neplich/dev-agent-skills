@@ -15,7 +15,7 @@ generated_by: "idea-to-spec"
 related_docs:
   - "docs/pm/agents/pm-agent/skills/human-writing/DECISIONS.md"
   - "docs/engineer/agents/pm-agent/skills/human-writing/TRD.md"
-  - "docs/engineer/agents/pm-agent/skills/human-writing/IMPLEMENTATION_PLAN.md"
+  - "docs/engineer/agents/pm-agent/skills/human-writing/archive/IMPLEMENTATION_PLAN-human-writing-scope-structure.md"
   - "docs/pm/agents/pm-agent/PRD.md"
   - "agents/product_manager/skills/pm-agent/SKILL.md"
   - "https://github.com/KKKKhazix/human-writing"

@@ -14,7 +14,7 @@ generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/human-writing/PRD.md"
 related_docs:
   - "docs/pm/agents/pm-agent/skills/human-writing/DECISIONS.md"
-  - "docs/engineer/agents/pm-agent/skills/human-writing/IMPLEMENTATION_PLAN.md"
+  - "docs/engineer/agents/pm-agent/skills/human-writing/archive/IMPLEMENTATION_PLAN-human-writing-scope-structure.md"
   - "agents/product_manager/skills/pm-agent/SKILL.md"
   - ".claude-plugin/marketplace.json"
   - "skills-lock.json"
