@@ -45,7 +45,7 @@ closeout gate。该路径作为活跃计划入口是必要的，因为 QA、DevO
 1. 保留 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 作为唯一活跃入口。
 2. 为完成态计划增加用户或维护者批准后的归档目录和范围命名规则。
 3. 在创建同一 `feature_path` 的下一份计划前，强制扫描并处理已有活跃计划。
-4. 让 repository contract 覆盖归档 metadata 与新计划前置门禁。
+4. 让 repository contract 能覆盖归档 metadata 与新计划前置门禁。
 
 ## 非目标
 

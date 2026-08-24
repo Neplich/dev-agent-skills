@@ -87,6 +87,7 @@ flowchart LR
 | AC-003 | Designer 能处理 Engineer 来源的 UI 维护设计请求，并停止在设计交付。 | 检查 `designer-agent` 文档。 |
 | AC-004 | Feature Implementor 实施计划引用设计交付物或说明无需更新设计的理由。 | 检查 `feature-implementor` 文档。 |
 | AC-005 | 外部 `ui-ux-pro-max` 不在本仓库变更范围内。 | 检查 diff。 |
+| AC-006 | 仓库契约检查通过。 | 运行 repository contract 检查。 |
 
 ## 7. 相关实现文档
 
