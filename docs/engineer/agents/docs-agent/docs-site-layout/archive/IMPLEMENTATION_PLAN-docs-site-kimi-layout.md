@@ -2,15 +2,18 @@
 title: "Docs Site Kimi Layout 实施计划"
 type: IMPLEMENTATION_PLAN
 version: "0.3.1"
-status: Pending Confirmation
+status: Archived
 author: "Neplich Codex"
 date: "2026-08-19"
-last_updated: "2026-08-19"
+last_updated: "2026-08-24"
 feature: "docs-site-layout"
 feature_path: "agents/docs-agent/docs-site-layout"
 parent_feature: "agents/docs-agent"
 feature_level: "3"
 implementation_scope: "docs-site-kimi-layout"
+archived_at: "2026-08-24"
+archive_approved_by: "Neplich"
+source_plan: "docs/engineer/agents/docs-agent/docs-site-layout/IMPLEMENTATION_PLAN.md"
 previous_plan_archive: "docs/engineer/agents/docs-agent/docs-site-layout/archive/IMPLEMENTATION_PLAN-docs-site-layout.md"
 related_prd: "docs/pm/agents/docs-agent/docs-site-layout/PRD.md"
 related_trd: "docs/engineer/agents/docs-agent/docs-site-layout/TRD.md"
@@ -101,3 +104,18 @@ git diff --check
 
 完成后记录实际文件、测试结果和浏览器验收；取得明确归档批准后归档为
 `archive/IMPLEMENTATION_PLAN-docs-site-kimi-layout.md`。
+
+## Closeout 对账
+
+| 字段 | 预期 | 实际 | 结论 |
+| --- | --- | --- | --- |
+| `expected_files` | 6 个文件：本功能 PRD、TRD、计划、主题 CSS、既有布局测试和 lock hash。 | PR #309 修改 6 个文件，与计划列出的文件完全一致。 | 一致 |
+| `expected_new_dependencies` | `0` | `0` | 一致 |
+| `expected_new_config` | `0` | `0` | 一致 |
+| `expected_new_abstractions` | `0` | `0` | 一致 |
+| `expected_loc_magnitude` | 新增约 7 行 CSS、5 行测试和少量现有文档。 | PR #309 为 224 行新增、154 行删除，净增 70 行；其中 CSS 净删 66 行、测试净增 4 行。 | 偏离：实现通过删除旧布局覆盖完成，CSS 从预期净增改为净删。 |
+| `expected_tests_vs_acceptance` | 既有布局测试、双站构建、仓库静态检查和 Chrome 布局验收覆盖计划目标。 | 未新增测试文件，修改 1 份既有布局测试；合并时 `repository-contract`、`doc-contract`、`python-tests` CI 全部通过。 | 一致 |
+
+验证证据以 PR #309 合并记录为准：`repository-contract`、`doc-contract`、
+`python-tests` 均为 SUCCESS；PR 正文记录 Chrome 1280×900、2560×1440、390×844
+三视口响应式验收通过。

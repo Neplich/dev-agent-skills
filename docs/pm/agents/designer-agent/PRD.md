@@ -5,11 +5,11 @@ feature: "agent-designer-agent"
 feature_path: "agents/designer-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.1.0"
+version: "1.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-24"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/designer/README.md"
@@ -17,13 +17,15 @@ related_docs:
   - ".claude-plugin/marketplace.json"
   - "agents/designer/skills/designer-agent/SKILL.md"
   - "skills-lock.json"
-  - "agents/designer/test/designer-agent/evals/evals.json"
   - "docs/pm/repository-governance/feature-path-contract/PRD.md"
   - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
   - "docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md"
   - "docs/pm/agent-collaboration/frontend-ui-routing-contract/PRD.md"
   - "docs/engineer/agent-collaboration/frontend-ui-routing-contract/TRD.md"
 changelog:
+  - version: "1.1.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.1.0"
     date: "2026-06-24"
     changes: "Add Engineer-sourced UI maintenance design handoff"
@@ -163,8 +165,7 @@ Error flow: 如果请求属于其他角色，转交 owning agent，而不是继�
 
 ## 相关实现文档
 
-- Internal: `agents/designer/README.md`, `agents/designer/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/designer/skills/designer-agent/SKILL.md`, `skills-lock.json`, `agents/designer/test/designer-agent/evals/evals.json`。
-- Internal: 对应 eval fixture / comparison 用于行为回归。
+- Internal: `agents/designer/README.md`, `agents/designer/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/designer/skills/designer-agent/SKILL.md`, `skills-lock.json`。
 - External: Codex / Claude Code 的 skill discovery 或 plugin marketplace。
 
 ## 发布计划与里程碑

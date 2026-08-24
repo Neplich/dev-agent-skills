@@ -1,7 +1,7 @@
 ---
 title: "Engineer Agent 编码阶段 sub-agent 分工实施文档"
 type: TRD
-version: "1.1.0"
+version: "1.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-05-15"
@@ -10,11 +10,14 @@ feature: "engineer-agent-subagent-division"
 feature_path: "agents/engineer-agent/subagent-division"
 parent_feature: "agents/engineer-agent"
 feature_level: "3"
-last_updated: "2026-08-01"
+last_updated: "2026-08-24"
 related_prd: "docs/pm/agents/engineer-agent/subagent-division/PRD.md"
 related_docs:
   - "docs/pm/agents/engineer-agent/subagent-division/DECISIONS.md"
 changelog:
+  - version: "1.1.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.1.0"
     date: "2026-05-15"
     changes: "补充 feature-implementor 实现上下文和文件级实施计划"
@@ -68,8 +71,6 @@ flowchart TD
 
 - 只修改 Engineer Agent 相关指导、eval 定义、eval workspace 和必要文档。
 - 不做无关重构，不整理现有 QA 工作区改动。
-- 不提交运行期 eval 产物。
-- 修改 skill 文档或 eval fixture 后，需要主动询问是否运行对应 skill eval，用户确认后再执行模型 eval。
 
 ## 4. 文件变更计划
 
@@ -140,7 +141,6 @@ Implementation context:
 5. **修改 `agents/engineer/test/feature-implementor/evals/evals.json`** — 新增 `eval-002-subagent-division-from-docs`。（来自 PRD §5 FR-008）
    - 依赖：步骤 4 的 workspace。
    - 要点：使用 schema version `1.0`；assertions 使用 lower snake_case `id`；每个 assertion 包含 `description` 和语义化 `text`。
-   - 验证：`uv run scripts/check_eval_contract.py` 应通过。
 
 6. **按需修改 `agents/engineer/test/engineer-agent/evals/evals.json`** — 增加 dispatcher 层路由断言。（来自 PRD §5 FR-006、FR-008）
    - 依赖：步骤 1。
@@ -307,17 +307,12 @@ sequenceDiagram
 | 层级 | 范围 | 命令 / 方法 | 通过标准 |
 | --- | --- | --- | --- |
 | 仓库契约 | symlink、registry、skill frontmatter、非法产物 | `uv run scripts/check_repository_contract.py` | 无错误。 |
-| Eval 契约 | `evals.json` schema、metadata、workspace 路径 | `uv run scripts/check_eval_contract.py` | 无错误。 |
-| Eval 产物策略 | 禁止提交运行期输出 | `uv run scripts/check_eval_artifacts.py` | 无运行期产物入库。 |
 | Python 确定性测试 | runner/parser/prompt/report 等确定性测试 | 仓库现有 pytest 命令 | 与当前 CI 要求一致。 |
-| 模型 eval | Engineer Agent 行为可用性 | 用户确认后运行对应 eval | sub-agent validation 给出 pass/fail 结论。 |
 
 建议校验顺序：
 
 ```bash
 uv run scripts/check_repository_contract.py
-uv run scripts/check_eval_contract.py
-uv run scripts/check_eval_artifacts.py
 ```
 
 如修改了 eval runner 或 Python 测试相关逻辑，再补充运行确定性 pytest。
@@ -347,12 +342,7 @@ uv run scripts/check_eval_artifacts.py
 
 5. 运行确定性检查。
    - 先运行 repository contract。
-   - 再运行 eval contract 和 eval artifact 检查。
    - 按改动范围决定是否运行 pytest。
-
-6. 询问是否运行模型 eval。
-   - 因为修改了 skill 文档和 eval fixture，必须主动询问。
-   - 用户确认后再运行对应 eval，并按产物策略更新 `comparison.md`。
 
 ## 10. 回滚策略
 
@@ -367,8 +357,6 @@ uv run scripts/check_eval_artifacts.py
 
 ```bash
 uv run scripts/check_repository_contract.py
-uv run scripts/check_eval_contract.py
-uv run scripts/check_eval_artifacts.py
 ```
 
 ## 11. 风险与技术债
@@ -394,6 +382,4 @@ uv run scripts/check_eval_artifacts.py
 - [ ] `debugger` 明确保留复现优先，同时支持复杂修复的实现与验收分工。
 - [ ] 至少一个真实 eval 覆盖文档驱动实现与独立验收。
 - [ ] `uv run scripts/check_repository_contract.py` 通过。
-- [ ] `uv run scripts/check_eval_contract.py` 通过。
-- [ ] `uv run scripts/check_eval_artifacts.py` 通过。
 - [ ] 如用户确认，完成对应模型 eval 并更新 durable `comparison.md`。

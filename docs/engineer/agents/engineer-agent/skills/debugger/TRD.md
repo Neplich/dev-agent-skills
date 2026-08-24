@@ -1,11 +1,11 @@
 ---
 title: "debugger 只读诊断模式 TRD"
 type: TRD
-version: "1.0.0"
+version: "1.0.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-13"
-last_updated: "2026-08-13"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 feature: "skill-debugger"
 feature_path: "agents/engineer-agent/skills/debugger"
@@ -18,10 +18,10 @@ related_docs:
   - "agents/product_manager/skills/pm-agent/SKILL.md"
   - "agents/engineer/skills/engineer-agent/SKILL.md"
   - "agents/engineer/skills/debugger/SKILL.md"
-  - "agents/product_manager/test/pm-agent/evals/evals.json"
-  - "agents/engineer/test/engineer-agent/evals/evals.json"
-  - "agents/engineer/test/debugger/evals/evals.json"
 changelog:
+  - version: "1.0.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.0.0"
     date: "2026-08-13"
     changes: "定义 diagnosis_only 与 repair 双模式、只读权限边界和 fresh eval 范围"
@@ -153,9 +153,6 @@ flowchart TD
 | `agents/engineer/skills/debugger/SKILL.md` | Modify | 增加双模式入口、只读调查流程、报告格式和 repair re-entry gate。 |
 | `agents/product_manager/README.md`, `README_zh.md` | Modify | 同步 bug_report 只读子模式与 Engineer handoff。 |
 | `agents/engineer/README.md`, `README_zh.md` | Modify | 同步 debugger 双模式与修复门禁不变。 |
-| 三组 `evals.json` | Modify | 增加 PM 路由 1 条、Engineer 路由 1 条、debugger 行为 2 条。 |
-| 新增 eval workspace files | Add | 增加必要 fixture、`eval_metadata.json` 及 runner 生成的 durable `comparison.md`。 |
-| `agents/product_manager/test/pm-agent/test_pm_entry_eval.py` | Modify | 新增约 15–30 行确定性断言：仅明确只读意图产生 `diagnosis_only` / `allowed_mutations: none`，模糊诊断表达不得自动进入零修改模式。 |
 | `skills-lock.json` | Modify | 刷新 `pm-agent`、`engineer-agent`、`debugger` 的 `computedHash`。 |
 
 不修改 marketplace/plugin 注册，因为没有新增 skill，现有 Agent discovery 描述中的
@@ -189,22 +186,11 @@ PR review 同步权威 handoff 契约后，`idea-to-spec` 的 9 条现有 eval �
 
 ```bash
 uv run scripts/check_repository_contract.py
-uv run scripts/check_eval_contract.py
-uv run scripts/check_eval_artifacts.py
 uv run scripts/check_doc_contract.py
-uv run --with pytest pytest agents/product_manager/test/pm-agent/test_pm_entry_eval.py agents/test_eval_contract.py scripts/test_run_skill_eval.py scripts/test_eval_execution.py scripts/test_eval_persistence.py
-uv run scripts/summarize_eval_results.py
+uv run --with pytest pytest agents/test_doc_contract.py
 git diff --check
 git status --short
-test ! -d tmp/eval-runs
 ```
-
-其中 `test_pm_entry_eval.py` 必须同时覆盖正反例：明确“只读确认、不要修”产生两个专属
-supplemental fields；“查一下”“为什么挂了”只保持普通 `bug_report` 语义，不能自动增加
-`allowed_mutations: none`。该测试不修改 PM handoff 的通用 schema。
-
-获得模型授权后，以单个 `run_skill_eval.py` 进程通过 32 个精确 `--select` 执行 fresh，
-然后重复四项契约、summary、Git 状态和运行期产物清理检查。
 
 ## 9. 风险与控制
 
@@ -212,6 +198,5 @@ supplemental fields；“查一下”“为什么挂了”只保持普通 `bug_r
 | --- | --- |
 | 只读复现隐含写入 | 无法证明无副作用时不执行，并记录证据缺口。 |
 | 缺预期文档时误判缺陷 | 强制标记 `unaligned`，禁止确认 `implementation_deviation`。 |
-| 诊断后直接修复 | repair re-entry eval 验证完整门禁重新生效。 |
-| 手工 comparison 冒充 fresh | 只允许 runner 事务性写入，静态 artifact contract 复核。 |
+| 诊断后直接修复 | 检查 repair re-entry gate，确认完整门禁重新生效。 |
 | 变更扩散到注册或 eval 基础设施 | 文件范围和禁止区明确排除这些目录。 |

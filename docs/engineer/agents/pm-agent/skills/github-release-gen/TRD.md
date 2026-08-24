@@ -9,7 +9,7 @@ version: "1.2.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-20"
-last_updated: "2026-08-06"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/github-release-gen/PRD.md"
 related_issues:
@@ -265,18 +265,9 @@ collision alias 的受控清理。不得为这两个具体名称添加 hardcode 
 
 ```bash
 uv run scripts/check_repository_contract.py
-uv run scripts/check_eval_contract.py
-uv run scripts/check_eval_artifacts.py
 uv run scripts/check_doc_contract.py
 uv run --with pytest pytest \
-  agents/product_manager/test/idea-to-spec \
-  agents/product_manager/test/pm-agent \
-  agents/qa/test/test_qa_run_eval.py \
-  agents/designer/test/test_designer_run_eval.py \
-  agents/devops/test/test_devops_run_eval.py \
-  agents/docs/test/test_docs_run_eval.py \
   agents/test_doc_contract.py \
-  agents/test_eval_contract.py \
   scripts/test_install_codex_skills.py
 ```
 

@@ -1,11 +1,11 @@
 ---
 title: "变更分级契约 TRD"
 type: TRD
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Claude Code"
 date: "2026-07-05"
-last_updated: "2026-07-05"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 feature: "change-tier-contract"
 feature_path: "repository-governance/change-tier-contract"
@@ -22,6 +22,9 @@ related_docs:
   - "agents/qa/skills/qa-agent/SKILL.md"
   - "agents/product_manager/skills/pm-agent/SKILL.md"
 changelog:
+  - version: "0.1.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "0.1.0"
     date: "2026-07-05"
     changes: "初始版本，定义变更分级契约的落点、引用方式和判定入口衔接"
@@ -102,7 +105,6 @@ flowchart TD
 | 项 | 结论 |
 | --- | --- |
 | `scripts/check_repository_contract.py` | 无需修改。轻量计划形态不引入新落盘结构；实施计划路径、frontmatter 契约不变。 |
-| `scripts/check_eval_contract.py` / `check_eval_artifacts.py` | 无需修改。 |
 | CI pytest | 无需新增测试；纯文档变更由现有契约脚本覆盖。 |
 | `skills-lock.json` | `feature-implementor`、`pm-agent`、`qa-agent` 的 `computedHash` 需重算。 |
 
@@ -111,7 +113,7 @@ flowchart TD
 | 验证项 | 方式 |
 | --- | --- |
 | 唯一定义源 | `rg "变更分级契约" AGENTS.md`；各 gate 引用不复制等级表。 |
-| 契约脚本 | `uv run scripts/check_repository_contract.py`、`check_eval_contract.py`、`check_eval_artifacts.py` 全部通过。 |
+| 契约脚本 | `uv run scripts/check_repository_contract.py` 通过。 |
 | CI 同款测试 | `uv run pytest` CI 配置的确定性测试全部通过。 |
 | eval 覆盖（FR-008，P1） | 后续单独补充 `hotfix` 轻量链路、`standard` 完整门禁、`hotfix` 名义滥用阻断三类用例；见第 8 节。 |
 

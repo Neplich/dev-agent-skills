@@ -1,7 +1,7 @@
 ---
 title: "Engineer Agent 编码阶段 sub-agent 分工 PRD"
 type: PRD
-version: "1.0.1"
+version: "1.0.2"
 status: Draft
 author: "Neplich Codex"
 date: "2026-05-15"
@@ -10,11 +10,14 @@ feature: "engineer-agent-subagent-division"
 feature_path: "agents/engineer-agent/subagent-division"
 parent_feature: "agents/engineer-agent"
 feature_level: "3"
-last_updated: "2026-08-03"
+last_updated: "2026-08-24"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/12"
 related_docs:
   - "docs/pm/agents/engineer-agent/subagent-division/DECISIONS.md"
 changelog:
+  - version: "1.0.2"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.0.1"
     date: "2026-06-15"
     changes: "明确 TRD 和 IMPLEMENTATION_PLAN 文档编写 sub-agent 委派不属于本 PRD 覆盖范围"
@@ -40,7 +43,7 @@ Engineer Agent 负责代码库分析、功能实现、测试补充、问题修�
 1. 通过保留主进程上下文，提升 Engineer Agent 在复杂编码任务中的交付质量。
 2. 明确实现委派要求，包括写入范围、模块边界、预期行为和禁止触碰区域。
 3. 明确独立验收要求，以需求文档、设计文档、仓库规则和测试证据作为判断依据。
-4. 增加持久化指导和 eval 覆盖，让该行为可重复、可回归，而不是依赖临时提示。
+4. 增加持久化指导，让该行为可重复，而不是依赖临时提示。
 
 ### 非目标
 
@@ -67,7 +70,6 @@ Engineer Agent 负责代码库分析、功能实现、测试补充、问题修�
 | US-002 | 作为 Skill 作者，我希望实现 sub-agent 的任务描述包含文件归属、模块边界、预期行为和禁止事项，以避免委派工作覆盖无关改动。 | P0 | 给定一次实现委派，当生成 sub-agent 任务描述时，必须包含写入范围、职责边界、预期输出，以及不得回退无关改动的约束。 |
 | US-003 | 作为仓库维护者，我希望验收 sub-agent 基于需求文档、设计文档、仓库规则和测试结果判断，以避免只做泛泛总结。 | P0 | 给定一次实现结果，当委派验收时，验收应检查需求符合度、测试覆盖、角色边界和遗留风险。 |
 | US-004 | 作为 Engineer Agent 使用者，我希望简单任务保持轻量，以避免小改动引入不必要流程。 | P1 | 给定单文件小改、纯解释、纯代码阅读或用户明确不拆分的请求，Engineer Agent 可以不触发 sub-agent 分工。 |
-| US-005 | 作为仓库维护者，我希望有一个 eval 证明该行为在真实文档驱动实现场景中生效，以便长期防回退。 | P0 | 给定 eval fixture，当验证 Engineer Agent 输出时，断言应确认实现与验收 sub-agent 分工，以及主进程最终整合。 |
 
 ## 5. 功能需求
 
@@ -80,16 +82,14 @@ Engineer Agent 负责代码库分析、功能实现、测试补充、问题修�
 | FR-005 | 验收 sub-agent 契约 | 定义验收委派必须包含的内容。 | P0 | 验收必须检查源需求、设计约束、仓库规则、测试结果、角色边界和遗留风险。 |
 | FR-006 | Specialist skill 覆盖 | 更新复杂编码阶段相关 Engineer Agent dispatcher 和 specialist skill 指导。 | P0 | `engineer-agent`、`feature-implementor`、`debugger` 指导体现 implementation/validation split；TRD 文档编写委派属于相邻能力。 |
 | FR-007 | 仓库文档对齐 | 让仓库级指导与新的 Engineer Agent 行为保持一致。 | P1 | 仓库级文档描述该分工模式，但不改变角色归属。 |
-| FR-008 | Eval 覆盖 | 新增或更新至少一个“文档驱动实现 + 独立验收”的 eval。 | P0 | Eval 断言检查触发行为、实现委派质量、验收依据和最终整合总结。 |
 
 ## 6. 非功能需求
 
 | 类别 | 需求 | 指标 | 目标 |
 | --- | --- | --- | --- |
-| 可靠性 | 行为应能抵抗提示词调整带来的回退。 | Eval 覆盖 | MVP 至少 1 个真实场景 eval。 |
 | 可维护性 | 指导应避免在大量文件中重复长规则。 | 指令重复度 | 共享概念尽量复用，必要处保持简洁。 |
 | 易用性 | 简单任务保持快速直接。 | 流程开销 | 非触发场景不强制拆分 sub-agent。 |
-| 可追踪性 | 行为能追溯到 PM 需求和 Issue 目标。 | 需求追踪 | P0 需求由文档或 eval 断言覆盖。 |
+| 可追踪性 | 行为能追溯到 PM 需求和 Issue 目标。 | 需求追踪 | P0 需求由文档覆盖。 |
 | 安全性 | 委派实现必须避免覆盖无关用户改动。 | 委派描述质量 | 实现任务包含写入范围和禁止事项。 |
 
 ## 7. 用户流程
@@ -164,17 +164,14 @@ erDiagram
 | `agents/engineer/skills/engineer-agent/SKILL.md` | Dispatcher 行为 | 增加复杂编码任务 sub-agent 分工指导。 |
 | `agents/engineer/skills/feature-implementor/SKILL.md` | Spec 驱动实现行为 | 增加实现委派和验收要求。 |
 | `agents/engineer/skills/debugger/SKILL.md` | Bug 修复工作流行为 | 增加面向回归验证的委派指导。 |
-| `agents/engineer/test/.../evals.json` | 行为守护 | 新增或更新真实场景 eval 断言。 |
 
 ## 11. 假设与约束
 
 | 类型 | 描述 | 如果不成立的影响 |
 | --- | --- | --- |
 | 假设 | 当前会话支持 sub-agent 执行能力。 | 如果不支持，需要降级为明确的结构化 handoff 语言。 |
-| 假设 | `feature-implementor` 和 `debugger` 足以覆盖 MVP。 | 如果不成立，实施和 eval 范围需要重新确认。 |
-| 约束 | 仓库变更应保持小范围，不做无关重构。 | PR 只应触及相关指导、文档、eval 和 fixture。 |
-| 约束 | Eval 变更必须遵循共享 `evals.json` schema version `1.0`。 | 无效 eval 定义会阻塞仓库契约检查。 |
-| 约束 | 不提交运行期 eval 产物。 | Transcript、outputs、diagnostics 等生成物不得进入 git。 |
+| 假设 | `feature-implementor` 和 `debugger` 足以覆盖 MVP。 | 如果不成立，实施范围需要重新确认。 |
+| 约束 | 仓库变更应保持小范围，不做无关重构。 | PR 只应触及相关指导和文档。 |
 
 ## 12. 依赖
 
@@ -190,8 +187,7 @@ erDiagram
 | 阶段 | 范围 | 目标时间 | Owner |
 | --- | --- | --- | --- |
 | Phase 1 | 更新 Engineer Agent dispatcher 和 MVP specialist 指导，覆盖复杂编码任务。 | TBD | Engineer maintainer |
-| Phase 2 | 增加真实 eval fixture 和断言，覆盖文档驱动实现与独立验收。 | TBD | Engineer maintainer |
-| Phase 3 | 运行确定性仓库检查，并在维护者确认后运行相关模型 eval。 | TBD | Maintainer |
+| Phase 2 | 运行确定性仓库检查。 | TBD | Maintainer |
 
 ## 14. 风险与缓解
 
@@ -223,4 +219,3 @@ erDiagram
 - 实现委派包含清晰范围和禁止事项。
 - 验收委派检查源文档、测试和角色边界。
 - 主进程保留上下文并负责最终整合。
-- 至少一个真实场景 eval 守护该行为。

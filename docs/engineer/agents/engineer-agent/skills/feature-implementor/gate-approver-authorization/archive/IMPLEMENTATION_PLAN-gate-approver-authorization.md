@@ -2,16 +2,19 @@
 title: "计划与 TRD 门禁批准者授权实施计划"
 type: IMPLEMENTATION_PLAN
 version: "0.1.0"
-status: Draft
+status: Archived
 author: "Neplich Codex"
 date: "2026-08-20"
-last_updated: "2026-08-20"
+last_updated: "2026-08-24"
 generated_by: "feature-implementor"
 feature: "gate-approver-authorization"
 feature_path: "agents/engineer-agent/skills/feature-implementor/gate-approver-authorization"
 parent_feature: "agents/engineer-agent/skills/feature-implementor"
 feature_level: "5"
 implementation_scope: "gate-approver-authorization"
+archived_at: "2026-08-24"
+archive_approved_by: "Neplich"
+source_plan: "docs/engineer/agents/engineer-agent/skills/feature-implementor/gate-approver-authorization/IMPLEMENTATION_PLAN.md"
 change_tier: "major"
 related_prd: "docs/pm/agents/engineer-agent/skills/feature-implementor/gate-approver-authorization/PRD.md"
 related_trd: "docs/engineer/agents/engineer-agent/skills/feature-implementor/gate-approver-authorization/TRD.md"
@@ -157,3 +160,17 @@ git diff --cached --check
 
 计划完成后保持活跃入口不变；只有取得维护者明确归档批准，才移动到
 `archive/IMPLEMENTATION_PLAN-gate-approver-authorization.md`。
+
+## Closeout 对账
+
+| 字段 | 预期 | 实际 | 结论 |
+| --- | --- | --- | --- |
+| `expected_files` | 15 个文件。 | 按本 `feature_path` 切分后，PR #317 修改计划内 15 个文件，并额外修改 1 份父功能 PRD 以登记子功能。 | 偏离：新增 1 份父功能 PRD。 |
+| `expected_new_dependencies` | `0` | `0` | 一致 |
+| `expected_new_config` | `0` | `0` | 一致 |
+| `expected_new_abstractions` | `0` | `0` | 一致 |
+| `expected_loc_magnitude` | 约 450–700 行净增或机械同步。 | 本范围约净增 650–700 行，包含 411 行过程文档、授权契约与门禁改动、六份机械生成副本及父功能 PRD 登记。 | 一致 |
+| `expected_tests_vs_acceptance` | 不新增测试文件；7 条 PRD 验收标准由 4 项确定性命令和逐项文档审查覆盖。 | 新增测试文件 `0`；合并时 `repository-contract`、`doc-contract`、`python-tests` CI 全部通过。 | 一致 |
+
+验证证据以 PR #317 合并记录为准：`repository-contract`、`doc-contract`、
+`python-tests` 均为 SUCCESS。

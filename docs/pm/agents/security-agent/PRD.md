@@ -5,11 +5,11 @@ feature: "agent-security-agent"
 feature_path: "agents/security-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.0.0"
+version: "1.0.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/security/README.md"
@@ -17,8 +17,10 @@ related_docs:
   - ".claude-plugin/marketplace.json"
   - "agents/security/skills/security-agent/SKILL.md"
   - "skills-lock.json"
-  - "agents/security/test/security-agent/evals/evals.json"
 changelog:
+  - version: "1.0.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"
@@ -155,8 +157,7 @@ Error flow: 如果请求属于其他角色，转交 owning agent，而不是继�
 
 ## 相关实现文档
 
-- Internal: `agents/security/README.md`, `agents/security/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/security/skills/security-agent/SKILL.md`, `skills-lock.json`, `agents/security/test/security-agent/evals/evals.json`。
-- Internal: 对应 eval fixture / comparison 用于行为回归。
+- Internal: `agents/security/README.md`, `agents/security/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/security/skills/security-agent/SKILL.md`, `skills-lock.json`。
 - External: Codex / Claude Code 的 skill discovery 或 plugin marketplace。
 
 ## 发布计划与里程碑

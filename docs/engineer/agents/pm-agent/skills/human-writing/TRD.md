@@ -5,11 +5,11 @@ feature: "skill-human-writing"
 feature_path: "agents/pm-agent/skills/human-writing"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
-version: "1.2.0"
+version: "1.2.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-19"
-last_updated: "2026-08-20"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/human-writing/PRD.md"
 related_docs:
@@ -19,6 +19,9 @@ related_docs:
   - ".claude-plugin/marketplace.json"
   - "skills-lock.json"
 changelog:
+  - version: "1.2.1"
+    date: "2026-08-24"
+    changes: "移除外部项目遗留描述，纳入文档站维护者整站优化用户场景"
   - version: "1.2.0"
     date: "2026-08-20"
     changes: "定义编写方式与范围判断、必要结构权限、高风险事实回传和整站模式的契约修改与验证（Issue #313）"
@@ -208,10 +211,10 @@ uv run --with pytest pytest \
 每组检查”事实零新增、关键术语零丢失、内部口径不进入不相关读者正文”。本批次不引入
 模型 eval runner 或新的持久化 eval 资产。
 
-第三批增加一个人工语义验收场景：对一套按技术域组织、含多角色和截图的文档站执行整站
-优化请求，预期在改写句子前识别章节组织与读者任务的不匹配，提出或执行任务导向的重分类，
+对于一套按技术域组织、含多角色和截图的文档站整站优化请求，设计预期是在改写句子前识别
+章节组织与读者任务的不匹配，提出或执行任务导向的重分类，
 保留全部页面、图片、操作步骤、警告和恢复说明，并将权限、数据边界和自动行为描述交由主
-Skill 核实。外部仓库不作为自动测试依赖。
+Skill 核实。
 
 ## 10. 发布与回滚
 
@@ -293,4 +296,4 @@ README、共享生成契约、handoff、安装器或发布配置。
 ### 12.2 验证
 
 除 §9 命令外，逐个检查 38 处共同加载条款的措辞一致性，确认 `human-writing` 本体与周边
-条款中的 “required structure” 语义一致，并按 §9.3 的整站场景完成一次人工语义验收。
+条款中的 “required structure” 语义一致。

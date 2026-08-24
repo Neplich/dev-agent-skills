@@ -126,12 +126,6 @@ uv run scripts/check_repository_contract.py
 
 目的：校验 eval 定义、fixture 和元数据结构，不在 PR 中生成模型输出。
 
-第一版命令：
-
-```bash
-uv run scripts/check_eval_contract.py
-```
-
 检查项：
 
 - `evals.json` 必须是合法 JSON。
@@ -159,11 +153,10 @@ uv run scripts/check_eval_contract.py
 
 ```bash
 uv run --with pytest pytest \
-  agents/product_manager/test/idea-to-spec \
-  agents/qa/test/test_qa_run_eval.py \
-  agents/designer/test/test_designer_run_eval.py \
-  agents/devops/test/test_devops_run_eval.py \
-  agents/test_eval_contract.py
+  agents/test_doc_contract.py \
+  scripts/test_generate_shared_contracts.py \
+  scripts/test_install_codex_skills.py \
+  scripts/test_check_repository_contract.py
 ```
 
 说明：
@@ -177,19 +170,11 @@ uv run --with pytest pytest \
 
 状态：
 
-- [x] 已创建独立手动 workflow：`.github/workflows/evals.yml`。
 - [x] 已支持 `workflow_dispatch` 手动触发，并可选择 `all`、`designer` 或 `qa`。
 - [x] Designer eval 在 workflow 中作为 diagnostics 运行，运行期输出缺口以
   warning 和 artifact 形式呈现。
 - [x] QA eval 保留模型执行路径，并要求仓库 secret `OPENAI_API_KEY`。
 - [ ] 尚未启用 nightly 定时触发。
-
-当前手动入口：
-
-```bash
-uv run agents/designer/test/run_all_evals.py
-uv run agents/qa/test/run_all_evals.py
-```
 
 触发方式：
 
@@ -241,28 +226,15 @@ uv run agents/qa/test/run_all_evals.py
 jobs：
 
 - [x] `repository-contract`
-- [x] `eval-contract`
+- [x] `doc-contract`
 - [x] `python-tests`
 
 - [x] 通过后再把这三个 job 加入 `main` required status checks。
 
-### [x] `.github/workflows/evals.yml`
-
-触发：
-
-- [x] `workflow_dispatch`
-
-jobs：
-
-- [x] `designer-evals`
-- [x] `qa-evals`
-
-该 workflow 第一版只作为管理员手动质量检查。
-
 ## 待确认问题
 
 - [ ] 是否需要第一版就新增 `CODEOWNERS`。
-- [x] required status checks 拆成 3 个 job：`repository-contract`、`eval-contract`、`python-tests`。
+- [x] required status checks 拆成 3 个 job：`repository-contract`、`doc-contract`、`python-tests`。
 - [ ] `description` 是否需要最小长度校验。
 - [ ] 是否需要在第一版 CI 中校验 README 中的本地验证命令仍存在。
 - [x] 已新增 `CHANGELOG.md` 索引和 `docs/changelog/changelog-v0.1.0.md`。

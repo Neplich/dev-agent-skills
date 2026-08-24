@@ -10,11 +10,11 @@ child_features:
   - "agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate"
   - "agents/engineer-agent/skills/feature-implementor/gate-approver-authorization"
   - "agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation"
-version: "1.5.1"
+version: "1.5.2"
 status: Approved
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-20"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_docs:
   - "docs/pm/agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate/PRD.md"
@@ -35,8 +35,10 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md"
   - "agents/engineer/skills/feature-implementor/_internal/implementor/INSTRUCTIONS.md"
   - "agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md"
-  - "agents/engineer/test/feature-implementor/evals/evals.json"
 changelog:
+  - version: "1.5.2"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.5.1"
     date: "2026-08-15"
     changes: "收敛 marketplace 当前能力镜像状态，确认文档正文对应已发布 Skill 契约"
@@ -69,7 +71,7 @@ changelog:
 ## 目标
 
 1. 明确 `feature-implementor` 的真实触发条件、上下文、工作流、产物和 handoff。
-2. 让维护者能用 PRD 对照 `SKILL.md` / README / eval 检查行为漂移。
+2. 让维护者能用 PRD 对照 `SKILL.md` / README 检查行为漂移。
 3. 将 Sub Agent 校验发现的实现差异收敛为可验收 requirement。
 4. 保持与 `engineer-agent` 的角色边界一致。
 
@@ -93,7 +95,7 @@ changelog:
 |----|-----------|----------|---------------------|
 | US-S01 | 作为用户，我想在 `feature-implementor` 场景下获得对应工作流，以便得到真实产物。 | P0 | 输出满足 FR-S04，不以泛化描述替代实际 artifact。 |
 | US-S02 | 作为 dispatcher，我想知道何时选择 `feature-implementor`，以便避免自路由或跨 skill 误路由。 | P0 | FR-S01 和 route / handoff 与父级 SKILL.md 一致。 |
-| US-S03 | 作为维护者，我想快速定位依赖文档，以便校验实现是否漂移。 | P1 | related_docs 覆盖 public entry、parent dispatcher 和必要 internal/reference/eval 文件。 |
+| US-S03 | 作为维护者，我想快速定位依赖文档，以便校验实现是否漂移。 | P1 | related_docs 覆盖 public entry、parent dispatcher 和必要 internal/reference 文件。 |
 
 ## 功能需求
 
@@ -109,7 +111,7 @@ changelog:
 | FR-S08 | Author Metadata | `feature-implementor` 创建或更新 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 时必须使用“生成触发者展示名 + Agent 平台名”的 `author`；平台名可以是用户自定义值。 | P0 | IMPLEMENTATION_PLAN frontmatter 使用已填写的可追踪 author，例如 `Neplich Codex`，不使用空值或 `AI Assistant` 这类占位泛称。 |
 | FR-S09 | Feature Path Plan Gate | 写实施计划前必须校验 PRD/TRD 的 `feature_path`、`parent_feature`、`feature_level` 和 TRD `related_prd` 一致。 | P0 | 缺 PRD 回 PM；缺 TRD、TRD stale 或路径/字段不一致回 `trd-gen`；只有 PRD/TRD 已确认且路径一致时才允许创建 Engineer 目标目录并写计划。 |
 | FR-S10 | UI Design Handoff Gate | 前端 UI 行为、视觉或交互变化进入实施计划前必须检查设计交付物。 | P0 | 实施计划必须引用覆盖当前变化的 `docs/design/{feature_path}/ui-ux-spec.md` 和/或 `visual-system.md`，或明确说明无需 Designer 更新的理由；设计缺失、过期或冲突时停止并 handoff 回 `engineer-agent -> designer-agent`。 |
-| FR-S11 | Implementation Plan Closeout Gate | 实现和验证完成后，必须同步更新 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 的实施结果、验证证据和剩余状态。 | P0 | `status: Implemented` 或等价完成态不得与正文“待确认 / 未开始 / 未执行”矛盾；已运行 deterministic checks 时记录实际命令；已运行 skill eval 或 fresh subagent validation 时引用 durable `comparison.md`；未运行时记录 skipped / blocked 原因。 |
+| FR-S11 | Implementation Plan Closeout Gate | 实现和验证完成后，必须同步更新 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 的实施结果、验证证据和剩余状态。 | P0 | `status: Implemented` 或等价完成态不得与正文“待确认 / 未开始 / 未执行”矛盾；已运行 deterministic checks 时记录实际命令；未运行时记录 skipped / blocked 原因。 |
 | FR-S12 | Implementation Plan Archive Gate | 创建或替换同一 `feature_path` 的活跃计划前必须扫描已有计划；完成态或废弃态旧计划只有经 closeout 和用户/维护者审批后才归档。 | P0 | 已有未归档活跃计划时不得直接覆盖，必须先询问“归档后新建 / 继续更新 / 归档为 Superseded”三选一；归档到 `docs/engineer/{feature_path}/archive/IMPLEMENTATION_PLAN-<scope>.md`，归档 frontmatter 含 `implementation_scope`、`status`（`Archived` 或 `Superseded`）、`archived_at`、`archive_approved_by`、`source_plan`，废弃态额外含 `superseded_reason`；归档后新建计划记录 `previous_plan_archive`；活跃入口保持 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 不变。 |
 
 ## 当前实现对齐
@@ -133,7 +135,7 @@ changelog:
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| AC-01 | P0 trigger、context、workflow、artifact 和 handoff 与当前实现文档一致。 | 对照 related_docs 中的 README、SKILL.md、internal/reference 或 eval 文件人工 review。 |
+| AC-01 | P0 trigger、context、workflow、artifact 和 handoff 与当前实现文档一致。 | 对照 related_docs 中的 README、SKILL.md、internal/reference 文件人工 review。 |
 | AC-02 | 文档不包含自路由、全量默认执行或将 specialist 行为泛化为整个 Agent 的错误描述。 | 检查 route matrix、非目标、边界和 Mermaid flow。 |
 | AC-03 | 产物要求必须指向具体文件、报告、代码变更或 blocked 输出，不使用模糊替代表述。 | 检查功能需求和用户流程中的 artifact 节点。 |
 | AC-04 | 实施完成态的 `IMPLEMENTATION_PLAN.md` 不得保留计划期状态残留。 | reviewer checklist 和 feature-implementor closeout eval。 |
@@ -204,7 +206,7 @@ Error flow: 如果必要上下文无法满足，输出 blocked reason、missing 
 
 ## 相关实现文档
 
-- Internal: `agents/engineer/README.md`, `agents/engineer/README_zh.md`, `agents/engineer/skills/engineer-agent/SKILL.md`, `agents/engineer/skills/feature-implementor/SKILL.md`, `.claude-plugin/marketplace.json`, `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md`, `agents/engineer/skills/feature-implementor/_internal/implementor/INSTRUCTIONS.md`, `agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md`, `agents/engineer/test/feature-implementor/evals/evals.json`。
+- Internal: `agents/engineer/README.md`, `agents/engineer/README_zh.md`, `agents/engineer/skills/engineer-agent/SKILL.md`, `agents/engineer/skills/feature-implementor/SKILL.md`, `.claude-plugin/marketplace.json`, `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md`, `agents/engineer/skills/feature-implementor/_internal/implementor/INSTRUCTIONS.md`, `agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md`。
 - Internal: 父级 dispatcher route matrix、README 和 marketplace 注册。
 - External: Codex / Claude Code skill execution environment；具体外部 CLI/API 仅在 SKILL.md 明确要求时使用。
 
@@ -228,5 +230,4 @@ Error flow: 如果必要上下文无法满足，输出 blocked reason、missing 
 
 | # | Question | Owner | Deadline | Resolution |
 |---|----------|-------|----------|------------|
-| 1 | 是否将本 PRD 纳入对应 skill eval 的 durable comparison 检查？ | Maintainer | TBD | Unresolved |
 | 2 | 是否需要为 `feature-implementor` 增加专门 PRD validator？ | Maintainer | TBD | Unresolved |

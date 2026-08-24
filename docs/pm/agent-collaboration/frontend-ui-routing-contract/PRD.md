@@ -5,7 +5,7 @@ version: "0.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
-last_updated: "2026-06-25"
+last_updated: "2026-08-24"
 generated_by: "idea-to-spec"
 feature: "frontend-ui-routing-contract"
 feature_path: "agent-collaboration/frontend-ui-routing-contract"
@@ -41,7 +41,6 @@ GitHub issue #35 记录了一个跨角色路由缺口：当用户表达“更新
 2. 保留现有 PRD/TRD alignment 和 `IMPLEMENTATION_PLAN.md` 用户确认门禁。
 3. 让 Engineer 在进入实现前检查相关设计交付物是否存在且覆盖当前 UI 变化。
 4. 让 Designer 处理来自 Engineer 的 UI maintenance / frontend-update design request，并在设计完成后停止，明确交回 Engineer。
-5. 用 eval 固化路由行为，防止后续回退到外部 UI skill 或让 Designer 直接实现代码。
 
 ## 3. 非目标
 
@@ -61,7 +60,6 @@ GitHub issue #35 记录了一个跨角色路由缺口：当用户表达“更新
 | FR-004 | Designer handoff | P0 | 设计交付物缺失、过期或不覆盖当前变化时，Engineer handoff 到 `designer-agent`，并说明需要补齐的设计输入。 |
 | FR-005 | Designer 停止边界 | P0 | `designer-agent` 只更新 `docs/design/{feature_path}/ui-ux-spec.md` 和/或 `visual-system.md`，不写代码，并在输出中明确 handoff 回 `engineer-agent`。 |
 | FR-006 | Feature Implementor 门禁 | P0 | `feature-implementor` 的实施计划引用已确认设计交付物，或明确说明为什么本次 UI 变化不需要 Designer 更新。设计交付物缺失或冲突时，不开始实现。 |
-| FR-007 | Eval 覆盖 | P0 | Engineer、Feature Implementor、Designer 的相关 eval 覆盖该路由契约，并在实际执行 eval 后更新 durable `comparison.md`。 |
 | FR-008 | Lockfile 同步 | P0 | 修改 skill 文档后同步更新 `skills-lock.json`。 |
 
 ## 5. 用户流程
@@ -84,12 +82,12 @@ flowchart LR
 
 | ID | Criteria | Verification |
 | --- | --- | --- |
-| AC-001 | Engineer 不把本地前端实现请求导向外部 `ui-ux-pro-max`。 | 检查 `engineer-agent` SKILL / README / eval。 |
-| AC-002 | 设计缺失时 Engineer 能明确 handoff 给 `designer-agent`。 | 检查 `engineer-agent` 与 `feature-implementor` 文档和 eval。 |
-| AC-003 | Designer 能处理 Engineer 来源的 UI 维护设计请求，并停止在设计交付。 | 检查 `designer-agent` 文档和 eval。 |
-| AC-004 | Feature Implementor 实施计划引用设计交付物或说明无需更新设计的理由。 | 检查 `feature-implementor` 文档和 eval。 |
+| AC-001 | Engineer 不把本地前端实现请求导向外部 `ui-ux-pro-max`。 | 检查 `engineer-agent` SKILL / README。 |
+| AC-002 | 设计缺失时 Engineer 能明确 handoff 给 `designer-agent`。 | 检查 `engineer-agent` 与 `feature-implementor` 文档。 |
+| AC-003 | Designer 能处理 Engineer 来源的 UI 维护设计请求，并停止在设计交付。 | 检查 `designer-agent` 文档。 |
+| AC-004 | Feature Implementor 实施计划引用设计交付物或说明无需更新设计的理由。 | 检查 `feature-implementor` 文档。 |
 | AC-005 | 外部 `ui-ux-pro-max` 不在本仓库变更范围内。 | 检查 diff。 |
-| AC-006 | 仓库契约、eval 契约和 artifact 策略通过。 | 运行 repository / eval contract 检查。 |
+| AC-006 | 仓库契约检查通过。 | 运行 repository contract 检查。 |
 
 ## 7. 相关实现文档
 
@@ -97,7 +95,3 @@ flowchart LR
 - Engineer: `agents/engineer/skills/engineer-agent/SKILL.md`
 - Feature Implementor: `agents/engineer/skills/feature-implementor/SKILL.md`
 - Designer: `agents/designer/skills/designer-agent/SKILL.md`
-- Eval definitions:
-  - `agents/engineer/test/engineer-agent/evals/evals.json`
-  - `agents/engineer/test/feature-implementor/evals/evals.json`
-  - `agents/designer/test/designer-agent/evals/evals.json`

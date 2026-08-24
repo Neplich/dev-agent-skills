@@ -2,16 +2,19 @@
 title: "实施计划预期改动声明与收尾对账实施计划"
 type: IMPLEMENTATION_PLAN
 version: "0.1.0"
-status: Draft
+status: Archived
 author: "Neplich Codex"
 date: "2026-08-20"
-last_updated: "2026-08-20"
+last_updated: "2026-08-24"
 generated_by: "feature-implementor"
 feature: "plan-expectation-reconciliation"
 feature_path: "agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation"
 parent_feature: "agents/engineer-agent/skills/feature-implementor"
 feature_level: "5"
 implementation_scope: "plan-expectation-reconciliation"
+archived_at: "2026-08-24"
+archive_approved_by: "Neplich"
+source_plan: "docs/engineer/agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation/IMPLEMENTATION_PLAN.md"
 change_tier: "major"
 related_prd: "docs/pm/agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation/PRD.md"
 related_trd: "docs/engineer/agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation/TRD.md"
@@ -160,3 +163,17 @@ git diff --cached --check
 | 小修复流程变重 | hotfix 成本上升 | 允许简化字段，但保留确认。 |
 | 普通 ADR 被额外约束 | 既有写作流程扩大 | 新字段保持可选，仅偏离驱动 ADR 条件必填。 |
 | 估算误差产生过多 ADR | 决策目录被稀释 | 纯 `estimate_wrong` 只在 closeout 留一行。 |
+
+## Closeout 对账
+
+| 字段 | 预期 | 实际 | 结论 |
+| --- | --- | --- | --- |
+| `expected_files` | 10 个 tracked 文件。 | 按本 `feature_path` 切分后，PR #317 修改计划内 10 个文件，并额外修改 1 份父功能 PRD 以登记子功能。 | 偏离：新增 1 份父功能 PRD。 |
+| `expected_new_dependencies` | `0` | `0` | 一致 |
+| `expected_new_config` | `0` | `0` | 一致 |
+| `expected_new_abstractions` | `0` | `0` | 一致 |
+| `expected_loc_magnitude` | Skill 契约源净增约 150–220 行；过程文档新增约 400–500 行。 | 本范围过程文档净增 468 行；契约源净增约 80–100 行，另有 lock hash 和父功能 PRD 机械更新。 | 偏离：契约源净增低于 150–220 行估算。 |
+| `expected_tests_vs_acceptance` | 新增测试 `0`；8 个验收点由四项静态检查与逐文件审查覆盖。 | 新增测试 `0`；合并时 `repository-contract`、`doc-contract`、`python-tests` CI 全部通过。 | 一致 |
+
+验证证据以 PR #317 合并记录为准：`repository-contract`、`doc-contract`、
+`python-tests` 均为 SUCCESS。

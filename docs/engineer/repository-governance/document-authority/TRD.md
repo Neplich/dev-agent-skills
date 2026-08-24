@@ -1,11 +1,11 @@
 ---
 title: "仓库文档权威与生命周期治理 — Technical Requirements Document"
 type: TRD
-version: "0.1.5"
+version: "0.1.6"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-15"
-last_updated: "2026-08-16"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 feature: "document-authority"
 feature_path: "repository-governance/document-authority"
@@ -25,6 +25,9 @@ related_code:
   - "scripts/install_codex_skills.py"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.6"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "0.1.5"
     date: "2026-08-16"
     changes: "把 Router 表格与指针中的既有要求收敛为显式 Specialist 名称和完整 handoff 证据字段"
@@ -106,7 +109,6 @@ frontmatter、marketplace Skill 路径、安装后相对引用和 checker 的退
 | `docs/architecture.md` | 七角色、安装方式、路由、协作链和扩展关系的当前架构地图 | 操作步骤、实施过程、历史争论、产品或技术决策账本 | 本地链接检查、架构事实 review |
 | `docs/AGENTS.md` | `docs/` 树的层级、owner、frontmatter、生命周期、派生物、归档与链接规则 | Agent 执行协议、具体 Skill 工作流、发布命令 | doc contract |
 | `docs/cookbook/maintain-skills.md` | 新增、修改、重命名 Role Skill 的顺序化维护步骤及权威 Skill 指针 | 重新定义同步面或 change tier | 链接检查、maintain-skills 契约 |
-| `docs/cookbook/run-skill-evals.md` | 设计、运行、复核与清理 skill eval 的操作顺序及权威 Skill 指针 | 复制 eval schema 或判定协议全文 | 链接检查、eval contract |
 | `docs/cookbook/release.md` | 手动 release checklist、tag 前后核验与批准边界 | 新 Release CI、具体功能事实、GitHub Release Specialist 协议全文 | repository contract、链接检查 |
 | `docs/pm/{feature_path}/DECISIONS.md` | 已接受的产品决策、理由与后果 | Engineer 技术取舍、执行步骤 | PM 文档契约 |
 | `docs/engineer/{feature_path}/TRD.md`、`ADR-*.md` | 当前技术设计与需要持久化理由的技术取舍 | 产品决策、下游路由操作、已完成实施叙事 | Engineer 文档契约 |
@@ -296,12 +298,7 @@ slug（含重复标题序号）验证锚点存在。URL percent-decoding 后再�
 | QA owner | 第 8 节三个 reference、QA E2E PRD/TRD、`qa-agent/SKILL.md` | 模板迁移与引用 |
 | 超长文档 | 第 9 节五份 | 四份收窄、一份归档 |
 | 检查与测试 | `scripts/generate_shared_contracts.py`、`scripts/check_repository_contract.py`、`scripts/check_doc_contract.py` 及同名/相邻 test 文件 | 生成、新鲜度、预算、状态、链接测试 |
-| Eval 隔离依赖 | 六个下游插件 Specialist 的 `evals/workspace/*/eval_metadata.json`、6 个现有 `<skill>/workspace/` legacy metadata，以及 Engineer/PM Router 的路由场景 metadata | Specialist 显式加入同插件 Router dependency；Router 场景显式包含被路由目标，使 overlay 与真实可用能力一致 |
 | 安装验证 | `scripts/install_codex_skills.py` 与 `scripts/test_install_codex_skills.py` | 复用安装器，补生成副本断言 |
-
-受影响 eval 的识别、fresh paired 执行和 durable `comparison.md` 更新遵循现有
-`skill-eval-runner`，不在本 TRD 重写 eval 协议。仅更新真实受契约变化影响的 eval，
-不把全部 35 个 Skill 无差别重跑。
 
 ## 12. 实施约束与禁止区
 
@@ -322,8 +319,7 @@ slug（含重复标题序号）验证锚点存在。URL percent-decoding 后再�
 | 生成 | 权威源与 24 份副本 | `uv run scripts/generate_shared_contracts.py --check` | missing/extra/stale 为 0 |
 | 仓库契约 | plan 生命周期、Router 预算、marketplace 文档状态、hash | `uv run scripts/check_repository_contract.py` | PASS |
 | 文档契约 | frontmatter、本地链接与锚点、归档路径 | `uv run scripts/check_doc_contract.py` | PASS |
-| Eval 静态契约 | eval schema 与持久化产物 | `uv run scripts/check_eval_contract.py`；`uv run scripts/check_eval_artifacts.py` | PASS |
-| 定向单测 | 生成、repository/doc checker、安装镜像 | `uv run --with pytest pytest scripts/test_generate_shared_contracts.py scripts/test_check_repository_contract.py scripts/test_check_doc_contract.py scripts/test_install_codex_skills.py` | 全部通过 |
+| 定向单测 | 生成、repository/doc checker、安装镜像 | `uv run --with pytest pytest scripts/test_generate_shared_contracts.py scripts/test_check_repository_contract.py agents/test_doc_contract.py scripts/test_install_codex_skills.py` | 全部通过 |
 | Codex 安装 | 全量安装临时目标 | `uv run scripts/install_codex_skills.py --target <tmp>` | 引用可读、生成副本存在 |
 | Claude 打包 | marketplace 七 plugin 临时复制测试 | pytest 内按 manifest source/skills 复制并解析引用 | 六个 plugin 自包含 |
 | 行为回归 | 受影响 Router/Specialist eval | metadata 显式声明同插件 Router dependency；fresh paired 结果与 durable comparison | overlay 与安装拓扑一致；既有行为差异 0 |

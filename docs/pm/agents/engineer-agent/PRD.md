@@ -5,11 +5,11 @@ feature: "agent-engineer-agent"
 feature_path: "agents/engineer-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.2.0"
+version: "1.2.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-01"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -22,8 +22,10 @@ related_docs:
   - "docs/pm/agent-collaboration/frontend-ui-routing-contract/PRD.md"
   - "docs/engineer/agent-collaboration/frontend-ui-routing-contract/TRD.md"
   - "skills-lock.json"
-  - "agents/engineer/test/engineer-agent/evals/evals.json"
 changelog:
+  - version: "1.2.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.2.0"
     date: "2026-06-24"
     changes: "Add frontend UI update routing contract"
@@ -170,8 +172,7 @@ Error flow: 如果请求属于其他角色，转交 owning agent，而不是继�
 
 ## 相关实现文档
 
-- Internal: `agents/engineer/README.md`, `agents/engineer/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/engineer/skills/engineer-agent/SKILL.md`, `skills-lock.json`, `agents/engineer/test/engineer-agent/evals/evals.json`。
-- Internal: 对应 eval fixture / comparison 用于行为回归。
+- Internal: `agents/engineer/README.md`, `agents/engineer/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/engineer/skills/engineer-agent/SKILL.md`, `skills-lock.json`。
 - External: Codex / Claude Code 的 skill discovery 或 plugin marketplace。
 
 ## 发布计划与里程碑

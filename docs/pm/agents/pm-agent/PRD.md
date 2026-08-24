@@ -15,11 +15,11 @@ child_features:
   - "agents/pm-agent/skills/idea-to-spec"
   - "agents/pm-agent/skills/pm-agent"
   - "agents/pm-agent/skills/roadmap-gen"
-version: "1.2.0"
+version: "1.2.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-19"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/product_manager/README.md"
@@ -28,8 +28,10 @@ related_docs:
   - "agents/product_manager/skills/pm-agent/SKILL.md"
   - "docs/pm/agents/pm-agent/skills/human-writing/PRD.md"
   - "skills-lock.json"
-  - "agents/product_manager/test/pm-agent/evals/evals.json"
 changelog:
+  - version: "1.2.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.2.0"
     date: "2026-08-19"
     changes: "登记 human-writing 子功能与面向读者的辅助写作能力"
@@ -186,8 +188,7 @@ Error flow: 如果请求属于其他角色，转交 owning agent，而不是继�
 
 ## 相关实现文档
 
-- Internal: `agents/product_manager/README.md`, `agents/product_manager/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/product_manager/skills/pm-agent/SKILL.md`, `skills-lock.json`, `agents/product_manager/test/pm-agent/evals/evals.json`。
-- Internal: 对应 eval fixture / comparison 用于行为回归。
+- Internal: `agents/product_manager/README.md`, `agents/product_manager/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/product_manager/skills/pm-agent/SKILL.md`, `skills-lock.json`。
 - External: Codex / Claude Code 的 skill discovery 或 plugin marketplace。
 
 ## 发布计划与里程碑

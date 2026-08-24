@@ -6,11 +6,11 @@ feature_path: "agents/pm-agent/skills/human-writing"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
 child_features: "N/A"
-version: "1.2.0"
+version: "1.2.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-19"
-last_updated: "2026-08-20"
+last_updated: "2026-08-24"
 generated_by: "idea-to-spec"
 related_docs:
   - "docs/pm/agents/pm-agent/skills/human-writing/DECISIONS.md"
@@ -20,6 +20,9 @@ related_docs:
   - "agents/product_manager/skills/pm-agent/SKILL.md"
   - "https://github.com/KKKKhazix/human-writing"
 changelog:
+  - version: "1.2.1"
+    date: "2026-08-24"
+    changes: "移除外部项目遗留描述，纳入文档站维护者整站优化用户场景"
   - version: "1.2.0"
     date: "2026-08-20"
     changes: "确认编写方式与范围判断、作者决策链、必要结构权限、高风险事实回传和整站写作模式（Issue #313）"
@@ -44,7 +47,7 @@ changelog:
 中文应先交代主语和动作。它面向论坛、博客和创作长文的部分硬禁令不适合直接套到技术
 文档。本功能吸收其方法，不复制其文体。
 
-在 LLM Wiki 文档站优化案例中，`human-writing` 成功帮助整站删除 Agent 话术、报告腔和
+在某一个项目的文档站整站优化实践中，`human-writing` 成功帮助整站删除 Agent 话术、报告腔和
 机械表达，同时暴露出现行契约的三处不足：第一轮容易只做事实纠偏和句子改写，不主动
 判断章节分类是否符合读者任务；"preserve structure" 容易被理解成保留现有布局而不是
 主 Skill 规定的必要结构；"只修改命中段落"让整站任务停留在局部润色。此外，契约只覆盖
@@ -99,6 +102,7 @@ changelog:
 | 研发协作者 | 阅读 PRD、TRD、API、运维或 QA 文档 | 找到决策、约束、接口、验证和风险，不读重复套话 |
 | Skill 使用者 | 用自然语言要求生成或改写文档 | 不必先填写读者、语气、长度等固定字段 |
 | Skill 维护者 | 为文档生成能力接入统一写作规则 | 保留主 Skill 权限和交付契约，不复制规则 |
+| 文档站维护者 | 对一套多角色、含截图的文档站提出整站优化要求 | 先识别章节分类与读者任务的不匹配并做结构调整，而不是逐段润色措辞 |
 
 ## 功能需求
 
@@ -168,7 +172,7 @@ flowchart LR
 12. "保留结构"在 Skill 本体与所有共同加载条款中统一指必要结构和真实流程，不等于保留现有布局。
 13. 结构调整必须获得用户或主 Skill 授权，并交回主 Skill 完成链接、构建和渲染验证。
 14. 高风险事实存在疑问时返回主 Skill 核验，不输出更肯定的改写。
-15. 不增加 prose lint、模型评分或 Skill eval 体系；使用 LLM Wiki 整站案例完成一次人工语义验收。
+15. 不增加 prose lint、模型评分或 Skill eval 体系。
 
 ## 风险与缓解
 

@@ -1,11 +1,11 @@
 ---
 title: "IMPLEMENTATION_PLAN 归档门禁 TRD"
 type: TRD
-version: "0.2.0"
+version: "0.2.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-01"
-last_updated: "2026-08-12"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 feature: "implementation-plan-archive-gate"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate"
@@ -21,6 +21,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md"
   - "scripts/check_repository_contract.py"
 changelog:
+  - version: "0.2.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "0.2.0"
     date: "2026-07-27"
     changes: "Fix issue #172 by making active-plan status mandatory and using the merge-base active-plan status, rather than archive history or scope-name changes, to trigger previous_plan_archive linkage"
@@ -62,8 +65,6 @@ changelog:
 | Reviewer module | `agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md` | 交付前检查 closeout 与 archive 状态一致。 |
 | Output conventions | `agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md` | 定义归档路径、metadata、状态值和 `previous_plan_archive`。 |
 | Repository contract | `scripts/check_repository_contract.py` | 将 active plan 的 `status` 设为必填 metadata；以 merge-base 上 active plan 的存在性和 `status` 重写 archive linkage 判断，并保留 closeout + archive 同提交例外。 |
-| Eval contract | `agents/engineer/test/feature-implementor/evals/evals.json` | 保留 archive workflow eval，并新增 base `Implemented` 拦截和 base 非 `Implemented` 放行的 repository contract 回归 eval。 |
-| Eval fixtures | `agents/engineer/test/feature-implementor/evals/workspace/eval-012-*`, `eval-013-*`, `eval-015-*`, `eval-016-*` | 保留既有 archive workflow fixture；新增两组可构造 base ref / HEAD 差异的 fixture 与 durable `comparison.md`。 |
 | Skill instructions | `agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md`, planner / reviewer `INSTRUCTIONS.md` | 现有三选一处理、继续更新与归档回链规则原则上保持不变；实施时仅复核与 base-ref `status` 契约是否冲突。 |
 | Skill lock | `skills-lock.json` | 仅当 `feature-implementor` skill 目录实际变更时刷新 `computedHash`。 |
 
@@ -199,7 +200,7 @@ superseded_reason: "<reason>"
 实现完成并同步 closeout 后：
 
 - 只有用户或维护者确认后才能归档。
-- 归档动作必须保留 closeout 证据、验证命令、eval/skipped/blocked 记录和剩余风险。
+- 归档动作必须保留 closeout 证据、验证命令、skipped/blocked 记录和剩余风险。
 - 归档后如果创建下一份活跃计划，新计划必须引用 `previous_plan_archive`。
 
 ### 6.3 Reviewer 检查
@@ -237,14 +238,9 @@ reviewer 在 handoff 或 delivery 前检查：
 ```bash
 git diff --check
 uv run scripts/check_repository_contract.py
-uv run scripts/check_eval_contract.py
-uv run scripts/check_eval_artifacts.py
 uv run scripts/check_doc_contract.py
-uv run --with pytest pytest agents/test_eval_contract.py
+uv run --with pytest pytest agents/test_doc_contract.py
 ```
-
-如果实际执行 feature-implementor eval 或 fresh Codex subagent validation，
-必须在同一轮变更中更新对应 durable `comparison.md`。
 
 ## 9. 回滚策略
 

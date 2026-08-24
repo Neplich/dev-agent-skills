@@ -5,7 +5,7 @@ version: "0.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
-last_updated: "2026-06-25"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 feature: "frontend-ui-routing-contract"
 feature_path: "agent-collaboration/frontend-ui-routing-contract"
@@ -17,9 +17,6 @@ related_docs:
   - "agents/engineer/skills/engineer-agent/SKILL.md"
   - "agents/engineer/skills/feature-implementor/SKILL.md"
   - "agents/designer/skills/designer-agent/SKILL.md"
-  - "agents/engineer/test/engineer-agent/evals/evals.json"
-  - "agents/engineer/test/feature-implementor/evals/evals.json"
-  - "agents/designer/test/designer-agent/evals/evals.json"
 ---
 
 # 前端 UI 更新路由契约 TRD
@@ -54,7 +51,6 @@ flowchart LR
 | `designer-agent` | 增加 Engineer 来源的 UI maintenance / frontend-update design request；输出设计文档后停止并 handoff 回 Engineer。 |
 | Engineer README | 最小补充前端 UI 更新入口边界，避免把设计参考能力误认为实现入口。 |
 | Designer README | 最小补充 Designer 只负责设计交付物，来自 Engineer 的 UI 维护请求完成后回交 Engineer。 |
-| Eval definitions | 增加或扩展三组 eval，分别覆盖 Engineer 路由、Feature Implementor 计划门禁、Designer 回交边界。 |
 | `skills-lock.json` | 反映 skill 文档 metadata/hash 更新。 |
 
 ## 4. 文件影响范围
@@ -71,9 +67,6 @@ flowchart LR
 | `agents/engineer/skills/engineer-agent/SKILL.md` | Modify | 固化 Engineering 入口和 Designer handoff 规则。 |
 | `agents/engineer/skills/feature-implementor/SKILL.md` | Modify | 固化实施计划前的 UI design handoff check。 |
 | `agents/designer/skills/designer-agent/SKILL.md` | Modify | 固化 Engineer 来源设计请求和回交边界。 |
-| `agents/engineer/test/engineer-agent/evals/evals.json` | Modify | 增加 Engineer 路由 eval。 |
-| `agents/engineer/test/feature-implementor/evals/evals.json` | Modify | 增加 Feature Implementor UI design gate eval。 |
-| `agents/designer/test/designer-agent/evals/evals.json` | Modify | 增加 Designer Engineer-handoff eval。 |
 | `skills-lock.json` | Modify | 更新受影响 skill metadata/hash。 |
 
 ### 4.2 按需文件
@@ -85,7 +78,6 @@ flowchart LR
 | `agents/designer/README.md` | Modify | 如果 SKILL 规则新增后 README 缺少 Designer 回交边界说明。 |
 | `agents/designer/README_zh.md` | Modify | 与英文 Designer README 保持一致。 |
 | `AGENTS.md` | Modify | 只有当项目级指导也需要说明该边界时才最小扩展现有句子。 |
-| `agents/*/test/*/evals/workspace/.../comparison.md` | Create / Modify | 只有实际新增 eval workspace 或执行 skill eval 后才更新 durable comparison。 |
 
 ## 5. 技术约束
 
@@ -95,7 +87,6 @@ flowchart LR
 - 不绕过 `IMPLEMENTATION_PLAN.md` 用户确认门禁。
 - 不把 README 写成第二事实源；README 只保留入口边界，细则保留在 SKILL.md。
 - 修改 skill 文档后必须同步 `skills-lock.json`。
-- 修改 skill 行为或 eval fixture 后，必须询问是否运行对应 skill eval；实际执行 eval 时同步更新 durable `comparison.md`。
 
 ## 6. 验证策略
 
@@ -103,16 +94,7 @@ flowchart LR
 
 1. `git diff --check`
 2. `uv run scripts/check_repository_contract.py`
-3. `uv run scripts/check_eval_contract.py`
-4. `uv run scripts/check_eval_artifacts.py`
-5. 针对改动范围运行相关 pytest，例如 `uv run --with pytest pytest agents/test_eval_contract.py`
-
-模型 eval 验证：
-
-- 受影响 skill：`engineer-agent`、`feature-implementor`、`designer-agent`。
-- 用户确认后执行对应 skill eval 或 fresh Codex subagent validation。
-- 只要实际执行，就更新对应 durable `comparison.md`。
-- 不提交运行期产物，例如 transcript、outputs、diagnostics、timing、run status。
+5. 针对改动范围运行相关 pytest，例如 `uv run --with pytest pytest agents/test_doc_contract.py`
 
 ## 7. 风险
 
