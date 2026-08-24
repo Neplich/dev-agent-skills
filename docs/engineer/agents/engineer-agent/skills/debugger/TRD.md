@@ -184,11 +184,9 @@ PR review 同步权威 handoff 契约后，`idea-to-spec` 的 9 条现有 eval �
 ```bash
 uv run scripts/check_repository_contract.py
 uv run scripts/check_doc_contract.py
-uv run --with pytest pytest agents/product_manager/test/pm-agent/test_pm_entry_eval.py agents/test_eval_contract.py scripts/test_run_skill_eval.py scripts/test_eval_execution.py scripts/test_eval_persistence.py
-uv run scripts/summarize_eval_results.py
+uv run --with pytest pytest agents/test_doc_contract.py
 git diff --check
 git status --short
-test ! -d tmp/eval-runs
 ```
 
 ## 9. 风险与控制

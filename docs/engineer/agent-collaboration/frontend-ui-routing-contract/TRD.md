@@ -94,7 +94,7 @@ flowchart LR
 
 1. `git diff --check`
 2. `uv run scripts/check_repository_contract.py`
-5. 针对改动范围运行相关 pytest，例如 `uv run --with pytest pytest agents/test_eval_contract.py`
+5. 针对改动范围运行相关 pytest，例如 `uv run --with pytest pytest agents/test_doc_contract.py`
 
 ## 7. 风险
 

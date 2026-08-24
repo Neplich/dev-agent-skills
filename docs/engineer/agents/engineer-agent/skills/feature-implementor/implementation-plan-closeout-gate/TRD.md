@@ -79,7 +79,7 @@ reviewer 需要在输出 pass 之前执行 stale-state 检查：
 ```bash
 git diff --check
 uv run scripts/check_repository_contract.py
-uv run --with pytest pytest agents/test_eval_contract.py
+uv run --with pytest pytest agents/test_doc_contract.py
 ```
 
 ## 7. 回滚

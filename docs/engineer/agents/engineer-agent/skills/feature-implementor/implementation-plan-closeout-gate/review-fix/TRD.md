@@ -46,7 +46,7 @@ closeout gate 行为。
 ```bash
 git diff --check
 uv run scripts/check_repository_contract.py
-uv run --with pytest pytest agents/test_eval_contract.py
+uv run --with pytest pytest agents/test_doc_contract.py
 ```
 
 本轮只改 durable Markdown 文档和本 review-fix 计划，不需要刷新 `skills-lock.json`。

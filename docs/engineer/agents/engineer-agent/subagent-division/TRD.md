@@ -68,8 +68,6 @@ flowchart TD
 
 - 只修改 Engineer Agent 相关指导、eval 定义、eval workspace 和必要文档。
 - 不做无关重构，不整理现有 QA 工作区改动。
-- 不提交运行期 eval 产物。
-- 修改 skill 文档或 eval fixture 后，需要主动询问是否运行对应 skill eval，用户确认后再执行模型 eval。
 
 ## 4. 文件变更计划
 
@@ -307,7 +305,6 @@ sequenceDiagram
 | --- | --- | --- | --- |
 | 仓库契约 | symlink、registry、skill frontmatter、非法产物 | `uv run scripts/check_repository_contract.py` | 无错误。 |
 | Python 确定性测试 | runner/parser/prompt/report 等确定性测试 | 仓库现有 pytest 命令 | 与当前 CI 要求一致。 |
-| 模型 eval | Engineer Agent 行为可用性 | 用户确认后运行对应 eval | sub-agent validation 给出 pass/fail 结论。 |
 
 建议校验顺序：
 
@@ -342,12 +339,7 @@ uv run scripts/check_repository_contract.py
 
 5. 运行确定性检查。
    - 先运行 repository contract。
-   - 再运行 eval contract 和 eval artifact 检查。
    - 按改动范围决定是否运行 pytest。
-
-6. 询问是否运行模型 eval。
-   - 因为修改了 skill 文档和 eval fixture，必须主动询问。
-   - 用户确认后再运行对应 eval，并按产物策略更新 `comparison.md`。
 
 ## 10. 回滚策略
 

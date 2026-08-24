@@ -153,11 +153,10 @@ uv run scripts/check_repository_contract.py
 
 ```bash
 uv run --with pytest pytest \
-  agents/product_manager/test/idea-to-spec \
-  agents/qa/test/test_qa_run_eval.py \
-  agents/designer/test/test_designer_run_eval.py \
-  agents/devops/test/test_devops_run_eval.py \
-  agents/test_eval_contract.py
+  agents/test_doc_contract.py \
+  scripts/test_generate_shared_contracts.py \
+  scripts/test_install_codex_skills.py \
+  scripts/test_check_repository_contract.py
 ```
 
 说明：

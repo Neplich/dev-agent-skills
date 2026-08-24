@@ -316,7 +316,7 @@ slug（含重复标题序号）验证锚点存在。URL percent-decoding 后再�
 | 生成 | 权威源与 24 份副本 | `uv run scripts/generate_shared_contracts.py --check` | missing/extra/stale 为 0 |
 | 仓库契约 | plan 生命周期、Router 预算、marketplace 文档状态、hash | `uv run scripts/check_repository_contract.py` | PASS |
 | 文档契约 | frontmatter、本地链接与锚点、归档路径 | `uv run scripts/check_doc_contract.py` | PASS |
-| 定向单测 | 生成、repository/doc checker、安装镜像 | `uv run --with pytest pytest scripts/test_generate_shared_contracts.py scripts/test_check_repository_contract.py scripts/test_check_doc_contract.py scripts/test_install_codex_skills.py` | 全部通过 |
+| 定向单测 | 生成、repository/doc checker、安装镜像 | `uv run --with pytest pytest scripts/test_generate_shared_contracts.py scripts/test_check_repository_contract.py agents/test_doc_contract.py scripts/test_install_codex_skills.py` | 全部通过 |
 | Codex 安装 | 全量安装临时目标 | `uv run scripts/install_codex_skills.py --target <tmp>` | 引用可读、生成副本存在 |
 | Claude 打包 | marketplace 七 plugin 临时复制测试 | pytest 内按 manifest source/skills 复制并解析引用 | 六个 plugin 自包含 |
 | 行为回归 | 受影响 Router/Specialist eval | metadata 显式声明同插件 Router dependency；fresh paired 结果与 durable comparison | overlay 与安装拓扑一致；既有行为差异 0 |

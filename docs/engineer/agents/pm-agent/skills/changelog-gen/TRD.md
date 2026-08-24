@@ -148,8 +148,7 @@ No new API endpoint, credential, database, or external service is introduced.
 | Level | Scope | Command / Evidence | Required Before Handoff |
 | --- | --- | --- | --- |
 | Repository contract | Repository-level doc and marketplace rules | `uv run scripts/check_repository_contract.py` | Yes |
-| Deterministic tests | Existing repository test coverage | `uv run --with pytest pytest agents/test_eval_contract.py` | Yes |
-| Skill eval | Semantic docs/test/ci behavior | Run changelog-gen eval or fresh Codex subagent validation after user confirmation if eval definitions or skill behavior docs change. | Required when implementation touches skill docs or evals |
+| Deterministic tests | Existing repository test coverage | `uv run --with pytest pytest agents/test_doc_contract.py` | Yes |
 
 ## 9. Rollout and Operations
 

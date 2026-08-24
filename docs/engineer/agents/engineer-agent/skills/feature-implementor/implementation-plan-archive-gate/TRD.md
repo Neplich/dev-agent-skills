@@ -236,7 +236,7 @@ reviewer 在 handoff 或 delivery 前检查：
 git diff --check
 uv run scripts/check_repository_contract.py
 uv run scripts/check_doc_contract.py
-uv run --with pytest pytest agents/test_eval_contract.py
+uv run --with pytest pytest agents/test_doc_contract.py
 ```
 
 ## 9. 回滚策略
