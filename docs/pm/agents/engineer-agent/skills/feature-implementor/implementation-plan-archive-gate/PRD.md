@@ -45,7 +45,7 @@ closeout gate。该路径作为活跃计划入口是必要的，因为 QA、DevO
 1. 保留 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` 作为唯一活跃入口。
 2. 为完成态计划增加用户或维护者批准后的归档目录和范围命名规则。
 3. 在创建同一 `feature_path` 的下一份计划前，强制扫描并处理已有活跃计划。
-4. 让 repository contract 和 eval 能覆盖归档 metadata 与新计划前置门禁。
+4. 让 repository contract 覆盖归档 metadata 与新计划前置门禁。
 
 ## 非目标
 
@@ -82,7 +82,6 @@ closeout gate。该路径作为活跃计划入口是必要的，因为 QA、DevO
 | FR-006 | User Decision Options | 发现旧计划时，只允许三种处理：归档后创建新计划、继续更新旧计划、归档为 Superseded 并记录原因。 | P0 | 选择必须写入计划正文或 frontmatter，不能只留在对话里。 |
 | FR-007 | New Plan Linkage | 归档旧计划后创建新活跃计划时，新计划必须记录 `previous_plan_archive`。 | P0 | repository contract 能校验该路径存在，并校验归档 metadata 与当前 `feature_path` 一致。 |
 | FR-008 | Contract Checker | repository contract 必须识别归档路径，并校验活跃计划和归档计划 metadata。 | P0 | 错误路径、缺失 metadata、无效日期、无批准人、错误 `source_plan` 或错误 `previous_plan_archive` 会失败。 |
-| FR-009 | Eval Coverage | `feature-implementor` eval 至少覆盖未归档旧计划阻塞新计划，以及归档后允许新计划。 | P0 | eval 断言检查询问门禁、归档 metadata、`previous_plan_archive` 和活跃入口不变。 |
 
 ## 非功能需求
 
@@ -139,7 +138,6 @@ flowchart TD
 | `agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md` | File update | 创建计划前扫描旧计划 | Markdown | planner 前置门禁 |
 | `agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md` | File update | 定义 archive path 和 metadata | Markdown | 归档输出约定 |
 | `scripts/check_repository_contract.py` | CLI | 校验实施计划归档契约 | repo files | pass/fail |
-| `agents/engineer/test/feature-implementor/evals/evals.json` | File update | 固化行为回归 | eval definitions | eval assertions |
 
 ## 假设与约束
 
@@ -154,15 +152,14 @@ flowchart TD
 
 - `implementation-plan-closeout-gate` 已定义完成态计划的 closeout 证据。
 - `feature_path` contract 已要求 PRD/TRD/IMPLEMENTATION_PLAN 路径镜像。
-- Eval artifact policy 已要求 durable `comparison.md` 入库、运行期产物不入库。
 
 ## 发布计划与里程碑
 
 | Phase | Scope | Target Date | Owner |
 | --- | --- | --- | --- |
 | Draft | 补齐 issue 级 PRD/TRD/IMPLEMENTATION_PLAN | 2026-07-01 | PM / Engineer |
-| Implement | 更新 skill、internal instructions、AGENTS、contract checker、eval | TBD | Engineer |
-| Validate | 运行 repository/eval contract 和必要 fresh subagent validation | TBD | Maintainer |
+| Implement | 更新 skill、internal instructions、AGENTS、contract checker | TBD | Engineer |
+| Validate | 运行 repository contract 和必要静态检查 | TBD | Maintainer |
 
 ## 风险与缓解
 

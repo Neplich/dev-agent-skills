@@ -22,7 +22,6 @@ related_docs:
   - "docs/pm/agent-collaboration/frontend-ui-routing-contract/PRD.md"
   - "docs/engineer/agent-collaboration/frontend-ui-routing-contract/TRD.md"
   - "skills-lock.json"
-  - "agents/engineer/test/engineer-agent/evals/evals.json"
 changelog:
   - version: "1.2.0"
     date: "2026-06-24"
@@ -170,8 +169,7 @@ Error flow: 如果请求属于其他角色，转交 owning agent，而不是继�
 
 ## 相关实现文档
 
-- Internal: `agents/engineer/README.md`, `agents/engineer/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/engineer/skills/engineer-agent/SKILL.md`, `skills-lock.json`, `agents/engineer/test/engineer-agent/evals/evals.json`。
-- Internal: 对应 eval fixture / comparison 用于行为回归。
+- Internal: `agents/engineer/README.md`, `agents/engineer/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/engineer/skills/engineer-agent/SKILL.md`, `skills-lock.json`。
 - External: Codex / Claude Code 的 skill discovery 或 plugin marketplace。
 
 ## 发布计划与里程碑

@@ -20,7 +20,6 @@ related_docs:
   - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
   - ".claude-plugin/marketplace.json"
   - "agents/engineer/skills/trd-gen/_internal/trd-schema.md"
-  - "agents/engineer/test/trd-gen/evals/evals.json"
 changelog:
   - version: "1.2.2"
     date: "2026-08-15"
@@ -48,7 +47,7 @@ changelog:
 ## 目标
 
 1. 明确 `trd-gen` 的真实触发条件、上下文、工作流、产物和 handoff。
-2. 让维护者能用 PRD 对照 `SKILL.md` / README / eval 检查行为漂移。
+2. 让维护者能用 PRD 对照 `SKILL.md` / README 检查行为漂移。
 3. 将 Sub Agent 校验发现的实现差异收敛为可验收 requirement。
 4. 保持与 `engineer-agent` 的角色边界一致。
 
@@ -72,7 +71,7 @@ changelog:
 |----|-----------|----------|---------------------|
 | US-S01 | 作为用户，我想在 `trd-gen` 场景下获得对应工作流，以便得到真实产物。 | P0 | 输出满足 FR-S04，不以泛化描述替代实际 artifact。 |
 | US-S02 | 作为 dispatcher，我想知道何时选择 `trd-gen`，以便避免自路由或跨 skill 误路由。 | P0 | FR-S01 和 route / handoff 与父级 SKILL.md 一致。 |
-| US-S03 | 作为维护者，我想快速定位依赖文档，以便校验实现是否漂移。 | P1 | related_docs 覆盖 public entry、parent dispatcher 和必要 internal/reference/eval 文件。 |
+| US-S03 | 作为维护者，我想快速定位依赖文档，以便校验实现是否漂移。 | P1 | related_docs 覆盖 public entry、parent dispatcher 和必要 internal/reference 文件。 |
 
 ## 功能需求
 
@@ -102,7 +101,7 @@ changelog:
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| AC-01 | P0 trigger、context、workflow、artifact 和 handoff 与当前实现文档一致。 | 对照 related_docs 中的 README、SKILL.md、internal/reference 或 eval 文件人工 review。 |
+| AC-01 | P0 trigger、context、workflow、artifact 和 handoff 与当前实现文档一致。 | 对照 related_docs 中的 README、SKILL.md、internal/reference 文件人工 review。 |
 | AC-02 | 文档不包含自路由、全量默认执行或将 specialist 行为泛化为整个 Agent 的错误描述。 | 检查 route matrix、非目标、边界和 Mermaid flow。 |
 | AC-03 | 产物要求必须指向具体文件、报告、代码变更或 blocked 输出，不使用模糊替代表述。 | 检查功能需求和用户流程中的 artifact 节点。 |
 
@@ -167,7 +166,7 @@ Error flow: 如果必要上下文无法满足，输出 blocked reason、missing 
 
 ## 相关实现文档
 
-- Internal: `agents/engineer/README.md`, `agents/engineer/README_zh.md`, `agents/engineer/skills/engineer-agent/SKILL.md`, `agents/engineer/skills/trd-gen/SKILL.md`, `.claude-plugin/marketplace.json`, `agents/engineer/skills/trd-gen/_internal/trd-schema.md`, `agents/engineer/test/trd-gen/evals/evals.json`。
+- Internal: `agents/engineer/README.md`, `agents/engineer/README_zh.md`, `agents/engineer/skills/engineer-agent/SKILL.md`, `agents/engineer/skills/trd-gen/SKILL.md`, `.claude-plugin/marketplace.json`, `agents/engineer/skills/trd-gen/_internal/trd-schema.md`。
 - Internal: 父级 dispatcher route matrix、README 和 marketplace 注册。
 - External: Codex / Claude Code skill execution environment；具体外部 CLI/API 仅在 SKILL.md 明确要求时使用。
 
@@ -191,5 +190,4 @@ Error flow: 如果必要上下文无法满足，输出 blocked reason、missing 
 
 | # | Question | Owner | Deadline | Resolution |
 |---|----------|-------|----------|------------|
-| 1 | 是否将本 PRD 纳入对应 skill eval 的 durable comparison 检查？ | Maintainer | TBD | Unresolved |
 | 2 | 是否需要为 `trd-gen` 增加专门 PRD validator？ | Maintainer | TBD | Unresolved |

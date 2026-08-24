@@ -17,7 +17,6 @@ related_docs:
   - ".claude-plugin/marketplace.json"
   - "agents/devops/skills/devops-agent/SKILL.md"
   - "skills-lock.json"
-  - "agents/devops/test/devops-agent/evals/evals.json"
 changelog:
   - version: "1.0.1"
     date: "2026-06-15"
@@ -163,8 +162,7 @@ Error flow: 如果请求属于其他角色，转交 owning agent，而不是继�
 
 ## 相关实现文档
 
-- Internal: `agents/devops/README.md`, `agents/devops/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/devops/skills/devops-agent/SKILL.md`, `skills-lock.json`, `agents/devops/test/devops-agent/evals/evals.json`。
-- Internal: 对应 eval fixture / comparison 用于行为回归。
+- Internal: `agents/devops/README.md`, `agents/devops/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/devops/skills/devops-agent/SKILL.md`, `skills-lock.json`。
 - External: Codex / Claude Code 的 skill discovery 或 plugin marketplace。
 
 ## 发布计划与里程碑

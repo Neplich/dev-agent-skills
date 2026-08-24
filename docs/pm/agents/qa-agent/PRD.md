@@ -19,7 +19,6 @@ related_docs:
   - "agents/qa/skills/qa-agent/references/e2e-credential-store.md"
   - "agents/qa/skills/qa-agent/references/e2e-test-report.md"
   - "skills-lock.json"
-  - "agents/qa/test/qa-agent/evals/evals.json"
   - "docs/pm/repository-governance/feature-path-contract/PRD.md"
   - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
   - "docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md"
@@ -164,8 +163,7 @@ Error flow: 如果请求属于其他角色，转交 owning agent，而不是继�
 
 ## 相关实现文档
 
-- Internal: `agents/qa/README.md`, `agents/qa/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/qa/skills/qa-agent/SKILL.md`, `agents/qa/skills/qa-agent/references/e2e-credential-store.md`, `agents/qa/skills/qa-agent/references/e2e-test-report.md`, `skills-lock.json`, `agents/qa/test/qa-agent/evals/evals.json`。
-- Internal: 对应 eval fixture / comparison 用于行为回归。
+- Internal: `agents/qa/README.md`, `agents/qa/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/qa/skills/qa-agent/SKILL.md`, `agents/qa/skills/qa-agent/references/e2e-credential-store.md`, `agents/qa/skills/qa-agent/references/e2e-test-report.md`, `skills-lock.json`。
 - External: Codex / Claude Code 的 skill discovery 或 plugin marketplace。
 
 ## 发布计划与里程碑

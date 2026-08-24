@@ -126,12 +126,6 @@ uv run scripts/check_repository_contract.py
 
 目的：校验 eval 定义、fixture 和元数据结构，不在 PR 中生成模型输出。
 
-第一版命令：
-
-```bash
-uv run scripts/check_eval_contract.py
-```
-
 检查项：
 
 - `evals.json` 必须是合法 JSON。
@@ -177,19 +171,11 @@ uv run --with pytest pytest \
 
 状态：
 
-- [x] 已创建独立手动 workflow：`.github/workflows/evals.yml`。
 - [x] 已支持 `workflow_dispatch` 手动触发，并可选择 `all`、`designer` 或 `qa`。
 - [x] Designer eval 在 workflow 中作为 diagnostics 运行，运行期输出缺口以
   warning 和 artifact 形式呈现。
 - [x] QA eval 保留模型执行路径，并要求仓库 secret `OPENAI_API_KEY`。
 - [ ] 尚未启用 nightly 定时触发。
-
-当前手动入口：
-
-```bash
-uv run agents/designer/test/run_all_evals.py
-uv run agents/qa/test/run_all_evals.py
-```
 
 触发方式：
 
@@ -246,7 +232,6 @@ jobs：
 
 - [x] 通过后再把这三个 job 加入 `main` required status checks。
 
-### [x] `.github/workflows/evals.yml`
 
 触发：
 

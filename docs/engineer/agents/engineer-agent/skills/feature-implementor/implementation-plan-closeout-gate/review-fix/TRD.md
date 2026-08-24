@@ -27,20 +27,10 @@ closeout gate 行为。
 
 | Area | File | Change |
 | --- | --- | --- |
-| Eval durable result | `agents/engineer/test/feature-implementor/evals/workspace/eval-010-implementation-plan-closeout-sync/comparison.md` | 补充真实 baseline 结果或 blocked / skipped 原因。 |
 | Implementation closeout | `docs/engineer/agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate/IMPLEMENTATION_PLAN.md` | 记录最终 PASS 的 fresh subagent validation。 |
 | Review-fix plan | `docs/engineer/agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate/review-fix/IMPLEMENTATION_PLAN.md` | 记录本轮 review 修复计划和后续实施结果。 |
 
 ## 3. 修复策略
-
-### Baseline evidence
-
-`comparison.md` 的 `Without Skill / Baseline` section 必须选择一种明确状态：
-
-- 如果已经生成 baseline / without_skill 结果，记录实际结果和观察到的行为。
-- 如果没有生成 baseline / without_skill 结果，明确写出 blocked 或 skipped 原因，不用假设性风险替代结果。
-
-本次修复不伪造 baseline pass/fail。
 
 ### Final validation evidence
 
@@ -56,8 +46,6 @@ closeout gate 行为。
 ```bash
 git diff --check
 uv run scripts/check_repository_contract.py
-uv run scripts/check_eval_contract.py
-uv run scripts/check_eval_artifacts.py
 uv run --with pytest pytest agents/test_eval_contract.py
 ```
 

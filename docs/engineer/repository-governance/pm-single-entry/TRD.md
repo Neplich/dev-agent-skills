@@ -107,24 +107,8 @@ flowchart LR
 | 用户文档 | 根 README 中英文版、`.codex/INSTALL.md`、`docs/README.codex.md`、PM Agent README 中英文版 | 仅改写直接描述旧自动入口规则的段落 |
 | Role router | 7 个 router `SKILL.md` | 删除强制显式 routing block / decision / owner 输出要求 |
 | PRD 文档 | 受影响 router 的既有 skill PRD | 仅在存在“必须展示路由过程”的已批准要求时同步删除或改写 |
-| Eval | PM 入口与 7 个 router 的 `evals.json`、workspace、受影响 durable `comparison.md` | 用真实任务请求验证入口与最终行为，不再断言 routing block |
 | Deterministic tests | PM entry、router routing 与契约相关 pytest | 固定三分支入口判断，防止误删 gate/handoff |
 | Lock | `skills-lock.json` | 重算本 PR 修改过的 skill 目录 hash |
-
-## 5. Eval 策略
-
-Eval 的编写、静态校验和 fresh paired 执行遵循项目 `skill-eval-runner`：
-
-1. PM 自动入口至少覆盖：
-   - 无 docs、但有明确研发意图；
-   - 有 docs、但属于普通非研发请求；
-   - 显式点名 `pm-agent` 处理非研发请求；
-   - 显式点名下游 agent 或 specialist，仍进入被点名能力的既有 gate。
-2. Router eval 删除“只做路由”“输出 routing decision”等测试化 prompt 和相关字段断言，
-   改用真实任务请求。
-3. 保留正确 specialist 选择、入口门禁、职责边界和最终任务结果的语义断言。
-4. Fresh paired eval 使用新的 with-skill 与 baseline 执行；只由真实结果更新受影响的
-   `comparison.md`，不手工复用旧结论。
 
 ## 6. Deterministic 验证
 
@@ -141,14 +125,10 @@ Eval 的编写、静态校验和 fresh paired 执行遵循项目 `skill-eval-run
 
 ```bash
 uv run scripts/check_repository_contract.py
-uv run scripts/check_eval_contract.py
-uv run scripts/check_eval_artifacts.py
 uv run scripts/check_doc_contract.py
 uv run --with pytest pytest <受影响的确定性测试>
 git diff --check
 ```
-
-涉及模型行为的 router eval 在静态检查通过后执行 fresh paired validation，最多 10 workers。
 
 ## 7. 实施约束
 

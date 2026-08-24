@@ -18,7 +18,6 @@ related_docs:
   - "agents/product_manager/skills/changelog-gen/SKILL.md"
   - "agents/product_manager/skills/changelog-gen/references/cc-prefixes.md"
   - ".claude-plugin/marketplace.json"
-  - "agents/product_manager/test/changelog-gen/evals/evals.json"
   - "docs/engineer/agents/pm-agent/skills/changelog-gen/TRD.md"
   - "https://github.com/Neplich/dev-agent-skills/issues/29"
   - "docs/pm/repository-governance/feature-path-contract/PRD.md"
@@ -47,7 +46,7 @@ changelog:
 ## 目标
 
 1. 明确 `changelog-gen` 的真实触发条件、上下文、工作流、产物和 handoff。
-2. 让维护者能用 PRD 对照 `SKILL.md` / README / eval 检查行为漂移。
+2. 让维护者能用 PRD 对照 `SKILL.md` / README 检查行为漂移。
 3. 将 Sub Agent 校验发现的实现差异收敛为可验收 requirement。
 4. 保持与 `pm-agent` 的角色边界一致。
 5. 在 docs-first / skill marketplace 仓库中保留重要文档、测试和 CI 变更进入 changelog 的能力。
@@ -76,7 +75,7 @@ changelog:
 |----|-----------|----------|---------------------|
 | US-S01 | 作为用户，我想在 `changelog-gen` 场景下获得对应工作流，以便得到真实产物。 | P0 | 输出满足 FR-S04，不以泛化描述替代实际 artifact。 |
 | US-S02 | 作为 dispatcher，我想知道何时选择 `changelog-gen`，以便避免自路由或跨 skill 误路由。 | P0 | FR-S01 和 route / handoff 与父级 SKILL.md 一致。 |
-| US-S03 | 作为维护者，我想快速定位依赖文档，以便校验实现是否漂移。 | P1 | related_docs 覆盖 public entry、parent dispatcher 和必要 internal/reference/eval 文件。 |
+| US-S03 | 作为维护者，我想快速定位依赖文档，以便校验实现是否漂移。 | P1 | related_docs 覆盖 public entry、parent dispatcher 和必要 internal/reference 文件。 |
 | US-S04 | 作为 release owner，我想让 docs/test/ci PR 按语义影响判断是否进入 changelog，以便发布记录不漏掉 skill 行为、验证或发布流程变化。 | P0 | FR-S08 和 FR-S09 能同时覆盖 skill marketplace 重要变化和传统仓库低价值变更省略。 |
 
 ## 功能需求
@@ -129,7 +128,7 @@ changelog:
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| AC-01 | P0 trigger、context、workflow、artifact 和 handoff 与当前实现文档一致。 | 对照 related_docs 中的 README、SKILL.md、internal/reference 或 eval 文件人工 review。 |
+| AC-01 | P0 trigger、context、workflow、artifact 和 handoff 与当前实现文档一致。 | 对照 related_docs 中的 README、SKILL.md、internal/reference 文件人工 review。 |
 | AC-02 | 文档不包含自路由、全量默认执行或将 specialist 行为泛化为整个 Agent 的错误描述。 | 检查 route matrix、非目标、边界和 Mermaid flow。 |
 | AC-03 | 产物要求必须指向具体文件、报告、代码变更或 blocked 输出，不使用模糊替代表述。 | 检查功能需求和用户流程中的 artifact 节点。 |
 | AC-04 | `docs:` / `test:` / `ci:` PR 不再被无条件跳过；skill marketplace 中的行为、eval、release、installation 和协作边界变化可进入 changelog。 | 更新 `SKILL.md`、`cc-prefixes.md` 和 changelog-gen eval，覆盖 issue #29 场景。 |
@@ -208,7 +207,7 @@ Error flow: 如果必要上下文无法满足，输出 blocked reason、missing 
 
 ## 相关实现文档
 
-- Internal: `agents/product_manager/README.md`, `agents/product_manager/README_zh.md`, `agents/product_manager/skills/pm-agent/SKILL.md`, `agents/product_manager/skills/changelog-gen/SKILL.md`, `agents/product_manager/skills/changelog-gen/references/cc-prefixes.md`, `.claude-plugin/marketplace.json`, `agents/product_manager/test/changelog-gen/evals/evals.json`。
+- Internal: `agents/product_manager/README.md`, `agents/product_manager/README_zh.md`, `agents/product_manager/skills/pm-agent/SKILL.md`, `agents/product_manager/skills/changelog-gen/SKILL.md`, `agents/product_manager/skills/changelog-gen/references/cc-prefixes.md`, `.claude-plugin/marketplace.json`。
 - Engineer: `docs/engineer/agents/pm-agent/skills/changelog-gen/TRD.md`。
 - Issue: `https://github.com/Neplich/dev-agent-skills/issues/29`。
 - Internal: 父级 dispatcher route matrix、README 和 marketplace 注册。
@@ -237,7 +236,6 @@ Error flow: 如果必要上下文无法满足，输出 blocked reason、missing 
 
 | # | Question | Owner | Deadline | Resolution |
 |---|----------|-------|----------|------------|
-| 1 | 是否将本 PRD 纳入对应 skill eval 的 durable comparison 检查？ | Maintainer | TBD | Unresolved |
 | 2 | 是否需要为 `changelog-gen` 增加专门 PRD validator？ | Maintainer | TBD | Unresolved |
 | 3 | body 缺失且 changed files 无法获取时，低价值前缀 PR 是否默认跳过？ | Maintainer / Engineer | Implementation planning | 建议默认跳过并在输出中记录依据，除非标题本身明确表达用户可见影响。 |
 

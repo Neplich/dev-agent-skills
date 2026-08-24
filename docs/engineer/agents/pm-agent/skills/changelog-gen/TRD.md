@@ -15,7 +15,6 @@ related_prd: "docs/pm/agents/pm-agent/skills/changelog-gen/PRD.md"
 related_docs:
   - "agents/product_manager/skills/changelog-gen/SKILL.md"
   - "agents/product_manager/skills/changelog-gen/references/cc-prefixes.md"
-  - "agents/product_manager/test/changelog-gen/evals/evals.json"
   - "https://github.com/Neplich/dev-agent-skills/issues/29"
 changelog:
   - version: "1.0.1"
@@ -82,8 +81,6 @@ flowchart TD
 | --- | --- | --- |
 | `agents/product_manager/skills/changelog-gen/SKILL.md` | Main execution contract | Split automatic skip rules into hard-skip and semantic-review rules; update Step 3 and Step 4 wording. |
 | `agents/product_manager/skills/changelog-gen/references/cc-prefixes.md` | Prefix reference | Mark docs/test/ci/build/style as “review body/context” instead of unconditional skip. |
-| `agents/product_manager/test/changelog-gen/evals/evals.json` | Eval definition | Add semantic assertion coverage for docs-first marketplace PRs and low-value omission. |
-| `agents/product_manager/test/changelog-gen/evals/workspace/.../comparison.md` | Durable eval result | Update comparison after actual eval or fresh Codex subagent validation is run. |
 
 ## 5. Classification Design
 
@@ -143,7 +140,6 @@ No new API endpoint, credential, database, or external service is introduced.
 
 - Keep changes limited to `changelog-gen` skill docs, prefix reference, eval definitions, and durable comparison updates.
 - Do not change release-notes-gen behavior.
-- Do not make model eval runtime artifacts durable git files; only update `comparison.md` after actual validation.
 - Preserve the ability to omit low-value docs/test/ci changes in traditional application repositories.
 - Avoid brittle exact-string assertions; use semantic assertions matching the changed classification contract.
 
@@ -152,8 +148,6 @@ No new API endpoint, credential, database, or external service is introduced.
 | Level | Scope | Command / Evidence | Required Before Handoff |
 | --- | --- | --- | --- |
 | Repository contract | Repository-level doc and marketplace rules | `uv run scripts/check_repository_contract.py` | Yes |
-| Eval contract | `evals.json` schema and workspace references | `uv run scripts/check_eval_contract.py` | Yes |
-| Eval artifacts | Durable vs runtime artifact policy | `uv run scripts/check_eval_artifacts.py` | Yes |
 | Deterministic tests | Existing repository test coverage | `uv run --with pytest pytest agents/test_eval_contract.py` | Yes |
 | Skill eval | Semantic docs/test/ci behavior | Run changelog-gen eval or fresh Codex subagent validation after user confirmation if eval definitions or skill behavior docs change. | Required when implementation touches skill docs or evals |
 
@@ -190,6 +184,4 @@ private account data. Eval fixtures must not contain credentials or private repo
 - Next implementation scope:
   - update `agents/product_manager/skills/changelog-gen/SKILL.md`;
   - update `agents/product_manager/skills/changelog-gen/references/cc-prefixes.md`;
-  - update `agents/product_manager/test/changelog-gen/evals/evals.json`;
-  - update durable `comparison.md` only after actual eval or fresh subagent validation.
 - Handoff condition: maintainer confirms this TRD or explicitly accepts any open questions as non-blocking.

@@ -48,5 +48,4 @@ related_issues:
 ## 验收标准
 
 1. 全仓（排除 `docs/changelog/` 与归档文件）无 4 个旧名残留。
-2. 5 项验证全绿：`check_repository_contract.py`、`check_eval_contract.py`、`check_eval_artifacts.py`、`check_doc_contract.py`、CI `python-tests`。
-3. 改名 skill 的 eval `comparison.md` 标注旧名评测事实，PASS 结论重标 `BLOCKED` 待 fresh eval 重跑（#238）。
+2. 3 项验证全绿：`check_repository_contract.py`、`check_doc_contract.py`、CI `python-tests`。

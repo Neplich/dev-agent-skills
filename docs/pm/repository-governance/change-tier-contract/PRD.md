@@ -41,7 +41,6 @@ changelog:
 2. 各 skill 的门禁不再各自默认最严，而是引用统一分级取强度。
 3. `hotfix` 等级的完整链路中，用户交互确认不超过 1 次（不含最终交付确认），且验证证据要求不被削弱。
 4. 为 #52 的 fast lane 判定和 handoff packet `change_tier` 字段提供跨角色共享的判定标准。
-5. eval 覆盖轻量链路放行与 `hotfix` 名义滥用阻断。
 
 ### 非目标
 
@@ -80,7 +79,6 @@ changelog:
 | FR-005 | QA E2E 门禁分级 | `hotfix` 只要求验证直接影响路径并追加结果；`standard` 以上维持预期对齐门禁。 | P0 | `qa-agent` SKILL 引用统一分级。 |
 | FR-006 | PM entry gate 衔接 | `hotfix` 与交付类请求走 fast lane（#52 落地后生效）。 | P1 | `pm-agent` SKILL 记录分级职责与 fast lane 引用。 |
 | FR-007 | 证据不削弱 | 分级只调整门禁形态和确认次数，不取消证据要求。 | P0 | 各 gate 分级表述均保留验证证据和结果记录要求。 |
-| FR-008 | Eval 覆盖 | `hotfix` 单文件修复走轻量链路；试图以 `hotfix` 名义跳过预期变更对齐被阻塞；`hotfix` E2E 只验证直接影响路径。 | P1 | 相关 eval 使用 schema `1.0`，执行后更新 durable `comparison.md`。 |
 
 ## 6. 用户流程
 
@@ -107,7 +105,6 @@ flowchart TD
 | AC-003 | `feature-implementor` 的 plan / closeout / archive gate 按 `change_tier` 取强度。 | 审查 SKILL.md、planner、reviewer。 |
 | AC-004 | QA E2E 门禁按 `change_tier` 取强度。 | 审查 `qa-agent` SKILL.md。 |
 | AC-005 | `pm-agent` 契约措辞为 #52 的 `change_tier` handoff packet 字段留好衔接。 | 审查 `pm-agent` SKILL.md。 |
-| AC-006 | eval 覆盖 `hotfix` 轻量链路、`standard` 完整门禁与 `hotfix` 名义滥用阻断。 | `check_eval_contract` 通过，执行后更新 `comparison.md`。 |
 
 ## 8. 风险与缓解
 

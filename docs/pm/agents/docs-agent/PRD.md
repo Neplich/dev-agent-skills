@@ -176,7 +176,7 @@ changelog:
 | AC-02 | sync 在带代码变更的 fixture 上只更新受影响文档并生长 change-map。 | eval fixture：含 TRD 与代码 diff 的 workspace。 |
 | AC-03 | audit 对注入的文档-代码不符 fixture 报告 mismatch 并 blocked 发版建议。 | eval fixture：文档声明与代码事实不一致的 workspace。 |
 | AC-04 | 6 个 Agent 在有文档站的 workspace 中优先按 change-map 取文档，无文档站时行为与现状一致。 | 现有 Agent eval 增补消费场景断言。 |
-| AC-05 | skill 文档、marketplace 注册、skills-lock、eval 齐备且通过全部契约检查。 | `check_repository_contract.py`、`check_eval_contract.py`、`check_doc_contract.py`。 |
+| AC-05 | skill 文档、marketplace 注册、skills-lock 齐备且通过全部契约检查。 | `check_repository_contract.py`、`check_doc_contract.py`。 |
 | AC-06 | 回填模式在含存量代码的 fixture 上生成 api 文档基线与 change-map 种子条目，且分批范围经确认。 | eval fixture：含存量 API 代码与 feature-catalog 产物的 workspace。 |
 | AC-07 | design 收口门禁覆盖实现未完成、测试失败或缺失、证据与 `feature_path` 不一致三类反向场景，以及实现、测试与 closeout 证据全部满足后进入候选范围确认的正向场景；所有 blocked 场景中设计正文与对应 design change-map 条目零变化。 | 持久化四组 eval fixture，并断言反向场景原子性 blocked、正向场景仍等待既有范围确认。 |
 

@@ -36,7 +36,6 @@ related_issue: "https://github.com/Neplich/dev-agent-skills/issues/230"
 | 发现 | marketplace agent description、router frontmatter description（无描述变化则跳过） |
 | Agent 文档 | `agents/{docs,product_manager}/README.md` 与 `README_zh.md` skills 表、Routing Rules |
 | 顶层入口 | 根 `README.md` / `README_zh.md`、`AGENTS.md`（CLAUDE.md 软链接自动同步） |
-| eval | 4 个 skill 的 `evals.json` `skill_name` 与断言文本；docs-agent 路由 eval、docs-audit、formal-docs-sync evals.json 中的引用；`eval_metadata.json`；workspace fixture（`scaffold-doc.mjs` 的 `RELEASE_HANDOFF` 字符串含权威副本与全部 workspace 副本） |
 | 过程文档 | PRD/TRD 正文与 `feature_path` 目录、实施计划正文（活跃计划跟随改名，已结案计划正文保留旧名） |
 
 ### computedHash 刷新
@@ -50,13 +49,10 @@ related_issue: "https://github.com/Neplich/dev-agent-skills/issues/230"
 | `docs/changelog/` 全部历史文件 | 保留旧名（历史发布记录） |
 | 已结案实施计划正文（status: Implemented） | 保留旧名（closeout 历史记录）；更新需走归档门禁，超出本变更范围 |
 | `implementation-plans/archive/` 归档正文与文件名 scope | 保留旧名；归档 frontmatter 链接字段（`feature_path`、`source_plan`、`related_prd`、`related_trd`）按契约指向当前路径 |
-| eval `comparison.md` | Skill 行保留旧名评测事实并标注改名；PASS 结论重标 `BLOCKED` 待 fresh eval 重跑（#238） |
 
 ## 验证
 
 1. `uv run scripts/check_repository_contract.py`
-2. `uv run scripts/check_eval_contract.py`
-3. `uv run scripts/check_eval_artifacts.py`
 4. `uv run scripts/check_doc_contract.py`
 5. `uv run --with pytest pytest scripts/ -q`（CI `python-tests`）
 

@@ -21,9 +21,6 @@ related_docs:
   - "docs/pm/repository-governance/feature-path-contract/PRD.md"
   - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
   - ".claude-plugin/marketplace.json"
-  - "agents/engineer/test/debugger/evals/evals.json"
-  - "agents/product_manager/test/pm-agent/evals/evals.json"
-  - "agents/engineer/test/engineer-agent/evals/evals.json"
   - "docs/pm/agents/engineer-agent/skills/debugger/DECISIONS.md"
   - "docs/engineer/agents/engineer-agent/skills/debugger/TRD.md"
 changelog:
@@ -76,7 +73,7 @@ changelog:
 |----|-----------|----------|---------------------|
 | US-S01 | 作为用户，我想在 `debugger` 场景下获得对应工作流，以便得到真实产物。 | P0 | 输出满足 FR-S04，不以泛化描述替代实际 artifact。 |
 | US-S02 | 作为 dispatcher，我想知道何时选择 `debugger`，以便避免自路由或跨 skill 误路由。 | P0 | FR-S01 和 route / handoff 与父级 SKILL.md 一致。 |
-| US-S03 | 作为维护者，我想快速定位依赖文档，以便校验实现是否漂移。 | P1 | related_docs 覆盖 public entry、parent dispatcher 和必要 internal/reference/eval 文件。 |
+| US-S03 | 作为维护者，我想快速定位依赖文档，以便校验实现是否漂移。 | P1 | related_docs 覆盖 public entry、parent dispatcher 和必要 internal/reference 文件。 |
 | US-S04 | 作为只想确认原因的用户，我希望 Agent 在不修改任何状态的前提下读取代码、日志和运行态证据，并给出清晰结论。 | P0 | 请求进入 `diagnosis_only`，输出诊断报告后停止，不生成修复计划或询问是否立即修复。 |
 | US-S05 | 作为后续决定修复的用户，我希望此前只读诊断不能绕过正式修复门禁。 | P0 | 后续修复重新进入 PM/Engineer handoff、PRD/TRD 对齐、repair plan confirmation、最小修复和验证流程。 |
 
@@ -124,13 +121,13 @@ changelog:
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| AC-01 | P0 trigger、context、workflow、artifact 和 handoff 与当前实现文档一致。 | 对照 related_docs 中的 README、SKILL.md、internal/reference 或 eval 文件人工 review。 |
+| AC-01 | P0 trigger、context、workflow、artifact 和 handoff 与当前实现文档一致。 | 对照 related_docs 中的 README、SKILL.md、internal/reference 文件人工 review。 |
 | AC-02 | 文档不包含自路由、全量默认执行或将 specialist 行为泛化为整个 Agent 的错误描述。 | 检查 route matrix、非目标、边界和 Mermaid flow。 |
 | AC-03 | 产物要求必须指向具体文件、报告、代码变更或 blocked 输出，不使用模糊替代表述。 | 检查功能需求和用户流程中的 artifact 节点。 |
-| AC-04 | “只读确认这个报错原因，不要修”进入 `debugger` 的 `diagnosis_only`，并传递 `allowed_mutations: none`。 | PM、Engineer 路由 eval。 |
-| AC-05 | 缺少 PRD/TRD 时仍可给出客观诊断，但不会把推断表述成已确认实现偏差。 | Debugger 只读诊断 eval。 |
+| AC-04 | “只读确认这个报错原因，不要修”进入 `debugger` 的 `diagnosis_only`，并传递 `allowed_mutations: none`。 | 检查 PM、Engineer 路由契约。 |
+| AC-05 | 缺少 PRD/TRD 时仍可给出客观诊断，但不会把推断表述成已确认实现偏差。 | 检查 Debugger 只读诊断契约。 |
 | AC-06 | 只读诊断不修改任何状态、不创建修复计划、不询问立即修复。 | Git 差异、外部状态边界和诊断输出断言。 |
-| AC-07 | 诊断后的修复请求重新进入完整门禁。 | Debugger repair re-entry eval。 |
+| AC-07 | 诊断后的修复请求重新进入完整门禁。 | 检查 Debugger repair re-entry gate。 |
 
 ## 非功能需求
 
@@ -202,7 +199,7 @@ Error flow: 如果必要上下文无法满足，输出 blocked reason、missing 
 
 ## 相关实现文档
 
-- Internal: `agents/engineer/README.md`, `agents/engineer/README_zh.md`, `agents/engineer/skills/engineer-agent/SKILL.md`, `agents/engineer/skills/debugger/SKILL.md`, `.claude-plugin/marketplace.json`, `agents/engineer/test/debugger/evals/evals.json`。
+- Internal: `agents/engineer/README.md`, `agents/engineer/README_zh.md`, `agents/engineer/skills/engineer-agent/SKILL.md`, `agents/engineer/skills/debugger/SKILL.md`, `.claude-plugin/marketplace.json`。
 - Internal: 父级 dispatcher route matrix、README 和 marketplace 注册。
 - External: Codex / Claude Code skill execution environment；具体外部 CLI/API 仅在 SKILL.md 明确要求时使用。
 

@@ -265,8 +265,6 @@ collision alias 的受控清理。不得为这两个具体名称添加 hardcode 
 
 ```bash
 uv run scripts/check_repository_contract.py
-uv run scripts/check_eval_contract.py
-uv run scripts/check_eval_artifacts.py
 uv run scripts/check_doc_contract.py
 uv run --with pytest pytest \
   agents/product_manager/test/idea-to-spec \

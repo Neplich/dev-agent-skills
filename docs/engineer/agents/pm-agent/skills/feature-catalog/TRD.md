@@ -56,8 +56,6 @@ changelog:
 | Agent README | `agents/product_manager/README.md`、`agents/product_manager/README_zh.md` | skills 表与 specialist 数量更新。 |
 | Marketplace | `.claude-plugin/marketplace.json` | pm-agent skills 数组新增 `./skills/feature-catalog`。 |
 | Skill lock | `skills-lock.json` | 新增 `feature-catalog` 条目，刷新 `pm-agent`、`codebase-analyzer` computedHash。 |
-| Eval contract | `agents/product_manager/test/feature-catalog/evals/evals.json` | 三个场景 eval 定义。 |
-| Eval fixtures | `agents/product_manager/test/feature-catalog/evals/workspace/eval-00{1,2,3}-*` | 最小模拟项目 fixture、`eval_metadata.json` 和 durable `comparison.md`。 |
 
 ## 3. 架构设计
 
@@ -143,28 +141,11 @@ feature_inventory:
   computedHash），并按 `compute_tracked_directory_hash` 重算被修改的
   `pm-agent` 与 `codebase-analyzer` 条目。
 
-### 4.4 Eval 设计
-
-`agents/product_manager/test/feature-catalog/evals/evals.json`（schema 1.0）
-覆盖 PRD FR-010 的三个场景：
-
-| Eval | 场景 | 核心断言 |
-| --- | --- | --- |
-| `eval-001-legacy-project-catalog` | 无文档老项目 | 草案先行、证据与置信度、不批量生成 PRD |
-| `eval-002-child-feature-under-parent-prd` | 已有父 PRD 的子功能 | 复用父 `feature_path`、不建并列顶层目录、handoff packet 字段完整 |
-| `eval-003-monorepo-scope-clarification` | monorepo 范围不清 | blocked + 最小澄清问题、unresolved 条目不落正式文档 |
-
-每个 eval 提供最小模拟项目 fixture、`eval_metadata.json` 和 durable
-`comparison.md`；不提交运行期产物。首次提交的 `comparison.md` 记录尚未执行
-fresh subagent validation 的 blocked 状态与原因。
-
 ## 5. 验证策略
 
 | Check | Command | Expectation |
 | --- | --- | --- |
 | Repository contract | `uv run scripts/check_repository_contract.py` | marketplace、skills-lock hash、文档 frontmatter 全部通过 |
-| Eval contract | `uv run scripts/check_eval_contract.py` | 新 evals.json 满足 schema 1.0 |
-| Eval artifacts | `uv run scripts/check_eval_artifacts.py` | 无运行期产物入库 |
 | Python tests | CI 同款 pytest 命令 | 全部通过 |
 
 ## 6. 风险与缓解

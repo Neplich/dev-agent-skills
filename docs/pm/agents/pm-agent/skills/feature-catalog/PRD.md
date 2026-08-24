@@ -91,7 +91,6 @@ IMPLEMENTATION_PLAN 和 QA E2E 目录容易在单次请求中临时命名，导�
 | FR-007 | PRD Cooperation | 确认 `feature_path` 后，配合 `prd-gen` 创建或更新 `docs/pm/{feature_path}/PRD.md` 和 `DECISIONS.md`。 | P0 | `feature-catalog` 自身不生成 PRD 正文，只移交确认后的功能上下文。 |
 | FR-008 | Engineer Handoff | PM 文档确认后显式 handoff 给 `engineer-agent:trd-gen` 镜像 `docs/engineer/{feature_path}/TRD.md`。 | P0 | handoff packet 包含 `feature_path`、`feature`、`parent_feature`、`feature_level` 和 `feature_path_evidence`。 |
 | FR-009 | Evidence Format | feature catalog 条目的证据结构与 `feature_inventory` 对齐，作为 `feature_path_evidence` 的标准来源。 | P1 | 下游 handoff packet 可直接引用 catalog 条目证据，不另建证据格式。 |
-| FR-010 | Eval Coverage | eval 覆盖无文档老项目、已有父 PRD 的子功能、monorepo 范围不清需要澄清三个场景。 | P0 | 断言检查草案先行、证据与置信度、父功能复用和 blocked 行为。 |
 
 ## 非功能需求
 
@@ -147,7 +146,6 @@ flowchart LR
 | `agents/product_manager/skills/pm-agent/SKILL.md` | File update | 注册路由信号和默认路由 | Markdown | 更新后的 dispatcher |
 | `.claude-plugin/marketplace.json` | File update | 注册 skill | JSON | 更新后的 registry |
 | `skills-lock.json` | File update | 新增 lock 条目并刷新受影响 hash | JSON | 更新后的 lock |
-| `agents/product_manager/test/feature-catalog/evals/evals.json` | File create | 固化行为回归 | eval definitions | eval assertions |
 
 ## 假设与约束
 
@@ -171,7 +169,7 @@ flowchart LR
 | --- | --- | --- | --- |
 | Draft | 补齐 issue 级 PRD/TRD/IMPLEMENTATION_PLAN | 2026-07-04 | PM / Engineer |
 | Implement | 增强 codebase-analyzer、新增 feature-catalog skill、注册与 eval | 2026-07-04 | Engineer |
-| Validate | 运行 repository/eval contract 与 pytest；模型 eval 由维护者在 PR 上决定触发 | TBD | Maintainer |
+| Validate | 运行 repository contract 与 pytest | TBD | Maintainer |
 
 ## 风险与缓解
 

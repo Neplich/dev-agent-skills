@@ -101,8 +101,6 @@ also does not parse arbitrary prose, eval fixture author values such as
 | Level | Scope | Command / Evidence | Required Before Handoff |
 | --- | --- | --- | --- |
 | Repository contract | Author metadata check and existing repo contracts | `uv run scripts/check_repository_contract.py` | Yes |
-| Eval contract | Ensure eval metadata and workspaces remain valid | `uv run scripts/check_eval_contract.py` | Yes |
-| Eval artifacts | Ensure no runtime artifacts were committed | `uv run scripts/check_eval_artifacts.py` | Yes |
 | Static author scan | Confirm known placeholder author frontmatter is gone | `rg -n '^author:\s*"AI Assistant"' docs agents --glob '*.md'` | Yes |
 | Targeted template scan | Confirm generator examples no longer use placeholder author values | `rg -n 'author:\s*"AI Assistant"' agents/product_manager/skills/idea-to-spec` | Yes |
 

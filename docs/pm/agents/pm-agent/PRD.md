@@ -28,7 +28,6 @@ related_docs:
   - "agents/product_manager/skills/pm-agent/SKILL.md"
   - "docs/pm/agents/pm-agent/skills/human-writing/PRD.md"
   - "skills-lock.json"
-  - "agents/product_manager/test/pm-agent/evals/evals.json"
 changelog:
   - version: "1.2.0"
     date: "2026-08-19"
@@ -186,8 +185,7 @@ Error flow: 如果请求属于其他角色，转交 owning agent，而不是继�
 
 ## 相关实现文档
 
-- Internal: `agents/product_manager/README.md`, `agents/product_manager/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/product_manager/skills/pm-agent/SKILL.md`, `skills-lock.json`, `agents/product_manager/test/pm-agent/evals/evals.json`。
-- Internal: 对应 eval fixture / comparison 用于行为回归。
+- Internal: `agents/product_manager/README.md`, `agents/product_manager/README_zh.md`, `.claude-plugin/marketplace.json`, `agents/product_manager/skills/pm-agent/SKILL.md`, `skills-lock.json`。
 - External: Codex / Claude Code 的 skill discovery 或 plugin marketplace。
 
 ## 发布计划与里程碑

@@ -364,7 +364,6 @@ feature_level: 1
 | P1 | `agents/qa/**` | QA 消费 PRD/TRD/Plan 时使用同一 feature path；E2E 目录使用 `docs/qa/e2e/{feature_path}/`。 |
 | P1 | `agents/devops/**` | feature-scoped DevOps 报告使用 feature path。 |
 | P1 | `agents/security/**` | feature-scoped Security 报告使用 feature path。 |
-| P1 | `agents/**/test/**/evals/evals.json` 和 fixture | 增加嵌套路径、缺层 blocked、旧路径兼容 eval。 |
 | P1 | `skills-lock.json` | 如果 skill 文档发生变更，按仓库规则刷新 metadata。 |
 
 ## 8. Eval 覆盖
@@ -380,8 +379,6 @@ feature_level: 1
 | `qa-agent` / `spec-based-tester` | E2E 文档更新来自嵌套功能实现。 | 引用同一路径 PRD/TRD/Plan，并写入 QA 功能树。 |
 | legacy compatibility | 旧单层 fixture 无 `feature_path`。 | 作为一级功能读取，不误报缺字段。 |
 
-只要实际执行 skill eval 或 fresh Codex subagent validation，就必须在同一轮变更中更新对应 durable `comparison.md`。运行期产物继续写入隔离 scratch workspace，不提交 transcript、outputs、diagnostics 或 `comparison.auto.md`。
-
 issue #197 已新增并执行两项 eval：`eval-009-prd-iteration-split-proposal`（L2b 拆分提案入口）与 `eval-016-route-document-structure-governance`（结构治理路由入口）；fresh subagent 验证均为 Behavior PASS / Coverage FULL，durable `comparison.md` 已同轮更新。
 
 ## 9. 验证策略
@@ -390,8 +387,6 @@ issue #197 已新增并执行两项 eval：`eval-009-prd-iteration-split-proposa
 
 ```bash
 uv run scripts/check_repository_contract.py
-uv run scripts/check_eval_contract.py
-uv run scripts/check_eval_artifacts.py
 ```
 
 针对本契约还应增加静态检查或人工审查：
@@ -415,7 +410,6 @@ rg -n "legacy_of:|legacy_reason:|superseded_by:" docs --glob "*/_legacy/**/*.md"
 3. 分模块更新 skill 文档、内部指令和 eval。
 4. 刷新 `skills-lock.json`。
 5. 运行仓库契约和 eval 契约检查。
-6. 实际执行相关 skill eval 或 fresh subagent validation，并更新 `comparison.md`。
 
 回滚方式是普通 git revert。若已经迁移历史误放目录，回滚必须同步恢复引用路径，不能只回滚部分文档。
 
