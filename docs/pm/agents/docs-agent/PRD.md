@@ -11,11 +11,11 @@ child_features:
   - "agents/docs-agent/formal-docs-sync"
   - "agents/docs-agent/manual-gen"
   - "agents/docs-agent/release-notes-gen"
-version: "1.5.2"
+version: "1.5.3"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
-last_updated: "2026-08-18"
+last_updated: "2026-08-24"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/105"
   - "https://github.com/Neplich/dev-agent-skills/issues/112"
@@ -33,6 +33,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/SKILL.md"
   - "scripts/check_doc_contract.py"
 changelog:
+  - version: "1.5.3"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.5.2"
     date: "2026-08-18"
     changes: "新增 docs-site-layout 子功能，固化双站点入口与页面布局骨架"

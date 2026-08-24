@@ -5,11 +5,11 @@ feature: "agent-qa-agent"
 feature_path: "agents/qa-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.0.0"
+version: "1.0.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/qa/README.md"
@@ -23,6 +23,9 @@ related_docs:
   - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
   - "docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
+  - version: "1.0.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"

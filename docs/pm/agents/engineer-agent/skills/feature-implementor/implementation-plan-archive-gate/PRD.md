@@ -1,11 +1,11 @@
 ---
 title: "IMPLEMENTATION_PLAN 归档门禁 PRD"
 type: PRD
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-01"
-last_updated: "2026-08-12"
+last_updated: "2026-08-24"
 generated_by: "idea-to-spec"
 feature: "implementation-plan-archive-gate"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate"
@@ -20,6 +20,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md"
   - "scripts/check_repository_contract.py"
 changelog:
+  - version: "0.1.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "0.1.0"
     date: "2026-07-01"
     changes: "Initial archive gate requirements for implementation plans"

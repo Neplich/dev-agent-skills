@@ -6,11 +6,11 @@ feature_path: "agents/pm-agent/skills/human-writing"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
 child_features: "N/A"
-version: "1.2.0"
+version: "1.2.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-19"
-last_updated: "2026-08-20"
+last_updated: "2026-08-24"
 generated_by: "idea-to-spec"
 related_docs:
   - "docs/pm/agents/pm-agent/skills/human-writing/DECISIONS.md"
@@ -20,6 +20,9 @@ related_docs:
   - "agents/product_manager/skills/pm-agent/SKILL.md"
   - "https://github.com/KKKKhazix/human-writing"
 changelog:
+  - version: "1.2.1"
+    date: "2026-08-24"
+    changes: "移除外部项目遗留描述，纳入文档站维护者整站优化用户场景"
   - version: "1.2.0"
     date: "2026-08-20"
     changes: "确认编写方式与范围判断、作者决策链、必要结构权限、高风险事实回传和整站写作模式（Issue #313）"

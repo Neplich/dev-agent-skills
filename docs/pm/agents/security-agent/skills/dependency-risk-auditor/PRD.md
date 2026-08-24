@@ -5,11 +5,11 @@ feature: "skill-dependency-risk-auditor"
 feature_path: "agents/security-agent/skills/dependency-risk-auditor"
 parent_feature: "agents/security-agent/skills"
 feature_level: "4"
-version: "1.0.1"
+version: "1.0.2"
 status: Approved
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-15"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/security/README.md"
@@ -18,6 +18,9 @@ related_docs:
   - "agents/security/skills/dependency-risk-auditor/SKILL.md"
   - ".claude-plugin/marketplace.json"
 changelog:
+  - version: "1.0.2"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.0.1"
     date: "2026-08-15"
     changes: "收敛 marketplace 当前能力镜像状态，确认文档正文对应已发布 Skill 契约"

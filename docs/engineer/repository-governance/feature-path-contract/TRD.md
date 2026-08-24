@@ -1,7 +1,7 @@
 ---
 title: "PRD/TRD 多级功能目录契约 TRD"
 type: TRD
-version: "1.2.0"
+version: "1.2.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-23"
@@ -10,7 +10,7 @@ feature: "feature-path-contract"
 feature_path: "repository-governance/feature-path-contract"
 parent_feature: "repository-governance"
 feature_level: "2"
-last_updated: "2026-08-12"
+last_updated: "2026-08-24"
 related_prd: "docs/pm/repository-governance/feature-path-contract/PRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/37"
@@ -38,6 +38,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md"
   - "agents/engineer/skills/debugger/SKILL.md"
 changelog:
+  - version: "1.2.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.0.0"
     date: "2026-06-23"
     changes: "初始版本"

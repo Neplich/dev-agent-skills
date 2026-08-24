@@ -5,11 +5,11 @@ feature: "agent-security-agent"
 feature_path: "agents/security-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.0.0"
+version: "1.0.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/security/README.md"
@@ -18,6 +18,9 @@ related_docs:
   - "agents/security/skills/security-agent/SKILL.md"
   - "skills-lock.json"
 changelog:
+  - version: "1.0.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.0.0"
     date: "2026-06-12"
     changes: "Initial version"

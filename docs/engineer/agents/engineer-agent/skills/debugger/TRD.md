@@ -1,11 +1,11 @@
 ---
 title: "debugger 只读诊断模式 TRD"
 type: TRD
-version: "1.0.0"
+version: "1.0.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-13"
-last_updated: "2026-08-13"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 feature: "skill-debugger"
 feature_path: "agents/engineer-agent/skills/debugger"
@@ -19,6 +19,9 @@ related_docs:
   - "agents/engineer/skills/engineer-agent/SKILL.md"
   - "agents/engineer/skills/debugger/SKILL.md"
 changelog:
+  - version: "1.0.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.0.0"
     date: "2026-08-13"
     changes: "定义 diagnosis_only 与 repair 双模式、只读权限边界和 fresh eval 范围"

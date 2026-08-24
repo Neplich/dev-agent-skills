@@ -11,7 +11,7 @@ feature_path: "repository-governance/skill-gen-rename"
 parent_feature: "repository-governance"
 feature_level: "2"
 child_features: "N/A"
-last_updated: "2026-08-06"
+last_updated: "2026-08-24"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/230"
 ---

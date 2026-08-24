@@ -117,4 +117,5 @@ git diff --check
 | `expected_tests_vs_acceptance` | 既有布局测试、双站构建、仓库静态检查和 Chrome 布局验收覆盖计划目标。 | 未新增测试文件，修改 1 份既有布局测试；合并时 `repository-contract`、`doc-contract`、`python-tests` CI 全部通过。 | 一致 |
 
 验证证据以 PR #309 合并记录为准：`repository-contract`、`doc-contract`、
-`python-tests` 均为 SUCCESS。
+`python-tests` 均为 SUCCESS；PR 正文记录 Chrome 1280×900、2560×1440、390×844
+三视口响应式验收通过。

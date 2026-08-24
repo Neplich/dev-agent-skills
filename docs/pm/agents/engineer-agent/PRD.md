@@ -5,11 +5,11 @@ feature: "agent-engineer-agent"
 feature_path: "agents/engineer-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.2.0"
+version: "1.2.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-01"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -23,6 +23,9 @@ related_docs:
   - "docs/engineer/agent-collaboration/frontend-ui-routing-contract/TRD.md"
   - "skills-lock.json"
 changelog:
+  - version: "1.2.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.2.0"
     date: "2026-06-24"
     changes: "Add frontend UI update routing contract"

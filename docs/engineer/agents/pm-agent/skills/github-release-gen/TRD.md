@@ -9,7 +9,7 @@ version: "1.2.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-20"
-last_updated: "2026-08-06"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/github-release-gen/PRD.md"
 related_issues:

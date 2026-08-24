@@ -5,7 +5,7 @@ version: "0.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
-last_updated: "2026-06-25"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 feature: "frontend-ui-routing-contract"
 feature_path: "agent-collaboration/frontend-ui-routing-contract"

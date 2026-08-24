@@ -226,27 +226,15 @@ uv run --with pytest pytest \
 jobs：
 
 - [x] `repository-contract`
-- [x] `eval-contract`
+- [x] `doc-contract`
 - [x] `python-tests`
 
 - [x] 通过后再把这三个 job 加入 `main` required status checks。
 
-
-触发：
-
-- [x] `workflow_dispatch`
-
-jobs：
-
-- [x] `designer-evals`
-- [x] `qa-evals`
-
-该 workflow 第一版只作为管理员手动质量检查。
-
 ## 待确认问题
 
 - [ ] 是否需要第一版就新增 `CODEOWNERS`。
-- [x] required status checks 拆成 3 个 job：`repository-contract`、`eval-contract`、`python-tests`。
+- [x] required status checks 拆成 3 个 job：`repository-contract`、`doc-contract`、`python-tests`。
 - [ ] `description` 是否需要最小长度校验。
 - [ ] 是否需要在第一版 CI 中校验 README 中的本地验证命令仍存在。
 - [x] 已新增 `CHANGELOG.md` 索引和 `docs/changelog/changelog-v0.1.0.md`。

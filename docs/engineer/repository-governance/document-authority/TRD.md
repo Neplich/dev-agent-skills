@@ -1,11 +1,11 @@
 ---
 title: "仓库文档权威与生命周期治理 — Technical Requirements Document"
 type: TRD
-version: "0.1.5"
+version: "0.1.6"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-15"
-last_updated: "2026-08-16"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 feature: "document-authority"
 feature_path: "repository-governance/document-authority"
@@ -25,6 +25,9 @@ related_code:
   - "scripts/install_codex_skills.py"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.6"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "0.1.5"
     date: "2026-08-16"
     changes: "把 Router 表格与指针中的既有要求收敛为显式 Specialist 名称和完整 handoff 证据字段"

@@ -5,11 +5,11 @@ feature: "skill-debugger"
 feature_path: "agents/engineer-agent/skills/debugger"
 parent_feature: "agents/engineer-agent/skills"
 feature_level: "4"
-version: "1.2.0"
+version: "1.2.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-13"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/274"
 related_docs:
@@ -24,6 +24,9 @@ related_docs:
   - "docs/pm/agents/engineer-agent/skills/debugger/DECISIONS.md"
   - "docs/engineer/agents/engineer-agent/skills/debugger/TRD.md"
 changelog:
+  - version: "1.2.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.2.0"
     date: "2026-08-13"
     changes: "增加 diagnosis_only 只读诊断模式，并保留后续修复的完整门禁"

@@ -5,11 +5,11 @@ feature: "agent-devops-agent"
 feature_path: "agents/devops-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.0.1"
+version: "1.0.2"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-23"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/devops/README.md"
@@ -18,6 +18,9 @@ related_docs:
   - "agents/devops/skills/devops-agent/SKILL.md"
   - "skills-lock.json"
 changelog:
+  - version: "1.0.2"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.0.1"
     date: "2026-06-15"
     changes: "对齐 DevOps 标准准备链路与单点路由口径"

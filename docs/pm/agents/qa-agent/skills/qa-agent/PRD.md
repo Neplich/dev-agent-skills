@@ -5,11 +5,11 @@ feature: "skill-qa-agent"
 feature_path: "agents/qa-agent/skills/qa-agent"
 parent_feature: "agents/qa-agent/skills"
 feature_level: "4"
-version: "1.1.1"
+version: "1.1.2"
 status: Approved
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-15"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/qa/README.md"
@@ -22,6 +22,9 @@ related_docs:
   - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
   - "docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
+  - version: "1.1.2"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.1.1"
     date: "2026-08-15"
     changes: "收敛 marketplace 当前能力镜像状态，确认文档正文对应已发布 Skill 契约"

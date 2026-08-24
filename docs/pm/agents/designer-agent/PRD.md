@@ -5,11 +5,11 @@ feature: "agent-designer-agent"
 feature_path: "agents/designer-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.1.0"
+version: "1.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-06-24"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/designer/README.md"
@@ -23,6 +23,9 @@ related_docs:
   - "docs/pm/agent-collaboration/frontend-ui-routing-contract/PRD.md"
   - "docs/engineer/agent-collaboration/frontend-ui-routing-contract/TRD.md"
 changelog:
+  - version: "1.1.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.1.0"
     date: "2026-06-24"
     changes: "Add Engineer-sourced UI maintenance design handoff"

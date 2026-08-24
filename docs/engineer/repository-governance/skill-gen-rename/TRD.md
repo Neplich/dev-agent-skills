@@ -10,7 +10,7 @@ feature: "skill-gen-rename"
 feature_path: "repository-governance/skill-gen-rename"
 parent_feature: "repository-governance"
 feature_level: "2"
-last_updated: "2026-08-06"
+last_updated: "2026-08-24"
 related_prd: "docs/pm/repository-governance/skill-gen-rename/PRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/230"
 ---

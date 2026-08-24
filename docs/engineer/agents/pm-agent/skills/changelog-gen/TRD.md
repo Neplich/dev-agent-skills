@@ -1,7 +1,7 @@
 ---
 title: "changelog-gen docs/test/ci 语义判断 — Technical Requirements Document"
 type: TRD
-version: "1.0.1"
+version: "1.0.2"
 status: Approved
 feature: "skill-changelog-gen"
 feature_path: "agents/pm-agent/skills/changelog-gen"
@@ -9,7 +9,7 @@ parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
 author: "Neplich Codex"
 date: "2026-06-15"
-last_updated: "2026-08-15"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/changelog-gen/PRD.md"
 related_docs:
@@ -17,6 +17,9 @@ related_docs:
   - "agents/product_manager/skills/changelog-gen/references/cc-prefixes.md"
   - "https://github.com/Neplich/dev-agent-skills/issues/29"
 changelog:
+  - version: "1.0.2"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.0.1"
     date: "2026-08-15"
     changes: "收敛 marketplace 当前能力镜像状态，确认文档正文对应已发布 Skill 契约"

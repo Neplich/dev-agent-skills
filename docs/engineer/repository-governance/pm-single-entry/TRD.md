@@ -1,11 +1,11 @@
 ---
 title: "PM 研发意图入口与路由过程收敛 TRD"
 type: TRD
-version: "1.1.0"
+version: "1.1.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-05"
-last_updated: "2026-08-14"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 feature: "pm-single-entry"
 feature_path: "repository-governance/pm-single-entry"
@@ -27,6 +27,9 @@ related_docs:
   - "agents/security/skills/security-agent/SKILL.md"
   - "agents/docs/skills/docs-agent/SKILL.md"
 changelog:
+  - version: "1.1.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.1.0"
     date: "2026-08-14"
     changes: "对齐 #281 与 #282：定义意图优先的 PM 自动入口顺序，并以最小删除方式移除 7 个 router 的强制路由过程输出"

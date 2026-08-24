@@ -1,11 +1,11 @@
 ---
 title: "IMPLEMENTATION_PLAN 归档门禁 TRD"
 type: TRD
-version: "0.2.0"
+version: "0.2.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-01"
-last_updated: "2026-08-12"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 feature: "implementation-plan-archive-gate"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate"
@@ -21,6 +21,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md"
   - "scripts/check_repository_contract.py"
 changelog:
+  - version: "0.2.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "0.2.0"
     date: "2026-07-27"
     changes: "Fix issue #172 by making active-plan status mandatory and using the merge-base active-plan status, rather than archive history or scope-name changes, to trigger previous_plan_archive linkage"

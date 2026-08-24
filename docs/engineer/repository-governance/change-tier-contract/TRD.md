@@ -1,11 +1,11 @@
 ---
 title: "变更分级契约 TRD"
 type: TRD
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Claude Code"
 date: "2026-07-05"
-last_updated: "2026-07-05"
+last_updated: "2026-08-24"
 generated_by: "trd-gen"
 feature: "change-tier-contract"
 feature_path: "repository-governance/change-tier-contract"
@@ -22,6 +22,9 @@ related_docs:
   - "agents/qa/skills/qa-agent/SKILL.md"
   - "agents/product_manager/skills/pm-agent/SKILL.md"
 changelog:
+  - version: "0.1.1"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "0.1.0"
     date: "2026-07-05"
     changes: "初始版本，定义变更分级契约的落点、引用方式和判定入口衔接"

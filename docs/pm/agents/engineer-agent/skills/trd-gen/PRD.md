@@ -5,11 +5,11 @@ feature: "skill-trd-gen"
 feature_path: "agents/engineer-agent/skills/trd-gen"
 parent_feature: "agents/engineer-agent/skills"
 feature_level: "4"
-version: "1.2.2"
+version: "1.2.3"
 status: Approved
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-15"
+last_updated: "2026-08-24"
 generated_by: "prd-gen"
 related_docs:
   - "agents/engineer/README.md"
@@ -21,6 +21,9 @@ related_docs:
   - ".claude-plugin/marketplace.json"
   - "agents/engineer/skills/trd-gen/_internal/trd-schema.md"
 changelog:
+  - version: "1.2.3"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.2.2"
     date: "2026-08-15"
     changes: "收敛 marketplace 当前能力镜像状态，确认文档正文对应已发布 Skill 契约"

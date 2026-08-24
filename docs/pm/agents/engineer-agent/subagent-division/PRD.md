@@ -1,7 +1,7 @@
 ---
 title: "Engineer Agent 编码阶段 sub-agent 分工 PRD"
 type: PRD
-version: "1.0.1"
+version: "1.0.2"
 status: Draft
 author: "Neplich Codex"
 date: "2026-05-15"
@@ -10,11 +10,14 @@ feature: "engineer-agent-subagent-division"
 feature_path: "agents/engineer-agent/subagent-division"
 parent_feature: "agents/engineer-agent"
 feature_level: "3"
-last_updated: "2026-08-03"
+last_updated: "2026-08-24"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/12"
 related_docs:
   - "docs/pm/agents/engineer-agent/subagent-division/DECISIONS.md"
 changelog:
+  - version: "1.0.2"
+    date: "2026-08-24"
+    changes: "清理已失效的 eval 机制引用与验证命令"
   - version: "1.0.1"
     date: "2026-06-15"
     changes: "明确 TRD 和 IMPLEMENTATION_PLAN 文档编写 sub-agent 委派不属于本 PRD 覆盖范围"
