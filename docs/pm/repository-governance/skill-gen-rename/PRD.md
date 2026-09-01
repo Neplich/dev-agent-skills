@@ -1,7 +1,7 @@
 ---
 title: "生成类 skill 后缀统一为 -gen PRD"
 type: PRD
-version: "1.0.0"
+version: "1.0.1"
 status: Implemented
 author: "Neplich Claude"
 date: "2026-08-06"
@@ -11,9 +11,13 @@ feature_path: "repository-governance/skill-gen-rename"
 parent_feature: "repository-governance"
 feature_level: "2"
 child_features: "N/A"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/230"
+changelog:
+  - version: "1.0.1"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（changelog）"
 ---
 
 # 生成类 skill 后缀统一为 -gen

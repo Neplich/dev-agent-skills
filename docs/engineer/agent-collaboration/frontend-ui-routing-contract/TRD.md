@@ -1,11 +1,11 @@
 ---
 title: "前端 UI 更新路由契约 TRD"
 type: TRD
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "frontend-ui-routing-contract"
 feature_path: "agent-collaboration/frontend-ui-routing-contract"
@@ -17,6 +17,10 @@ related_docs:
   - "agents/engineer/skills/engineer-agent/SKILL.md"
   - "agents/engineer/skills/feature-implementor/SKILL.md"
   - "agents/designer/skills/designer-agent/SKILL.md"
+changelog:
+  - version: "0.1.1"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（changelog）"
 ---
 
 # 前端 UI 更新路由契约 TRD

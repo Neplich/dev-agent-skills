@@ -1,18 +1,23 @@
 ---
 title: "README 协作门禁 Review 修复 PRD"
 type: PRD
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-25"
-last_updated: "2026-08-11"
+last_updated: "2026-09-01"
 generated_by: "idea-to-spec"
 feature: "review-fix"
 feature_path: "agent-collaboration/readme-collaboration-guardrails/review-fix"
 parent_feature: "agent-collaboration/readme-collaboration-guardrails"
 feature_level: "3"
+child_features: "N/A"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/28"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/34"
+changelog:
+  - version: "0.1.1"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（child_features、changelog）"
 ---
 
 # README 协作门禁 Review 修复 PRD

@@ -1,16 +1,17 @@
 ---
 title: "前端 UI 更新路由契约 PRD"
 type: PRD
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "idea-to-spec"
 feature: "frontend-ui-routing-contract"
 feature_path: "agent-collaboration/frontend-ui-routing-contract"
 parent_feature: "agent-collaboration"
 feature_level: "2"
+child_features: "N/A"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/35"
 related_docs:
   - "agents/engineer/README.md"
@@ -25,6 +26,10 @@ related_docs:
   - "docs/pm/agents/engineer-agent/skills/feature-implementor/PRD.md"
   - "docs/pm/agents/designer-agent/PRD.md"
   - "docs/pm/agents/designer-agent/skills/designer-agent/PRD.md"
+changelog:
+  - version: "0.1.1"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（child_features、changelog）"
 ---
 
 # 前端 UI 更新路由契约 PRD

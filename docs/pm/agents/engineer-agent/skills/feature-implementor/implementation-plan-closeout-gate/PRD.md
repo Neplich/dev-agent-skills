@@ -1,17 +1,23 @@
 ---
 title: "IMPLEMENTATION_PLAN 收尾门禁 PRD"
 type: PRD
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "idea-to-spec"
 feature: "implementation-plan-closeout-gate"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate"
 parent_feature: "agents/engineer-agent/skills/feature-implementor"
 feature_level: "5"
+child_features:
+  - "agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate/review-fix"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/44"
+changelog:
+  - version: "0.1.1"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（child_features、changelog）"
 ---
 
 # IMPLEMENTATION_PLAN 收尾门禁 PRD

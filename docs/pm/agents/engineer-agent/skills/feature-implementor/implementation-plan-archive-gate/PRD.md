@@ -1,16 +1,17 @@
 ---
 title: "IMPLEMENTATION_PLAN 归档门禁 PRD"
 type: PRD
-version: "0.1.1"
+version: "0.1.2"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-01"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "idea-to-spec"
 feature: "implementation-plan-archive-gate"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate"
 parent_feature: "agents/engineer-agent/skills/feature-implementor"
 feature_level: "5"
+child_features: "N/A"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/54"
 related_docs:
   - "docs/pm/agents/engineer-agent/skills/feature-implementor/PRD.md"
@@ -20,6 +21,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md"
   - "scripts/check_repository_contract.py"
 changelog:
+  - version: "0.1.2"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（child_features）"
   - version: "0.1.1"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"

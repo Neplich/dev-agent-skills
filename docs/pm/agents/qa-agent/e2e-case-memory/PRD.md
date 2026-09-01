@@ -1,7 +1,7 @@
 ---
 title: "QA Agent E2E 用例沉淀与复用 PRD"
 type: PRD
-version: "1.0.11"
+version: "1.0.12"
 status: Approved
 author: "Neplich Codex"
 date: "2026-05-19"
@@ -11,6 +11,7 @@ feature: "qa-e2e-case-memory"
 feature_path: "agents/qa-agent/e2e-case-memory"
 parent_feature: "agents/qa-agent"
 feature_level: "3"
+child_features: "N/A"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/18"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/18"
@@ -23,6 +24,9 @@ related_docs:
   - "agents/qa/skills/qa-agent/references/e2e-case-format.md"
   - "agents/qa/skills/qa-agent/references/e2e-test-report.md"
 changelog:
+  - version: "1.0.12"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（child_features）"
   - version: "1.0.11"
     date: "2026-09-01"
     changes: "清理已失效的 eval 机制残留引用"

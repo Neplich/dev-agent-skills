@@ -75,7 +75,9 @@ revision is needed and hands the work to `engineer-agent:trd-gen`.
 
 ## Failure Handling
 
-- Missing version metadata -> note it in the Engineer handoff packet
+- Missing version or other required frontmatter metadata -> note it in the
+  Engineer handoff packet and require the revision to backfill the missing
+  fields per `_internal/_shared/output-conventions.md`
 - Requested change conflicts with locked decisions -> surface the conflict and
   ask the user to choose
 - Change would remove a required section -> mark as a blocker for Engineer review

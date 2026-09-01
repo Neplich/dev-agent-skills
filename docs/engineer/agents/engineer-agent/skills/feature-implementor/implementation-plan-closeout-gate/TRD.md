@@ -1,7 +1,7 @@
 ---
 title: "IMPLEMENTATION_PLAN 收尾门禁 TRD"
 type: TRD
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -13,6 +13,10 @@ parent_feature: "agents/engineer-agent/skills/feature-implementor"
 feature_level: "5"
 related_prd: "docs/pm/agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate/PRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/44"
+changelog:
+  - version: "0.1.1"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（changelog）"
 ---
 
 # IMPLEMENTATION_PLAN 收尾门禁 TRD

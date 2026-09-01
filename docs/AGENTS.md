@@ -19,9 +19,14 @@
 ## 功能文档
 
 公开过程文档使用 `docs/{role}/{feature_path}/`，每个路径段均为 lower
-kebab-case。新功能文档的 frontmatter 包含 `feature`、`feature_path`、
-`parent_feature`、`feature_level`、`version`、`date` 和 `last_updated`。
-当前事实变化时同步更新 `last_updated` 和文档 changelog。
+kebab-case。功能文档的 frontmatter 必填字段以
+`agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md`
+为准（含 `title`、`type`、`feature`、`feature_path`、`parent_feature`、
+`feature_level`、`version`、`status`、`author`、`date`、`last_updated`、
+`generated_by` 和 `changelog`；PRD 另有 `child_features`，`related_docs`
+可选）。当前事实变化时同步更新 `last_updated` 和文档 changelog。迭代或更新
+触及既有文档时，将其 metadata 与结构补齐到该约定的最新形态：缺失的必填字段
+当场补建，不因文档早于约定而跳过。
 
 不要为了目录对称创建空的 Design、QA、DevOps 或 Security 文档树。只有角色确实存在
 交付物时才创建对应路径。

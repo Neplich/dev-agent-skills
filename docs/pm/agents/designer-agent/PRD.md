@@ -5,7 +5,11 @@ feature: "agent-designer-agent"
 feature_path: "agents/designer-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.1.2"
+child_features:
+  - "agents/designer-agent/skills/designer-agent"
+  - "agents/designer-agent/skills/ui-ux-design"
+  - "agents/designer-agent/skills/visual-design"
+version: "1.1.3"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
@@ -23,6 +27,9 @@ related_docs:
   - "docs/pm/agent-collaboration/frontend-ui-routing-contract/PRD.md"
   - "docs/engineer/agent-collaboration/frontend-ui-routing-contract/TRD.md"
 changelog:
+  - version: "1.1.3"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（child_features）"
   - version: "1.1.2"
     date: "2026-09-01"
     changes: "清理已失效的 eval 机制残留引用"

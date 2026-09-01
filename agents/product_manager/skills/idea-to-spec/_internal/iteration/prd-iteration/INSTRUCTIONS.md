@@ -77,6 +77,10 @@ Apply changes to an existing PRD while maintaining version history and quality s
    - Scope change → MAJOR
 
 6. **Update changelog**: Add entry to both frontmatter and inline changelog.
+   If the document predates the current metadata conventions (missing
+   `changelog` or other required frontmatter fields), add the missing fields
+   in the same update per `_internal/_shared/output-conventions.md` — do not
+   skip them.
 
 7. **Run inline validation**: Apply `prd-validator` checks to the updated document. Report any remaining issues.
 

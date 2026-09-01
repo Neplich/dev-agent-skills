@@ -1,11 +1,12 @@
 ---
 title: "Docs Site Layout TRD"
 type: TRD
-version: "0.4.0"
+version: "0.4.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-18"
-last_updated: "2026-08-19"
+last_updated: "2026-09-01"
+generated_by: "trd-gen"
 feature: "docs-site-layout"
 feature_path: "agents/docs-agent/docs-site-layout"
 parent_feature: "agents/docs-agent"
@@ -15,6 +16,9 @@ related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/303"
   - "https://github.com/Neplich/dev-agent-skills/issues/304"
 changelog:
+  - version: "0.4.1"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（generated_by）"
   - version: "0.4.0"
     date: "2026-08-19"
     changes: "无目录页面使用 256px 空目录占位列保持正文居中"

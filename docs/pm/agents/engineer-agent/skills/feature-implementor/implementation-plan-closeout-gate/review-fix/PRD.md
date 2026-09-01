@@ -1,7 +1,7 @@
 ---
 title: "IMPLEMENTATION_PLAN 收尾门禁 Review 修复 PRD"
 type: PRD
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
@@ -11,8 +11,13 @@ feature: "review-fix"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate/review-fix"
 parent_feature: "agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate"
 feature_level: "6"
+child_features: "N/A"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/44"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/45"
+changelog:
+  - version: "0.1.1"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（child_features、changelog）"
 ---
 
 # IMPLEMENTATION_PLAN 收尾门禁 Review 修复 PRD

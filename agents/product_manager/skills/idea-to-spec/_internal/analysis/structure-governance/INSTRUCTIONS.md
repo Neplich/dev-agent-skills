@@ -155,7 +155,8 @@ The report must state these constraints for any later approved implementation:
    be overwritten during a move or split.
 6. Preserve content traceability: every source section must map to a target
    document, and each changed formal document records the migration in its
-   frontmatter changelog.
+   frontmatter changelog (adding the `changelog` field first when the document
+   predates it).
 7. Treat the approved structural implementation as `change_tier: major` and
    route it through the normal PM handoff and confirmation gates. Every move
    names a per-role owner: PM paths go to `idea-to-spec`, Engineer artifacts to

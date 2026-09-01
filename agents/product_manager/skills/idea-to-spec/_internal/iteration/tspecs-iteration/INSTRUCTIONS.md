@@ -61,6 +61,9 @@ history, traceability, and versioning.
 5. **Bump version**: Use
 `_internal/_shared/output-conventions.md`.
 6. **Update changelog**: Record coverage added, revised, deferred, or retired.
+   If the document predates the current metadata conventions (missing
+   `changelog` or other required frontmatter fields), add the missing fields
+   in the same update per `_internal/_shared/output-conventions.md`.
 7. **Run inline validation**: Apply `tspecs-validator` checks, using related
    docs if provided.
 8. **Present**: Show a coverage diff summary, validation result, and updated

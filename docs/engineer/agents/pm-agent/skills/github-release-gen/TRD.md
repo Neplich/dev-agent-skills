@@ -5,7 +5,7 @@ feature: "skill-github-release-gen"
 feature_path: "agents/pm-agent/skills/github-release-gen"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
-version: "1.2.0"
+version: "1.2.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-20"
@@ -22,6 +22,10 @@ related_docs:
   - "agents/docs/skills/docs-audit/_internal/INSTRUCTIONS.md"
   - "scripts/install_codex_skills.py"
   - "skills-lock.json"
+changelog:
+  - version: "1.2.1"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（changelog）"
 ---
 
 # github-release-gen TRD

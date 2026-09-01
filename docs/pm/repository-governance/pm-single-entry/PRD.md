@@ -1,16 +1,17 @@
 ---
 title: "PM 研发意图入口与路由过程收敛 PRD"
 type: PRD
-version: "1.1.0"
+version: "1.1.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-05"
-last_updated: "2026-08-14"
+last_updated: "2026-09-01"
 generated_by: "prd-gen"
 feature: "pm-single-entry"
 feature_path: "repository-governance/pm-single-entry"
 parent_feature: "repository-governance"
 feature_level: "2"
+child_features: "N/A"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/52"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/281"
@@ -30,6 +31,9 @@ related_docs:
   - "agents/security/skills/security-agent/SKILL.md"
   - "agents/docs/skills/docs-agent/SKILL.md"
 changelog:
+  - version: "1.1.1"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（child_features）"
   - version: "1.1.0"
     date: "2026-08-14"
     changes: "对齐 #281 与 #282：自动入口改为研发意图优先，保留显式调用，并移除 router 强制展示路由过程的要求"
