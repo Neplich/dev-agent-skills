@@ -11,11 +11,11 @@ child_features:
   - "agents/docs-agent/formal-docs-sync"
   - "agents/docs-agent/manual-gen"
   - "agents/docs-agent/release-notes-gen"
-version: "1.5.3"
+version: "1.5.4"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/105"
   - "https://github.com/Neplich/dev-agent-skills/issues/112"
@@ -33,6 +33,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/SKILL.md"
   - "scripts/check_doc_contract.py"
 changelog:
+  - version: "1.5.4"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.5.3"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -172,6 +175,8 @@ changelog:
 | 发版前文档校验（原为人工习惯） | `docs-audit` 固化为发版门禁 |
 
 ## 验收标准
+
+以下 AC 验证方式中的 eval fixture 引用为历史交付事实；eval 机制已随 #301 移除，不作为现行验证依据。
 
 | ID | Criteria | Verification |
 |----|----------|--------------|

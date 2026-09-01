@@ -117,7 +117,7 @@ flowchart TD
 | --- | --- |
 | 唯一定义源 | `rg "变更分级契约" AGENTS.md`；各 gate 引用不复制等级表。 |
 | 契约脚本 | `uv run scripts/check_repository_contract.py` 通过。 |
-| CI 同款测试 | `uv run pytest` CI 配置的确定性测试全部通过。 |
+| CI 同款测试 | 执行 `.github/workflows/ci.yml` 当前定义的 pytest 命令，全部通过。 |
 
 ## 8. 后续工作
 

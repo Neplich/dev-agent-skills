@@ -9,7 +9,7 @@ version: "1.2.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-20"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/github-release-gen/PRD.md"
 related_issues:
@@ -209,7 +209,7 @@ post-tag audit，不自动修 tag。
 | merged PR | 选择与正文事实对应的代表性 PR | 重点条目的 PR 链接 |
 | commit | 用于范围审计和必要的精确追溯 | 不输出未经整理的原始 commit dump |
 | contributor | 从已纳入条目和 compare 中归并 | 项目既有风格的贡献者署名 |
-| `reference/release-outline.md` | 作为标题与正文结构的唯一来源，不读取或继承相邻 Release 格式 | 内部质量证据只进入 changelog 的 Skill Eval 汇总，不进入用户向 GitHub Release 正文 |
+| `reference/release-outline.md` | 作为标题与正文结构的唯一来源，不读取或继承相邻 Release 格式 | 内部质量证据只进入仓库内交付记录，不进入用户向 GitHub Release 正文 |
 
 正文不得新增适用版本事实源未确认的产品事实。若 GitHub 证据揭示遗漏或冲突，停止生成；
 有文档站宿主将差异交回 `docs-agent:release-notes-gen` 重新确认和校验，无文档站宿主
