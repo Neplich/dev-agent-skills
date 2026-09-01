@@ -5,7 +5,7 @@ feature: "skill-delivery"
 feature_path: "agents/engineer-agent/skills/delivery"
 parent_feature: "agents/engineer-agent/skills"
 feature_level: "4"
-version: "1.0.3"
+version: "1.0.4"
 status: Approved
 author: "Neplich Codex"
 date: "2026-06-12"
@@ -21,6 +21,9 @@ related_docs:
   - "docs/engineer/repository-governance/feature-path-contract/TRD.md"
   - "docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md"
 changelog:
+  - version: "1.0.4"
+    date: "2026-09-01"
+    changes: "清理维护者画像中已失效的 eval 机制提及"
   - version: "1.0.3"
     date: "2026-09-01"
     changes: "清理已失效的 eval 机制残留引用"
@@ -60,7 +63,7 @@ changelog:
 |---------|-------------|-----------|-------------|
 | 直接调用用户 | 已知道要使用 `delivery` 的用户 | 直接获得当前 skill 的真实产物 | 泛化 PRD 会误导输入和输出 |
 | `engineer-agent` Dispatcher | 根据用户意图选择下游 skill | 清晰 trigger 和 route boundary | 描述过宽会误路由 |
-| 维护者 | 维护 skill 文档和 eval 的人 | 可追溯、可校验的契约 | related docs 不全会漏掉真实实现 |
+| 维护者 | 维护 skill 文档和确定性检查的人 | 可追溯、可校验的契约 | related docs 不全会漏掉真实实现 |
 
 ## 用户故事与场景
 

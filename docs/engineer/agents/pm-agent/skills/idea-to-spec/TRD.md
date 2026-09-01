@@ -1,7 +1,7 @@
 ---
 title: "idea-to-spec author 元数据规范 — Technical Requirements Document"
 type: TRD
-version: "0.1.0"
+version: "0.1.1"
 status: Approved
 feature: "skill-idea-to-spec"
 feature_path: "agents/pm-agent/skills/idea-to-spec"
@@ -9,7 +9,7 @@ parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/idea-to-spec/PRD.md"
 related_docs:
@@ -82,8 +82,8 @@ Examples:
 The repository contract only validates committed formal Markdown frontmatter with an
 existing `author` field. It rejects empty values, one-part values, and placeholders
 such as `AI Assistant`, but it does not parse or enumerate Agent platform names. It
-also does not parse arbitrary prose, eval fixture author values such as
-`Eval Fixture`, or data set examples where `AI Assistant` is not a document author.
+also does not parse arbitrary prose, author values from test or evaluation
+fixtures, or data set examples where `AI Assistant` is not a document author.
 
 ## 5. Implementation Constraints
 
@@ -92,7 +92,7 @@ also does not parse arbitrary prose, eval fixture author values such as
   to formal document metadata.
 - Use direct wording in docs; avoid process commentary in the final user-facing
   documents.
-- Do not modify eval runtime artifacts or data set examples that are not formal docs.
+- Do not modify test or evaluation runtime artifacts or data set examples that are not formal docs.
 - Preserve current document structure and add minimal requirement rows or metadata
   guidance instead of rewriting full PRDs.
 
@@ -122,7 +122,7 @@ machine hostnames, or other sensitive local identifiers.
 
 | Type | Item | Owner | Blocking |
 | --- | --- | --- | --- |
-| Risk | Over-broad scanning may flag prose examples or eval fixtures that are not formal docs. | Engineer | Yes |
+| Risk | Over-broad scanning may flag prose examples or test and evaluation fixtures that are not formal docs. | Engineer | Yes |
 | Risk | Bare `Codex` appears in many newly generated Agent / Skill PRDs and must be cleaned in the same change as the checker. | Engineer | Yes |
 | Assumption | `Neplich Codex` is the correct display value for this repo and current platform. | Maintainer | No |
 
