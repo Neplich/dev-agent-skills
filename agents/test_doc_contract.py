@@ -39,6 +39,31 @@ def add_tracked_file(root: Path, rel: str, content: str) -> Path:
     return path
 
 
+def formal_doc_frontmatter(doc_type: str) -> str:
+    child_features = 'child_features: "N/A"\n' if doc_type == "PRD" else ""
+    return (
+        "---\n"
+        'title: "Example"\n'
+        f"type: {doc_type}\n"
+        'feature: "example"\n'
+        'feature_path: "example"\n'
+        'parent_feature: "N/A"\n'
+        'feature_level: "1"\n'
+        'version: "0.1.0"\n'
+        "status: Draft\n"
+        'author: "Tester Codex"\n'
+        'date: "2026-07-06"\n'
+        'last_updated: "2026-07-06"\n'
+        'generated_by: "prd-gen"\n'
+        f"{child_features}"
+        "changelog:\n"
+        '  - version: "0.1.0"\n'
+        '    date: "2026-07-06"\n'
+        '    changes: "Initial version"\n'
+        "---\n\n"
+    )
+
+
 class DocContractTests(unittest.TestCase):
     def test_doc_contract_rejects_missing_required_formal_metadata(self):
         checker = load_doc_checker_module()
@@ -61,6 +86,10 @@ class DocContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("frontmatter 'date' must be non-empty", rendered)
         self.assertIn("frontmatter 'last_updated' must be non-empty", rendered)
+        self.assertIn("frontmatter 'title' must be non-empty", rendered)
+        self.assertIn(
+            "frontmatter 'changelog' must contain at least one entry", rendered
+        )
 
     def test_doc_contract_archive_segment_pm_doc_still_requires_frontmatter(self):
         checker = load_doc_checker_module()
@@ -78,6 +107,66 @@ class DocContractTests(unittest.TestCase):
 
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("docs/pm/payments/archive/PRD.md", rendered)
+
+    def test_doc_contract_rejects_prd_without_child_features(self):
+        checker = load_doc_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            add_tracked_file(
+                root,
+                "docs/pm/example/PRD.md",
+                formal_doc_frontmatter("PRD").replace('child_features: "N/A"\n', "")
+                + "# Example PRD\n",
+            )
+
+            errors = checker.validate_all(root)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("frontmatter 'child_features' must be non-empty for PRDs", rendered)
+
+    def test_doc_contract_rejects_changelog_entry_without_changes(self):
+        checker = load_doc_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            add_tracked_file(
+                root,
+                "docs/engineer/example/TRD.md",
+                formal_doc_frontmatter("TRD").replace(
+                    '    changes: "Initial version"\n', ""
+                )
+                + "# Example TRD\n",
+            )
+
+            errors = checker.validate_all(root)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("must have non-empty 'changes'", rendered)
+
+    def test_doc_contract_registered_exemption_skips_extended_fields(self):
+        checker = load_doc_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            add_tracked_file(
+                root,
+                "docs/pm/repository-ci-governance/CI_PLAN.md",
+                "---\n"
+                'feature: "repository-ci-governance"\n'
+                'version: "0.1.0-draft"\n'
+                'date: "2026-05-06"\n'
+                'last_updated: "2026-09-01"\n'
+                "---\n\n"
+                "# Repository CI Governance Plan\n",
+            )
+
+            errors = checker.validate_all(root)
+
+        self.assertEqual([], errors)
 
     def test_doc_contract_rejects_non_pm_description_trigger_phrase(self):
         checker = load_doc_checker_module()
@@ -113,25 +202,16 @@ class DocContractTests(unittest.TestCase):
             add_tracked_file(
                 root,
                 "docs/pm/example/PRD.md",
-                "---\n"
-                'feature: "example"\n'
-                'version: "0.1.0"\n'
-                'date: "2026-07-06"\n'
-                'last_updated: "2026-07-06"\n'
-                "---\n\n"
-                "# Example PRD\n",
+                formal_doc_frontmatter("PRD") + "# Example PRD\n",
             )
             add_tracked_file(
                 root,
                 "docs/engineer/example/TRD.md",
-                "---\n"
-                'feature: "example"\n'
-                'version: "0.1.0"\n'
-                'date: "2026-07-06"\n'
-                'last_updated: "2026-07-06"\n'
-                'related_prd: "docs/pm/example/PRD.md"\n'
-                "---\n\n"
-                "# Example TRD\n",
+                formal_doc_frontmatter("TRD").replace(
+                    "changelog:\n",
+                    'related_prd: "docs/pm/example/PRD.md"\nchangelog:\n',
+                )
+                + "# Example TRD\n",
             )
 
             pm_agent = root / "agents/product_manager/skills/pm-agent/SKILL.md"

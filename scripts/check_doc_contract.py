@@ -12,6 +12,8 @@ from check_repository_contract import (
     ContractError,
     add_error,
     is_legacy_artifact_path,
+    markdown_frontmatter_block,
+    markdown_frontmatter_changelog_block,
     parse_markdown_frontmatter,
     repo_root,
     tracked_files,
@@ -19,6 +21,37 @@ from check_repository_contract import (
 
 
 REQUIRED_FORMAL_FRONTMATTER_FIELDS = ("feature", "version", "date", "last_updated")
+# Extended presence set aligning with the output-conventions required fields
+# (agents/product_manager/skills/idea-to-spec/_internal/_shared/
+# output-conventions.md). `changelog` is validated structurally below because
+# the frontmatter parser flattens block values to empty strings; the PRD-only
+# `child_features` field is validated per document type.
+EXTENDED_FORMAL_FRONTMATTER_FIELDS = (
+    "title",
+    "type",
+    "feature",
+    "feature_path",
+    "parent_feature",
+    "feature_level",
+    "version",
+    "status",
+    "author",
+    "date",
+    "last_updated",
+    "generated_by",
+)
+# Explicit registry of formal documents exempt from the extended field set (the
+# base four fields still apply). Every entry must name an existing tracked file
+# and record the reason; retire an entry by bringing the document up to the
+# output-conventions field set.
+FORMAL_DOC_FIELD_EXEMPTIONS: dict[str, str] = {
+    "docs/pm/repository-ci-governance/CI_PLAN.md": (
+        "checklist-style CI governance ledger; its document type is outside the"
+        " output-conventions enum and its version is a non-SemVer draft (#331)"
+    ),
+}
+CHANGELOG_ENTRY_START_RE = re.compile(r"^\s*-\s+version:\s*(.*?)\s*$")
+CHANGELOG_ENTRY_FIELD_RE = re.compile(r"^\s+(date|changes):\s*(.*?)\s*$")
 FORMAL_DOC_PREFIXES = ("docs/pm/", "docs/engineer/")
 NON_FORMAL_DOC_NAMES = {"README.md", "README_zh.md", "CHANGELOG.md"}
 
@@ -69,8 +102,75 @@ def is_formal_pm_or_engineer_document(rel: str) -> bool:
         return False
     # Implementation plan metadata, including archive-specific fields, is owned
     # by check_repository_contract.py. Keep this checker focused on the gap:
-    # PRD/TRD plus other formal PM/Engineer docs such as DECISIONS and CI_PLAN.
+    # PRD/TRD plus other formal PM/Engineer docs such as DECISIONS and CI_PLAN
+    # (CI_PLAN carries a registered exemption from the extended field set; see
+    # FORMAL_DOC_FIELD_EXEMPTIONS).
     return not is_implementation_plan_artifact_path(rel)
+
+
+def validate_changelog_entries(
+    path: Path,
+    content: str,
+    errors: list[ContractError],
+) -> None:
+    block = markdown_frontmatter_changelog_block(content)
+    if not block.strip():
+        add_error(
+            errors, path, "frontmatter 'changelog' must contain at least one entry"
+        )
+        return
+    entries: list[dict[str, str]] = []
+    current: dict[str, str] | None = None
+    for line in block.splitlines():
+        start = CHANGELOG_ENTRY_START_RE.match(line)
+        if start is not None:
+            current = {"version": start.group(1)}
+            entries.append(current)
+            continue
+        if current is None:
+            continue
+        field = CHANGELOG_ENTRY_FIELD_RE.match(line)
+        if field is not None:
+            current[field.group(1)] = field.group(2)
+    if not entries:
+        add_error(
+            errors,
+            path,
+            "frontmatter 'changelog' must contain at least one '- version:' entry",
+        )
+        return
+    for entry in entries:
+        for key in ("version", "date", "changes"):
+            if not entry.get(key, "").strip().strip("'\""):
+                add_error(
+                    errors,
+                    path,
+                    "frontmatter 'changelog' entry for version"
+                    f" {entry.get('version') or '<unknown>'!r}"
+                    f" must have non-empty {key!r}",
+                )
+
+
+def frontmatter_field_has_value(content: str, field: str) -> bool:
+    block = markdown_frontmatter_block(content)
+    if not block:
+        return False
+    lines = block.splitlines()
+    for index, line in enumerate(lines):
+        if line.startswith((" ", "\t", "-")) or ":" not in line:
+            continue
+        key, _, value = line.partition(":")
+        if key.strip() != field:
+            continue
+        if value.strip():
+            return True
+        for child in lines[index + 1 :]:
+            if child.strip() and not child.startswith((" ", "\t", "-")):
+                break
+            if child.strip():
+                return True
+        return False
+    return False
 
 
 def validate_required_formal_frontmatter(
@@ -85,7 +185,8 @@ def validate_required_formal_frontmatter(
         if not path.exists():
             continue
 
-        parsed = parse_markdown_frontmatter(path, path.read_text(), errors)
+        content = path.read_text()
+        parsed = parse_markdown_frontmatter(path, content, errors)
         if parsed is None:
             continue
         metadata, _ = parsed
@@ -94,6 +195,28 @@ def validate_required_formal_frontmatter(
             value = metadata.get(field)
             if not isinstance(value, str) or not value.strip():
                 add_error(errors, path, f"frontmatter {field!r} must be non-empty")
+
+        if rel in FORMAL_DOC_FIELD_EXEMPTIONS:
+            continue
+
+        for field in EXTENDED_FORMAL_FRONTMATTER_FIELDS:
+            value = metadata.get(field)
+            if not isinstance(value, str) or not value.strip():
+                add_error(errors, path, f"frontmatter {field!r} must be non-empty")
+
+        validate_changelog_entries(path, content, errors)
+
+        if (
+            rel.startswith("docs/pm/")
+            and Path(rel).name == "PRD.md"
+            and not frontmatter_field_has_value(content, "child_features")
+        ):
+            add_error(
+                errors,
+                path,
+                "frontmatter 'child_features' must be non-empty for PRDs"
+                ' (use "N/A" when the PRD has no direct children)',
+            )
 
 
 def validate_prd_related_trd_mirror(

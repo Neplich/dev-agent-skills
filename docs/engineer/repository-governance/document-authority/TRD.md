@@ -1,7 +1,7 @@
 ---
 title: "仓库文档权威与生命周期治理 — Technical Requirements Document"
 type: TRD
-version: "0.1.7"
+version: "0.1.8"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-15"
@@ -25,6 +25,9 @@ related_code:
   - "scripts/install_codex_skills.py"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.8"
+    date: "2026-09-01"
+    changes: "check_doc_contract 加严：output-conventions 必填字段与 changelog 条目结构硬失败，登记 CI_PLAN 显式豁免（#331）"
   - version: "0.1.7"
     date: "2026-09-01"
     changes: "清理已失效的 eval 机制残留引用"
@@ -321,7 +324,7 @@ slug（含重复标题序号）验证锚点存在。URL percent-decoding 后再�
 | --- | --- | --- | --- |
 | 生成 | 权威源与 24 份副本 | `uv run scripts/generate_shared_contracts.py --check` | missing/extra/stale 为 0 |
 | 仓库契约 | plan 生命周期、Router 预算、marketplace 文档状态、hash | `uv run scripts/check_repository_contract.py` | PASS |
-| 文档契约 | frontmatter、本地链接与锚点、归档路径 | `uv run scripts/check_doc_contract.py` | PASS |
+| 文档契约 | frontmatter 必填字段（对齐 output-conventions 全集、PRD `child_features`、changelog 条目结构；豁免经 `FORMAL_DOC_FIELD_EXEMPTIONS` 显式登记）、本地链接与锚点、归档路径 | `uv run scripts/check_doc_contract.py` | PASS |
 | 定向单测 | 生成、repository/doc checker、安装镜像 | `uv run --with pytest pytest scripts/test_generate_shared_contracts.py scripts/test_check_repository_contract.py agents/test_doc_contract.py scripts/test_install_codex_skills.py` | 全部通过 |
 | Codex 安装 | 全量安装临时目标 | `uv run scripts/install_codex_skills.py --target <tmp>` | 引用可读、生成副本存在 |
 | Claude 打包 | marketplace 七 plugin 临时复制测试 | pytest 内按 manifest source/skills 复制并解析引用 | 六个 plugin 自包含 |
