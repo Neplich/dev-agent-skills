@@ -1,7 +1,7 @@
 ---
 title: "变更分级契约 PRD"
 type: PRD
-version: "1.0.2"
+version: "1.0.3"
 status: Approved
 author: "Neplich Claude Code"
 date: "2026-07-04"
@@ -10,6 +10,7 @@ feature: "change-tier-contract"
 feature_path: "repository-governance/change-tier-contract"
 parent_feature: "repository-governance"
 feature_level: "2"
+child_features: "N/A"
 last_updated: "2026-09-01"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/55"
 related_docs:
@@ -20,6 +21,9 @@ related_docs:
   - "agents/qa/skills/qa-agent/SKILL.md"
   - "agents/product_manager/skills/pm-agent/SKILL.md"
 changelog:
+  - version: "1.0.3"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（child_features）"
   - version: "1.0.2"
     date: "2026-09-01"
     changes: "清理已失效的 eval 机制残留引用"

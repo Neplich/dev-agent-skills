@@ -5,11 +5,13 @@ feature: "docs-authoring-foundation"
 feature_path: "agents/docs-agent/docs-authoring-foundation"
 parent_feature: "agents/docs-agent"
 feature_level: "3"
-version: "1.0.1"
+child_features: "N/A"
+version: "1.0.2"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-19"
 last_updated: "2026-09-01"
+generated_by: "prd-gen"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/122"
 related_docs:
@@ -17,6 +19,9 @@ related_docs:
   - "docs/engineer/agents/docs-agent/docs-authoring-foundation/TRD.md"
   - "docs/engineer/agents/docs-agent/docs-authoring-foundation/IMPLEMENTATION_PLAN.md"
 changelog:
+  - version: "1.0.2"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（child_features、generated_by）"
   - version: "1.0.1"
     date: "2026-09-01"
     changes: "清理已失效的 eval 机制残留引用"

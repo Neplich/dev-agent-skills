@@ -11,11 +11,12 @@ child_features:
   - "agents/docs-agent/formal-docs-sync"
   - "agents/docs-agent/manual-gen"
   - "agents/docs-agent/release-notes-gen"
-version: "1.5.4"
+version: "1.5.5"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
 last_updated: "2026-09-01"
+generated_by: "prd-gen"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/105"
   - "https://github.com/Neplich/dev-agent-skills/issues/112"
@@ -33,6 +34,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/SKILL.md"
   - "scripts/check_doc_contract.py"
 changelog:
+  - version: "1.5.5"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（generated_by）"
   - version: "1.5.4"
     date: "2026-09-01"
     changes: "清理已失效的 eval 机制残留引用"

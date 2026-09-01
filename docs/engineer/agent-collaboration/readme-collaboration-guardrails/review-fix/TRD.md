@@ -1,17 +1,21 @@
 ---
 title: "README 协作门禁 Review 修复 TRD"
 type: TRD
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-25"
-last_updated: "2026-06-25"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "review-fix"
 feature_path: "agent-collaboration/readme-collaboration-guardrails/review-fix"
 parent_feature: "agent-collaboration/readme-collaboration-guardrails"
 feature_level: "3"
 related_prd: "docs/pm/agent-collaboration/readme-collaboration-guardrails/review-fix/PRD.md"
+changelog:
+  - version: "0.1.1"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（changelog）"
 ---
 
 # README 协作门禁 Review 修复 TRD

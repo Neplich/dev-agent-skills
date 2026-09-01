@@ -1,16 +1,17 @@
 ---
 title: "接手项目功能目录与项目画像 PRD"
 type: PRD
-version: "0.1.2"
+version: "0.1.3"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-04"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "idea-to-spec"
 feature: "feature-catalog"
 feature_path: "agents/pm-agent/skills/feature-catalog"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
+child_features: "N/A"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/51"
 related_docs:
   - "docs/pm/agents/pm-agent/PRD.md"
@@ -20,6 +21,9 @@ related_docs:
   - "agents/engineer/skills/codebase-analyzer/SKILL.md"
   - ".claude-plugin/marketplace.json"
 changelog:
+  - version: "0.1.3"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（child_features）"
   - version: "0.1.2"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"

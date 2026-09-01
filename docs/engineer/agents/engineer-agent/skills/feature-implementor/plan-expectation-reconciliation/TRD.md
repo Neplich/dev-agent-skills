@@ -1,11 +1,11 @@
 ---
 title: "实施计划预期改动声明与收尾对账 TRD"
 type: TRD
-version: "0.1.0"
+version: "0.1.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-20"
-last_updated: "2026-08-20"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "plan-expectation-reconciliation"
 feature_path: "agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation"
@@ -14,6 +14,10 @@ feature_level: "5"
 related_prd: "docs/pm/agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation/PRD.md"
 related_plan: "docs/engineer/agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation/IMPLEMENTATION_PLAN.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/315"
+changelog:
+  - version: "0.1.1"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（changelog）"
 ---
 
 # 实施计划预期改动声明与收尾对账 TRD

@@ -1,7 +1,7 @@
 ---
 title: "idea-to-spec author 元数据规范 — Technical Requirements Document"
 type: TRD
-version: "0.1.1"
+version: "0.1.2"
 status: Approved
 feature: "skill-idea-to-spec"
 feature_path: "agents/pm-agent/skills/idea-to-spec"
@@ -16,6 +16,10 @@ related_docs:
   - "docs/pm/agents/engineer-agent/skills/trd-gen/PRD.md"
   - "docs/pm/agents/engineer-agent/skills/feature-implementor/PRD.md"
   - "https://github.com/Neplich/dev-agent-skills/issues/32"
+changelog:
+  - version: "0.1.2"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（changelog）"
 ---
 
 # idea-to-spec author 元数据规范 TRD

@@ -1,19 +1,23 @@
 ---
 title: "Codex 统一全量安装 PRD"
 type: PRD
-version: "0.1.0"
+version: "0.1.1"
 status: Draft
 author: "Neplich Claude"
 date: "2026-08-17"
-last_updated: "2026-08-17"
+last_updated: "2026-09-01"
 generated_by: "idea-to-spec"
 feature: "codex-install"
 feature_path: "repository-governance/codex-install"
 parent_feature: "repository-governance"
 feature_level: "2"
+child_features: "N/A"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/288"
 related_pr: "https://github.com/Neplich/dev-agent-skills/pull/293"
 changelog:
+  - version: "0.1.1"
+    date: "2026-09-01"
+    changes: "按 skill 最新约定补齐 frontmatter 字段（child_features）"
   - version: "0.1.0"
     date: "2026-08-17"
     changes: "初始版本，定义 Codex 统一全量安装需求"

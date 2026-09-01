@@ -41,13 +41,25 @@ changelog:
 | author | Yes | Traceable creator display name |
 | date | Yes | Creation/update date |
 | generated_by | Yes | Skill that generated this document |
-| feature_path | Yes for new feature-scoped docs | Multi-level slash-separated feature path |
-| feature | Yes for new feature-scoped docs | Terminal feature slug or compatible legacy feature value |
-| parent_feature | Yes for new feature-scoped docs | Parent feature path, or `N/A` for level 1 |
-| feature_level | Yes for new feature-scoped docs | Positive integer matching `feature_path` depth |
-| child_features | Yes for new or updated PRDs | Direct child feature paths, or `N/A` when the PRD has no direct children |
+| feature_path | Yes | Multi-level slash-separated feature path |
+| feature | Yes | Terminal feature slug or compatible legacy feature value |
+| parent_feature | Yes | Parent feature path, or `N/A` for level 1 |
+| feature_level | Yes | Positive integer matching `feature_path` depth |
+| child_features | Yes for PRDs | Direct child feature paths, or `N/A` when the PRD has no direct children; omit for other document types |
 | related_docs | No | List of related document paths |
 | changelog | Yes | Version history entries |
+
+### Updating Existing Documents
+
+When an iteration or update touches an existing document, bring its metadata
+and structure up to the latest form of these conventions in the same change:
+add every missing required field (for example `changelog` or
+`child_features`), record the update in the frontmatter changelog (adding the
+field first when the document predates it), and bump the version per the rules
+below. Never skip a required field because the document predates the
+convention. Fields marked optional stay optional; where an optional field has
+a documented consumer fallback (for example `related_code` in `trd-gen`), the
+fallback is the designed behavior and remains valid.
 
 ## 2. Version Numbering
 
@@ -93,7 +105,8 @@ docs/<agent-short>/<feature_path>/<DOC>.md
 
 `feature_path` must contain one or more slash-separated slug segments. Existing
 single-level folders without feature-path metadata remain readable as level-1
-features.
+features; any update to such a document backfills the metadata per Required
+Fields.
 
 ### Short Agent Paths
 
