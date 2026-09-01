@@ -257,7 +257,7 @@ repository contract 对 `_legacy/` 的处理应与 canonical PRD/TRD/Plan 分开
 
 | ID | 验收标准 | 验证方式 |
 | --- | --- | --- |
-| AC-001 | 子功能不会默认创建并列一级 PRD。 | repository contract 校验嵌套 PRD 的 `feature_path` 与父级归属；静态检查确认无错误并列一级 PRD。 |
+| AC-001 | 子功能不会默认创建并列一级 PRD。 | repository contract 校验嵌套 PRD 的 `feature_path` 与 frontmatter 父级一致；审查 `idea-to-spec` 指令保留禁止并列一级目录条款。 |
 | AC-002 | TRD 和实施计划镜像 PRD 的 `feature_path`。 | repository contract 校验 TRD/实施计划路径、frontmatter 与 `related_prd` 镜像。 |
 | AC-003 | 缺 PRD、缺 TRD、路径冲突时不会生成实施计划。 | repository contract 校验实施计划必须落在与 PRD/TRD 一致的 `feature_path` 下。 |
 | AC-004 | 旧单层路径仍可读取；触及时向用户提出更新 `feature_path`。 | 静态检查确认 `idea-to-spec` 与 feature-implementor planner 保留旧单层路径兼容读取回退，且触及旧单层路径时的处理与 FR-010 一致。 |
