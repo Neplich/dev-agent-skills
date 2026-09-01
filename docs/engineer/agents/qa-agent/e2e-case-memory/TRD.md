@@ -1,11 +1,11 @@
 ---
 title: "QA Agent E2E 用例沉淀与复用 TRD"
 type: TRD
-version: "1.0.3"
+version: "1.0.4"
 status: Approved
 author: "Neplich Codex"
 date: "2026-05-21"
-last_updated: "2026-08-15"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "qa-e2e-case-memory"
 feature_path: "agents/qa-agent/e2e-case-memory"
@@ -19,6 +19,9 @@ related_docs:
   - "agents/qa/skills/qa-agent/references/e2e-case-format.md"
   - "agents/qa/skills/qa-agent/references/e2e-test-report.md"
 changelog:
+  - version: "1.0.4"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.0.3"
     date: "2026-08-15"
     changes: "收窄为当前目录、数据流和验证设计；格式模板迁至 QA reference"
@@ -95,7 +98,7 @@ Router 和 Specialist 只保留 reference 指针，不复制模板。
 
 ## 6. 验证
 
-- QA Router/Specialist 确定性测试和受影响 eval 保持行为。
+- QA Router/Specialist 确定性测试保持行为。
 - 扫描 case、script、result、report 与 fixture，拒绝明文 secret。
 - 检查平台版本、TC 命名、case/script 一一对应和追加路径。
 - 文档契约检查 reference 链接。

@@ -10,11 +10,11 @@ child_features:
   - "agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate"
   - "agents/engineer-agent/skills/feature-implementor/gate-approver-authorization"
   - "agents/engineer-agent/skills/feature-implementor/plan-expectation-reconciliation"
-version: "1.5.2"
+version: "1.5.3"
 status: Approved
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "prd-gen"
 related_docs:
   - "docs/pm/agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate/PRD.md"
@@ -36,6 +36,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/implementor/INSTRUCTIONS.md"
   - "agents/engineer/skills/feature-implementor/_internal/reviewer/INSTRUCTIONS.md"
 changelog:
+  - version: "1.5.3"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.5.2"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -138,8 +141,8 @@ changelog:
 | AC-01 | P0 trigger、context、workflow、artifact 和 handoff 与当前实现文档一致。 | 对照 related_docs 中的 README、SKILL.md、internal/reference 文件人工 review。 |
 | AC-02 | 文档不包含自路由、全量默认执行或将 specialist 行为泛化为整个 Agent 的错误描述。 | 检查 route matrix、非目标、边界和 Mermaid flow。 |
 | AC-03 | 产物要求必须指向具体文件、报告、代码变更或 blocked 输出，不使用模糊替代表述。 | 检查功能需求和用户流程中的 artifact 节点。 |
-| AC-04 | 实施完成态的 `IMPLEMENTATION_PLAN.md` 不得保留计划期状态残留。 | reviewer checklist 和 feature-implementor closeout eval。 |
-| AC-05 | 同一 `feature_path` 存在未归档活跃计划时不会被直接覆盖；归档发生在 closeout 和审批之后，归档 metadata 完整，新计划引用 `previous_plan_archive`。 | repository contract 归档校验和 feature-implementor archive gate eval。 |
+| AC-04 | 实施完成态的 `IMPLEMENTATION_PLAN.md` 不得保留计划期状态残留。 | reviewer checklist 和 repository contract。 |
+| AC-05 | 同一 `feature_path` 存在未归档活跃计划时不会被直接覆盖；归档发生在 closeout 和审批之后，归档 metadata 完整，新计划引用 `previous_plan_archive`。 | repository contract 归档校验。 |
 
 ## 非功能需求
 
@@ -186,7 +189,7 @@ Error flow: 如果必要上下文无法满足，输出 blocked reason、missing 
 | Context | source_docs, code_or_repo_state, constraints, evidence | consumed_by Skill |
 | Artifact | path, type, owner, status, evidence | produced_by Skill |
 | Handoff | target, reason, packet, expected_output | emitted_when needed |
-| Validation | related_docs, evals, manual review | verifies contract |
+| Validation | related_docs, deterministic checks, manual review | verifies contract |
 
 ## 接口与文件触点
 

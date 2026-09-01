@@ -5,11 +5,11 @@ feature: "skill-debugger"
 feature_path: "agents/engineer-agent/skills/debugger"
 parent_feature: "agents/engineer-agent/skills"
 feature_level: "4"
-version: "1.2.1"
+version: "1.2.2"
 status: Approved
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "prd-gen"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/274"
 related_docs:
@@ -24,6 +24,9 @@ related_docs:
   - "docs/pm/agents/engineer-agent/skills/debugger/DECISIONS.md"
   - "docs/engineer/agents/engineer-agent/skills/debugger/TRD.md"
 changelog:
+  - version: "1.2.2"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.2.1"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -179,7 +182,7 @@ Error flow: 如果必要上下文无法满足，输出 blocked reason、missing 
 | Context | source_docs, code_or_repo_state, constraints, evidence | consumed_by Skill |
 | Artifact | path, type, owner, status, evidence | produced_by Skill |
 | Handoff | target, reason, packet, expected_output | emitted_when needed |
-| Validation | related_docs, evals, manual review | verifies contract |
+| Validation | related_docs, deterministic checks, manual review | verifies contract |
 | Debug Mode | mode, allowed_mutations, expected_behavior_alignment | controls diagnosis or repair path |
 | Diagnosis Report | facts, evidence, inference, confidence, impact, unknowns, next_step | produced_by `diagnosis_only` |
 

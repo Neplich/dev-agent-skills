@@ -1,11 +1,11 @@
 ---
 title: "PM 研发意图入口与路由过程收敛 TRD"
 type: TRD
-version: "1.1.1"
+version: "1.1.2"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-05"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "pm-single-entry"
 feature_path: "repository-governance/pm-single-entry"
@@ -27,6 +27,9 @@ related_docs:
   - "agents/security/skills/security-agent/SKILL.md"
   - "agents/docs/skills/docs-agent/SKILL.md"
 changelog:
+  - version: "1.1.2"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.1.1"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -144,7 +147,7 @@ git diff --check
 ## 8. 回滚
 
 本变更没有数据迁移或运行时状态。若入口判断或 router 行为回归，整体 revert 本 PR 即可；
-不得只回滚 lockfile 或 eval 产物，避免 skill 内容与验证证据失配。
+不得只回滚 lockfile，避免 skill 内容与验证证据失配。
 
 ## 9. 已确认决策
 

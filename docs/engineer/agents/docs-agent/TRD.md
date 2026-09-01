@@ -1,11 +1,11 @@
 ---
 title: "docs-agent TRD"
 type: TRD
-version: "0.6.3"
+version: "0.6.4"
 status: Approved
 author: "Neplich Claude"
 date: "2026-07-14"
-last_updated: "2026-08-15"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "agent-docs-agent"
 feature_path: "agents/docs-agent"
@@ -19,6 +19,9 @@ related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/118"
   - "https://github.com/Neplich/dev-agent-skills/issues/120"
 changelog:
+  - version: "0.6.4"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "0.6.3"
     date: "2026-08-15"
     changes: "收窄为 Docs Agent 父架构、公共对象与子能力边界，详细协议由 child TRD 和 Specialist 所有"
@@ -116,7 +119,7 @@ mirror 均不得越过 plugin 根读取 PM 源路径。
 
 ## 7. 验证与回滚
 
-- marketplace、lock hash、frontmatter、change-map、站点构建和 Specialist eval 各由现有
+- marketplace、lock hash、frontmatter、change-map、站点构建各由现有
   checker/Skill 验证。
 - 安装测试证明内部资源在 Claude 与 Codex 边界可读。
 - Release audit 验证使用隔离提交事务，不把未确认外部操作当作完成。

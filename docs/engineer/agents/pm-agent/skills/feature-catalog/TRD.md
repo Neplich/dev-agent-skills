@@ -1,11 +1,11 @@
 ---
 title: "接手项目功能目录与项目画像 TRD"
 type: TRD
-version: "0.1.3"
+version: "0.1.4"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-04"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "feature-catalog"
 feature_path: "agents/pm-agent/skills/feature-catalog"
@@ -21,6 +21,9 @@ related_docs:
   - ".claude-plugin/marketplace.json"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.4"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "0.1.3"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -46,7 +49,7 @@ changelog:
 - 把已确认 catalog 条目定义为 handoff packet 中 `feature_path_evidence`
   （`{source, reason}` 条目列表）的推导来源，完整分类证据经 `source_catalog`
   引用，供 `prd-gen` / `trd-gen` 消费。
-- 完成 marketplace、skills-lock 注册和 eval 契约覆盖。
+- 完成 marketplace、skills-lock 注册和 repository contract 覆盖。
 
 ## 2. 影响范围
 

@@ -5,7 +5,7 @@ version: "0.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-25"
-last_updated: "2026-06-25"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "readme-collaboration-guardrails"
 feature_path: "agent-collaboration/readme-collaboration-guardrails"
@@ -39,4 +39,4 @@ related_prd: "docs/pm/agent-collaboration/readme-collaboration-guardrails/PRD.md
 
 - Markdown 中 Mermaid 流程语义人工检查。
 - `git diff --check`
-- 仓库 contract 和 eval artifact 检查。
+- repository contract 检查。

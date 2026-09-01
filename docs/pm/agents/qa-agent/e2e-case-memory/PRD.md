@@ -1,11 +1,11 @@
 ---
 title: "QA Agent E2E 用例沉淀与复用 PRD"
 type: PRD
-version: "1.0.10"
+version: "1.0.11"
 status: Approved
 author: "Neplich Codex"
 date: "2026-05-19"
-last_updated: "2026-08-15"
+last_updated: "2026-09-01"
 generated_by: "prd-gen"
 feature: "qa-e2e-case-memory"
 feature_path: "agents/qa-agent/e2e-case-memory"
@@ -23,6 +23,9 @@ related_docs:
   - "agents/qa/skills/qa-agent/references/e2e-case-format.md"
   - "agents/qa/skills/qa-agent/references/e2e-test-report.md"
 changelog:
+  - version: "1.0.11"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.0.10"
     date: "2026-08-15"
     changes: "收窄为产品要求与验收；凭据、用例、脚本和报告格式迁至 QA reference 唯一 owner"
@@ -109,4 +112,4 @@ QA 应在每次 E2E 工作前复用已有可执行测试记忆，避免重复探
 ## 8. 发布与完成条件
 
 本能力随 QA Skill 文档和 checker 普通 PR 发布，不需要服务部署或数据迁移。完成要求：
-格式 owner 唯一，已有 QA 行为不变，确定性检查和受影响 eval 通过。
+格式 owner 唯一，已有 QA 行为不变，确定性检查通过。
