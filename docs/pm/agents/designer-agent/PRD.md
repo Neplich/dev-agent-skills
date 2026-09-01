@@ -5,11 +5,11 @@ feature: "agent-designer-agent"
 feature_path: "agents/designer-agent"
 parent_feature: "agents"
 feature_level: "2"
-version: "1.1.1"
+version: "1.1.2"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "prd-gen"
 related_docs:
   - "agents/designer/README.md"
@@ -23,6 +23,9 @@ related_docs:
   - "docs/pm/agent-collaboration/frontend-ui-routing-contract/PRD.md"
   - "docs/engineer/agent-collaboration/frontend-ui-routing-contract/TRD.md"
 changelog:
+  - version: "1.1.2"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.1.1"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -45,7 +48,7 @@ changelog:
 1. 作为入口 dispatcher，识别用户意图并选择一个主 route。
 2. 保持 route matrix 与 README、dispatcher `SKILL.md`、marketplace 和 skill 目录一致。
 3. 在需要跨角色协作时说明 owning agent、输入包和期望产物。
-4. 支持后续维护者通过 related docs 和 eval fixture 追踪行为漂移。
+4. 支持后续维护者通过 related docs 和确定性检查追踪行为漂移。
 5. 消费 PM/Engineer 已确认的 `feature_path`，并将设计产物镜像到同一路径。
 6. 支持来自 Engineer 的 UI maintenance / frontend-update design request，并在设计交付后回交 Engineer。
 
@@ -68,7 +71,7 @@ changelog:
 | ID | User Story | Priority | Acceptance Criteria |
 |----|-----------|----------|---------------------|
 | US-A01 | 作为用户，我想通过 `designer-agent` 进入UX 流程、信息架构、页面结构、线框、视觉系统和设计 handoff流程，以便获得最小足够的 specialist 处理。 | P0 | 给定匹配请求，输出一个主 route、选择理由和下一步产物。 |
-| US-A02 | 作为维护者，我想确认 route matrix 不自路由、不全量执行，同时能表达完整设计闭环，以便和 eval 及 README 保持一致。 | P0 | 流程图表达最小主 route，以及完整设计闭环 `ui-ux-design` -> `visual-design` -> `engineer-agent` handoff。 |
+| US-A02 | 作为维护者，我想确认 route matrix 不自路由、不全量执行，同时能表达完整设计闭环，以便和行为契约及 README 保持一致。 | P0 | 流程图表达最小主 route，以及完整设计闭环 `ui-ux-design` -> `visual-design` -> `engineer-agent` handoff。 |
 | US-A03 | 作为下游 Agent，我想收到明确 handoff，以便继续工作时不重猜上下文。 | P1 | handoff 包含 target、source docs、blocked reason 或 expected output。 |
 
 ## 功能需求
@@ -104,7 +107,7 @@ changelog:
 
 | Category | Requirement | Metric | Target |
 |----------|-------------|--------|--------|
-| Accuracy | route 与 README / SKILL / marketplace 一致 | Review / eval | P0 场景无自路由或误路由 |
+| Accuracy | route 与 README / SKILL / marketplace 一致 | Review / 静态检查 | P0 场景无自路由或误路由 |
 | Traceability | 关键行为能回到 related docs | 文档链接 | route、artifact、handoff 均有来源 |
 | Maintainability | 新增/删除 skill 后 PRD 可同步 | repository contract | skill 清单一致 |
 | Safety | 不输出凭据或越权修改 | 静态审查 | 0 secrets |
@@ -180,7 +183,7 @@ Error flow: 如果请求属于其他角色，转交 owning agent，而不是继�
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
-| Dispatcher 被写成自路由 | Medium | 用户误以为存在循环 route | PRD 与 eval 均要求无自路由 |
+| Dispatcher 被写成自路由 | Medium | 用户误以为存在循环 route | PRD 与路由契约均要求无自路由 |
 | 一次请求执行所有 specialist | Medium | 范围膨胀 | route matrix 明确一个主 route |
 | 新增 skill 后 PRD 过期 | Medium | 文档漂移 | 将 PRD 更新纳入 skill 维护 checklist |
 

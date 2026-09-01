@@ -1,11 +1,11 @@
 ---
 title: "仓库文档权威与生命周期治理 — Technical Requirements Document"
 type: TRD
-version: "0.1.6"
+version: "0.1.7"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-15"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "document-authority"
 feature_path: "repository-governance/document-authority"
@@ -25,6 +25,9 @@ related_code:
   - "scripts/install_codex_skills.py"
   - "skills-lock.json"
 changelog:
+  - version: "0.1.7"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "0.1.6"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -73,10 +76,10 @@ changelog:
 | FR-002 / US-002 | 14 份当前已完成计划精确归档；本功能完成后同规则归档 | 活跃计划扫描、归档元数据检查 |
 | FR-003 | PM `DECISIONS.md` 与 Engineer TRD/ADR 边界 | 路径与职责检查；无中央决策目录 |
 | FR-004 / US-003 | 四份 PM 权威契约、生成的插件内只读副本、freshness check | 生成器 `--check` 与安装副本测试 |
-| FR-005 / US-004 | 七个 Router 预算、共享协议移除、Specialist 本地消费 | 行/词预算与定向 eval |
+| FR-005 / US-004 | 七个 Router 预算、共享协议移除、Specialist 本地消费 | 行/词预算检查 |
 | FR-006 | QA reference 唯一拥有 E2E 模板 | 重复模板扫描与 QA 文档检查 |
 | FR-007 | 五份超长文档逐份收窄或归档 | 行数、章节 owner 与 diff 审查 |
-| FR-008 / US-005 | 不改注册、名称和用户可见行为 | repository/eval contract 与现有 eval |
+| FR-008 / US-005 | 不改注册、名称和用户可见行为 | repository contract 与确定性检查 |
 
 ## 2. 技术总览
 
@@ -113,7 +116,7 @@ frontmatter、marketplace Skill 路径、安装后相对引用和 checker 的退
 | `docs/pm/{feature_path}/DECISIONS.md` | 已接受的产品决策、理由与后果 | Engineer 技术取舍、执行步骤 | PM 文档契约 |
 | `docs/engineer/{feature_path}/TRD.md`、`ADR-*.md` | 当前技术设计与需要持久化理由的技术取舍 | 产品决策、下游路由操作、已完成实施叙事 | Engineer 文档契约 |
 | `agents/*/README*.md` | Role 能力目录、输入输出、简要边界和导航 | 共享契约全文、Specialist 执行细节 | marketplace/README review |
-| `agents/*/skills/*/SKILL.md` | Router 入口分流或 Specialist 独有执行协议 | 人工复制跨角色通用契约 | skill hash、eval、freshness check |
+| `agents/*/skills/*/SKILL.md` | Router 入口分流或 Specialist 独有执行协议 | 人工复制跨角色通用契约 | skill hash 与 freshness check |
 | 活跃 `IMPLEMENTATION_PLAN.md` | 已确认且仍需完成的当前执行范围 | `Implemented`、`Archived` 或纯历史叙事 | repository contract |
 | `archive/IMPLEMENTATION_PLAN-<scope>.md` | 经批准的冻结实施历史 | 当前待办、作为当前规范被消费 | archive metadata contract |
 
@@ -258,7 +261,7 @@ Agent 父 PRD、非 marketplace child feature 和冻结历史不受此规则影�
 
 PM 文档只保留用户故事、产品约束和验收；Engineer TRD 只保留目录关系、读写时序、
 兼容与验证设计；`qa-agent/SKILL.md` 和根/文档规则只保留 owner 指针。reference 变更后
-刷新 `qa-agent` hash，并以现有 QA deterministic tests 与受影响 fresh eval 验证行为不变。
+刷新 `qa-agent` hash，并以现有 QA deterministic tests 验证行为不变。
 
 ## 9. 五份超长活跃文档处置
 
@@ -322,7 +325,7 @@ slug（含重复标题序号）验证锚点存在。URL percent-decoding 后再�
 | 定向单测 | 生成、repository/doc checker、安装镜像 | `uv run --with pytest pytest scripts/test_generate_shared_contracts.py scripts/test_check_repository_contract.py agents/test_doc_contract.py scripts/test_install_codex_skills.py` | 全部通过 |
 | Codex 安装 | 全量安装临时目标 | `uv run scripts/install_codex_skills.py --target <tmp>` | 引用可读、生成副本存在 |
 | Claude 打包 | marketplace 七 plugin 临时复制测试 | pytest 内按 manifest source/skills 复制并解析引用 | 六个 plugin 自包含 |
-| 行为回归 | 受影响 Router/Specialist eval | metadata 显式声明同插件 Router dependency；fresh paired 结果与 durable comparison | overlay 与安装拓扑一致；既有行为差异 0 |
+| 行为回归 | 受影响 Router/Specialist | 确定性检查与精确 diff 审查 | 既有行为差异 0 |
 | Diff | 范围、空白、净行数 | `git diff --check`；`git diff --stat`；精确路径 review | 无越界；人工维护内容净删 1,000–2,500 行，生成副本单列 |
 
 负向用例必须覆盖：手改一个生成副本、Router 超任一预算、活跃计划写
@@ -344,7 +347,7 @@ secret。
 | 类型 | 项目 | Owner | Blocking |
 | --- | --- | --- | --- |
 | 风险 | 归档 scope 与既有文件重名导致覆盖 | 实施者以目标存在性检查阻止覆盖 | 是，单项停止 |
-| 风险 | 收窄 Router 时误删阻塞语义 | 生成契约消费、定向 eval 与预算共同验证 | 是 |
+| 风险 | 收窄 Router 时误删阻塞语义 | 生成契约消费与预算检查共同验证 | 是 |
 | 风险 | Markdown 历史文件产生无关存量失败 | 只扫描活跃来源，历史仅作为被引用目标 | 否 |
 | 假设 | marketplace plugin copy 与 Codex mirror 都复制 Router `_internal/` | 两类临时安装测试证明 | 是 |
 | 假设 | 31 PRD 与 2 TRD 仅状态漂移，正文已对应当前 marketplace 能力 | 状态变更只做机械 frontmatter 更新 | 是 |

@@ -1,11 +1,11 @@
 ---
 title: "Release Notes Generator TRD"
 type: TRD
-version: "0.4.0"
+version: "0.4.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-19"
-last_updated: "2026-08-06"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "release-notes-gen"
 feature_path: "agents/docs-agent/release-notes-gen"
@@ -16,6 +16,9 @@ related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/116"
   - "https://github.com/Neplich/dev-agent-skills/issues/117"
 changelog:
+  - version: "0.4.1"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "0.4.0"
     date: "2026-07-19"
     changes: "将 site-ready handoff 直接交给 #117，并显式传递维护者确认的 target_release_version 与确认来源"
@@ -37,10 +40,10 @@ changelog:
 本 TRD 将已批准的
 `docs/pm/agents/docs-agent/release-notes-gen/PRD.md` 转换为可实施设计。PRD
 由维护者已批准的 GitHub issue #116 蒸馏而来，issue #122 已合并的 bootstrap 资产
-与脚手架为后续 AI Hub-shaped fixture 提供基础。
+与脚手架为 AI Hub-shaped 宿主集成验证提供样本基础。
 
-本 feature 新增 docs-agent specialist、router 分流、marketplace 注册和 eval 契约，按
-仓库契约判定为 `change_tier: major`。R1 已交付 skill、注册与文档链；R2 已交付完整
+本 feature 新增 docs-agent specialist、router 分流和 marketplace 注册，按仓库
+契约判定为 `change_tier: major`。R1 已交付 skill、注册与文档链；R2 已交付完整
 eval fixture、fresh with/without validation、独立 judge、durable comparison、跨边界
 自查和 PR 交付前验证。
 
@@ -200,28 +203,7 @@ handoff 至少包含：
   精确报告失败；修复后重新执行完整宿主 checks 才能 ready。
 - 不修改输入证据、过程文档、GitHub 状态、tag、镜像、Helm 或部署环境。
 
-## 9. Eval 设计
-
-Eval 使用 issue #122 已交付的 AI Hub-shaped bootstrap 资产建立隔离 fixture，不修改
-既有 eval fixture。每个 eval 必须有显式 workspace 和 durable `comparison.md`，并
-至少覆盖：
-
-1. **完整成功路径**：七类证据可用，生成符合 #118 的页面；确认后更新三个派生
-   surface，`npm run test:docs` 成功并输出 ready handoff。
-2. **确认门禁**：正文未确认时，metadata、index、导航保持零变化且 handoff not-ready。
-3. **检查失败**：正文已确认但 `test:docs` 失败，准确记录命令与结果，不输出 ready。
-4. **缺少站点**：不创建 `docs/site/`，明确 handoff `docs-site-bootstrap`。
-5. **证据完整性**：有证据的功能、架构、数据库、部署、资产、升级与风险内容没有被
-   过度压缩；证据冲突时阻塞而非猜测。
-6. **职责负向场景**：不操作 GitHub Release、tag、部署，也不代替 #117 盖章或 #121
-   同步一般正式文档。
-
-最终验证必须由 fresh Codex subagent 使用同一 prompt 和 fixture 先运行 with-skill，
-再在不读取 skill/Agent README 的条件下生成新的 without-skill baseline，并根据
-assertions 评审。实际运行同轮更新 durable `comparison.md`，运行期 transcript、verdict
-和 diagnostics 不提交。
-
-## 10. Codex 同名 Skill 过渡契约
+## 9. Codex 同名 Skill 过渡契约
 
 issue #116 在 docs-agent 注册 `release-notes-gen` 时，issue #120 尚未把 PM 侧
 旧能力重命名为 `github-release-gen`。Claude plugin 以 plugin namespace 区分两者，
@@ -236,21 +218,16 @@ issue #116 在 docs-agent 注册 `release-notes-gen` 时，issue #120 尚未把 
 安装器回归必须断言普通安装、幂等、force、旧 symlink 迁移和 mirror
 扫描均保持通过，并显式确认顶层 `release-notes-gen` 指向 Docs source。
 
-## 11. 验证策略
+## 10. 验证策略
 
 | 验证面 | 方法 |
 | --- | --- |
-| 文档与注册契约 | 依序运行 4 个 `uv run scripts/check_*.py`。 |
+| 文档与注册契约 | 依序运行 `uv run scripts/check_repository_contract.py` 与 `uv run scripts/check_doc_contract.py`。 |
 | Python 回归 | 执行 `.github/workflows/ci.yml` 当前定义的同款 pytest 命令。 |
 | 宿主集成 | 在隔离 AI Hub-shaped fixture 执行 `npm run test:docs`，验证 frontmatter、索引、metadata 与必要导航。 |
 | 原子门禁 | 对未确认和检查失败场景比较派生 surface，确认未产生越权 ready 状态。 |
-| Skill eval | fresh with-skill、fresh without-skill 和 durable comparison；不复用历史 baseline。 |
 
-R2 的 fresh validation 在 `tmp/eval-runs/116/` 生成运行期证据，只把独立 judge 的结论
-汇总到对应 durable `comparison.md`；运行期 transcript、candidate、verdict 和 diagnostics
-不进入 git。
-
-## 12. 风险、假设与开放问题
+## 11. 风险、假设与开放问题
 
 | 风险 / 假设 | 处理 |
 | --- | --- |
@@ -265,7 +242,7 @@ R2 的 fresh validation 在 `tmp/eval-runs/116/` 生成运行期证据，只把�
 当前无阻塞技术开放问题。若宿主没有明确的 release metadata/index schema，或目标版本
 与 release scope 未获确认，运行时必须阻塞并请求维护者决定，不能由 skill 发明默认值。
 
-## 13. 当前状态
+## 12. 当前状态
 
 本 TRD 与同路径 Approved PRD 已完成实施。3 个 specialist eval 和 docs-agent router
 全部 4 个 eval 均使用本轮 fresh with-skill、fresh without-skill 与独立 judge 验证，
@@ -277,3 +254,6 @@ Issue #117 A2 将 site-ready handoff 改为直接面向 pre-tag audit 后，相�
 eval 与 2 个 router eval 已重新生成 fresh with-skill / without-skill，并由独立 judge
 评审为 5/5 case、18/18 assertions PASS；新的 handoff 明确携带维护者确认的
 `target_release_version` 与确认来源，仍不授权 GitHub Release 或 tag 操作。
+
+以上 eval 结果均为历史交付事实；Skill eval 机制已随 PR #301 移除，不再作为现行验证
+依据。

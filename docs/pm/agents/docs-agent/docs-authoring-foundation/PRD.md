@@ -5,11 +5,11 @@ feature: "docs-authoring-foundation"
 feature_path: "agents/docs-agent/docs-authoring-foundation"
 parent_feature: "agents/docs-agent"
 feature_level: "3"
-version: "1.0.0"
+version: "1.0.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-19"
-last_updated: "2026-07-19"
+last_updated: "2026-09-01"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/122"
 related_docs:
@@ -17,6 +17,9 @@ related_docs:
   - "docs/engineer/agents/docs-agent/docs-authoring-foundation/TRD.md"
   - "docs/engineer/agents/docs-agent/docs-authoring-foundation/IMPLEMENTATION_PLAN.md"
 changelog:
+  - version: "1.0.1"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.0.0"
     date: "2026-07-19"
     changes: "将维护者已确认的 issue #122 规格转化为 docs-authoring-foundation 产品要求"
@@ -118,9 +121,8 @@ issue #122 的验收标准按以下分组执行：
    解析和 `test:docs`；Release Notes 明确交给 #116。
 4. **宿主兼容性**：保留现有 prepare、check、public/internal build 和测试入口；
    导航仍由站点准备脚本生成，不重新定义宿主 CI workflow。
-5. **测试与 eval**：确定性测试覆盖五类成功路径及输入、路径、覆盖、模板、dry-run、
-   merge 和回滚反向场景；完成 fresh with-skill、fresh without-skill 验证并更新
-   durable `comparison.md`。
+5. **测试**：确定性测试覆盖五类成功路径及输入、路径、覆盖、模板、dry-run、
+   merge 和回滚反向场景。
 
 ## 依赖与开放问题
 

@@ -1,7 +1,7 @@
 ---
 title: "Engineer Agent 编码阶段 sub-agent 分工 PRD"
 type: PRD
-version: "1.0.2"
+version: "1.0.3"
 status: Draft
 author: "Neplich Codex"
 date: "2026-05-15"
@@ -10,11 +10,14 @@ feature: "engineer-agent-subagent-division"
 feature_path: "agents/engineer-agent/subagent-division"
 parent_feature: "agents/engineer-agent"
 feature_level: "3"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/12"
 related_docs:
   - "docs/pm/agents/engineer-agent/subagent-division/DECISIONS.md"
 changelog:
+  - version: "1.0.3"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.0.2"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -58,9 +61,9 @@ Engineer Agent 负责代码库分析、功能实现、测试补充、问题修�
 
 | 用户画像 | 描述 | 核心诉求 | 痛点 |
 | --- | --- | --- | --- |
-| 仓库维护者 | 维护 `dev-agent-skills`，审核 Agent 行为变更。 | Agent 边界稳定、变更风险可控、行为有 eval 兜底。 | 只改提示词的行为不容易验证，且可能静默回退。 |
+| 仓库维护者 | 维护 `dev-agent-skills`，审核 Agent 行为变更。 | Agent 边界稳定、变更风险可控、行为变更有可验证的兜底。 | 只改提示词的行为不容易验证，且可能静默回退。 |
 | Engineer Agent 使用者 | 使用 Engineer Agent 处理功能实现、bug 修复和交付任务。 | 复杂任务执行可靠、最终总结清晰、降低需求遗漏风险。 | 长任务容易丢失上下文，或把实现和验收判断混在一起。 |
-| Skill 作者 | 更新 specialist skill 指令和 eval fixture。 | 触发规则清楚、实现要求可落地、验收标准可测试。 | 行为模糊会导致 eval 脆弱，skill 输出不一致。 |
+| Skill 作者 | 更新 specialist skill 指令。 | 触发规则清楚、实现要求可落地、验收标准可测试。 | 行为模糊会导致 skill 输出不一致。 |
 
 ## 4. 用户故事与场景
 
@@ -140,7 +143,6 @@ flowchart TD
 | ImplementationTask | 写入范围、模块归属、预期行为、测试、禁止事项 | 由主进程传递给实现 sub-agent。 |
 | ValidationTask | 源文档、变更文件、测试结果、验收标准、仓库规则 | 由主进程传递给验收 sub-agent。 |
 | ValidationResult | 问题、通过/失败状态、测试缺口、边界风险、遗留风险 | 用于主进程做最终交付判断。 |
-| EvalCase | fixture workspace、prompt、assertions、comparison 结果 | 用于长期守护预期行为。 |
 
 ```mermaid
 erDiagram
@@ -148,7 +150,6 @@ erDiagram
     EngineeringRequest ||--o{ ValidationTask : creates
     ImplementationTask ||--|| ValidationTask : informs
     ValidationTask ||--|| ValidationResult : produces
-    EvalCase ||--o{ EngineeringRequest : exercises
 ```
 
 ## 10. API 触点
@@ -178,7 +179,7 @@ erDiagram
 | 依赖 | 类型 | 描述 |
 | --- | --- | --- |
 | Engineer Agent skill 文档 | 内部 | Dispatcher 和 specialist skill 指导决定实际行为。 |
-| Eval runner 和契约检查 | 内部 | 用于验证行为并避免 fixture 或产物漂移。 |
+| 仓库契约检查 | 内部 | 用于验证文档与仓库结构不漂移。 |
 | 仓库指导 | 内部 | 如果该行为影响仓库级 Agent 协作，`AGENTS.md` 需要增加简短规则。 |
 | 当前 sub-agent 能力 | 运行时 | 实际工程任务中需要该能力支持目标工作流。 |
 
@@ -195,7 +196,7 @@ erDiagram
 | --- | --- | --- | --- |
 | 过度触发 sub-agent 分工，拖慢简单任务。 | 中 | 中 | 保留明确非触发场景和轻量直接路径。 |
 | 实现和验收 prompt 过于泛化。 | 中 | 高 | 强制包含具体写入范围、源文档、测试和禁止事项。 |
-| Eval 只验证措辞，没有验证行为。 | 中 | 高 | 使用语义断言覆盖路由、委派质量、验收依据和最终总结。 |
+| 验收 sub-agent 只验证措辞，没有验证行为。 | 中 | 高 | 验收委派要求对照源文档、仓库规则和测试结果给出结论。 |
 | 多个 skill 中的指导重复且不一致。 | 中 | 中 | 保持共享概念简洁，并对齐 dispatcher 与 specialist wording。 |
 | 验收 sub-agent 被误用为测试替代品。 | 低 | 高 | 明确确定性测试在适用时仍然必须执行。 |
 

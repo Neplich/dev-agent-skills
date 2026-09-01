@@ -5,11 +5,11 @@ feature: "skill-security-agent"
 feature_path: "agents/security-agent/skills/security-agent"
 parent_feature: "agents/security-agent/skills"
 feature_level: "4"
-version: "1.1.2"
+version: "1.1.3"
 status: Approved
 author: "Neplich Codex"
 date: "2026-06-12"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "prd-gen"
 related_docs:
   - "agents/security/README.md"
@@ -17,6 +17,9 @@ related_docs:
   - "agents/security/skills/security-agent/SKILL.md"
   - ".claude-plugin/marketplace.json"
 changelog:
+  - version: "1.1.3"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.1.2"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -141,7 +144,7 @@ Error flow: 如果必要上下文无法满足，输出 blocked reason、missing 
 | Context | source_docs, code_or_repo_state, constraints, evidence | consumed_by Skill |
 | Artifact | path, type, owner, status, evidence | produced_by Skill |
 | Handoff | target, reason, packet, expected_output | emitted_when needed |
-| Validation | related_docs, evals, manual review | verifies contract |
+| Validation | related_docs, deterministic checks, manual review | verifies contract |
 
 ## 接口与文件触点
 

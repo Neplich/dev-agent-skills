@@ -5,11 +5,11 @@ feature: "skill-human-writing"
 feature_path: "agents/pm-agent/skills/human-writing"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
-version: "1.2.1"
+version: "1.2.2"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-19"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/human-writing/PRD.md"
 related_docs:
@@ -19,6 +19,9 @@ related_docs:
   - ".claude-plugin/marketplace.json"
   - "skills-lock.json"
 changelog:
+  - version: "1.2.2"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.2.1"
     date: "2026-08-24"
     changes: "移除外部项目遗留描述，纳入文档站维护者整站优化用户场景"
@@ -209,7 +212,8 @@ uv run --with pytest pytest \
 3. Release Notes：保留版本事实和风险，改为用户能感知的变化，不输出生成过程。
 
 每组检查”事实零新增、关键术语零丢失、内部口径不进入不相关读者正文”。本批次不引入
-模型 eval runner 或新的持久化 eval 资产。
+模型评测或新的持久化评测资产。本节人工语义对照不作为完成门禁（D-023），结论以真实
+项目案例形式进入后续迭代依据。
 
 对于一套按技术域组织、含多角色和截图的文档站整站优化请求，设计预期是在改写句子前识别
 章节组织与读者任务的不匹配，提出或执行任务导向的重分类，
@@ -266,14 +270,14 @@ schema、lockfile 或数据输出不加载。
 | 本 PRD、DECISIONS、TRD、活跃计划 | 对齐第二批范围、边界和验证 |
 
 不修改 marketplace、plugin descriptor、中英文 README、`human-writing` 本体、`pm-agent`、
-共享生成契约、handoff、安装器、eval runner、宿主模板或发布配置。
+共享生成契约、handoff、安装器、宿主模板或发布配置。
 
 ### 11.4 验证
 
 除 §9 命令外，遍历全部目标 `SKILL.md`，验证 `human-writing` 引用无遗漏；确认 Router 文本
 包含”主 Specialist 已选定后共同加载”，Specialist 文本包含”直接调用也自行判断”，并检查
 所有被修改 Skill 的 lock hash。受影响 deterministic tests 沿用 repository contract、安装器
-与文档契约测试。模型 eval 不在本批确定性实施范围内。
+与文档契约测试。
 
 ## 12. 第三批：编写范围与结构权限
 

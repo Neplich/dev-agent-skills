@@ -1,11 +1,11 @@
 ---
 title: "变更分级契约 TRD"
 type: TRD
-version: "0.1.1"
+version: "0.1.2"
 status: Draft
 author: "Neplich Claude Code"
 date: "2026-07-05"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "change-tier-contract"
 feature_path: "repository-governance/change-tier-contract"
@@ -22,6 +22,9 @@ related_docs:
   - "agents/qa/skills/qa-agent/SKILL.md"
   - "agents/product_manager/skills/pm-agent/SKILL.md"
 changelog:
+  - version: "0.1.2"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "0.1.1"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -86,7 +89,7 @@ flowchart TD
 | D-003 | 判定入口分两阶段表述：#52 落地前承接 skill 自判，落地后 `pm-agent` 入口判级并写入 handoff packet。 | #52 未落地时契约即可生效，落地时无需返工措辞。 |
 | D-004 | 判定信号不满足、预期可能变化或无法判级时一律按 `standard` 处理；以 `hotfix` 名义跳过预期对齐必须 blocked 或回 PM。 | 防止分级成为逃逸通道，保住 PRD/TRD 对齐门禁。 |
 | D-005 | archive gate（#54）以"生效时"条件引用：`hotfix` 合并 closeout 与归档为一次确认。 | #54 与本契约并行推进，措辞互不阻塞。 |
-| D-006 | Fresh Sub-Agent 门禁不参与分级。 | 它作用于 skill 自身测试流程，与产品变更分级无关。 |
+| D-006 | Fresh Sub-Agent 门禁不参与分级；该门禁已随 eval 机制于 PR #301 移除。 | 它作用于 skill 自身测试流程，与产品变更分级无关。 |
 
 ## 5. 门禁分级矩阵
 
@@ -114,14 +117,10 @@ flowchart TD
 | --- | --- |
 | 唯一定义源 | `rg "变更分级契约" AGENTS.md`；各 gate 引用不复制等级表。 |
 | 契约脚本 | `uv run scripts/check_repository_contract.py` 通过。 |
-| CI 同款测试 | `uv run pytest` CI 配置的确定性测试全部通过。 |
-| eval 覆盖（FR-008，P1） | 后续单独补充 `hotfix` 轻量链路、`standard` 完整门禁、`hotfix` 名义滥用阻断三类用例；见第 8 节。 |
+| CI 同款测试 | 执行 `.github/workflows/ci.yml` 当前定义的 pytest 命令，全部通过。 |
 
 ## 8. 后续工作
 
-- eval 覆盖（PRD FR-008，P1）：在 `feature-implementor`、`qa-agent`、`pm-agent`
-  的 eval 中补充 `hotfix` 场景用例，执行 fresh subagent validation 并更新
-  durable `comparison.md`。本次契约落地不包含该项。
 - #52 落地时：`pm-agent` handoff packet 增加 `change_tier` 字段，fast lane 判定
   直接引用本契约的 `hotfix` 判定；路由触发语料收敛到共享 routing contract 文档
   的建议并入 #52 TRD。

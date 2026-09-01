@@ -9,7 +9,7 @@ version: "1.1.0"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-20"
-last_updated: "2026-08-06"
+last_updated: "2026-09-01"
 generated_by: "idea-to-spec"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/120"
@@ -83,7 +83,7 @@ commit 和贡献者的可追溯链接。
 | FR-003 | #117 pre-tag 门禁 | P0 | 仅当宿主存在已初始化正式文档站时，才要求可信 pre-tag handoff 返回 `ready_for_tag` 后生成可提交预览或创建/更新 draft；无文档站时不因缺少 #116/#117 handoff 阻塞预览，但必须记录降级依据，并以维护者已确认的版本事实源作为预览基线，任何 draft 写入仍须本次维护者显式批准 |
 | FR-004 | 事实一致性 | P0 | 读取适用路径下已确认的版本事实源：有文档站使用站内 Release Notes，无文档站使用维护者确认的降级事实源；保留功能、架构、数据库、部署、资产、升级和风险事实，不覆盖改写 |
 | FR-005 | GitHub 可追溯性 | P0 | 补充完整 compare、代表性 PR/commit 和贡献者链接，且不以原始清单替代用户版本说明 |
-| FR-006 | 结构来源与预览 | P0 | 以 `reference/release-outline.md` 作为标题与正文结构的唯一来源，不读取或继承相邻 GitHub Release 格式；任何 draft 写入前先展示标题与正文预览；eval 结果、assertion 计数、review 轮次、QA 证据汇总等内部质量证据只进入 changelog 的 Skill Eval 汇总，不进入用户向 GitHub Release 正文 |
+| FR-006 | 结构来源与预览 | P0 | 以 `reference/release-outline.md` 作为标题与正文结构的唯一来源，不读取或继承相邻 GitHub Release 格式；任何 draft 写入前先展示标题与正文预览；eval 结果、assertion 计数、review 轮次、QA 证据汇总等内部质量证据只进入仓库内交付记录，不进入用户向 GitHub Release 正文 |
 | FR-007 | draft 生命周期 | P0 | 有文档站宿主在 `ready_for_tag` 后、无文档站宿主在维护者确认版本事实源后可生成完整 draft 预览；仅在用户明确要求且不产生 tag 副作用时创建或更新远端 draft，无文档站路径还须取得本次维护者显式批准；缺少现有 draft 与实际 tag 时保持预览并阻塞远端创建；写后回读并核对 tag、标题、正文、draft 状态和远端 tag 零变化 |
 | FR-008 | 发布三重门禁 | P0 | 宿主存在已初始化正式文档站时，实际 tag、#117 post-tag `release_verified` 与维护者另行明确批准三者齐备才可发布，既有强度不变；无文档站时 #116/#117 handoff 门禁不适用，发布仍要求实际 tag、维护者已确认的版本事实源及本次写入前的维护者显式批准，并在最终报告记录降级依据 |
 | FR-009 | 发布后验证 | P0 | 发布后回读 GitHub Release，核对 tag、标题、正文、draft/published 状态和 URL |
@@ -135,7 +135,7 @@ flowchart LR
 
 | ID | 验收标准 | 验证方式 |
 | --- | --- | --- |
-| AC-001 | 有文档站宿主没有完整 #116 ready handoff 时明确阻塞 | review skill gate 与 eval 结构 |
+| AC-001 | 有文档站宿主没有完整 #116 ready handoff 时明确阻塞 | review skill gate 阻塞行为 |
 | AC-002 | 有文档站宿主未取得 `ready_for_tag` 时不创建/更新 draft | review #117 pre-tag gate |
 | AC-003 | GitHub Release 与适用路径下已确认的版本事实源一致 | 对照事实源与生成预览 |
 | AC-004 | compare、PR、commit、贡献者链接可追溯 | 人工检查链接与范围 |
@@ -144,7 +144,7 @@ flowchart LR
 | AC-007 | 执行过程不修改 `docs/site/`、tag、镜像、Helm 或部署状态 | git/API 操作审查 |
 | AC-008 | PM 旧 skill 名从 PM 能力、注册和指针中消失，Docs specialist 保持原职责 | 全仓语义 grep 与 registry review |
 | AC-009 | 更名后两个 skill 朴素安装，通用冲突机制仍受测试保护 | 安装器测试与 repository checker |
-| AC-010 | 四项 checker 与 CI 同款 pytest 全部通过 | 命令退出码为 0 |
+| AC-010 | repository contract、doc contract 与 CI 同款 pytest 全部通过 | 命令退出码为 0 |
 | AC-011 | 无文档站宿主可基于维护者确认的版本事实源生成预览；draft 写入要求本次维护者显式批准且不得产生 tag 副作用，发布还要求实际 tag 存在 | review 降级路径与写入门禁 |
 
 ## 非功能需求

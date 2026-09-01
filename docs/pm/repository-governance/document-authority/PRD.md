@@ -1,11 +1,11 @@
 ---
 title: "仓库文档权威与生命周期治理 PRD"
 type: PRD
-version: "1.0.1"
+version: "1.0.2"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-15"
-last_updated: "2026-08-15"
+last_updated: "2026-09-01"
 generated_by: "idea-to-spec"
 feature: "document-authority"
 feature_path: "repository-governance/document-authority"
@@ -17,6 +17,9 @@ related_issue:
 related_docs:
   - "docs/pm/repository-governance/document-authority/DECISIONS.md"
 changelog:
+  - version: "1.0.2"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.0.1"
     date: "2026-08-15"
     changes: "复核 #117 与 PR #128 后，将已完成但 frontmatter 仍为 Draft 的 docs-agent 父计划纳入归档，范围由 13 份修正为 14 份"
@@ -29,7 +32,7 @@ changelog:
 
 ## 1. 背景与动机
 
-仓库已建立 PM-first 路由、跨角色 handoff、`feature_path` 文档树、Skill eval 和实施计划归档规则，但维护知识同时存在于 `AGENTS.md`、Role Router、Specialist Skill、PRD、TRD 与 `IMPLEMENTATION_PLAN.md`。同一规则在多个位置被人工维护，维护者难以快速判断当前行为的权威来源，也难以区分产品决策、技术取舍、当前契约、操作流程和历史证据。
+仓库已建立 PM-first 路由、跨角色 handoff、`feature_path` 文档树和实施计划归档规则，但维护知识同时存在于 `AGENTS.md`、Role Router、Specialist Skill、PRD、TRD 与 `IMPLEMENTATION_PLAN.md`。同一规则在多个位置被人工维护，维护者难以快速判断当前行为的权威来源，也难以区分产品决策、技术取舍、当前契约、操作流程和历史证据。
 
 Issue #285 的只读扫描确认了以下当前状态：
 
@@ -178,7 +181,7 @@ flowchart TD
 | 根 `AGENTS.md` | 仓库级常驻规则与不变量。 | 只保留每次工作必须携带的规则，并指向专项 owner。 |
 | `docs/architecture.md` | 仓库当前架构地图。 | 描述七个角色、安装方式、路由、协作链和扩展关系的当前事实。 |
 | `docs/AGENTS.md` | 文档树治理规则。 | 定义文档层级、归属、生命周期和检查规则。 |
-| `docs/cookbook/` | 维护者操作流程。 | 保存新增或修改 Skill、eval 与发布等顺序化操作。 |
+| `docs/cookbook/` | 维护者操作流程。 | 保存新增或修改 Skill 与发布等顺序化操作。 |
 | PM `DECISIONS.md` | 产品决策记录。 | 只保存已接受产品决策及其理由和后果。 |
 | Engineer TRD / ADR | 技术设计与技术取舍。 | 不与 PM 决策记录争夺技术 owner。 |
 | Role README / `SKILL.md` | 角色能力目录与 Skill 独有协议。 | README 不复制执行协议；Skill 不复制共享契约全文。 |
@@ -200,7 +203,7 @@ flowchart TD
 - 用户在 2026-08-15 确认已完成计划采用全部冻结归档，并批准其余已列治理决策；
 - 现有 `feature_path`、实施计划归档和变更分级契约提供生命周期与变更强度基础；
 - Engineer 后续设计负责把本 PRD 的结果约束转化为精确迁移清单、机器预算和检查方案；
-- 现有仓库契约、文档检查与 Skill eval 结果提供回归证据。
+- 现有仓库契约、文档检查与确定性测试提供回归证据。
 
 ## 14. 发布计划与里程碑
 
@@ -257,5 +260,5 @@ flowchart TD
 | Router / Specialist | 七个 Router 仅含四类允许内容，Specialist 不再人工复制通用协议。 | 内容分类审查与重复规则扫描。 |
 | QA E2E | QA Skill reference 是模板唯一 owner。 | 模板定义清单与引用审查。 |
 | 超长文档 | 5/5 有保留、收窄或拆分结论及章节映射。 | 经确认的逐文档映射。 |
-| 行为兼容 | 七个 Agent 的用户可见能力、名称和行为无变化。 | 既有 contract、eval 与回归结果。 |
+| 行为兼容 | 七个 Agent 的用户可见能力、名称和行为无变化。 | 既有 contract、确定性测试与回归结果。 |
 | 结构克制 | 没有新增空角色文档镜像或未经需求追溯的抽象。 | 最终 diff 审查。 |

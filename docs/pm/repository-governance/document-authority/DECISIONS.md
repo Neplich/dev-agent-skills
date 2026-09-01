@@ -1,11 +1,11 @@
 ---
 title: "仓库文档权威与生命周期治理决策记录"
 type: DECISIONS
-version: "1.0.1"
+version: "1.0.2"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-15"
-last_updated: "2026-08-15"
+last_updated: "2026-09-01"
 generated_by: "idea-to-spec"
 feature: "document-authority"
 feature_path: "repository-governance/document-authority"
@@ -16,6 +16,9 @@ related_issue:
 related_docs:
   - "docs/pm/repository-governance/document-authority/PRD.md"
 changelog:
+  - version: "1.0.2"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.0.1"
     date: "2026-08-15"
     changes: "依据 #117 关闭、PR #128 合并和 A8 完成记录，将归档范围由 13 份修正为 14 份"
@@ -69,7 +72,7 @@ changelog:
 | A-001 | Issue #285 的只读扫描识别 13 份 `Implemented` 活跃计划与 5 份超长活跃文档；当前复核已记录第 14 份状态漂移计划。 | 后续若数量继续漂移，记录差异并按相同已接受规则处理，不静默遗漏。 |
 | A-002 | 发布或安装流程可生成消费方本地可读的只读副本并验证新鲜度。 | 能力不可行时停止共享契约迁移并回到产品层重新确认，不恢复人工多权威。 |
 | A-003 | 冻结归档可以保留来源、状态和稳定引用。 | 无法保留时先补齐归档契约，不移动原文件。 |
-| A-004 | 现有 contract、eval 和文档检查可用于证明用户可见行为不变。 | 证据不足时补齐验证设计；不能以人工主观判断代替回归证据。 |
+| A-004 | 现有 contract、确定性测试和文档检查可用于证明用户可见行为不变。 | 证据不足时补齐验证设计；不能以人工主观判断代替回归证据。 |
 
 ## 待确认问题
 

@@ -6,11 +6,11 @@ feature_path: "agents/docs-agent/manual-gen"
 parent_feature: "agents/docs-agent"
 feature_level: "3"
 child_features: "N/A"
-version: "1.1.0"
+version: "1.1.1"
 status: Approved
 author: "Neplich Claude Code"
 date: "2026-08-05"
-last_updated: "2026-08-18"
+last_updated: "2026-09-01"
 generated_by: "prd-gen"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/226"
@@ -23,6 +23,9 @@ related_docs:
   - "agents/docs/skills/docs-agent/_internal/_shared/frontmatter-contract.md"
   - "agents/docs/skills/formal-docs-sync/_internal/INSTRUCTIONS.md"
 changelog:
+  - version: "1.1.1"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.1.0"
     date: "2026-08-18"
     changes: "增加局部/全量范围与增量/重写目录策略的正交分类，写前覆盖矩阵、任务级拆页和写后覆盖门禁；截图改为记录真实窗口与内容视口并保持自然比例"
@@ -127,7 +130,7 @@ changelog:
 
 | Category | Requirement | Metric | Target |
 |----------|-------------|--------|--------|
-| Portability | 技术栈无关，不假设宿主框架或浏览器工具实现 | eval 覆盖 | 无框架或工具名假设导致的失败断言 |
+| Portability | 技术栈无关，不假设宿主框架或浏览器工具实现 | 宿主集成检查 | 无框架或工具名假设导致的失败断言 |
 | Reproducibility | 同一环境重复执行产出一致的桌面页面状态 | 视口回读 | 每轮截图前记录实际窗口与内容视口，且未进入非预期响应式布局 |
 | Safety | 未经同意不启动本地环境，不执行范围外副作用操作 | 反向场景 | 拒绝与未确认两种场景下零启动命令、零副作用 |
 | Privacy | 已知敏感字段不进入截图、图注与正文 | 负向断言 | 敏感字段与环境长串标识零出现 |

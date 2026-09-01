@@ -1,11 +1,11 @@
 ---
 title: "Formal Docs Sync 多类型扩展 TRD"
 type: TRD
-version: "0.1.0"
+version: "0.1.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-19"
-last_updated: "2026-08-06"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "formal-docs-sync"
 feature_path: "agents/docs-agent/formal-docs-sync"
@@ -15,6 +15,9 @@ related_prd: "docs/pm/agents/docs-agent/formal-docs-sync/PRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/121"
 changelog:
+  - version: "0.1.1"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "0.1.0"
     date: "2026-07-19"
     changes: "定义 formal-docs-sync 四模式、五类型渐进加载、八步站点契约及相邻 issue 边界"
@@ -29,10 +32,9 @@ changelog:
 已批准的 GitHub issue #121 蒸馏而来；issue #118 的 frontmatter 契约与 issue #122
 的五模板、`new:doc` 脚手架均已合并，满足硬前置。
 
-本 feature 修改现有 specialist 的公开入口契约、内部协议和五类文档行为，影响后续
-eval 与 lock hash，按仓库契约判定为 `change_tier: major`。本轮 S1 只实施 skill、
-渐进加载结构、文档链与确定性仓库验证；S2 再处理 eval fixture、fresh validation、
-durable comparison 与交付。
+本 feature 修改现有 specialist 的公开入口契约、内部协议和五类文档行为，影响 lock
+hash，按仓库契约判定为 `change_tier: major`。S1 实施 skill、渐进加载结构、文档链
+与确定性仓库验证，即为本 feature 的完整交付范围。
 
 ## 2. 技术结构
 
@@ -197,10 +199,6 @@ S1 预计只影响：
 - 本 feature 的 PRD、TRD 与实施计划；
 - `skills-lock.json` 中 `formal-docs-sync` 的 `computedHash`。
 
-S2 才影响 `agents/docs/test/formal-docs-sync/**` 的 eval 定义、fixture 和 durable
-`comparison.md`。S1 不因现有 eval fixture 对旧 API-only 表述的断言失效而修改它们；
-若确定性检查暴露该差异，应如实记录并留给 S2。
-
 ## 10. 验证策略
 
 | 验证面 | 方法 |
@@ -208,9 +206,8 @@ S2 才影响 `agents/docs/test/formal-docs-sync/**` 的 eval 定义、fixture �
 | 渐进加载 | 静态核对 `SKILL.md`、通用入口和五类型模块的职责；单类型规则不得要求读取其他模块。 |
 | 契约与边界 | 检查八步顺序、四模式输出、#116/#117/#118/#122 handoff 与所有负向禁令。 |
 | 模板单一来源 | 搜索 skill 内无模板 scaffold 正文副本，五类型模块只指向宿主模板。 |
-| 仓库契约 | 依序运行 4 个 `uv run scripts/check_*.py`。 |
+| 仓库契约 | 依序运行 `uv run scripts/check_repository_contract.py` 与 `uv run scripts/check_doc_contract.py`。 |
 | Python 回归 | 执行 `.github/workflows/ci.yml` 当前定义的同款 pytest 命令。 |
-| Skill eval | S2 使用 AI Hub-shaped fixtures 覆盖 database / design、deployment ops、product 与 Release Notes 越界，fresh with/without 后更新 durable comparison。 |
 
 ## 11. 风险、假设与开放问题
 
@@ -221,7 +218,6 @@ S2 才影响 `agents/docs/test/formal-docs-sync/**` 的 eval 定义、fixture �
 | Release 模式越界生成 Release Notes | 在入口、通用流程、product / ops 模块和报告中统一 handoff #116。 |
 | Backfill 从扫描扩张为全站生成 | 优先 catalog / map；无映射只提出有限候选；一次一个确认批次。 |
 | 计划或文档主张覆盖代码事实 | 以最终代码、测试、配置和真实验证为 ground truth；冲突即阻塞并回 owner。 |
-| S1 改文案使旧 eval fixture 断言失效 | 不在 S1 顺手改 eval；记录结果，S2 同 prompt 重新生成 fresh baseline 后处理。 |
 
 当前无阻塞技术开放问题。若宿主缺少 standards、目标模板或可解析 change map，运行时
 必须阻塞并 handoff / 请求维护者决定，不能由 skill 静默补建或发明默认契约。

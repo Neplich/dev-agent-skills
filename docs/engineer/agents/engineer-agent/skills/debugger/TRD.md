@@ -1,11 +1,11 @@
 ---
 title: "debugger 只读诊断模式 TRD"
 type: TRD
-version: "1.0.1"
+version: "1.0.2"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-13"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "skill-debugger"
 feature_path: "agents/engineer-agent/skills/debugger"
@@ -19,6 +19,9 @@ related_docs:
   - "agents/engineer/skills/engineer-agent/SKILL.md"
   - "agents/engineer/skills/debugger/SKILL.md"
 changelog:
+  - version: "1.0.2"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.0.1"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -33,8 +36,7 @@ changelog:
 
 在现有 `pm-agent → engineer-agent → debugger` 链路中增加轻量
 `diagnosis_only` 模式，同时保留 `repair` 模式的完整门禁。实现只修改 Markdown skill
-契约、路由文档、eval 数据和 PM 入口确定性测试，不新增生产运行时代码、配置、skill 或
-抽象层。
+契约和路由文档，不新增生产运行时代码、配置、skill 或抽象层。
 
 成功条件：
 
@@ -158,29 +160,7 @@ flowchart TD
 不修改 marketplace/plugin 注册，因为没有新增 skill，现有 Agent discovery 描述中的
 bugs/debugging 已覆盖该能力。
 
-## 7. Eval 设计
-
-| Target | New eval | Expected behavior |
-| --- | --- | --- |
-| `product_manager/pm-agent` | `eval-020-route-read-only-diagnosis` | 分类为 `bug_report` 只读子模式，handoff Engineer 时包含 `mode: diagnosis_only`、`allowed_mutations: none`。 |
-| `engineer/engineer-agent` | `eval-005-route-read-only-diagnosis` | 选择现有 `debugger`，不要求先补齐修复文档，也不创建新 specialist。 |
-| `engineer/debugger` | `eval-006-diagnosis-only-without-product-docs` | 缺 PRD/TRD 时读取客观证据，输出 `unaligned` 结构化报告，保持零修改且不生成 repair plan。 |
-| `engineer/debugger` | `eval-007-repair-after-diagnosis-reenters-gates` | 用户在诊断后要求修复时重新进入 PM/PRD/TRD/repair-plan 门禁，不沿用只读授权。 |
-
-三项 SKILL.md 改变后，对应 skill 的全部 comparison 都会 stale。新增 eval 后 fresh 范围为：
-
-- `pm-agent`：20 条；
-- `engineer-agent`：5 条；
-- `debugger`：7 条；
-- 合计：32 条。
-
-PR review 同步权威 handoff 契约后，`idea-to-spec` 的 9 条现有 eval 也需 fresh；这 9 条只
-验证共享契约更新没有破坏既有 PM 文档编排行为，不新增 eval 定义。
-
-模型 eval 使用一个 runner 进程、`jobs <= 10`。计划确认不包含模型执行授权；获得单独
-授权后才可运行，durable `comparison.md` 只能由 runner 写入。
-
-## 8. 验证策略
+## 7. 验证策略
 
 确定性验证：
 
@@ -192,11 +172,11 @@ git diff --check
 git status --short
 ```
 
-## 9. 风险与控制
+## 8. 风险与控制
 
 | Risk | Control |
 | --- | --- |
 | 只读复现隐含写入 | 无法证明无副作用时不执行，并记录证据缺口。 |
 | 缺预期文档时误判缺陷 | 强制标记 `unaligned`，禁止确认 `implementation_deviation`。 |
 | 诊断后直接修复 | 检查 repair re-entry gate，确认完整门禁重新生效。 |
-| 变更扩散到注册或 eval 基础设施 | 文件范围和禁止区明确排除这些目录。 |
+| 变更扩散到注册项 | 文件范围和禁止区明确排除这些目录。 |

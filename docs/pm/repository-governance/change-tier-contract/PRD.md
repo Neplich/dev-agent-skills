@@ -1,7 +1,7 @@
 ---
 title: "变更分级契约 PRD"
 type: PRD
-version: "1.0.1"
+version: "1.0.2"
 status: Approved
 author: "Neplich Claude Code"
 date: "2026-07-04"
@@ -10,7 +10,7 @@ feature: "change-tier-contract"
 feature_path: "repository-governance/change-tier-contract"
 parent_feature: "repository-governance"
 feature_level: "2"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/55"
 related_docs:
   - "AGENTS.md"
@@ -20,6 +20,9 @@ related_docs:
   - "agents/qa/skills/qa-agent/SKILL.md"
   - "agents/product_manager/skills/pm-agent/SKILL.md"
 changelog:
+  - version: "1.0.2"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.0.1"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -32,7 +35,7 @@ changelog:
 
 ## 1. 背景与动机
 
-仓库执行流程中已存在多道串行门禁并持续增加：`feature-implementor` 的 plan gate、closeout gate、issue #54 计划新增的 archive gate、QA E2E 门禁、skill eval 的 Fresh Sub-Agent 门禁，以及 issue #52 计划新增的 PM entry gate。每道门禁单看都有明确理由，但仓库层面没有任何地方定义"什么规模的变更需要哪几道门"。
+仓库执行流程中已存在多道串行门禁并持续增加：`feature-implementor` 的 plan gate、closeout gate、issue #54 计划新增的 archive gate、QA E2E 门禁、skill eval 的 Fresh Sub-Agent 门禁（已随 #301 移除），以及 issue #52 计划新增的 PM entry gate。每道门禁单看都有明确理由，但仓库层面没有任何地方定义"什么规模的变更需要哪几道门"。
 
 现行规则要求"小功能、单文件变更和轻量 bug fix 也不能跳过实施计划门禁"，叠加 #52 后，一个轻量 bug fix 的完整链路是：PM 入口分类 -> 预期对齐 -> 实施计划 + 用户确认 -> 实现 -> closeout -> 归档审批，其中至少 3 处需要用户交互确认。门禁强度与变更风险不匹配，会推高日常轻量任务的流程成本，并促使用户绕开流程直接点名下游 skill，与 #52 的收口目标冲突。
 
@@ -48,7 +51,7 @@ changelog:
 ### 非目标
 
 1. 不取消任何现有门禁，只调整其按等级的强度和确认合并方式。
-2. 不改变 eval 的 Fresh Sub-Agent 门禁（它作用于 skill 自身的测试流程，与产品变更分级无关）。
+2. 不改变 eval 的 Fresh Sub-Agent 门禁（它作用于 skill 自身的测试流程，与产品变更分级无关；该门禁已随 #301 移除）。
 3. 不在本功能内实现 #52 的 PM 收口本体。
 
 ## 3. 用户画像
@@ -122,6 +125,6 @@ flowchart TD
 | 类型 | 内容 | Owner | Blocking |
 | --- | --- | --- | --- |
 | Decision | 分级只调整门禁形态和确认次数，不取消任何证据要求。 | Maintainer | No |
-| Decision | Fresh Sub-Agent 门禁不参与本分级。 | Maintainer | No |
+| Decision | Fresh Sub-Agent 门禁不参与本分级（该门禁已随 #301 移除）。 | Maintainer | No |
 | Assumption | `hotfix` 轻量计划的具体形态（追加 scope 条目或简化模板）由 TRD 阶段确定。 | Engineer | No |
 | Open Question | #52 落地时 fast lane 的 delivery / 状态查询清单是否需要扩展。 | Maintainer | No |
