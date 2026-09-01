@@ -206,7 +206,7 @@ S1 预计只影响：
 | 渐进加载 | 静态核对 `SKILL.md`、通用入口和五类型模块的职责；单类型规则不得要求读取其他模块。 |
 | 契约与边界 | 检查八步顺序、四模式输出、#116/#117/#118/#122 handoff 与所有负向禁令。 |
 | 模板单一来源 | 搜索 skill 内无模板 scaffold 正文副本，五类型模块只指向宿主模板。 |
-| 仓库契约 | 依序运行 4 个 `uv run scripts/check_*.py`。 |
+| 仓库契约 | 依序运行 `uv run scripts/check_repository_contract.py` 与 `uv run scripts/check_doc_contract.py`。 |
 | Python 回归 | 执行 `.github/workflows/ci.yml` 当前定义的同款 pytest 命令。 |
 
 ## 11. 风险、假设与开放问题

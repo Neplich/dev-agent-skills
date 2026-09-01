@@ -222,7 +222,7 @@ issue #116 在 docs-agent 注册 `release-notes-gen` 时，issue #120 尚未把 
 
 | 验证面 | 方法 |
 | --- | --- |
-| 文档与注册契约 | 依序运行 4 个 `uv run scripts/check_*.py`。 |
+| 文档与注册契约 | 依序运行 `uv run scripts/check_repository_contract.py` 与 `uv run scripts/check_doc_contract.py`。 |
 | Python 回归 | 执行 `.github/workflows/ci.yml` 当前定义的同款 pytest 命令。 |
 | 宿主集成 | 在隔离 AI Hub-shaped fixture 执行 `npm run test:docs`，验证 frontmatter、索引、metadata 与必要导航。 |
 | 原子门禁 | 对未确认和检查失败场景比较派生 surface，确认未产生越权 ready 状态。 |

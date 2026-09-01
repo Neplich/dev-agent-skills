@@ -260,7 +260,7 @@ repository contract 对 `_legacy/` 的处理应与 canonical PRD/TRD/Plan 分开
 | AC-001 | 子功能不会默认创建并列一级 PRD。 | repository contract 校验嵌套 PRD 的 `feature_path` 与父级归属；静态检查确认无错误并列一级 PRD。 |
 | AC-002 | TRD 和实施计划镜像 PRD 的 `feature_path`。 | repository contract 校验 TRD/实施计划路径、frontmatter 与 `related_prd` 镜像。 |
 | AC-003 | 缺 PRD、缺 TRD、路径冲突时不会生成实施计划。 | repository contract 校验实施计划必须落在与 PRD/TRD 一致的 `feature_path` 下。 |
-| AC-004 | 旧单层路径仍可读取。 | 现存活跃 PRD/TRD 均已迁入嵌套 `feature_path`，无旧单层路径存留；repository contract 对缺失 `feature_path` 三字段的 canonical 文档报错，旧路径兼容读取不再作为现行验收依据。 |
+| AC-004 | 旧单层路径仍可读取；触及时向用户提出更新 `feature_path`。 | 静态检查确认 `idea-to-spec` 与 feature-implementor planner 保留旧单层路径兼容读取回退，且触及旧单层路径时的处理与 FR-010 一致。 |
 | AC-006 | API / ADR 请求不会由 PM 直接生成 Engineer 文档。 | 静态检查确认 PM 侧指令不生成 `docs/engineer/{feature_path}/API.md` 与 `ADR-*.md`；Engineer 文档只由 `trd-gen` 输出。 |
 | AC-007 | `repository-governance/...` 和 `agent-collaboration/...` 被识别为合法顶层 namespace。 | repository contract 或静态检查接受这两个 namespace 下的 PRD/TRD/Plan 镜像路径。 |
 | AC-008 | plan-only legacy artifact 有明确处置记录。 | `_legacy/` 文件具备 `legacy_of`、`legacy_reason`、`superseded_by`，且 canonical 扫描不把它们当作活跃计划。 |

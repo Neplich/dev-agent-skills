@@ -258,7 +258,7 @@ Bootstrap 始终交付完整宿主基础。后续 formal-docs-sync 的渐进加�
 | Bootstrap 回归 | 确定性测试覆盖空目录、相同文件、全量冲突、`kept-as-is`、manifest 回读和重复 zero-diff。 |
 | 脚手架单元测试 | Node 测试覆盖五类成功与全部阻塞、dry-run、change-map 合并、原子回滚和写后校验。 |
 | 宿主集成 | 在隔离 AI Hub-shaped fixture 执行 `npm run test:docs`，并分别验证 public / internal build。 |
-| 仓库契约 | 依序运行 4 个 `uv run scripts/check_*.py` 与 CI 同款 pytest 清单。 |
+| 仓库契约 | 依序运行 `uv run scripts/check_repository_contract.py`、`uv run scripts/check_doc_contract.py` 与 CI 同款 pytest 清单。 |
 
 ## 11. 风险、假设与开放问题
 
@@ -278,6 +278,8 @@ Bootstrap 始终交付完整宿主基础。后续 formal-docs-sync 的渐进加�
 ## 12. 实施与交付状态
 
 issue #122 的批准范围、同路径 PRD 与本 TRD 仍是实现依据；W1-W6 已完成并由
-`IMPLEMENTATION_PLAN.md` 记录 closeout。C5R 只加固既有交付，不改变产品预期。
+`IMPLEMENTATION_PLAN.md` 记录 closeout。上文 `eval-002` 相关内容为历史交付
+事实，eval 机制已随 #301 移除，不作为现行验证依据。C5R 只加固既有交付，
+不改变产品预期。
 维护者已授权本轮一次 commit、push 和 PR review 触发，但未授权 merge、amend、
 rebase、force push 或管理员绕过。
