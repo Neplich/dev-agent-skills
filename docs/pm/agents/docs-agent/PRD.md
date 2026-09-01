@@ -192,7 +192,7 @@ changelog:
 
 | Category | Requirement | Metric | Target |
 |----------|-------------|--------|--------|
-| Portability | 技术栈无关，不假设框架 | eval 覆盖 | 无框架假设导致的失败断言 |
+| Portability | 技术栈无关，不假设框架 | 宿主集成检查 | 无框架假设导致的失败断言 |
 | Determinism | 契约类校验由脚本承担，事实判断由 agent 承担 | 校验分层 | 脚本不做事实判断，agent 不重复脚本职责 |
 | Traceability | audit 报告版本化归档 | 报告存在性 | 每次发版门禁执行留档 |
 | Cost | 消费按 change-map 精准取文档 | 上下文规模 | 不因文档层引入全库文档加载 |
@@ -282,7 +282,7 @@ Error flow：宿主项目无文档站时，sync 与 audit 提示可先执行 boo
 | 全量 audit 成本过高导致门禁被跳过 | Medium | 门禁名存实亡 | 影响域按 diff × change-map 圈定，只核对受影响文档 |
 | 正式文档堆积 feature 增量变成变更日志 | Medium | 文档失去"当前状态"语义 | 模板与写作纪律固化 latest state 规则，audit 检查文档形态 |
 | bootstrap 模板与宿主项目结构冲突 | Low | 初始化失败或覆盖已有文档 | bootstrap 幂等、遇已有内容 blocked 并要求用户确认 |
-| 新 Agent eval 成本高（尤其 sync fixture） | High | 交付周期拉长 | MVP 收窄为 bootstrap + api 文档单链路，database / ops 后续迭代 |
+| 新 Agent eval 成本高（尤其 sync fixture；机制已随 #301 移除，本条为历史风险记录） | High | 交付周期拉长 | MVP 收窄为 bootstrap + api 文档单链路，database / ops 后续迭代 |
 | 大代码库存量回填成本高 | Medium | 回填烂尾或质量下降 | 按模块分批 + feature-catalog 地图 + 每批维护者确认；MVP 收窄为 api 链路 |
 
 ## 待确认问题

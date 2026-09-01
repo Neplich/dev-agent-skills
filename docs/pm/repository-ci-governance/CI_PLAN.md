@@ -74,7 +74,17 @@ uv run scripts/check_repository_contract.py
 - skill 版本号。
 - frontmatter 的完整 schema。
 
-### 2. [x] python-tests
+### 2. [x] doc-contract
+
+目的：校验正式文档 frontmatter、链接与文档形态契约。
+
+第一版命令：
+
+```bash
+uv run scripts/check_doc_contract.py
+```
+
+### 3. [x] python-tests
 
 目的：执行当前已有的确定性 Python 测试。
 

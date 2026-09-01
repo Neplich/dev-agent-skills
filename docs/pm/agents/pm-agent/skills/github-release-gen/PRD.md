@@ -135,7 +135,7 @@ flowchart LR
 
 | ID | 验收标准 | 验证方式 |
 | --- | --- | --- |
-| AC-001 | 有文档站宿主没有完整 #116 ready handoff 时明确阻塞 | review skill gate 与 eval 结构 |
+| AC-001 | 有文档站宿主没有完整 #116 ready handoff 时明确阻塞 | review skill gate 阻塞行为 |
 | AC-002 | 有文档站宿主未取得 `ready_for_tag` 时不创建/更新 draft | review #117 pre-tag gate |
 | AC-003 | GitHub Release 与适用路径下已确认的版本事实源一致 | 对照事实源与生成预览 |
 | AC-004 | compare、PR、commit、贡献者链接可追溯 | 人工检查链接与范围 |
@@ -144,7 +144,7 @@ flowchart LR
 | AC-007 | 执行过程不修改 `docs/site/`、tag、镜像、Helm 或部署状态 | git/API 操作审查 |
 | AC-008 | PM 旧 skill 名从 PM 能力、注册和指针中消失，Docs specialist 保持原职责 | 全仓语义 grep 与 registry review |
 | AC-009 | 更名后两个 skill 朴素安装，通用冲突机制仍受测试保护 | 安装器测试与 repository checker |
-| AC-010 | 四项 checker 与 CI 同款 pytest 全部通过 | 命令退出码为 0 |
+| AC-010 | repository contract、doc contract 与 CI 同款 pytest 全部通过 | 命令退出码为 0 |
 | AC-011 | 无文档站宿主可基于维护者确认的版本事实源生成预览；draft 写入要求本次维护者显式批准且不得产生 tag 副作用，发布还要求实际 tag 存在 | review 降级路径与写入门禁 |
 
 ## 非功能需求
