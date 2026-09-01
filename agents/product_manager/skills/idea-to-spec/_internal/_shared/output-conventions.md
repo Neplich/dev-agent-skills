@@ -20,6 +20,7 @@ version: "1.0.0"
 status: Draft | In Review | Approved | Superseded | Deprecated
 author: "<generation requester display name + agent platform name>"
 date: "YYYY-MM-DD"
+last_updated: "YYYY-MM-DD"
 generated_by: "<skill-name>"
 related_docs:
   - "docs/pm/<feature_path>/DECISIONS.md"
@@ -40,6 +41,7 @@ changelog:
 | status | Yes | Document lifecycle status |
 | author | Yes | Traceable creator display name |
 | date | Yes | Creation/update date |
+| last_updated | Yes | Last content-update date; refresh on every substantive revision |
 | generated_by | Yes | Skill that generated this document |
 | feature_path | Yes | Multi-level slash-separated feature path |
 | feature | Yes | Terminal feature slug or compatible legacy feature value |
