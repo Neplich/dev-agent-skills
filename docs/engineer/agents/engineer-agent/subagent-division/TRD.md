@@ -214,7 +214,7 @@ sequenceDiagram
 | 层级 | 范围 | 命令 / 方法 | 通过标准 |
 | --- | --- | --- | --- |
 | 仓库契约 | symlink、registry、skill frontmatter、非法产物 | `uv run scripts/check_repository_contract.py` | 无错误。 |
-| Python 确定性测试 | 文档契约等确定性 pytest | `uv run pytest agents/test_doc_contract.py` | 与当前 CI 要求一致。 |
+| Python 确定性测试 | 文档契约、shared contract、安装器与仓库契约等确定性 pytest | `uv run --with pytest pytest agents/test_doc_contract.py scripts/test_generate_shared_contracts.py scripts/test_install_codex_skills.py scripts/test_check_repository_contract.py` | 与当前 CI 要求一致。 |
 
 建议校验顺序：
 
