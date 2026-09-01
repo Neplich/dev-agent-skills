@@ -1,11 +1,11 @@
 ---
 title: "debugger 只读诊断模式决策记录"
 type: DECISIONS
-version: "1.0.0"
+version: "1.0.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-13"
-last_updated: "2026-08-13"
+last_updated: "2026-09-01"
 generated_by: "idea-to-spec"
 feature: "skill-debugger"
 feature_path: "agents/engineer-agent/skills/debugger"
@@ -15,6 +15,9 @@ related_issue: "https://github.com/Neplich/dev-agent-skills/issues/274"
 related_docs:
   - "docs/pm/agents/engineer-agent/skills/debugger/PRD.md"
 changelog:
+  - version: "1.0.1"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.0.0"
     date: "2026-08-13"
     changes: "确认 debugger 双模式、零修改边界与修复重新入场规则"
@@ -41,5 +44,4 @@ changelog:
 
 - 不新增 skill、注册项、feature flag、配置项或运行时抽象。
 - 不削弱现有 `debugger` 修复 checkpoint 和 repair-plan confirmation。
-- 不修改 eval runner、checker、identity schema 或冻结迁移清单。
-- Durable `comparison.md` 只能由 runner 生成，不能手工编辑。
+- 除不修改已移除机制相关的历史表述外，本决策不引入新的验证基础设施。

@@ -6,11 +6,11 @@ feature_path: "agents/pm-agent/skills/human-writing"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
 child_features: "N/A"
-version: "1.2.1"
+version: "1.2.2"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-19"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "idea-to-spec"
 related_docs:
   - "docs/pm/agents/pm-agent/skills/human-writing/DECISIONS.md"
@@ -20,6 +20,9 @@ related_docs:
   - "agents/product_manager/skills/pm-agent/SKILL.md"
   - "https://github.com/KKKKhazix/human-writing"
 changelog:
+  - version: "1.2.2"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.2.1"
     date: "2026-08-24"
     changes: "移除外部项目遗留描述，纳入文档站维护者整站优化用户场景"
@@ -92,7 +95,7 @@ changelog:
 - 不新增独立的文档架构或网站架构 Skill；整站优化只是多文档写作模式的一种应用。
 - 不接管产品 UX 信息架构、网站导航实现或正式文档 owner；文档信息架构只作用于目标文档及其文档集合。
 - 不要求局部文字修改也扫描整个仓库；未获用户或主 Skill 授权时不移动、拆分或合并文件。
-- 不恢复已移除的 Skill eval 体系、模型评分或 prose lint 机制，验收继续依赖真实项目案例和人工语义验收。
+- 不恢复已移除的 Skill eval 体系、模型评分或 prose lint 机制；完成验收以本 PRD 确定性验收标准为准，真实项目案例与人工反馈作为后续迭代依据。
 
 ## 用户与场景
 

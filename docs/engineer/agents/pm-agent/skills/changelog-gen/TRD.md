@@ -1,7 +1,7 @@
 ---
 title: "changelog-gen docs/test/ci 语义判断 — Technical Requirements Document"
 type: TRD
-version: "1.0.2"
+version: "1.0.3"
 status: Approved
 feature: "skill-changelog-gen"
 feature_path: "agents/pm-agent/skills/changelog-gen"
@@ -9,7 +9,7 @@ parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
 author: "Neplich Codex"
 date: "2026-06-15"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 related_prd: "docs/pm/agents/pm-agent/skills/changelog-gen/PRD.md"
 related_docs:
@@ -17,6 +17,9 @@ related_docs:
   - "agents/product_manager/skills/changelog-gen/references/cc-prefixes.md"
   - "https://github.com/Neplich/dev-agent-skills/issues/29"
 changelog:
+  - version: "1.0.3"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.0.2"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -32,14 +35,14 @@ changelog:
 本 TRD 承接 issue #29 和 `changelog-gen` PRD。PM scope 已确认：
 `docs:`、`test:`、`ci:`、`build:` 和 `style:` 这类低价值前缀不能继续被无条件跳过；
 在 docs-first / skill marketplace 仓库中，PR body 或上下文显示其影响 skill 行为、
-routing、eval fixture、durable comparison、installation、marketplace、release workflow、
+routing、installation、marketplace、release workflow、
 CI gate 或协作边界时，应进入 changelog。低价值内部维护变更仍可省略。
 
 ## 2. Technical Overview
 
-实现方向是在 `changelog-gen` 的文档契约、prefix reference 和 eval 中引入
+实现方向是在 `changelog-gen` 的文档契约和 prefix reference 中引入
 “硬跳过 + 降权语义判断”的两层分类策略。现有 GitHub CLI 查询已拉取 PR body，
-因此不需要新增外部 API；主要工作是调整决策规则和测试语义断言。
+因此不需要新增外部 API；主要工作是调整决策规则和分类契约。
 
 ```mermaid
 flowchart LR
@@ -48,19 +51,17 @@ flowchart LR
     Skill --> Classifier["PR classification rules"]
     Prefix --> Classifier
     Classifier --> Output["docs/changelog output"]
-    Eval["changelog-gen evals"] --> Classifier
-    Eval --> Compare["durable comparison.md"]
 ```
 
 ## 3. Requirement Traceability
 
 | PRD Requirement | Technical Component | Design Response |
 | --- | --- | --- |
-| FR-S08 Semantic Inclusion | `SKILL.md`, `cc-prefixes.md`, evals | Replace unconditional low-value prefix skipping with body/context semantic review. |
-| FR-S09 Low-Value Omission | `SKILL.md`, evals | Preserve skip rules for formatting-only docs, internal test maintenance, internal CI maintenance, dependency bumps, release chores, and bot PRs. |
-| FR-S10 Repository Context Awareness | `SKILL.md`, evals | Make skill marketplace / docs-first signals explicit and verify them with representative PR fixtures. |
-| AC-04 | eval fixture and comparison | Add or update an eval where docs/test/ci PR bodies describe skill behavior, eval, release workflow, installation, or collaboration impacts. |
-| AC-05 | eval fixture and comparison | Keep at least one low-value docs/test/ci sample skipped. |
+| FR-S08 Semantic Inclusion | `SKILL.md`, `cc-prefixes.md` | Replace unconditional low-value prefix skipping with body/context semantic review. |
+| FR-S09 Low-Value Omission | `SKILL.md`, `cc-prefixes.md` | Preserve skip rules for formatting-only docs, internal test maintenance, internal CI maintenance, dependency bumps, release chores, and bot PRs. |
+| FR-S10 Repository Context Awareness | `SKILL.md`, `cc-prefixes.md` | Make skill marketplace / docs-first signals explicit and document representative PR examples. |
+| AC-04 | `SKILL.md`, `cc-prefixes.md` | Cover the case where docs/test/ci PR bodies describe skill behavior, release workflow, installation, or collaboration impacts. |
+| AC-05 | `cc-prefixes.md` | Keep at least one low-value docs/test/ci skip example documented. |
 
 ## 4. Architecture Overview
 
@@ -102,7 +103,7 @@ For `docs:`, `test:`, `ci:`, `build:` and `style:`, the classifier should read t
 body and available file context. Include the PR when the content indicates:
 
 - skill behavior, routing, handoff, gate, or collaboration-boundary changes;
-- eval fixture, assertion, durable comparison, fresh validation, or required-check changes;
+- repository contract, deterministic test, or required-check changes;
 - marketplace registry, skill metadata, installation, packaging, or lockfile semantics;
 - release workflow, changelog preflight, tag, draft release, or publishing flow changes;
 - user-facing README, reference, or public skill documentation that changes how users operate the skill.
@@ -112,7 +113,7 @@ Default section mapping:
 | Signal | Section |
 | --- | --- |
 | New user-visible capability or workflow | Added |
-| Existing skill, eval, release, install, or collaboration behavior changed | Changed |
+| Existing skill, release, install, or collaboration behavior changed | Changed |
 | Broken or misleading behavior fixed | Fixed |
 | Security-sensitive validation or release gate changed | Security when security impact is explicit, otherwise Changed |
 
@@ -135,16 +136,14 @@ unless the title itself clearly describes user-visible behavior.
 | `gh pr list --json number,title,body,mergedAt,author` | Already fetches PR body | Keep body in the query and make it semantically relevant in the skill instructions. |
 | `SKILL.md` prefix table | `docs:` / `ci:` / `test:` are unconditional skip | Replace with hard-skip and review-body/context categories. |
 | `cc-prefixes.md` table | marks docs/ci/test/build/style as skip | Mark low-value prefixes as conditional review. |
-| Eval prompt fixtures | prefix classification expects docs/ci skip | Add marketplace-style PR bodies and low-value skip cases. |
 
 No new API endpoint, credential, database, or external service is introduced.
 
 ## 7. Implementation Constraints
 
-- Keep changes limited to `changelog-gen` skill docs, prefix reference, eval definitions, and durable comparison updates.
+- Keep changes limited to `changelog-gen` skill docs and prefix reference.
 - Do not change release-notes-gen behavior.
 - Preserve the ability to omit low-value docs/test/ci changes in traditional application repositories.
-- Avoid brittle exact-string assertions; use semantic assertions matching the changed classification contract.
 
 ## 8. Validation Strategy
 
@@ -155,18 +154,18 @@ No new API endpoint, credential, database, or external service is introduced.
 
 ## 9. Rollout and Operations
 
-This is a documentation, skill-contract, and eval-contract change. Rollout is by PR merge.
+This is a documentation and skill-contract change. Rollout is by PR merge.
 No service deployment, data migration, feature flag, or runtime monitoring change is required.
 
-Rollback is a standard git revert of the skill docs, prefix reference, eval definition, and
-comparison updates. If the implementation has already changed release changelog output, verify
+Rollback is a standard git revert of the skill docs and prefix reference updates. If the
+implementation has already changed release changelog output, verify
 the affected changelog file manually after rollback.
 
 ## 10. Security and Privacy
 
 The change reads PR titles, bodies, authors, and optionally changed filenames that are already
 available in the repository context. It must not request secrets, tokens, cookies, SSH keys, or
-private account data. Eval fixtures must not contain credentials or private repository content.
+private account data.
 
 ## 11. Risks and Open Technical Questions
 
@@ -174,7 +173,6 @@ private account data. Eval fixtures must not contain credentials or private repo
 | --- | --- | --- | --- |
 | Risk | Over-including docs/test/ci PRs may add changelog noise. | Engineer | No |
 | Risk | Under-specified PR bodies may still hide important docs-first changes. | Maintainer / Engineer | No |
-| Risk | Existing prefix-classification eval currently expects docs/ci skip and must be updated carefully. | Engineer | Yes |
 | Open Question | Should changed files be fetched for low-value prefixes when body is ambiguous? | Maintainer / Engineer | No; initial implementation can rely on title/body and document fallback behavior. |
 
 ## 12. Feature-Implementor Handoff

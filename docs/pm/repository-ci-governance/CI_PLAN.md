@@ -2,7 +2,7 @@
 feature: repository-ci-governance
 version: 0.1.0-draft
 date: 2026-05-06
-last_updated: 2026-08-06
+last_updated: 2026-09-01
 ---
 
 # Repository CI Governance Plan
@@ -12,8 +12,7 @@ last_updated: 2026-08-06
 为 `dev-agent-skills` 仓库建立第一版 CI 门禁，用于支持从 `0.1.0`
 开始的版本维护流程。
 
-CI 的第一版目标是保护 `main`、skill 注册结构和基础测试，不把模型型
-eval 一开始就放入 PR 硬门禁。
+CI 的第一版目标是保护 `main`、skill 注册结构和基础测试。
 
 状态标记：
 
@@ -31,60 +30,13 @@ eval 一开始就放入 PR 硬门禁。
 - [x] `CLAUDE.md` 应保持为指向 `AGENTS.md` 的相对软链接。
 - [x] Python 验证命令默认使用 `uv run`。
 - [x] `docs/pm/` 当前是本地讨论文档位置，不作为第一版公开版本化文档入口。
-- [x] eval 维护流程应只把评测任务、fixture 和最新评测比对结果提交到仓库，
-  不提交 transcript、candidate output、verdict、timing、run status 等评测过程产物。
-
-## Eval 维护流程
-
-```text
-新建/更新 skill
-  → 使用已有测试集或更新后的测试集进行评测
-  → 按固定格式编写最新评测比对结果
-  → 删除评测过程文件
-  → 提交 PR
-```
-
-该流程的目标是让仓库保持为 skill、测试集和最新结论的事实源，而不是模型
-评测运行日志的归档目录。
 
 ## CI 启用前置任务
 
 在把 CI 门禁加入 `main` required status checks 前，需要先完成以下整理：
 
-1. [x] 明确 eval 产物分层
-   - 应提交：`evals.json`、`eval_metadata.json`、fixture、必要的测试说明、
-     最新评测比对结果。
-   - 不应提交：`with_skill/outputs/`、`without_skill/outputs/`、
-     `baseline/outputs/`、`transcript.md`、`candidate-output.md`、
-     `subagent-verdict.md`、`timing.json`、`run_status.json` 等过程文件。
-
-2. [x] 固定评测比对结果格式
-   - 每个 eval workspace 保留一个最新结果文件，例如 `comparison.md`。
-   - 结果文件应包含评测对象、测试集版本或 commit、执行入口、总体结论、
-     with/without skill 对比、失败项和后续处理建议。
-   - 结果文件只写结论和证据摘要，不内嵌完整 transcript 或模型长输出。
-
-3. [x] 统一 eval runner 输出位置
-   - runner 默认在临时目录或仓库外 scratch workspace 生成过程文件。
-   - 如需在仓库内临时生成过程文件，runner 必须提供清理命令或自动清理。
-   - runner 最终只同步固定格式的最新评测比对结果回 eval workspace。
-   - 当前 runner 已统一使用 `tmp/eval-runs/...`，不再向 eval fixture 写入
-     `comparison.auto.md`、transcript、verdict、diagnostics 或 run status。
-
-4. [x] 整理现有历史过程产物
-   - 先盘点当前已提交的 `outputs/`、`comparison.auto.md`、`timing.json`、
-     `run_status.json` 等文件。
-   - 将仍有价值的信息压缩进固定格式 `comparison.md`。
-   - 删除不再需要保留的过程产物，再启用禁止过程产物入库的 CI 检查。
-
-5. [x] 补充忽略规则和契约检查
-   - 在 `.gitignore` 或等效检查中阻止常见过程产物再次入库。
-   - `eval-contract` 应校验过程产物没有被提交。
-   - `eval-contract` 只校验 metadata 中声明的输出配置格式，不要求输出文件存在。
-
-6. [x] 扩展确定性 Python 测试
-   - `python-tests` 覆盖所有 runner/parser/prompt/report 这类确定性单元测试。
-   - Python 测试不得依赖上一次 eval 生成的过程文件。
+1. [x] 扩展确定性 Python 测试
+   - `python-tests` 覆盖仓库内所有确定性单元测试。
    - Python 测试使用临时目录或最小 fixture 构造输入，避免污染仓库。
 
 ## 第一阶段：PR 必跑 CI
@@ -122,30 +74,7 @@ uv run scripts/check_repository_contract.py
 - skill 版本号。
 - frontmatter 的完整 schema。
 
-### 2. [x] eval-contract
-
-目的：校验 eval 定义、fixture 和元数据结构，不在 PR 中生成模型输出。
-
-检查项：
-
-- `evals.json` 必须是合法 JSON。
-- 带 workspace 的 eval 必须提交对应 `eval_metadata.json` 和 durable `comparison.md`。
-- `eval_metadata.json` 的 `eval_id` 必须匹配同一 skill 的 `evals.json`。
-- metadata 中声明的 workspace、fixture、with/without skill、baseline 输出和 `execution_cleanup` 路径必须是 eval workspace 内的相对路径。
-- `with_skill`、`without_skill`、baseline 输出配置格式必须保持完整，
-  但不要求对应过程输出文件已提交。
-- `execution_cleanup` 只能指向 eval workspace 内的相对路径。
-- eval 断言字段必须存在，不能是空列表。
-- 不应提交 eval 过程产物，例如 transcript、candidate output、verdict、
-  timing、run status 和临时 outputs 目录。
-
-暂不检查：
-
-- 不运行 `codex exec`。
-- 不刷新 transcript。
-- 不用模型裁判判断 eval pass/fail。
-
-### 3. [x] python-tests
+### 2. [x] python-tests
 
 目的：执行当前已有的确定性 Python 测试。
 
@@ -164,33 +93,9 @@ uv run --with pytest pytest \
 - 该测试不依赖模型调用，适合作为 PR 硬门禁。
 - 后续如果新增稳定的单元测试，可继续并入该 job。
 
-## 第二阶段：手动或定时 Eval
+## 第二阶段：Release CI
 
-第二阶段用于质量回归，不作为第一版 PR 必跑门禁。
-
-状态：
-
-- [x] 已支持 `workflow_dispatch` 手动触发，并可选择 `all`、`designer` 或 `qa`。
-- [x] Designer eval 在 workflow 中作为 diagnostics 运行，运行期输出缺口以
-  warning 和 artifact 形式呈现。
-- [x] QA eval 保留模型执行路径，并要求仓库 secret `OPENAI_API_KEY`。
-- [ ] 尚未启用 nightly 定时触发。
-
-触发方式：
-
-- [x] `workflow_dispatch` 手动触发。
-- [ ] 后续可选 nightly 定时触发。
-- [x] release 前由管理员手动执行。
-
-原因：
-
-- QA eval 当前会调用 `codex exec`。
-- 模型输出、token、超时和运行环境会影响稳定性。
-- 第一版不应让模型型 eval 阻塞普通 PR。
-
-## 第三阶段：Release CI
-
-第三阶段用于版本发布和 tag 流程。
+第二阶段用于版本发布和 tag 流程。
 
 状态：当前不实现 Release CI；发布前采用手动 release checklist。
 
@@ -205,7 +110,6 @@ uv run --with pytest pytest \
 - [ ] 校验 release tag 格式为 `vMAJOR.MINOR.PATCH`，预发布按 SemVer 后缀扩展。
 - [ ] 确认 `docs/changelog/changelog-v{version}.md` 存在并记录对应版本变更。
 - [ ] 根目录 `CHANGELOG.md` 只作为版本索引。
-- [ ] 必要时手动触发 eval workflow 并记录结果。
 - [ ] 按 `pm-agent → github-release-gen` 流程创建 GitHub Release draft 并交维护者审批；本仓无文档站宿主，使用维护者确认的版本事实源，不生成 `docs/release-notes/`。
 
 暂不实现：

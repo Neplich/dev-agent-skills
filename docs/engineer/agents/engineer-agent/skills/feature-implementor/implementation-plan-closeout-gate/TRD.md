@@ -5,7 +5,7 @@ version: "0.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "implementation-plan-closeout-gate"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate"
@@ -56,25 +56,7 @@ reviewer 需要在输出 pass 之前执行 stale-state 检查：
 
 发现冲突时，reviewer 返回 blocking finding，并回到 closeout 更新步骤。
 
-## 5. Eval 设计
-
-新增 `eval-010-implementation-plan-closeout-sync`：
-
-| Field | Value |
-| --- | --- |
-| Workspace | `workspace/eval-010-implementation-plan-closeout-sync` |
-| Scenario | fixture 中已有一个 `status: Implemented` 但正文仍写“待确认 / 未开始 / 未执行”的 `IMPLEMENTATION_PLAN.md`。 |
-| Expected Output | skill 必须发现 stale closeout 状态，要求同步结果和验证证据，不得直接 handoff 或 delivery。 |
-
-核心断言：
-
-- 检测 frontmatter 与正文状态冲突。
-- 要求更新实施结果区和状态表。
-- 要求记录 deterministic checks 的命令和结果。
-- 要求 eval 已执行时引用 durable `comparison.md`，未执行时写明原因。
-- 不提交运行期 eval 产物。
-
-## 6. 验证策略
+## 5. 验证策略
 
 ```bash
 git diff --check
@@ -82,6 +64,6 @@ uv run scripts/check_repository_contract.py
 uv run --with pytest pytest agents/test_doc_contract.py
 ```
 
-## 7. 回滚
+## 6. 回滚
 
-标准 git revert 可回滚 skill 文档、internal instructions、eval fixture、durable comparison 和 `skills-lock.json` 变更。回滚后现有实施前计划门禁仍保持不变。
+标准 git revert 可回滚 skill 文档、internal instructions 和 `skills-lock.json` 变更。回滚后现有实施前计划门禁仍保持不变。

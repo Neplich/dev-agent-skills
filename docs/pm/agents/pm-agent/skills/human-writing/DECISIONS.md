@@ -5,15 +5,18 @@ feature: "skill-human-writing"
 feature_path: "agents/pm-agent/skills/human-writing"
 parent_feature: "agents/pm-agent/skills"
 feature_level: "4"
-version: "1.2.1"
+version: "1.2.2"
 status: Approved
 author: "Neplich Codex"
 date: "2026-08-19"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "idea-to-spec"
 related_docs:
   - "docs/pm/agents/pm-agent/skills/human-writing/PRD.md"
 changelog:
+  - version: "1.2.2"
+    date: "2026-09-01"
+    changes: "记录 D-023，明确人工语义验收为迭代原则并限缩 D-022"
   - version: "1.2.1"
     date: "2026-08-24"
     changes: "移除外部项目遗留描述，纳入文档站维护者整站优化用户场景"
@@ -55,7 +58,8 @@ changelog:
 | D-019 | 权限、数据边界、自动行为、删除影响面、失败恢复等高风险事实存在疑问时，停止润色并返回主 Skill 核验。 | 不确定描述不能被润色成更肯定的说法；事实研究和确认始终归主 Skill。 |
 | D-020 | 文档集合与整站写作指导作为 `document-patterns.md` 的一个模式，不新增文档架构或网站架构 Skill。 | 整站优化是多文档写作的尺度之一，不值得独立 Skill；也避免接管 Designer 的产品 UX 信息架构职责。 |
 | D-021 | 周边 Router 与 Specialist 共同加载条款中的 "structure" 统一改为 "required structure"，一词同步。 | 保持所有权表述与 D-018 一致，改动最小且语义自洽。 |
-| D-022 | 验收继续依赖真实项目案例和人工语义验收，不恢复已移除的 Skill eval 体系，也不新增写作评分或禁词统计。 | 延续 #301 的移除结论；能力质量由真实用户体验判定。 |
+| D-022 | 验收继续依赖真实项目案例和人工语义验收，不恢复已移除的 Skill eval 体系，也不新增写作评分或禁词统计。（已由 D-023 限缩） | 延续 #301 的移除结论；能力质量由真实用户体验判定。 |
+| D-023 | "真实项目案例与人工语义验收"是能力质量的迭代原则，不作为完成门禁；能力完成验收以 PRD 确定性验收标准为准；不恢复 Skill eval 体系的结论不变。 | 限缩 D-022：#301 移除 eval 机制后完成验收只承载确定性口径，人工语义验收回归迭代依据定位。 |
 
 ## 约束
 

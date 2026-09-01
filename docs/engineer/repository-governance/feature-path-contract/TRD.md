@@ -1,7 +1,7 @@
 ---
 title: "PRD/TRD 多级功能目录契约 TRD"
 type: TRD
-version: "1.2.1"
+version: "1.2.2"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-23"
@@ -10,7 +10,7 @@ feature: "feature-path-contract"
 feature_path: "repository-governance/feature-path-contract"
 parent_feature: "repository-governance"
 feature_level: "2"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 related_prd: "docs/pm/repository-governance/feature-path-contract/PRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/37"
@@ -38,6 +38,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/planner/INSTRUCTIONS.md"
   - "agents/engineer/skills/debugger/SKILL.md"
 changelog:
+  - version: "1.2.2"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.2.1"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -66,7 +69,7 @@ changelog:
 
 GitHub issue #197 进一步要求在 PRD/TRD 跨越多个明确子功能边界时形成 L2b 拆分提案，并新增只读的跨角色功能树梳理入口。拆分评估、报告生成和实际结构变更必须分离：前两者只读，后者在用户确认后按 `major` 执行。
 
-issue #197 的当前实施范围是更新已确认的 skill 指令、路由、PRD/TRD 和锁文件，并新增两项 eval（`eval-009-prd-iteration-split-proposal`、`eval-016-route-document-structure-governance`，fresh 验证均 PASS/FULL）；不实际拆分、移动宿主文档目录。
+issue #197 的交付范围是更新已确认的 skill 指令、路由、PRD/TRD 和锁文件；当轮还新增两项 eval（`eval-009-prd-iteration-split-proposal`、`eval-016-route-document-structure-governance`，fresh 验证均 PASS/FULL），该 eval 机制已随 PR #301 移除，此处仅作历史交付事实保留；不实际拆分、移动宿主文档目录。
 
 ## 2. 技术概览
 
@@ -134,7 +137,7 @@ Agent/Skill 治理 PRD 使用同一多级口径：`feature_path=agents/{agent}/s
 
 | Namespace | 技术含义 | 路径规则 | 下游镜像 |
 | --- | --- | --- | --- |
-| `repository-governance/...` | 仓库级规则，包括目录契约、eval 证据规则、CI、repository contract 和 release preflight。 | 具体文档使用 `repository-governance/{topic}` 或更深路径；`parent_feature` 为去掉末段后的完整路径，二级主题可使用 `repository-governance`。 | `docs/engineer/repository-governance/{topic}/TRD.md`、`docs/qa/e2e/repository-governance/{topic}/...` 等使用同一 `feature_path`。 |
+| `repository-governance/...` | 仓库级规则，包括目录契约、CI、repository contract 和 release preflight。 | 具体文档使用 `repository-governance/{topic}` 或更深路径；`parent_feature` 为去掉末段后的完整路径，二级主题可使用 `repository-governance`。 | `docs/engineer/repository-governance/{topic}/TRD.md`、`docs/qa/e2e/repository-governance/{topic}/...` 等使用同一 `feature_path`。 |
 | `agent-collaboration/...` | 多个 Agent 之间的交接、分工、路由和协作门禁。 | 具体文档使用 `agent-collaboration/{topic}` 或更深路径；`parent_feature` 为去掉末段后的完整路径，二级主题可使用 `agent-collaboration`。 | `docs/engineer/agent-collaboration/{topic}/TRD.md`、`docs/design/agent-collaboration/{topic}/...` 等使用同一 `feature_path`。 |
 
 校验规则：
@@ -369,22 +372,7 @@ feature_level: 1
 | P1 | `agents/security/**` | feature-scoped Security 报告使用 feature path。 |
 | P1 | `skills-lock.json` | 如果 skill 文档发生变更，按仓库规则刷新 metadata。 |
 
-## 8. Eval 覆盖
-
-| Skill | Eval 场景 | 断言重点 |
-| --- | --- | --- |
-| `idea-to-spec` | 已有一级父功能 PRD，新需求为二级子功能。 | 生成 `docs/pm/{parent}/{child}/PRD.md`，不创建并列 `{child}`。 |
-| `idea-to-spec` | 父功能归属模糊。 | blocked 或提出最小澄清，不写新顶层 PRD。 |
-| `trd-gen` | 嵌套 PRD 输入。 | TRD 写入 `docs/engineer/{feature_path}/TRD.md`，`related_prd` 匹配。 |
-| `feature-implementor` | PRD 存在但 TRD 缺失。 | 回 `engineer-agent:trd-gen`，不写 `IMPLEMENTATION_PLAN.md`。 |
-| `feature-implementor` | PRD/TRD feature path 不一致。 | blocked 或 TRD gap handoff，不创建计划。 |
-| `debugger` | bug 报告涉及已有二级功能。 | 按 feature path 读取 PRD/TRD；需求变化回 PM。 |
-| `qa-agent` / `spec-based-tester` | E2E 文档更新来自嵌套功能实现。 | 引用同一路径 PRD/TRD/Plan，并写入 QA 功能树。 |
-| legacy compatibility | 旧单层 fixture 无 `feature_path`。 | 作为一级功能读取，不误报缺字段。 |
-
-issue #197 已新增并执行两项 eval：`eval-009-prd-iteration-split-proposal`（L2b 拆分提案入口）与 `eval-016-route-document-structure-governance`（结构治理路由入口）；fresh subagent 验证均为 Behavior PASS / Coverage FULL，durable `comparison.md` 已同轮更新。
-
-## 9. 验证策略
+## 8. 验证策略
 
 实施完成后建议按以下顺序验证：
 
@@ -404,29 +392,29 @@ rg -n "legacy_of:|legacy_reason:|superseded_by:" docs --glob "*/_legacy/**/*.md"
 
 本 TRD 阶段不声称上述命令已经运行。命令是后续实施完成后的验证入口。
 
-## 10. 发布与回滚
+## 9. 发布与回滚
 
-本变更是文档和 eval 契约升级，不新增运行时服务。发布通过普通 PR 合入：
+本变更是文档和 skill 指令契约升级，不新增运行时服务。发布通过普通 PR 合入：
 
 1. 合入 PRD/TRD。
 2. 由 `feature-implementor` 产出并确认实施计划。
-3. 分模块更新 skill 文档、内部指令和 eval。
+3. 分模块更新 skill 文档和内部指令。
 4. 刷新 `skills-lock.json`。
-5. 运行仓库契约和 eval 契约检查。
+5. 运行仓库契约和文档契约检查（`check_repository_contract.py`、`check_doc_contract.py`）。
 
 回滚方式是普通 git revert。若已经迁移历史误放目录，回滚必须同步恢复引用路径，不能只回滚部分文档。
 
-## 11. 安全与隐私
+## 10. 安全与隐私
 
 本变更不引入凭据、账号、token、cookie 或 SSH key。路径扫描只读取仓库内 Markdown 文档和 frontmatter。实现时不得把本地绝对路径、用户私有目录或运行期 scratch 路径写入正式 PRD/TRD/Plan frontmatter。
 
-## 12. 风险、假设和待确认问题
+## 11. 风险、假设和待确认问题
 
 | 类型 | 内容 | Owner | Blocking |
 | --- | --- | --- | --- |
 | Risk | 自动父功能匹配过度自信会把文档放入错误父目录。 | Engineer | Yes |
 | Risk | 只更新 PM/Engineer，未更新下游消费方，会让 Design/QA/DevOps/Security 继续漂移。 | Engineer | Yes |
-| Risk | 只更新文档不更新 eval，会导致规则后续回退。 | Engineer | Yes |
+| Risk | 只更新文档不更新 skill 指令，会导致规则后续回退。 | Engineer | Yes |
 | Risk | 结构报告被当作移动授权，会让只读扫描越过确认门禁。 | PM | Yes |
 | Decision | `feature_path` 支持多级统一口径；合法深度由功能树决定，不因超过三级而 blocked。 | Maintainer | No |
 | Decision | `repository-governance/...` 和 `agent-collaboration/...` 是合法顶层 namespace；二级主题可使用保留 namespace 作为 `parent_feature`。 | Maintainer | No |
@@ -436,10 +424,10 @@ rg -n "legacy_of:|legacy_reason:|superseded_by:" docs --glob "*/_legacy/**/*.md"
 | Decision | L2b 任一信号只触发评估；提案确认前不执行拆分，拒绝后保持原路径。 | Maintainer | No |
 | Decision | 结构建议执行按 `major` 处理，目录移动和重命名使用 `git mv`，不新增迁移脚本。 | Maintainer | No |
 
-## 13. Feature-Implementor 交接条件
+## 12. Feature-Implementor 交接条件
 
 - Confirmed PRD path: `docs/pm/repository-governance/feature-path-contract/PRD.md`
 - Confirmed TRD path: `docs/engineer/repository-governance/feature-path-contract/TRD.md`
 - Expected implementation plan path: `docs/engineer/repository-governance/feature-path-contract/IMPLEMENTATION_PLAN.md`
-- Boundary: issue #197 仅修改已确认的指令、路由、PRD/TRD 与锁文件，并新增 `eval-009-prd-iteration-split-proposal`、`eval-016-route-document-structure-governance` 两项 eval（fresh 验证均 PASS/FULL）；不执行真实文档拆分或迁移。
+- Boundary: issue #197 仅修改已确认的指令、路由、PRD/TRD 与锁文件；当轮新增的 `eval-009-prd-iteration-split-proposal`、`eval-016-route-document-structure-governance` 两项 eval（fresh 验证均 PASS/FULL）所属机制已随 PR #301 移除，仅作历史交付事实，不作为现行验证依据；不执行真实文档拆分或迁移。
 - Required implementation: 按 L2b、只读结构治理和受控移动契约更新指定 skill，并通过仓库确定性检查。

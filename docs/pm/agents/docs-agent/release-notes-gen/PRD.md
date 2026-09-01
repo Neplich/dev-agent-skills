@@ -5,11 +5,11 @@ feature: "release-notes-gen"
 feature_path: "agents/docs-agent/release-notes-gen"
 parent_feature: "agents/docs-agent"
 feature_level: "3"
-version: "1.0.0"
+version: "1.0.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-19"
-last_updated: "2026-08-06"
+last_updated: "2026-09-01"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/116"
 related_docs:
@@ -17,6 +17,9 @@ related_docs:
   - "docs/engineer/agents/docs-agent/release-notes-gen/TRD.md"
   - "docs/engineer/agents/docs-agent/release-notes-gen/IMPLEMENTATION_PLAN.md"
 changelog:
+  - version: "1.0.1"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.0.0"
     date: "2026-07-19"
     changes: "将维护者已批准的 issue #116 规格转化为站内 Release Notes 产品要求"
@@ -119,20 +122,20 @@ flowchart LR
    过度压缩。
 3. **确认门禁**：确认前不更新 `.meta/releases.json`、Release Notes index 或导航；
    只有用户或维护者明确确认后才更新。
-4. **宿主验证**：执行宿主定义的 docs checks；AI Hub-shaped fixture 必须通过
+4. **宿主验证**：执行宿主定义的 docs checks；AI Hub-shaped 宿主必须通过
    `npm run test:docs`。
 5. **下游交付**：成功时输出符合 #120 要求的 ready handoff；未确认或检查失败时不
    标记 ready。
 6. **负向边界**：执行过程不操作 GitHub Release、tag、镜像、Helm 或部署，不修改
    AI Hub 仓库，也不代替 #117、#121 的职责。
-7. **Skill 可用性**：完成 fresh with-skill 与同 prompt/fixture 的 fresh
-   without-skill validation，并更新 durable `comparison.md`。
+7. **交付验证**：skill、注册与文档链通过仓库确定性检查（repository contract、
+   doc contract 与 CI 同款 pytest 回归）。
 
 ## 依赖与开放问题
 
 - issue #118 已提供统一 frontmatter 契约，是页面生成的硬前置。
-- issue #122 已提供 AI Hub-shaped bootstrap 资产和宿主脚手架，可作为后续 eval
-  fixture 基础；不得把该 fixture 误当成运行时依赖。
+- issue #122 已提供 AI Hub-shaped bootstrap 资产和宿主脚手架，可作为宿主集成
+  验证样本；不得把该样本误当成运行时依赖。
 - issue #117 消费本站点页面和 release metadata 证据执行双阶段审计；issue #120
   消费本 specialist 的 ready handoff，但必须等待 #117 pre-tag audit 返回
   `ready_for_tag` 后才能准备 GitHub Release 草稿；issue #121 与本能力按文档类型

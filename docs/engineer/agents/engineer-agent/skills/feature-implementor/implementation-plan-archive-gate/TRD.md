@@ -1,11 +1,11 @@
 ---
 title: "IMPLEMENTATION_PLAN 归档门禁 TRD"
 type: TRD
-version: "0.2.1"
+version: "0.2.2"
 status: Draft
 author: "Neplich Codex"
 date: "2026-07-01"
-last_updated: "2026-08-24"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "implementation-plan-archive-gate"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-archive-gate"
@@ -21,6 +21,9 @@ related_docs:
   - "agents/engineer/skills/feature-implementor/_internal/_shared/output-conventions.md"
   - "scripts/check_repository_contract.py"
 changelog:
+  - version: "0.2.2"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "0.2.1"
     date: "2026-08-24"
     changes: "清理已失效的 eval 机制引用与验证命令"
@@ -52,7 +55,7 @@ changelog:
 - 将完成态或废弃态旧计划保存到
   `docs/engineer/{feature_path}/archive/IMPLEMENTATION_PLAN-<scope>.md`。
 - 保留当前活跃计划入口不变，并通过 `previous_plan_archive` 记录新旧计划关系。
-- 扩展 repository contract 和 eval，避免计划被直接覆盖或归档 metadata 漂移。
+- 扩展 repository contract，避免计划被直接覆盖或归档 metadata 漂移。
 
 ## 2. 影响范围
 
@@ -212,26 +215,7 @@ reviewer 在 handoff 或 delivery 前检查：
 - `previous_plan_archive` 是否存在且指向同一 `feature_path` 的 archive 文件。
 - 归档状态是否只使用 `Archived` 或 `Superseded`。
 
-## 7. Eval 设计
-
-在既有两个 archive workflow eval 基础上，新增两个 repository contract 回归 eval：
-
-| Eval | Scenario | Expected Behavior |
-| --- | --- | --- |
-| `eval-012-implementation-plan-archive-preflight` | 同一 `feature_path` 已存在未归档 `IMPLEMENTATION_PLAN.md`，用户要求创建新计划。 | skill 阻止直接覆盖，列出旧计划状态和三种处理选项。 |
-| `eval-013-implementation-plan-archive-allows-next-plan` | 旧计划已 closeout 并归档，新请求创建下一份计划。 | skill 允许创建新活跃计划，并要求记录 `previous_plan_archive`。 |
-| `eval-015-active-plan-base-implemented-requires-archive-link` | base ref 上 active plan 的 `status` 已是 `Implemented`，本次修改 active plan，但没有声明 `previous_plan_archive`。 | repository contract 拦截改动，要求提供存在且 `feature_path` 一致的归档回链。 |
-| `eval-016-active-plan-base-in-progress-allows-update` | base ref 上 active plan 的 `status` 不是 `Implemented`，本次继续修订 active plan，正常 bump `version` 和 `last_updated`，但不声明 `previous_plan_archive`。 | repository contract 放行合法的同轮计划更新。 |
-
-每个 eval fixture 应包含：
-
-- PRD / TRD；
-- 活跃或归档计划；
-- 对 `eval-015` / `eval-016`，能够构造并验证 base ref 与 HEAD 差异的 git fixture；
-- `comparison.md` durable 结果；
-- 必要的 `eval_metadata.json`，但不提交运行期产物。
-
-## 8. 验证策略
+## 7. 验证策略
 
 确定性检查：
 
@@ -242,16 +226,16 @@ uv run scripts/check_doc_contract.py
 uv run --with pytest pytest agents/test_doc_contract.py
 ```
 
-## 9. 回滚策略
+## 8. 回滚策略
 
-标准 git revert 可回滚文档、skill 指令、contract checker、eval fixture 和
+标准 git revert 可回滚文档、skill 指令、contract checker 和
 `skills-lock.json`。回滚后：
 
 - `IMPLEMENTATION_PLAN.md` 活跃入口仍存在；
 - closeout gate 继续生效；
 - archive 目录不再作为新计划前置门禁的一部分。
 
-## 10. 已决技术结论
+## 9. 已决技术结论
 
 | # | Decision | Rationale |
 | --- | --- | --- |

@@ -1,11 +1,11 @@
 ---
 title: "Docs Authoring Foundation TRD"
 type: TRD
-version: "0.2.0"
+version: "0.2.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-19"
-last_updated: "2026-07-19"
+last_updated: "2026-09-01"
 generated_by: "trd-gen"
 feature: "docs-authoring-foundation"
 feature_path: "agents/docs-agent/docs-authoring-foundation"
@@ -15,6 +15,9 @@ related_prd: "docs/pm/agents/docs-agent/docs-authoring-foundation/PRD.md"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/122"
 changelog:
+  - version: "0.2.1"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "0.2.0"
     date: "2026-07-19"
     changes: "同步 W1-W6 已交付状态，并补充 C4/C5R 的路径、schema、进程与原子性加固约束"
@@ -241,7 +244,7 @@ Bootstrap 始终交付完整宿主基础。后续 formal-docs-sync 的渐进加�
 - 本 feature 的 TRD 与实施计划。
 
 实际交付同时影响宿主资产内的模板 scaffold 区块、`scaffold-doc.mjs`、
-`package.json`、脚手架测试和 eval fixture。非目标包括：复制 AI Hub 业务事实；动态发现
+`package.json` 和脚手架测试。非目标包括：复制 AI Hub 业务事实；动态发现
 任意宿主 schema；自动扫描全仓生成正文；创建宿主本地 skill；修改 AI Hub；
 修改宿主 CI；生成 Release Notes；改变 docs-audit 状态与盖章；发布 release、tag、
 镜像或部署。
@@ -256,7 +259,6 @@ Bootstrap 始终交付完整宿主基础。后续 formal-docs-sync 的渐进加�
 | 脚手架单元测试 | Node 测试覆盖五类成功与全部阻塞、dry-run、change-map 合并、原子回滚和写后校验。 |
 | 宿主集成 | 在隔离 AI Hub-shaped fixture 执行 `npm run test:docs`，并分别验证 public / internal build。 |
 | 仓库契约 | 依序运行 4 个 `uv run scripts/check_*.py` 与 CI 同款 pytest 清单。 |
-| Skill eval | fresh with-skill 与同 prompt / fixture 的 fresh without-skill baseline，更新 durable `comparison.md`，不提交运行期产物。 |
 
 ## 11. 风险、假设与开放问题
 
@@ -266,7 +268,7 @@ Bootstrap 始终交付完整宿主基础。后续 formal-docs-sync 的渐进加�
 | 模板正文出现第二份来源 | scaffold 只提取模板唯一标记区块；测试只断言结构和行为，不复制完整模板。 |
 | 页面写入成功但 change map 失败 | 预计算并原子提交两者，失败恢复原状态，随后回读。 |
 | 宿主人工字段被 merge 覆盖 | 只修改显式目标字段，未知字段和条目原样保留。 |
-| `eval-002` 以旧内嵌正文做字节 fixture | W6 已按真实资产重做 fixture；后续物化目标字节变化时，同轮对齐对应 fixture 与范围版本。 |
+| `eval-002` 以旧内嵌正文做字节 fixture | W6 已按真实资产重做 fixture。 |
 | formal-docs-sync 渐进加载与完整 bootstrap 被混淆 | W2/W5 明确 bootstrap 仍全量交付；#121 只按当前类型读取模板。 |
 | issue #122 的 `feature_level` 标注与仓库路径层级契约不一致 | 同路径 PRD、TRD 与实施计划统一按三段 `feature_path` 记录为 level 3；不扩展 checker。 |
 
@@ -276,7 +278,6 @@ Bootstrap 始终交付完整宿主基础。后续 formal-docs-sync 的渐进加�
 ## 12. 实施与交付状态
 
 issue #122 的批准范围、同路径 PRD 与本 TRD 仍是实现依据；W1-W6 已完成并由
-`IMPLEMENTATION_PLAN.md` 记录 closeout。C5R 只加固既有交付，不改变产品预期；
-物化 eval 目标发生字节变化时必须同步 fixture 并如实记录是否执行 fresh eval。
+`IMPLEMENTATION_PLAN.md` 记录 closeout。C5R 只加固既有交付，不改变产品预期。
 维护者已授权本轮一次 commit、push 和 PR review 触发，但未授权 merge、amend、
 rebase、force push 或管理员绕过。

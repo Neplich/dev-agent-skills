@@ -5,11 +5,11 @@ feature: "formal-docs-sync"
 feature_path: "agents/docs-agent/formal-docs-sync"
 parent_feature: "agents/docs-agent"
 feature_level: "3"
-version: "1.0.0"
+version: "1.0.1"
 status: Approved
 author: "Neplich Codex"
 date: "2026-07-19"
-last_updated: "2026-08-06"
+last_updated: "2026-09-01"
 related_issues:
   - "https://github.com/Neplich/dev-agent-skills/issues/121"
 related_docs:
@@ -17,6 +17,9 @@ related_docs:
   - "docs/engineer/agents/docs-agent/formal-docs-sync/TRD.md"
   - "docs/engineer/agents/docs-agent/formal-docs-sync/IMPLEMENTATION_PLAN.md"
 changelog:
+  - version: "1.0.1"
+    date: "2026-09-01"
+    changes: "清理已失效的 eval 机制残留引用"
   - version: "1.0.0"
     date: "2026-07-19"
     changes: "将维护者已批准的 issue #121 规格转化为 formal-docs-sync 五类正式文档同步要求"
@@ -129,9 +132,8 @@ flowchart LR
    回读；新改页面符合 #118 且保持 `unverified`。
 6. **模板与加载**：宿主五模板是唯一正文来源；新页面优先建议 `npm run new:doc`；
    单类型任务不加载其他四类模块。
-7. **验证**：宿主 docs checks 通过；AI Hub-shaped fixture 使用
-   `npm run test:docs`；S2 完成 fresh with-skill、fresh without-skill 和 durable
-   `comparison.md`。
+7. **验证**：宿主 docs checks 通过；AI Hub-shaped 宿主使用
+   `npm run test:docs`。
 8. **独立性与负向边界**：AI Hub 不可用时 skill 仍可执行，且不越权初始化站点、盖章、
    操作 Release / tag / 部署或定义动态 schema。
 

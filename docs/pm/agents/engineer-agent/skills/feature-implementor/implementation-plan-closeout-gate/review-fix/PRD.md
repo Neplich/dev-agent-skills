@@ -5,7 +5,7 @@ version: "0.1.0"
 status: Draft
 author: "Neplich Codex"
 date: "2026-06-24"
-last_updated: "2026-06-25"
+last_updated: "2026-09-01"
 generated_by: "idea-to-spec"
 feature: "review-fix"
 feature_path: "agents/engineer-agent/skills/feature-implementor/implementation-plan-closeout-gate/review-fix"
@@ -28,9 +28,11 @@ PR review 进一步指出新增 eval 的 durable `comparison.md` 缺少真实 ba
 
 ## 目标
 
-1. 让新增 eval 的 `Without Skill / Baseline` section 不再只是描述假设风险。
-2. 让实施计划 closeout 记录最终 PASS 的 fresh subagent validation。
+1. 补齐新增 eval `Without Skill / Baseline` section 的真实 baseline 结果或 blocked / skipped 原因。
+2. 在实施计划 closeout 中记录最终 PASS 的 fresh subagent validation。
 3. 保持两个 durable evidence 文件对 baseline、validation 和 runtime artifact policy 的表述一致。
+
+以上目标均已交付；涉及的 eval 机制现已移除，durable evidence 文件不再作为现行验证依据。
 
 ## 非目标
 
@@ -43,14 +45,14 @@ PR review 进一步指出新增 eval 的 durable `comparison.md` 缺少真实 ba
 
 | ID | Feature | Description | Priority | Acceptance Criteria |
 | --- | --- | --- | --- | --- |
-| FR-001 | Baseline Evidence | `eval-010` 的 durable comparison 必须记录 baseline 结果，或明确 baseline 被 blocked / skipped 的原因。 | P0 | `Without Skill / Baseline` section 不再只有假设风险。 |
-| FR-002 | Final Validation Evidence | closeout gate 实施计划必须记录最终 PASS 的 fresh subagent validation。 | P0 | 实施计划中可看到最终 subagent id、PASS 结论和测试命令摘要。 |
-| FR-003 | Evidence Consistency | `IMPLEMENTATION_PLAN.md` 与 `comparison.md` 的 validation / baseline / runtime artifact policy 表述一致。 | P1 | 两份文档不会互相矛盾。 |
+| FR-001 | Baseline Evidence | `eval-010` 的 durable comparison 已记录 baseline 结果或 blocked / skipped 原因（已交付；eval 机制现已移除）。 | P0 | `Without Skill / Baseline` section 不再只有假设风险。 |
+| FR-002 | Final Validation Evidence | closeout gate 实施计划已记录最终 PASS 的 fresh subagent validation（已交付）。 | P0 | 实施计划中记录了最终 subagent id、PASS 结论和测试命令摘要。 |
+| FR-003 | Evidence Consistency | `IMPLEMENTATION_PLAN.md` 与 `comparison.md` 的 validation / baseline / runtime artifact policy 表述已保持一致（已交付）。 | P1 | 两份文档不互相矛盾。 |
 
 ## 验收标准
 
 | ID | Criteria | Verification |
 | --- | --- | --- |
-| AC-01 | PR review thread 的 baseline 缺口被直接处理。 | 人工 review `comparison.md`。 |
-| AC-02 | 本地 review 提到的最终 PASS subagent 证据已写回实施计划。 | 人工 review `IMPLEMENTATION_PLAN.md`。 |
-| AC-03 | 仓库确定性检查通过。 | 运行 repository / eval contract 和 pytest。 |
+| AC-01 | PR review thread 的 baseline 缺口已被直接处理（已交付）。 | 人工 review durable `comparison.md`（该文件随 eval 机制移除，不再作为现行验证依据）。 |
+| AC-02 | 本地 review 提到的最终 PASS subagent 证据已写回实施计划（已交付）。 | 人工 review `IMPLEMENTATION_PLAN.md`。 |
+| AC-03 | 仓库确定性检查通过。 | 运行 repository contract 和 pytest。 |
