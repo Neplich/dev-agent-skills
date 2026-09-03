@@ -110,9 +110,14 @@ def is_formal_pm_or_engineer_document(rel: str) -> bool:
 
 def normalize_frontmatter_scalar(value: str) -> str:
     normalized = value.strip()
-    if not normalized.startswith(("'", '"')):
-        normalized = re.split(r"(?:^|\s+)#", normalized, maxsplit=1)[0]
-    return normalized.strip("'\"").strip()
+    if normalized.startswith(("'", '"')):
+        quote = normalized[0]
+        closing_quote = normalized.find(quote, 1)
+        if closing_quote == -1:
+            return ""
+        return normalized[1:closing_quote].strip()
+    normalized = re.split(r"(?:^|\s+)#", normalized, maxsplit=1)[0].strip()
+    return "" if normalized in ("|", ">") else normalized
 
 
 def validate_changelog_entries(
@@ -156,7 +161,7 @@ def validate_changelog_entries(
     for entry in entries:
         for key in ("version", "date", "changes"):
             normalized = normalize_frontmatter_scalar(entry.get(key, ""))
-            if not normalized or normalized in ("|", ">"):
+            if not normalized:
                 add_error(
                     errors,
                     path,
@@ -182,9 +187,12 @@ def frontmatter_field_has_value(content: str, field: str) -> bool:
             compact = re.sub(r"\s+", "", inline).lower()
             return bool(inline) and compact not in ("[]", "{}", "~", "null")
         for child in lines[index + 1 :]:
-            if child.strip() and not child.startswith((" ", "\t", "-")):
+            stripped = child.strip()
+            if stripped.startswith("#"):
+                continue
+            if stripped and not child.startswith((" ", "\t", "-")):
                 break
-            if child.strip():
+            if stripped:
                 return True
         return False
     return False
