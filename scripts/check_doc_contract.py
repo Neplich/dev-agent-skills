@@ -193,7 +193,9 @@ def frontmatter_field_has_value(content: str, field: str) -> bool:
             if stripped and not child.startswith((" ", "\t", "-")):
                 break
             if stripped:
-                return True
+                item = stripped[1:] if stripped.startswith("-") else stripped
+                if normalize_frontmatter_scalar(item):
+                    return True
         return False
     return False
 

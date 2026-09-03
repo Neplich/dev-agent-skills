@@ -290,6 +290,12 @@ class DocContractTests(unittest.TestCase):
 
         self.assertFalse(checker.frontmatter_field_has_value(content, "child_features"))
 
+    def test_doc_contract_rejects_blank_child_features_list_item(self):
+        checker = load_doc_checker_module()
+        content = '---\nchild_features:\n  - ""\nchangelog:\n---\n'
+
+        self.assertFalse(checker.frontmatter_field_has_value(content, "child_features"))
+
     def test_doc_contract_registered_exemption_skips_extended_fields(self):
         checker = load_doc_checker_module()
 
