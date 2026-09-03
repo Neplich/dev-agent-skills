@@ -146,6 +146,46 @@ class DocContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("must have non-empty 'changes'", rendered)
 
+    def test_doc_contract_rejects_quoted_whitespace_changelog_value(self):
+        checker = load_doc_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            add_tracked_file(
+                root,
+                "docs/engineer/example/TRD.md",
+                formal_doc_frontmatter("TRD").replace(
+                    '    changes: "Initial version"\n', '    changes: "   "\n'
+                )
+                + "# Example TRD\n",
+            )
+
+            errors = checker.validate_all(root)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("must have non-empty 'changes'", rendered)
+
+    def test_doc_contract_rejects_empty_child_features_collection(self):
+        checker = load_doc_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            add_tracked_file(
+                root,
+                "docs/pm/example/PRD.md",
+                formal_doc_frontmatter("PRD").replace(
+                    'child_features: "N/A"\n', "child_features: []\n"
+                )
+                + "# Example PRD\n",
+            )
+
+            errors = checker.validate_all(root)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("frontmatter 'child_features' must be non-empty for PRDs", rendered)
+
     def test_doc_contract_registered_exemption_skips_extended_fields(self):
         checker = load_doc_checker_module()
 

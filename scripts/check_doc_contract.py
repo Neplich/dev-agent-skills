@@ -141,7 +141,7 @@ def validate_changelog_entries(
         return
     for entry in entries:
         for key in ("version", "date", "changes"):
-            if not entry.get(key, "").strip().strip("'\""):
+            if not entry.get(key, "").strip().strip("'\"").strip():
                 add_error(
                     errors,
                     path,
@@ -163,7 +163,8 @@ def frontmatter_field_has_value(content: str, field: str) -> bool:
         if key.strip() != field:
             continue
         if value.strip():
-            return True
+            inline = value.strip().strip("'\"")
+            return bool(inline) and inline.lower() not in ("[]", "{}", "~", "null")
         for child in lines[index + 1 :]:
             if child.strip() and not child.startswith((" ", "\t", "-")):
                 break
