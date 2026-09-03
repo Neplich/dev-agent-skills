@@ -91,6 +91,24 @@ class DocContractTests(unittest.TestCase):
             "frontmatter 'changelog' must contain at least one entry", rendered
         )
 
+    def test_doc_contract_rejects_inline_comment_title(self):
+        checker = load_doc_checker_module()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            add_tracked_file(
+                root,
+                "docs/engineer/example/TRD.md",
+                formal_doc_frontmatter("TRD").replace(
+                    'title: "Example"\n', "title: # absent\n"
+                ),
+            )
+            errors = checker.validate_all(root)
+
+        rendered = "\n".join(error.render(root) for error in errors)
+        self.assertIn("frontmatter 'title' must be non-empty", rendered)
+
     def test_doc_contract_archive_segment_pm_doc_still_requires_frontmatter(self):
         checker = load_doc_checker_module()
 
@@ -146,6 +164,32 @@ class DocContractTests(unittest.TestCase):
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("must have non-empty 'changes'", rendered)
 
+    def test_doc_contract_rejects_wrapped_changelog(self):
+        checker = load_doc_checker_module()
+        content = (
+            "---\nchangelog:\n  wrapper:\n"
+            "    - version: 0.1.0\n"
+            "      date: 2026-07-06\n"
+            "      changes: Initial version\n---\n"
+        )
+        errors = []
+
+        checker.validate_changelog_entries(Path("TRD.md"), content, errors)
+
+        self.assertIn("must be a flat list", errors[0].message)
+
+    def test_doc_contract_rejects_inline_comment_changelog_value(self):
+        checker = load_doc_checker_module()
+        content = (
+            "---\nchangelog:\n  - version: 0.1.0\n"
+            "    date: 2026-07-06\n    changes: # absent\n---\n"
+        )
+        errors = []
+
+        checker.validate_changelog_entries(Path("TRD.md"), content, errors)
+
+        self.assertIn("must have non-empty 'changes'", errors[0].message)
+
     def test_doc_contract_rejects_quoted_whitespace_changelog_value(self):
         checker = load_doc_checker_module()
 
@@ -185,6 +229,12 @@ class DocContractTests(unittest.TestCase):
 
         rendered = "\n".join(error.render(root) for error in errors)
         self.assertIn("frontmatter 'child_features' must be non-empty for PRDs", rendered)
+
+    def test_doc_contract_rejects_spaced_empty_child_features_collection(self):
+        checker = load_doc_checker_module()
+        content = "---\nchild_features: [ ]\n---\n"
+
+        self.assertFalse(checker.frontmatter_field_has_value(content, "child_features"))
 
     def test_doc_contract_registered_exemption_skips_extended_fields(self):
         checker = load_doc_checker_module()

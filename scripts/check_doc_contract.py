@@ -50,8 +50,8 @@ FORMAL_DOC_FIELD_EXEMPTIONS: dict[str, str] = {
         " output-conventions enum and its version is a non-SemVer draft (#331)"
     ),
 }
-CHANGELOG_ENTRY_START_RE = re.compile(r"^\s*-\s+version:\s*(.*?)\s*$")
-CHANGELOG_ENTRY_FIELD_RE = re.compile(r"^\s+(date|changes):\s*(.*?)\s*$")
+CHANGELOG_ENTRY_START_RE = re.compile(r"^  - version:\s*(.*?)\s*$")
+CHANGELOG_ENTRY_FIELD_RE = re.compile(r"^    (date|changes):\s*(.*?)\s*$")
 FORMAL_DOC_PREFIXES = ("docs/pm/", "docs/engineer/")
 NON_FORMAL_DOC_NAMES = {"README.md", "README_zh.md", "CHANGELOG.md"}
 
@@ -108,6 +108,13 @@ def is_formal_pm_or_engineer_document(rel: str) -> bool:
     return not is_implementation_plan_artifact_path(rel)
 
 
+def normalize_frontmatter_scalar(value: str) -> str:
+    normalized = value.strip()
+    if not normalized.startswith(("'", '"')):
+        normalized = re.split(r"(?:^|\s+)#", normalized, maxsplit=1)[0]
+    return normalized.strip("'\"").strip()
+
+
 def validate_changelog_entries(
     path: Path,
     content: str,
@@ -122,16 +129,23 @@ def validate_changelog_entries(
     entries: list[dict[str, str]] = []
     current: dict[str, str] | None = None
     for line in block.splitlines():
+        if not line.strip():
+            continue
         start = CHANGELOG_ENTRY_START_RE.match(line)
         if start is not None:
             current = {"version": start.group(1)}
             entries.append(current)
             continue
-        if current is None:
-            continue
         field = CHANGELOG_ENTRY_FIELD_RE.match(line)
-        if field is not None:
+        if field is not None and current is not None:
             current[field.group(1)] = field.group(2)
+            continue
+        add_error(
+            errors,
+            path,
+            "frontmatter 'changelog' must be a flat list of '- version:' entries",
+        )
+        return
     if not entries:
         add_error(
             errors,
@@ -141,7 +155,8 @@ def validate_changelog_entries(
         return
     for entry in entries:
         for key in ("version", "date", "changes"):
-            if not entry.get(key, "").strip().strip("'\"").strip():
+            normalized = normalize_frontmatter_scalar(entry.get(key, ""))
+            if not normalized or normalized in ("|", ">"):
                 add_error(
                     errors,
                     path,
@@ -163,8 +178,9 @@ def frontmatter_field_has_value(content: str, field: str) -> bool:
         if key.strip() != field:
             continue
         if value.strip():
-            inline = value.strip().strip("'\"")
-            return bool(inline) and inline.lower() not in ("[]", "{}", "~", "null")
+            inline = normalize_frontmatter_scalar(value)
+            compact = re.sub(r"\s+", "", inline).lower()
+            return bool(inline) and compact not in ("[]", "{}", "~", "null")
         for child in lines[index + 1 :]:
             if child.strip() and not child.startswith((" ", "\t", "-")):
                 break
@@ -190,19 +206,25 @@ def validate_required_formal_frontmatter(
         parsed = parse_markdown_frontmatter(path, content, errors)
         if parsed is None:
             continue
-        metadata, _ = parsed
+        raw_metadata: dict[str, str] = {}
+        for line in markdown_frontmatter_block(content).splitlines():
+            if line.startswith((" ", "\t", "-")) or ":" not in line:
+                continue
+            key, value = line.split(":", 1)
+            if key.strip():
+                raw_metadata[key.strip()] = value.strip()
 
         for field in REQUIRED_FORMAL_FRONTMATTER_FIELDS:
-            value = metadata.get(field)
-            if not isinstance(value, str) or not value.strip():
+            value = raw_metadata.get(field)
+            if value is None or not normalize_frontmatter_scalar(value):
                 add_error(errors, path, f"frontmatter {field!r} must be non-empty")
 
         if rel in FORMAL_DOC_FIELD_EXEMPTIONS:
             continue
 
         for field in EXTENDED_FORMAL_FRONTMATTER_FIELDS:
-            value = metadata.get(field)
-            if not isinstance(value, str) or not value.strip():
+            value = raw_metadata.get(field)
+            if value is None or not normalize_frontmatter_scalar(value):
                 add_error(errors, path, f"frontmatter {field!r} must be non-empty")
 
         validate_changelog_entries(path, content, errors)
