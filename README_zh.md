@@ -35,6 +35,8 @@
 
 > [!IMPORTANT]
 > **适用模型范围**：本仓库的 skill 流程适合 `gpt-5.6-sol`、`opus-4.8` 及以下模型配合 harness 使用。随着 GPT-6-Astra、Fable-5.1 等模型发布，这套流程对它们已过于冗杂，反而限制其能力释放。
+>
+> 使用 GPT-6-Astra、Fable-5.1 等高自主能力模型时，可选择精简版 [H-Level Model Skills](https://github.com/Neplich/h-level-model-skills)：保留 8 个 Skill，集中提供可复用资产、规格模板和专业约定。
 
 ## 快速开始
 
