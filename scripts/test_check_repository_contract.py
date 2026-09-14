@@ -196,7 +196,7 @@ def test_kimi_plugin_session_start_skill_glob_metachar_rejected(tmp_path: Path) 
 
 
 def test_each_skill_accepts_direct_user_trigger_without_role_metadata(tmp_path: Path) -> None:
-    for name in ("pm-agent", "debugger", "visual-design"):
+    for name in ("pm-agent", "debugger", "manual-gen"):
         skill = tmp_path / "agents/example/skills" / name
         skill.mkdir(parents=True)
         (skill / "SKILL.md").write_text(

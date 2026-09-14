@@ -15,7 +15,7 @@ def test_generate_creates_all_expected_files(tmp_path: Path) -> None:
 
     generator.generate(tmp_path)
 
-    assert len(generator.expected_files(tmp_path)) == 24
+    assert len(generator.expected_files(tmp_path)) == 20
     assert generator.freshness_errors(tmp_path) == []
 
 

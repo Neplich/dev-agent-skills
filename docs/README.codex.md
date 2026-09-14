@@ -1,6 +1,6 @@
 # Dev Agent Skills for Codex
 
-通过 Codex 的原生 Skill 发现机制使用本仓库的 40 个能力。安装器采用隐藏镜像和根部相对软链，保留专业资料之间的引用，并为每个 Skill 提供稳定入口。
+通过 Codex 的原生 Skill 发现机制使用本仓库的 37 个能力。安装器采用隐藏镜像和根部相对软链，保留专业资料之间的引用，并为每个 Skill 提供稳定入口。
 
 [完整安装步骤](../.codex/INSTALL.md) · [仓库架构](./architecture.md) · [维护指南](./cookbook/maintain-skills.md)
 
@@ -14,7 +14,7 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 
 安装范围沿用用户指定或上下文中已有的选择。个人级安装适合跨项目使用，项目级安装适合一个仓库。
 
-默认安装包括全部 40 个 Skill，以及七个帮助选择方法的角色导航：
+默认安装包括全部 37 个 Skill，以及六个帮助选择方法的角色导航：
 
 | 导航 | 主要内容 |
 | --- | --- |
@@ -22,11 +22,10 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 | `engineer-agent` | 代码分析、技术设计、实现、测试、调试、交付 |
 | `qa-agent` | 行为验收、探索测试、缺陷分析、回归 |
 | `devops-agent` | 部署、CI/CD、配置审计、故障手册 |
-| `designer-agent` | 用户旅程、布局、交互、视觉系统 |
 | `security-agent` | 应用安全、权限、依赖、隐私数据流 |
 | `docs-agent` | 文档站、事实同步、图文手册、发布说明、审查 |
 
-直接描述目标或点名专项 Skill，例如 `debugger`、`visual-design`、`github-reader`。助手按任务选择资料，在已有授权内持续推进。
+直接描述目标或点名专项 Skill，例如 `debugger`、`test-writer`、`github-reader`。助手按任务选择资料，在已有授权内持续推进。
 
 ## 镜像与发现原理
 
@@ -117,7 +116,7 @@ python3 "$CLONE_ROOT/scripts/install_codex_skills.py" --target "$SKILL_ROOT"
 - 解析到 `<target>/.dev-agent-skills/` 内的软链。
 - 解析到带有本仓库 marketplace 标识的 checkout 内的旧软链。
 
-旧 checkout 软链会迁移到隐藏镜像。可证明归属的 `<target>/dev-agent-skills` 聚合入口也会按安装器规则迁移。其他目录与软链保持原状，并在结果中说明跳过或冲突。
+旧 checkout 软链会迁移到隐藏镜像。升级时，已从注册表移除的 Skill 对应的镜像软链会自动清理。可证明归属的 `<target>/dev-agent-skills` 聚合入口也会按安装器规则迁移。其他目录与软链保持原状，并在结果中说明跳过或冲突。
 
 已有真实隐藏镜像使用 `.dev-agent-skills-mirror.json` 标记归属。需要重建已归属的镜像和入口时，可使用：
 

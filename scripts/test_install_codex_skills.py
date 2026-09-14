@@ -627,7 +627,6 @@ def test_generated_shared_contracts_are_reachable_in_mirror(
     tmp_path: Path,
 ) -> None:
     expected = {
-        "designer": "designer-agent",
         "engineer": "engineer-agent",
         "qa": "qa-agent",
         "devops": "devops-agent",
@@ -675,3 +674,28 @@ def is_under(link: Path, parent: Path) -> bool:
     except ValueError:
         return False
     return True
+
+
+def test_upgrade_removes_retired_designer_plugin_entries(tmp_path: Path) -> None:
+    target = tmp_path / "skills"
+    initial = run_installer(target)
+    assert initial.returncode == 0, initial.stderr
+
+    retired = ("designer-agent", "ui-ux-design", "visual-design")
+    for name in retired:
+        old_source = target / MIRROR_DIR / "agents/designer/skills" / name
+        old_source.mkdir(parents=True)
+        (old_source / "SKILL.md").write_text(f"---\nname: {name}\n---\n")
+        (target / name).symlink_to(
+            Path(MIRROR_DIR) / "agents/designer/skills" / name,
+            target_is_directory=True,
+        )
+
+    upgraded = run_installer(target)
+    assert upgraded.returncode == 0, upgraded.stderr
+    for name in retired:
+        assert not (target / name).is_symlink()
+        assert not (target / name).exists()
+    assert not (target / MIRROR_DIR / "agents/designer").exists()
+    for _, source in marketplace_skill_sources():
+        assert (target / source.name / "SKILL.md").is_file()

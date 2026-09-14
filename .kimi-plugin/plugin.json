@@ -1,7 +1,7 @@
 {
   "name": "dev-agent-skills",
   "version": "0.6.6",
-  "description": "On-demand professional capabilities for product, engineering, QA, operations, design, security, and documentation. The assistant combines relevant knowledge to complete the user-authorized task.",
+  "description": "On-demand professional capabilities for product, engineering, QA, operations, security, and documentation. The assistant combines relevant knowledge to complete the user-authorized task.",
   "keywords": [
     "agent-skills",
     "knowledge-library",
@@ -10,13 +10,12 @@
   "homepage": "https://github.com/Neplich/dev-agent-skills",
   "interface": {
     "displayName": "Dev Agent Skills",
-    "shortDescription": "On-demand product, engineering, QA, operations, design, security, and documentation knowledge",
+    "shortDescription": "On-demand product, engineering, QA, operations, security, and documentation knowledge",
     "developerName": "Neplich",
     "websiteURL": "https://github.com/Neplich/dev-agent-skills"
   },
   "skills": [
     "./agents/product_manager/skills/",
-    "./agents/designer/skills/",
     "./agents/engineer/skills/",
     "./agents/qa/skills/",
     "./agents/devops/skills/",

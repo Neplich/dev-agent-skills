@@ -1,9 +1,0 @@
-<!-- GENERATED FILE. Source: agents/product_manager/skills/idea-to-spec/_internal/_shared/consumption-contract.md. -->
-
-# 精准阅读参考
-
-围绕任务定位代码、测试和资料。存在 `docs/site/standards/change-map.yaml` 时，可用代码路径反查相关页面，阅读必要索引和命中文档，再回到实现验证关键判断。也可通过符号、路由、配置和测试直接探索。
-
-文档帮助发现入口；当前运行行为以可验证的实现、配置和执行证据为依据。核对 `related_code` 与 `last_verified_version`，将旧页面视为需要复查的线索。区分源事实、推断与缺口，引用支持结论的具体来源。
-
-正式页面按当前状态维护。发布事实可参考站内 Release Notes、版本记录和 GitHub 标签，并核对相同版本范围。
