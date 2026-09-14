@@ -1,110 +1,23 @@
-# Designer Agent
+# Designer Skills
 
-`designer-agent` is the design-role dispatcher skill. It routes UX flows, page structure, information architecture, wireframes, reference-style analysis, and visual system requests to the right design specialist skill. It produces design deliverables only and does not implement code.
+This plugin provides 3 skills for user experience, information architecture and visual systems. Every skill can be used directly; `designer-agent` helps select relevant methods for a task.
 
-> [!NOTE]
-> Repository architecture and document ownership: [Architecture](../../docs/architecture.md) and [Documentation Governance](../../docs/AGENTS.md).
->
-> Other languages: [中文](./README_zh.md)
-
-> [!IMPORTANT]
-> Designer Agent may read PM specs and design context, but reading those documents only authorizes design work. It must stop at handoff and let `engineer-agent` implement the design.
-
-## Quick Facts
-
-| Item | Details |
-| --- | --- |
-| Entry skill | `designer-agent` |
-| Specialist skills | 2 |
-| Main inputs | Confirmed `docs/pm/{feature_path}/PRD.md`, `DECISIONS.md`, optional `docs/engineer/{feature_path}/TRD.md`, reference sites, brand cues |
-| Main outputs | `docs/design/{feature_path}/ui-ux-spec.md`, `visual-system.md` |
-| Core boundary | Design documents only; no code, tests, scripts, or deployment config |
+The assistant combines capabilities to complete the user's goal through analysis, implementation, validation and delivery. Authorization carries through the task, and documents and references are selected as needed.
 
 ## Skills
 
-| Skill | When to use | Main output |
-| --- | --- | --- |
-| `designer-agent` | Design request routing | Specialist selection and execution path |
-| `ui-ux-design` | UX flows, information architecture, page structure, wireframes, interaction states, reference-site analysis | `ui-ux-spec.md` |
-| `visual-design` | Visual systems, product-type reasoning, style direction, color, typography, component rules, UX quality rules, anti-patterns, copy tone | `visual-system.md` |
+| Skill | Purpose |
+| --- | --- |
+| [designer-agent](./skills/designer-agent/SKILL.md) | Design capability guide |
+| [ui-ux-design](./skills/ui-ux-design/SKILL.md) | User flows, information architecture and wireframes |
+| [visual-design](./skills/visual-design/SKILL.md) | Visual systems and interface specifications |
 
-## Routing Rules
-
-- UX flows, page structure, information architecture, wireframes, interaction rules: use `ui-ux-design`
-- Visual style, design system, color, typography, component rules, copy tone: use `visual-design`
-- Engineer handoff for UI maintenance or frontend-update design gaps: update the relevant design deliverables, then hand back to `engineer-agent`
-- Ambiguous but clearly design-oriented requests: default to `ui-ux-design`
-- Full design loop: run `ui-ux-design` first, then `visual-design`
-
-## Design Flow
-
-```mermaid
-flowchart LR
-    PM["PM docs"] --> Designer["designer-agent"]
-    Designer --> UX["ui-ux-design"]
-    UX --> Visual["visual-design"]
-    Visual --> Handoff["handoff to engineer-agent"]
-```
-
-## Output Directory
+## Installation and Use
 
 ```text
-docs/
-    └── design/
-    └── {feature_path}/
-        ├── ui-ux-spec.md
-        └── visual-system.md
+/plugin install designer-agent@dev-agent-skills
 ```
 
-Designer consumes `feature_path` from PM/Engineer handoff. If the path or parent
-feature is unclear, route back to PM alignment instead of creating a synonym
-top-level design directory.
+The [Codex guide](../../docs/README.codex.md) installs all skills. Describe the goal or name a skill directly.
 
-## Visual Design References
-
-`visual-design` uses reference material managed under this repository's own path:
-
-```text
-agents/designer/skills/visual-design/references/
-├── design-system-data/          # CSV design database and design-system lookup scripts
-├── design-system-framework.md   # Design system output model and boundary
-├── product-patterns.md          # Product type to design pattern mapping
-├── style-patterns.md            # Style direction rules
-├── color-palettes.md            # Product-aware color recommendations
-├── typography-pairings.md       # Font pairing recommendations
-├── ux-quality-rules.md          # Visual UX quality checks
-└── anti-patterns.md             # General and scenario-specific anti-patterns
-```
-
-Design system data:
-
-- Local path: `agents/designer/skills/visual-design/references/design-system-data/`
-- Data coverage: product types, style patterns, colors, typography, UX guidelines, charts, landing patterns, icons, and stack guidelines
-- Usage boundary: design reasoning and design-system documentation only
-
-The data design follows ui ux pro max's organization model and is maintained under this repository's own paths and documentation.
-
-These references are only used for design reasoning. Even if raw data contains stack/code fields, final design documents must not include Tailwind config, CSS variable implementation, React/Vue/SwiftUI components, install commands, or engineering task lists.
-
-## Collaboration Boundary
-
-- Designer produces design documents, Mermaid flows, and ASCII wireframes.
-- Designer does not modify project code, generate tests, or create deployment config.
-- Engineer is the only role that turns PM/Designer documents into code, tests, and delivery artifacts.
-- Engineer-sourced UI maintenance requests remain design-only in Designer; implementation returns to Engineer after the design handoff.
-
-## Collaboration Dependencies
-
-Designer Agent hands off to peer agents that are packaged and installed as separate plugins:
-
-- `pm-agent` for scope and feature-path clarification
-- `engineer-agent` for implementation after design handoff
-
-If a target agent is not installed, the corresponding handoff stage is unavailable; Designer Agent reports the missing stage and the recommended plugin and marks that stage blocked instead of doing the work itself.
-
-## Local Maintenance
-
-```bash
-# Install one Designer skill into the current project runtime
-npx skills add ./agents/designer/skills/visual-design
-```
+[Architecture](../../docs/architecture.md) · [Documentation](../../docs/AGENTS.md) · [中文](./README_zh.md)

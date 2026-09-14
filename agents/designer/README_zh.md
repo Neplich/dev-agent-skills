@@ -1,108 +1,23 @@
-# Designer Agent
+# 设计能力
 
-`designer-agent` 是设计角色的 dispatcher skill，负责把 UX 流程、页面结构、信息架构、线框、参考风格分析和视觉系统请求路由到合适的设计 specialist skill。它只产出设计交付物，不进入工程实现。
+本插件包含 3 个 Skill，提供用户体验、信息架构与视觉系统。每个 Skill 均可直接使用；`designer-agent` 帮助按任务选择相关方法。
 
-> [!NOTE]
-> 仓库架构与文档归属见 [Architecture](../../docs/architecture.md) 和 [Documentation Governance](../../docs/AGENTS.md)。
->
-> 其他语言：[English](./README.md)
+助手根据用户目标组合这些能力，贯穿分析、实现、验证与交付。已有授权随任务延续，文档与专业参考按实际需要使用。
 
-> [!IMPORTANT]
-> Designer Agent 可以读取 PM spec 和设计上下文，但读取这些文档只意味着继续设计，不代表可以开始写代码。设计完成后必须停在 handoff，由 `engineer-agent` 接手实现。
+## 能力目录
 
-## 快速信息
-
-| 项目 | 内容 |
+| Skill | 用途 |
 | --- | --- |
-| 入口 skill | `designer-agent` |
-| Specialist skills | 2 个 |
-| 主要输入 | 已确认的 `docs/pm/{feature_path}/PRD.md`、`DECISIONS.md`、可选 `docs/engineer/{feature_path}/TRD.md`、参考网站或品牌线索 |
-| 主要输出 | `docs/design/{feature_path}/ui-ux-spec.md`、`visual-system.md` |
-| 核心边界 | 只做设计文档，不生成代码、测试、脚本、部署配置 |
+| [designer-agent](./skills/designer-agent/SKILL.md) | 设计能力导航 |
+| [ui-ux-design](./skills/ui-ux-design/SKILL.md) | 用户流程、信息架构与线框图 |
+| [visual-design](./skills/visual-design/SKILL.md) | 视觉系统与界面规范 |
 
-## Skill 清单
-
-| Skill | 适用场景 | 主要产物 |
-| --- | --- | --- |
-| `designer-agent` | 设计请求入口与路由 | 下游 skill 选择与执行路径 |
-| `ui-ux-design` | UX 流程、信息架构、页面结构、线框、交互状态、参考网站分析 | `ui-ux-spec.md` |
-| `visual-design` | 视觉系统、产品类型推理、风格方向、配色、字体、组件规范、UX 质量规则、反模式、文案语气 | `visual-system.md` |
-
-## 路由规则
-
-- UX 流程、页面结构、信息架构、线框、交互规范：使用 `ui-ux-design`
-- 视觉风格、设计系统、颜色、字体、组件规范、文案语气：使用 `visual-design`
-- 来自 Engineer 的 UI 维护或前端更新设计缺口：只更新相关设计交付物，完成后 handoff 回 `engineer-agent`
-- 需求模糊但明显是设计问题：默认先走 `ui-ux-design`
-- 完整设计闭环：先 `ui-ux-design`，再 `visual-design`
-
-## 设计流程
-
-```mermaid
-flowchart LR
-    PM["PM docs"] --> Designer["designer-agent"]
-    Designer --> UX["ui-ux-design"]
-    UX --> Visual["visual-design"]
-    Visual --> Handoff["handoff to engineer-agent"]
-```
-
-## 输出目录
+## 安装与使用
 
 ```text
-docs/
-    └── design/
-    └── {feature_path}/
-        ├── ui-ux-spec.md
-        └── visual-system.md
+/plugin install designer-agent@dev-agent-skills
 ```
 
-Designer 只消费 PM/Engineer handoff 中已确认的 `feature_path`。路径或父功能不清时，回到 PM 对齐，不创建同义顶层设计目录。
+也可按 [Codex 安装指南](../../docs/README.codex.md) 安装全部能力。直接描述目标，或点名所需 Skill 即可。
 
-## Visual Design References
-
-`visual-design` 的设计系统能力基于本仓库自有路径管理的 reference 资料：
-
-```text
-agents/designer/skills/visual-design/references/
-├── design-system-data/          # CSV 设计数据库与 design-system 查询脚本
-├── design-system-framework.md   # 设计系统输出模型和边界
-├── product-patterns.md          # 产品类型到设计模式的映射
-├── style-patterns.md            # 风格方向选择规则
-├── color-palettes.md            # 产品感知配色建议
-├── typography-pairings.md       # 字体组合建议
-├── ux-quality-rules.md          # 视觉 UX 质量检查
-└── anti-patterns.md             # 通用与场景反模式
-```
-
-设计系统数据：
-
-- 本地路径：`agents/designer/skills/visual-design/references/design-system-data/`
-- 数据范围：产品类型、风格模式、颜色、字体、UX guidelines、charts、landing patterns、icons、stack guidelines
-- 使用边界：只用于设计推理和设计系统文档
-
-该数据设计参考了 ui ux pro max 的组织方式，并按本仓库自己的路径和文档结构维护。
-
-这些 references 只用于设计推理。即使原始数据中存在 stack/code 字段，最终设计文档也不能包含 Tailwind config、CSS 变量落地、React/Vue/SwiftUI 组件、安装命令或工程任务清单。
-
-## 协作边界
-
-- Designer 输出设计文档、Mermaid 流程和 ASCII 线框。
-- Designer 不修改项目代码，不生成测试，不创建部署配置。
-- Engineer 是唯一负责把 PM/Designer 文档转化为代码、测试和交付产物的角色。
-- 来自 Engineer 的 UI 维护请求在 Designer 内仍然只做设计；设计 handoff 后由 Engineer 继续实现。
-
-## 协作依赖
-
-Designer Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
-
-- `pm-agent` 用于范围与 feature-path 澄清
-- `engineer-agent` 用于设计 handoff 后的实现
-
-如果所需目标不可用，Designer Agent 会识别缺失的阶段和插件，将该阶段标记为 blocked，并且不会执行缺失角色的工作。
-
-## 本地维护
-
-```bash
-# 安装某个 Designer skill 到当前项目运行时
-npx skills add ./agents/designer/skills/visual-design
-```
+[仓库架构](../../docs/architecture.md) · [文档说明](../../docs/AGENTS.md) · [English](./README.md)

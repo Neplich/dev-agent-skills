@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate plugin-local copies of cross-role contracts."""
+"""Generate plugin-local copies of optional shared references."""
 
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ def generated_content(name: str, root: Path = REPO_ROOT) -> str:
     relative_source = source.relative_to(root).as_posix()
     body = source.read_text(encoding="utf-8")
     return (
-        "<!-- GENERATED FILE: DO NOT EDIT. "
+        "<!-- GENERATED FILE. "
         f"Source: {relative_source}. -->\n\n{body}"
     )
 
@@ -102,11 +102,11 @@ def main() -> int:
             for error in errors:
                 print(f"ERROR: {error}")
             return 1
-        print("Shared contract copies are fresh.")
+        print("Shared reference copies are fresh.")
         return 0
 
     generate()
-    print(f"Generated {len(expected_files())} shared contract copies.")
+    print(f"Generated {len(expected_files())} shared reference copies.")
     return 0
 
 

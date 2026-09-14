@@ -4,13 +4,13 @@
     "name": "Neplich"
   },
   "metadata": {
-    "description": "PM-first agent skill marketplace with one public pm-agent entry, reader-facing human writing composition, and downstream PM-orchestrated engineering, QA, DevOps, design, security, and documentation capabilities",
+    "description": "On-demand professional capabilities for product, engineering, QA, operations, design, security, and documentation. The assistant combines relevant knowledge to complete the user-authorized task.",
     "version": "0.6.6"
   },
   "plugins": [
     {
       "name": "pm-agent",
-      "description": "Default entry plugin for product and engineering R&D requests when no other agent or skill is named. Explicitly naming pm-agent selects it even when a downstream capability is also named; naming another role agent or skill without pm-agent excludes pm-agent and leaves that capability to enforce its own gate. Routes product ideas, features, changes, bugs, implementation, testing, design, deployment, security, formal docs, delivery, planning, and repository status work, with human-writing composition for reader-facing documents.",
+      "description": "Product discovery, specifications, feature inventories, research, roadmaps, changelogs, release preparation, and GitHub status. Select these capabilities directly for the requested product task.",
       "source": "./agents/product_manager",
       "strict": true,
       "skills": [
@@ -27,7 +27,7 @@
     },
     {
       "name": "engineer-agent",
-      "description": "Downstream engineering capability invoked after pm-agent handoff for confirmed codebase analysis, TRDs, implementation, tests, debugging, and delivery. Skills remain available for PM-orchestrated execution, not as standalone starting points.",
+      "description": "Repository analysis, technical design, implementation, debugging, tests, and Git delivery. Apply these capabilities directly to the requested engineering outcome.",
       "source": "./agents/engineer",
       "strict": true,
       "skills": [
@@ -42,7 +42,7 @@
     },
     {
       "name": "qa-agent",
-      "description": "Downstream QA capability invoked after pm-agent handoff for confirmed acceptance, exploratory testing, bug analysis, and regression verification. Requirement or implementation gaps return through the PM-orchestrated handoff path.",
+      "description": "Exploratory testing, behavior-based acceptance, defect analysis, and regression verification using reproducible evidence and reusable test cases.",
       "source": "./agents/qa",
       "strict": true,
       "skills": [
@@ -55,7 +55,7 @@
     },
     {
       "name": "devops-agent",
-      "description": "Downstream DevOps capability invoked after pm-agent handoff for confirmed deployment planning, CI/CD automation, environment audits, release readiness, rollback, and runbook preparation.",
+      "description": "Deployment design, CI/CD configuration, environment audits, and incident runbooks grounded in the actual application and target environment.",
       "source": "./agents/devops",
       "strict": true,
       "skills": [
@@ -68,7 +68,7 @@
     },
     {
       "name": "designer-agent",
-      "description": "Downstream design capability invoked after pm-agent handoff for confirmed UX flows, information architecture, wireframes, reference-pattern analysis, and reference-backed visual system work.",
+      "description": "User journeys, interaction design, responsive layouts, and visual systems supported by reusable design references and data.",
       "source": "./agents/designer",
       "strict": true,
       "skills": [
@@ -79,7 +79,7 @@
     },
     {
       "name": "security-agent",
-      "description": "Downstream security capability invoked after pm-agent handoff for confirmed AppSec, auth/authz, dependency risk, privacy, and data-flow reviews, with remediation routed through the PM handoff path.",
+      "description": "Application security, authorization, dependency risk, and privacy reviews using code evidence, reachability analysis, and actionable findings.",
       "source": "./agents/security",
       "strict": true,
       "skills": [
@@ -92,7 +92,7 @@
     },
     {
       "name": "docs-agent",
-      "description": "Downstream documentation capability invoked after pm-agent handoff for confirmed formal documentation bootstrap, synchronization, backfill, illustrated user operation manuals from real running interfaces, site Release Notes, and release audit.",
+      "description": "Documentation sites, product and technical documentation, illustrated manuals, release notes, and accuracy audits grounded in implemented behavior.",
       "source": "./agents/docs",
       "strict": true,
       "skills": [

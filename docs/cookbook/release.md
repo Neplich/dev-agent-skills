@@ -1,17 +1,12 @@
 # 手动发布
 
-1. 确认发布范围与目标不可变 SemVer。
-2. 把以下版本面更新为相同、不带 `v` 前缀的版本（`check_repository_contract.py`
-   逐项强制一致）：
-   - `.claude-plugin/marketplace.json` 的 `metadata.version`；
-   - 七个角色 Agent 的 `agents/{agent}/.claude-plugin/plugin.json` 的 `version`；
-   - `.kimi-plugin/plugin.json` 的 `version`。
-3. 确认 `docs/changelog/changelog-v{version}.md` 存在，并被根 `CHANGELOG.md` 索引。
-4. 运行生成契约、repository/doc contract、安装与受影响测试。
-5. 创建 release PR 并等待全部 CI 通过；不要新增 Release CI 或绕过 tag ruleset。
-6. PR 获批合并后，按手动清单创建带 `v` 前缀的 tag。
-7. 通过 `pm-agent -> github-release-gen` 创建 GitHub Release draft；发布仍需维护者明确
-   批准。
+发布使用维护者确认的范围与不可变 SemVer。仓库通过 PR 完成版本准备，取得明确授权后合并和发布。
 
-生产镜像若在范围内，使用不可变 SemVer tag，并在发布前验证同时包含
-`linux/amd64` 与 `linux/arm64`。
+1. 将 `.claude-plugin/marketplace.json` 的 `metadata.version`、七个 `agents/*/.claude-plugin/plugin.json` 的 `version` 和 `.kimi-plugin/plugin.json` 的 `version` 更新为相同的无 `v` 前缀版本。
+2. 编写 `docs/changelog/changelog-v{version}.md`，并更新根 `CHANGELOG.md` 索引。记录可核实的能力变化、修复和升级操作。
+3. 运行共享参考检查、仓库检查、文档检查、安装测试与受影响的行为测试。
+4. 创建 release PR，确认三个 CI 检查通过，按维护者授权合并。
+5. 为已核实的发布提交创建带 `v` 前缀的 SemVer tag。
+6. 准备 GitHub Release 草稿，可直接使用 `github-release-gen`；核对版本、tag、正文和升级说明后，按维护者明确授权发布。
+
+现有 tag ruleset 与手动发布方式共同管理发布权限。

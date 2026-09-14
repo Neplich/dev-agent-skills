@@ -1,149 +1,23 @@
-# TRD (Technical Requirements Document) Schema
+# 技术规格参考
 
-> Legacy PM-side validation schema referenced by `trd-validator`. New TRD
-> generation is owned by `engineer-agent:trd-gen`.
-
-## Required Sections
-
-### 1. Document Metadata
+根据任务和读者需要选择以下内容，沿用宿主实际工具读取的格式。
 
 ```yaml
-title: <project name> — Technical Requirements Document
-version: <SemVer>
-status: Draft | In Review | Approved | Superseded
-author: <generation requester display name + agent platform name>
-date: <YYYY-MM-DD>
-feature: <leaf feature slug>
-feature_path: <multi-level feature path>
-parent_feature: <parent feature path or "N/A">
-feature_level: <positive integer path depth>
-related_prd: docs/pm/{feature_path}/PRD.md | "N/A"
+---
+title: "文档标题"
+type: TRD
+status: Draft
+---
 ```
 
-Feature-scoped PM-side TRD validation is legacy, but when used it must mirror
-the PM `feature_path` and write or validate `docs/engineer/{feature_path}/TRD.md`.
-`feature_path` is the canonical cross-role key with one or more lower
-kebab-case path segments. `feature` is the leaf slug, `parent_feature` is `N/A`
-for level 1, and `feature_level` must match the path depth. If the PRD and TRD
-paths or frontmatter disagree, return to PM/Engineer alignment instead of
-continuing with implementation.
+状态使用 `Draft`、`In Review`、`Approved`、`Superseded`、`Deprecated`。版本、作者、日期、feature_path 与关联资料按维护需要添加，见 [输出约定](../output-conventions.md)。
 
-### 2. Overview
+- 目标行为与技术约束。
+- 组件职责、控制流、数据流与真实入口。
+- 技术选择及其维护成本、兼容性和扩展影响。
+- 数据模型、索引、迁移、接口和外部依赖。
+- 权限、安全、错误、重试、超时与恢复。
+- 配置、部署、观测和性能容量。
+- 验证方案、关键用例与验收结果。
 
-- Technical summary of the solution (max 300 words)
-- Link to PRD for business context
-- **Quality**: Must reference the PRD or business requirement driving this design.
-
-### 3. Architecture Overview
-
-- High-level architecture diagram (Mermaid C4 or flowchart)
-- Component list with responsibilities
-- **Quality**: Must include at least one diagram and a component table.
-
-### 4. Technology Stack
-
-| Layer | Technology | Version | Rationale |
-|-------|-----------|---------|-----------|
-| Frontend | ... | ... | ... |
-| Backend | ... | ... | ... |
-| Database | ... | ... | ... |
-| Infrastructure | ... | ... | ... |
-
-- **Quality**: Each choice must have a rationale.
-
-### 5. Data Model
-
-- Entity-Relationship diagram (Mermaid ER)
-- Table/collection definitions with field types
-- Index strategy
-- Data migration plan (if applicable)
-- **Quality**: At least ER diagram + key entity definitions.
-
-### 6. API Design
-
-| Endpoint | Method | Auth | Request Schema | Response Schema | Error Codes |
-|----------|--------|------|---------------|-----------------|-------------|
-
-- Versioning strategy
-- Rate limiting policy
-- **Quality**: All endpoints from PRD must be covered.
-
-### 7. System Interactions
-
-- Sequence diagrams for key flows (Mermaid)
-- External service integration details
-- Event/message contracts (if event-driven)
-- **Quality**: At least 1 sequence diagram for the primary flow.
-
-### 8. Non-Functional Requirements (Quantified)
-
-| Category | Metric | Target | Measurement Method |
-|----------|--------|--------|--------------------|
-| Latency | p95 response time | < 200ms | APM dashboard |
-| Throughput | RPS | 1000 | Load test |
-| Availability | Uptime | 99.9% | Monitoring |
-| Storage | Growth rate | 10GB/month | DB metrics |
-
-- **Quality**: Targets must be numeric and measurable.
-
-### 9. Security Design
-
-- Authentication & authorization model
-- Data encryption (at rest / in transit)
-- Input validation strategy
-- Threat model (STRIDE or equivalent)
-- **Quality**: Must address auth, encryption, and at least one threat.
-
-### 10. Deployment Architecture
-
-- Environment topology (dev/staging/prod)
-- CI/CD pipeline overview
-- Rollback strategy
-- Infrastructure as Code references
-- **Quality**: Must describe at least prod deployment and rollback.
-
-### 11. Monitoring & Observability
-
-- Logging strategy (structured logs, log levels)
-- Metrics & dashboards
-- Alerting rules
-- Distributed tracing
-
-### 12. Testing Strategy
-
-| Level | Scope | Tool | Coverage Target |
-|-------|-------|------|-----------------|
-| Unit | Business logic | Jest/pytest | > 80% |
-| Integration | API contracts | Supertest | All endpoints |
-| E2E | Critical paths | Playwright | Top 5 flows |
-| Performance | Load/stress | k6 | NFR targets |
-
-### 13. Risks & Technical Debt
-
-| Risk/Debt | Impact | Mitigation | Timeline |
-|-----------|--------|------------|----------|
-
-### 14. Open Technical Questions
-
-| # | Question | Owner | Deadline |
-|---|----------|-------|----------|
-
-### 15. Appendix (Optional)
-
-- Glossary, ADR references, spike findings
-
-## Section Completeness Weights
-
-| Section | Weight |
-|---------|--------|
-| Overview | 5% |
-| Architecture Overview | 15% |
-| Technology Stack | 10% |
-| Data Model | 10% |
-| API Design | 15% |
-| System Interactions | 10% |
-| NFR (Quantified) | 10% |
-| Security Design | 10% |
-| Deployment Architecture | 5% |
-| Testing Strategy | 5% |
-| Risks & Technical Debt | 5% |
+正文以当前事实或明确目标为依据，关键声明链接可核对来源。

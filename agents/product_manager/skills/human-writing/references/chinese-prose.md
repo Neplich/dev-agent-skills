@@ -1,78 +1,13 @@
-# Natural Chinese Prose
+# 中文表达
 
-Apply these rules to Chinese prose. They describe useful writing actions, not a
-universal list of forbidden words or punctuation.
-
-## Put Meaning Before Style
-
-Identify what each sentence contributes: a fact, action, result, reason,
-warning, distinction, or recovery path. Delete sentences that contribute none.
-If the meaning is uncertain, return to the evidence instead of polishing it.
-
-Natural does not mean casual. A manual can be plain, a PRD explicit, a TRD
-technical, and a runbook terse. Match the reader and task.
-
-## Show the Actor and Action
-
-Let readers know who does what before adding long conditions or background.
-
-Prefer:
+用常用词和准确术语说明谁做什么、结果如何。先写主要事实，再补充会影响理解的条件。
 
 > 管理员启用单点登录后，新成员可以使用公司账号登录。
 
-Avoid:
+动作使用直接动词，例如“创建页面”“更新配置”。每段完成一项解释，把前置条件放在操作之前，将结果和恢复方式放在相关步骤附近。
 
-> 在完成对于单点登录能力的启用之后，可以实现新成员通过公司账号进行登录。
+正文描述读者现实。手册写实际操作，产品文档写能力和边界，技术文档写结构和依据，运维文档写可执行步骤。编写、采集和核对过程放在确实面向维护者的说明中。
 
-Use direct verbs: “创建页面” instead of “进行页面的创建”, “更新配置” instead
-of “完成配置的更新”. Keep nouns that are real domain terms, such as 身份验证,
-访问控制, and 事务隔离.
+术语和界面文字保持一致。比较呈现真实选项与证据，判断直接说明理由。语气根据读者和使用环境调整，篇幅根据材料密度决定。
 
-## Let Paragraphs Advance
-
-Each paragraph should complete one local job. A new paragraph must add new
-material rather than rename the previous conclusion. Put prerequisites before
-the dependent action, results beside the action, and limits where readers meet
-them. Vary length according to content, not to simulate personality.
-
-## Remove Report and Agent Tone
-
-State the reader's reality instead of the author's process.
-
-| Process-centred wording | Better action |
-| --- | --- |
-| 本节将对相关能力进行介绍 | State what the capability does |
-| 通过上述步骤即可实现 | State the actual result |
-| 需要注意的是 | Put the warning directly |
-| 对操作结果进行确认 | Name the success signal only when needed |
-| 截图中应遮盖账号信息 | Keep in authoring guidance, not the user manual |
-
-Do not begin sections with “本节介绍” or “本文将” when the heading already does
-that work.
-
-## Avoid Manufactured Insight
-
-State judgments and evidence directly. Do not invent a reader misconception and
-overturn it, announce a “deeper level” without new evidence, or use phrases such
-as “真正的问题” and “值得注意” as substitutes for reasoning. Real comparisons
-between alternatives, states, and failure modes remain valid.
-
-## Do Not Perform Humanness
-
-Do not add slang, memes, fake first-person experience, invented scenes, deliberate
-typos, synonym churn, or decorative metaphors. Human-feeling prose comes from a
-clear position, supported material, useful selection, and natural order.
-
-Repeat exact product and technical terms. Keep code, commands, fields, identifiers,
-menu labels, and quoted UI text unchanged.
-
-## Use Format Deliberately
-
-Colons, semicolons, dashes, parentheses, lists, and tables are available when
-they reduce reader effort. Use lists for scanable independent items, numbers for
-real sequences, tables for repeated fields, and prose for causality or judgment.
-If every paragraph has the same shape, revise the structure rather than swapping
-punctuation.
-
-End with the last useful result, risk, recovery step, decision, or next action.
-Do not append a summary, product praise, or broad significance by habit.
+顺序操作用编号，平行内容用列表，重复字段用表格，原因和判断用连贯段落。写到最后一个有用事实、结果或下一步即可。

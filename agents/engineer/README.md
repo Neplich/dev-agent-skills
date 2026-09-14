@@ -1,128 +1,27 @@
-# Engineer Agent
+# Engineer Skills
 
-`engineer-agent` is the engineering-role dispatcher skill. It routes codebase analysis, TRD generation, feature implementation, test coverage, debugging, and delivery requests to the right engineering specialist skill.
+This plugin provides 7 skills for code analysis, technical design, implementation, tests, debugging and delivery. Every skill can be used directly; `engineer-agent` helps select relevant methods for a task.
 
-> [!NOTE]
-> Repository architecture and document ownership: [Architecture](../../docs/architecture.md) and [Documentation Governance](../../docs/AGENTS.md).
->
-> Other languages: [中文](./README_zh.md)
-
-> [!IMPORTANT]
-> Engineer Agent should only take over after the requirement or fix target is clear. If the user is still defining product goals, or an empty repository only contains an idea, route back to `pm-agent` first.
-
-## Quick Facts
-
-| Item | Details |
-| --- | --- |
-| Entry skill | `engineer-agent` |
-| Specialist skills | 6 |
-| Main inputs | PM documents, optional design documents, existing codebase, test results, failure logs |
-| Main outputs | TRDs, implementation plans, code changes, tests, engineering docs, Git commits / PRs |
-| Collaboration | Upstream `pm-agent` / `designer-agent`; downstream `qa-agent` / `devops-agent` / `security-agent` |
+The assistant combines capabilities to complete the user's goal through analysis, implementation, validation and delivery. Authorization carries through the task, and documents and references are selected as needed.
 
 ## Skills
 
-| Skill | When to use | Main output |
-| --- | --- | --- |
-| `engineer-agent` | Engineering request routing | Specialist selection and execution path |
-| `codebase-analyzer` | Taking over an existing repo, understanding structure and constraints | Project profile, stack and architecture summary |
-| `trd-gen` | Writing technical plans, API docs, and ADRs after PRD / DECISIONS are confirmed | `docs/engineer/{feature_path}/TRD.md`, optional `API.md` / `ADR-*.md` |
-| `feature-implementor` | Implementing a confirmed TRD or design document | `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`, code changes, necessary docs |
-| `test-writer` | Adding unit, integration, or validation coverage | Test files, test execution evidence |
-| `debugger` | Read-only diagnosis or gated repair of bugs and build failures | Evidence-based diagnosis or minimal fix with regression evidence |
-| `delivery` | Branches, commits, pushes, PRs, delivery wrap-up | Git commit, PR, delivery summary |
+| Skill | Purpose |
+| --- | --- |
+| [engineer-agent](./skills/engineer-agent/SKILL.md) | Engineering capability guide |
+| [codebase-analyzer](./skills/codebase-analyzer/SKILL.md) | Code structure and dependency analysis |
+| [trd-gen](./skills/trd-gen/SKILL.md) | Technical design, APIs and architecture decisions |
+| [feature-implementor](./skills/feature-implementor/SKILL.md) | Feature implementation and fixes |
+| [test-writer](./skills/test-writer/SKILL.md) | Behavior-focused tests |
+| [debugger](./skills/debugger/SKILL.md) | Root-cause analysis and fix verification |
+| [delivery](./skills/delivery/SKILL.md) | Commits, pull requests and delivery checks |
 
-## Routing Rules
+## Installation and Use
 
-- Understand repository structure, stack, and architecture boundaries: use `codebase-analyzer`
-- Write or update the technical plan, API docs, or ADRs after PRD confirmation: use `trd-gen`
-- Implement features, behavior changes, or design handoff: use `feature-implementor`
-- Frontend code updates, UI implementation, or design-to-code: enter through Engineer; hand off to Designer only when design deliverables are missing or stale
-- Add tests, coverage, or implementation validation: use `test-writer`
-- Diagnose bugs without mutation, or repair failed logs, tests, and builds: use `debugger`; explicit read-only requests use `diagnosis_only`
-- Commit, push, open PRs, or finish delivery: use `delivery`
-
-Default rule: if the request changes production behavior, first confirm the requirement source and code context. If the request starts from a failure symptom, prefer `debugger`.
-Missing PRD/TRD does not block an explicitly read-only diagnosis, but its report must mark expected behavior unaligned and must not confirm an implementation defect. A later fix request re-enters the full repair gates.
-
-## Typical Flow
-
-```mermaid
-flowchart LR
-    PM["PM docs / decisions"] --> Engineer["engineer-agent"]
-    Design["Design docs"] --> Engineer
-    Engineer --> Analyze["codebase-analyzer"]
-    Engineer --> Align["Existing feature PRD/TRD alignment"]
-    Analyze --> TRD["trd-gen"]
-    Align --> TRD
-    TRD --> Plan["Confirm IMPLEMENTATION_PLAN"]
-    Plan --> Implement["feature-implementor"]
-    Plan -. "failure / regression" .-> Debug["debugger"]
-    Implement --> Test["test-writer"]
-    Debug --> Test
-    Implement --> QAHandOff["QA E2E handoff package"]
-    Debug --> QAHandOff
-    QAHandOff --> QA["qa-agent"]
-    Test --> Delivery["delivery"]
+```text
+/plugin install engineer-agent@dev-agent-skills
 ```
 
-## Engineering Guardrails
+The [Codex guide](../../docs/README.codex.md) installs all skills. Describe the goal or name a skill directly.
 
-Existing feature changes, bug fixes, and user-visible implementation should pass PRD/TRD alignment before engineering execution. Engineer confirms the TRD and `IMPLEMENTATION_PLAN.md` before implementation, then hands user-flow impact to QA through a QA E2E package.
-
-```mermaid
-flowchart LR
-    Align["PRD/TRD alignment"] --> TRD["TRD confirmed"]
-    TRD --> Plan["IMPLEMENTATION_PLAN confirmed"]
-    Plan --> Work["implementation / debug"]
-    Work --> QAHandOff["QA E2E handoff"]
-```
-
-## Inputs And Outputs
-
-Engineer mainly consumes:
-
-- `docs/pm/{feature_path}/PRD.md`
-- `docs/pm/{feature_path}/DECISIONS.md`
-- `docs/engineer/{feature_path}/TRD.md`
-- `docs/design/{feature_path}/ui-ux-spec.md`
-- `docs/design/{feature_path}/visual-system.md`
-
-`feature_path` is the canonical path key for feature-scoped documents. New
-Engineer documents mirror the PM path and include `feature_path`,
-`parent_feature`, and `feature_level` frontmatter. Existing single-level docs
-without those fields remain compatible as level-1 features.
-
-Engineer's primary outputs include technical plans, API / ADR docs,
-implementation plans, code, and tests:
-
-- `docs/engineer/{feature_path}/TRD.md`
-- `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
-- `docs/engineer/{feature_path}/API.md`
-- `docs/engineer/{feature_path}/ADR-*.md`
-
-## Collaboration Boundary
-
-- Engineer is the only role that turns PM/Designer documents into code, tests, and delivery artifacts.
-- Engineer owns TRD, API documentation, and ADR writing after PM scope is confirmed. `feature-implementor` consumes confirmed Engineer docs and produces implementation plans.
-- Engineer does not replace PM for requirement definition or Designer for UX/visual decisions.
-- Frontend UI implementation stays in Engineer after PRD/TRD alignment; if UI/UX or visual documents are missing or stale, Engineer hands that design gap to Designer before implementation planning.
-- QA findings return to Engineer when they are implementation defects, and to PM when they are requirement gaps.
-- DevOps and Security join only when deployment, runtime, or security review becomes the current goal.
-
-## Collaboration Dependencies
-
-Engineer Agent hands off to peer agents that are packaged and installed as separate plugins:
-
-- `pm-agent` for requirement definition, scope alignment, and PRD updates
-- `designer-agent` for missing or stale UI/UX and visual design deliverables
-- `qa-agent` for validation, `devops-agent` for deployment, and `security-agent` for security review
-
-If a target agent is not installed, the corresponding handoff stage is unavailable; Engineer Agent reports the missing stage and the recommended plugin and marks that stage blocked instead of doing the work itself.
-
-## Local Maintenance
-
-```bash
-# Install one Engineer skill into the current project runtime
-npx skills add ./agents/engineer/skills/trd-gen
-```
+[Architecture](../../docs/architecture.md) · [Documentation](../../docs/AGENTS.md) · [中文](./README_zh.md)

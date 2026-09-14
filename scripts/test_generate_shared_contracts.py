@@ -41,5 +41,5 @@ def test_generated_copy_declares_source(tmp_path: Path) -> None:
 
     content = generator.generated_content("handoff-contract.md", tmp_path)
 
-    assert content.startswith("<!-- GENERATED FILE: DO NOT EDIT.")
+    assert content.startswith("<!-- GENERATED FILE. Source:")
     assert "idea-to-spec/_internal/_shared/handoff-contract.md" in content

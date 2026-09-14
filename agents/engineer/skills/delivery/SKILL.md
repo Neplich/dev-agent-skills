@@ -1,225 +1,33 @@
 ---
 name: delivery
-description: "Deliver verified work through an intentional branch, commits, push, PR preview or creation, and CI/readback evidence. Use after engineer-agent confirms scope and verification are complete."
-visibility: internal
+description: "Prepare focused commits and pull requests, verify CI, and complete authorized Git delivery with accurate descriptions and a clean workspace."
 ---
 
 # Delivery
 
-Manage the Git workflow for delivering completed code: branch creation, meaningful commits, PR creation with proper references, and CI status verification.
-
-## Reader-Facing Writing Composition
-
-For substantial reader-facing prose, co-load `human-writing` even on direct
-invocation; use the same context, not a later pass. This Skill retains evidence,
-facts, required structure, paths, gates, and verification. Skip code-, config-, schema-,
-lockfile-, and data-only output.
-
-## Mandatory Delivery Checkpoint
-
-Before mutating Git, verify that the working tree contains the claimed scoped
-changes and that their tests pass. Never create an empty commit to imitate a
-delivery. When changes exist, create the project-conformant branch, stage only
-those files, create a meaningful commit, and then attempt push, PR creation,
-and CI readback in order. If the remote, authentication, `gh`, PR, or CI is
-unavailable, preserve the completed local evidence, name the exact blocker, and
-do not claim a remote PR or CI result that was not observed.
-When PR creation is blocked, still present an equivalent PR preview containing
-title, summary, PM/PRD reference, changed scope, and test status. When CI cannot
-be read, explicitly record `CI: not run` or `CI: unavailable` and provide the
-exact recovery/readback command rather than omitting CI state.
-Before writing that preview, resolve the applicable PM/PRD and Engineer document
-references from the completed-work evidence and repository. Cite every reference
-that exists by its exact path; do not report a PM/PRD as missing until the
-corresponding documentation paths have been checked.
-
-## When to Use
-
-- Code and tests are complete, ready to commit
-- User asks to create a PR
-- User asks to commit or push changes
-- After `feature-implementor` + `test-writer` + optional `debugger` complete
-
-## PM Handoff Entry Gate
-
-Delivery is a downstream engineering specialist. Before committing, pushing, or
-creating a PR, require PM/Engineer handoff context or equivalent completed-work
-evidence: changed scope, verification status, related issue/PRD/TRD when
-applicable, and the requested delivery action. If the user directly asks for
-delivery while scope or verification status is unclear, return to `pm-agent`
-for classification or status confirmation.
-
-Use the PM-side packet definition in
-the plugin-local generated `../engineer-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
-
-## Step 1 — Assess current Git state
-
-```bash
-git status
-git branch --show-current
-git log --oneline -5
-```
-
-Determine:
-- Are we on main/master or a feature branch?
-- Are there unstaged changes?
-- Are there already commits for this feature?
-
-## Step 2 — Create feature branch (if needed)
-
-If currently on main/master, create a branch:
-
-```bash
-git checkout -b <branch-name>
-```
-
-### Branch naming
-
-Check if the project has a convention:
-
-```bash
-git branch -r | head -20
-```
-
-Follow existing patterns. Common conventions:
-- `feature/<description>` or `feat/<description>`
-- `fix/<description>`
-- `<username>/<description>`
-
-If no convention detected, use: `feat/<short-description>`
-
-Use lowercase, hyphens for spaces. Keep it short and descriptive.
-
-## Step 3 — Stage and commit
-
-### Determine commit strategy
-
-Check if the project uses Conventional Commits:
-
-```bash
-git log --oneline -20
-```
-
-Look for `feat:`, `fix:`, `chore:` prefixes.
-
-### Stage files
-
-Stage only the files related to this feature. Never use `git add -A` or `git add .` blindly.
-
-```bash
-git add <specific-files>
-```
-
-Review what's staged:
-
-```bash
-git diff --staged --stat
-```
-
-### Commit
-
-If small feature (1-5 files changed): single commit.
-If larger feature: group by logical unit (data model, business logic, API routes, tests).
-
-```bash
-git commit -m "<type>: <description>"
-```
-
-Commit message rules:
-- Use Conventional Commits format if the project uses it
-- First line under 72 characters
-- Reference the PM doc or Issue if applicable: `feat: add notification endpoints (per TRD §3.4)`
-- Don't include file lists in the message — that's what `git diff` is for
-
-## Step 4 — Push to remote
-
-```bash
-git push -u origin <branch-name>
-```
-
-If the push fails due to auth, tell the user to check their GitHub authentication (`gh auth status`).
-
-## Step 5 — Create PR
-
-```bash
-gh pr create --title "<title>" --body "$(cat <<'EOF'
-## Summary
-
-<1-3 bullet points describing the change>
-
-## PM Documents
-
-- PRD: <reference if applicable>
-- TRD: <reference if applicable>
-- Related Issue: <#number if applicable>
-
-## Changes
-
-<brief description of what was added/modified>
-
-## Testing
-
-- [ ] Unit tests pass
-- [ ] Integration tests pass (if applicable)
-- [ ] Manual testing done (if applicable)
-
-## Checklist
-
-- [ ] Code follows project conventions
-- [ ] Self-review completed
-- [ ] Tests cover P0 acceptance criteria
-EOF
-)"
-```
-
-### PR title
-
-- Under 72 characters
-- Use conventional format if the project does: `feat: add notification system`
-- Clear and descriptive
-
-### Link to Issues
-
-If there's a related GitHub Issue:
-
-```bash
-gh pr create --title "..." --body "..."
-```
-
-Add `Closes #<number>` or `Relates to #<number>` in the body.
-
-## Step 6 — Verify CI
-
-After PR is created, check CI status:
-
-```bash
-gh pr checks <pr-number> --watch
-```
-
-If CI fails:
-- Read the failure logs: `gh pr checks <pr-number> --json name,state,description`
-- If it's a lint/test failure from our code: fix it, commit, push
-- If it's a CI infrastructure issue: report to user
-
-## Step 7 — Summary
-
-```text
-## 交付完成
-
-- **分支**: <branch-name>
-- **PR**: <PR URL>
-- **提交数**: <N>
-- **CI 状态**: ✅ 通过 / ⏳ 运行中 / ❌ 失败
-
-### PR 内容
-- <brief summary of changes>
-```
-
-## Edge Cases
-
-- **No remote**: If `git remote -v` shows nothing, ask the user to add a remote first.
-- **Branch already exists**: Ask to use existing branch or create a new one.
-- **Merge conflicts with main**: Report the conflict and ask the user how to resolve (rebase, merge, or manual).
-- **Large number of changes**: If > 20 files changed, suggest splitting into multiple PRs if the changes can be logically separated.
-- **Draft PR**: If the user says the work isn't complete, use `gh pr create --draft`.
-- **No CI configured**: Note the absence in the delivery summary.
+Inspect the repository, branch, working tree, remote, and current PR before
+writing. The user's request and existing session authorization establish the
+delivery scope; apply repository-specific Git conventions.
+
+## Prepare and deliver
+
+1. Review the diff, preserve unrelated user changes, and run the relevant checks.
+2. Use a dedicated branch for the change. Keep the requested base and branch
+   naming convention.
+3. Stage the intended files and write a commit message describing the resulting
+   behavior. Use ordinary follow-up commits for an existing PR.
+4. Push the branch and create or update the PR with the problem, final change,
+   verification, and material risks. Reference the relevant issues.
+5. Read back the PR's head and CI results. Resolve relevant failures and report
+   the final review state.
+6. Merge when the user has authorized that action and the required checks pass.
+   Match the reviewed head, verify the merge, synchronize the default branch,
+   and perform the requested branch cleanup.
+
+A concise PR body is usually sufficient. Expand it for compatibility changes,
+migrations, rollout steps, or important review tradeoffs. Use exact newline-
+preserving text inputs for multiline descriptions.
+
+Summarize the delivered commit or PR, test results, merge state, and outstanding
+items. Keep irreversible and externally visible actions within the established
+permission scope, and ask only for authorization that is still missing.

@@ -1,104 +1,23 @@
-# ADR (Architecture Decision Record) Schema
+# 架构决策参考
 
-> Shared schema referenced by Engineer-owned ADRs from
-> `engineer-agent:trd-gen` and `adr-validator`.
-
-## Required Sections
-
-### 1. Document Metadata
+根据任务和读者需要选择以下内容，沿用宿主实际工具读取的格式。
 
 ```yaml
-title: "ADR-<NNN>: <Decision Title>"
-version: <SemVer>
-status: Proposed | Accepted | Deprecated | Superseded
-author: <generation requester display name + agent platform name>
-date: <YYYY-MM-DD>
-superseded_by: <ADR number or "N/A">
-related_docs: []
-# Optional for ordinary ADRs; required together for deviation-driven ADRs.
-feature_path: <canonical feature path>
-trigger: <declaration field>
-expected: <declared value>
-actual: <measured value>
-kind: scope_up | scope_down | estimate_wrong | design_gap
-resolution: accepted | split_to_issue | reverted
-spawned_issue: <Issue number or "N/A">
+---
+title: "文档标题"
+type: ADR
+status: Draft
+---
 ```
 
-The seven deviation fields are optional for ordinary ADRs. They are all
-required when an ADR records an accepted `scope_up`, a new dependency, a new
-abstraction layer, or completion of a `design_gap`. Pure `estimate_wrong`
-deviations stay in implementation-plan closeout and do not require an ADR.
+状态使用 `Draft`、`In Review`、`Approved`、`Superseded`、`Deprecated`。版本、作者、日期、feature_path 与关联资料按维护需要添加，见 [输出约定](../output-conventions.md)。
 
-### 2. Title
+- 决定标题与稳定编号。
+- 产生决定的技术和业务背景。
+- 当前采用的方案与适用范围。
+- 影响后续维护的取舍、后果和支持证据。
+- 替代或废弃关系以及相关实现、规格和评测链接。
 
-Format: `ADR-<NNN>: <Short descriptive title>`
+记录当前结论及必要理由。需要保留方案比较时，围绕真正影响决定的差异组织内容。`Superseded` 可配合 `superseded_by` 引用新决策。
 
-- **Quality**: Must be a concise noun phrase describing the decision.
-
-### 3. Status
-
-One of: `Proposed` | `Accepted` | `Deprecated` | `Superseded by ADR-<NNN>`
-
-- **Quality**: Must be a valid status value.
-
-### 4. Context
-
-- What is the issue or situation that motivates this decision?
-- What forces are at play (technical, business, organizational)?
-- What constraints exist?
-- **Quality**: Must describe at least one technical and one business force.
-
-### 5. Decision
-
-- What is the change being proposed or adopted?
-- Written in active voice: "We will..."
-- **Quality**: Must be a clear, unambiguous statement of what will be done.
-
-### 6. Consequences
-
-#### Positive
-- Benefits of this decision
-
-#### Negative
-- Drawbacks, trade-offs, or new constraints introduced
-
-#### Neutral
-- Side effects that are neither good nor bad
-
-- **Quality**: Must list at least one positive and one negative consequence.
-
-### 7. Alternatives Considered
-
-| Alternative | Pros | Cons | Why Not Chosen |
-|-------------|------|------|----------------|
-
-- **Quality**: At least 2 alternatives; each must have pros, cons, and rejection reason.
-
-### 8. References (Optional)
-
-- Links to research, benchmarks, proof-of-concept results, related ADRs
-
-## Section Completeness Weights
-
-| Section | Weight |
-|---------|--------|
-| Title | 5% |
-| Status | 5% |
-| Context | 25% |
-| Decision | 25% |
-| Consequences | 25% |
-| Alternatives Considered | 15% |
-
-## Status Transition Rules
-
-Used by `engineer-agent:trd-gen` and `adr-validator`:
-
-```
-Proposed → Accepted      (requires: reviewer approval)
-Proposed → Deprecated    (requires: rationale)
-Accepted → Deprecated    (requires: rationale)
-Accepted → Superseded    (requires: superseded_by ADR number)
-Deprecated → (terminal)
-Superseded → (terminal)
-```
+正文以当前事实或明确目标为依据，关键声明链接可核对来源。

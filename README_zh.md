@@ -1,67 +1,33 @@
-<div align="center">
-
 # Dev Agent Skills
 
-面向软件交付全流程的多 Agent 技能市场。
+按需使用的专业知识库：七个插件、四十个 Skill，覆盖产品、设计、工程、测试、运维、安全和文档。助手根据用户目标选择专业方法，持续完成任务。
 
-[![Agents](https://img.shields.io/badge/agents-7-blue)](#agents)
-[![Skills](https://img.shields.io/badge/skills-40-green)](#agents)
-[![License](https://img.shields.io/badge/license-Apache%202.0-orange)](LICENSE)
+[English](./README.md) · [中文](./README_zh.md)
 
-`pm-agent` • `designer-agent` • `engineer-agent` • `qa-agent` • `devops-agent` • `security-agent` • `docs-agent`
-
-[快速开始](#快速开始) • [使用示例](#使用示例) • [Agents](#agents) • [协作方式](#协作方式) • [文档索引](#文档索引)
-
-</div>
-
-> [!NOTE]
-> 其他语言：[English](./README.md)
-
-## 概览
-
-这个仓库把 7 个按角色划分的 Agent 集中发布在同一个 marketplace/source 中，用来覆盖一条完整的软件交付链：需求、设计、实现、测试、部署、安全审查和正式文档。
-
-仓库内容包括：
-
-- 1 个公开 PM 入口 skill，加 6 个下游 role router
-- 33 个内部 specialist 与组合 skills，覆盖产品、工程、QA、DevOps、设计、安全和正式文档细分任务
-- Claude Code marketplace 配置
-- Codex 原生 skill discovery 安装入口
-- Kimi Code 原生插件 manifest
-- 本地验证脚本
-
-> [!NOTE]
-> 这些 Agent 通过 Markdown 文档和项目资产协作，不依赖共享运行时或固定状态机。直接用户入口只推荐 `pm-agent`；下游 role plugin 只在 PM handoff 需要对应能力时安装。
-
-## 快速开始
+## 安装
 
 ### Claude Code
 
-```bash
-# 添加 marketplace
+按需安装一个或多个插件：
+
+```text
 /plugin marketplace add Neplich/dev-agent-skills
-
-# 安装公开入口
 /plugin install pm-agent@dev-agent-skills
-
-# 按需安装 PM handoff 的下游能力
-/plugin install designer-agent@dev-agent-skills
 /plugin install engineer-agent@dev-agent-skills
 /plugin install qa-agent@dev-agent-skills
 /plugin install devops-agent@dev-agent-skills
+/plugin install designer-agent@dev-agent-skills
 /plugin install security-agent@dev-agent-skills
 /plugin install docs-agent@dev-agent-skills
 ```
 
 ### Codex
 
-告诉 Codex：
-
 ```text
 Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/heads/main/.codex/INSTALL.md
 ```
 
-实现原理与排障见 [Codex Guide](./docs/README.codex.md)。
+[Codex 安装指南](./docs/README.codex.md)
 
 ### Kimi Code
 
@@ -69,94 +35,37 @@ Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev
 /plugins install https://github.com/Neplich/dev-agent-skills/tree/main
 ```
 
-仓库内置 `.kimi-plugin/plugin.json` manifest：7 个角色 skill 目录注册为单个插件，`pm-agent` 随会话启动自动加载（`sessionStart.skill`）。上面的 `tree/main` 形式安装最新开发状态；如需固定不可变版本，可改用 `/plugins install https://github.com/Neplich/dev-agent-skills/releases/tag/vX.Y.Z`。
+README 描述当前源码的能力。固定版本安装使用对应发布 tag，该版本行为见版本记录。
 
-已按 Codex 方式安装到 `~/.agents/skills/` 的 skill 也会被 Kimi Code 自动扫描到；推荐优先使用上面的原生插件方式。
+## 使用
 
-**同时使用 Codex 与 Kimi Code？** 只走 Codex 安装路径（`~/.agents/skills/`）：Kimi Code 会自动扫描该目录，一份副本两个宿主共读，保持单一事实源。若同时再装 Kimi 插件，每个 skill 会产生两份同名副本——实时跟踪工作区的软链 vs `~/.kimi-code/plugins/managed/` 下的安装快照——版本可能漂移。注意：Kimi 的 generic skill 目录组互斥，若 `~/.config/agents/skills/` 存在会遮蔽 `~/.agents/skills/`，此时需在 Kimi 的 `config.toml` 中把 `~/.agents/skills/` 加入 `extra_skill_dirs`。 取舍说明：Codex 路径下 Kimi 只有普通 skill 发现，插件的 `sessionStart.skill` 自动加载 `pm-agent` 不生效；如需保留会话启动的 PM 入口，可在会话开始时手动 `/skill:pm-agent`，或改用插件并接受上面的双副本注意事项。
-
-## 使用范围
-
-这些 Agent 面向产品与工程研发工作流。显式点名 `pm-agent`、role agent 或 skill 时始终使用对应能力并保留其既有门禁；未显式点名时，研发意图进入 `pm-agent`，普通非研发请求由当前助手直接处理。项目文档、代码与启用 marker 只在进入 PM 后提供上下文，不决定是否触发。
-
-若需要最严格的隔离，优先使用 Codex 项目级安装（见 [`docs/README.codex.md`](./docs/README.codex.md)），它会将 skill 保持在项目目录内，并为项目提供明确的启用标记。
-
-## 使用示例
+每个 Skill 都可直接使用，也可通过角色导航选择方法。用户请求、issue、代码、测试与已有文档提供工作依据；计划和正式文档按任务需要选用。已有授权随任务延续，关键决策缺口或额外权限需求由助手向用户确认。
 
 ```text
-/pm-agent "我想做一个任务管理应用，先帮我梳理需求"
-/pm-agent "登录流程有 bug，先帮我确认预期再安排修复"
-/pm-agent "按 spec 验证登录功能"
-/pm-agent "补一套 CI/CD 和发布前检查"
-/pm-agent "上线前看一下权限和依赖风险"
+/debugger "定位并修复登录失败，验证正常与失败路径。"
+/feature-implementor "为任务列表增加按状态筛选。"
+/human-writing "根据当前代码更新安装说明。"
 ```
 
-下游 role router 和 specialist skills 仍会作为 PM 编排能力安装。直接用户请求优先从 `pm-agent` 进入；下游 skills 用于 PM handoff 或等效已确认文档链已经明确范围后的工作。
+## 插件
 
-## Agents
+| 插件 | Skills |
+| --- | ---: |
+| [`pm-agent`](./agents/product_manager/README_zh.md) | 9 |
+| [`engineer-agent`](./agents/engineer/README_zh.md) | 7 |
+| [`qa-agent`](./agents/qa/README_zh.md) | 5 |
+| [`devops-agent`](./agents/devops/README_zh.md) | 5 |
+| [`designer-agent`](./agents/designer/README_zh.md) | 3 |
+| [`security-agent`](./agents/security/README_zh.md) | 5 |
+| [`docs-agent`](./agents/docs/README_zh.md) | 6 |
 
-| Agent | 关注范围 | Skills | 调用方式 | 文档 |
-| --- | --- | :---: | --- | --- |
-| `pm-agent` | 需求收敛、spec、竞品、路线图、带门禁的 GitHub Release、GitHub 项目状态、面向读者的自然写作 | 9 (`1 + 8`) | 直接入口：`/pm-agent` | [product_manager](./agents/product_manager/README_zh.md) |
-| `designer-agent` | UX 流程、信息架构、线框、视觉系统、设计交接 | 3 (`1 + 2`) | 仅 PM handoff | [designer](./agents/designer/README_zh.md) |
-| `engineer-agent` | 代码库分析、TRD 生成、功能实现、测试、调试、交付 | 7 (`1 + 6`) | 仅 PM handoff | [engineer](./agents/engineer/README_zh.md) |
-| `qa-agent` | 规范验收、探索测试、缺陷分析、回归验证 | 5 (`1 + 4`) | 仅 PM handoff | [qa](./agents/qa/README_zh.md) |
-| `devops-agent` | 部署规划、CI/CD、环境配置审计、故障手册 | 5 (`1 + 4`) | 仅 PM handoff | [devops](./agents/devops/README_zh.md) |
-| `security-agent` | 应用安全、授权审查、依赖风险、隐私数据流 | 5 (`1 + 4`) | 仅 PM handoff | [security](./agents/security/README_zh.md) |
-| `docs-agent` | 正式文档分流、站点初始化、证据驱动的 API/database/design/ops/product 同步、基于运行界面截图的图文用户操作手册、站内 Release Notes 与发版审计 | 6 (`1 + 5`) | 仅 PM handoff | [docs](./agents/docs/README_zh.md) |
+## 文档
 
-> [!TIP]
-> 直接用户入口使用 `/pm-agent`。PM 会先分类请求，范围明确后再 handoff 到下游 role router 或 specialist skill。
+- [Architecture](./docs/architecture.md)
+- [Documentation guide](./docs/AGENTS.md)
+- [Skill maintenance](./docs/cookbook/maintain-skills.md)
+- [Manual release](./docs/cookbook/release.md)
+- [Contributing](./CONTRIBUTING.md)
+- [Changelog](./CHANGELOG.md)
 
-## 协作方式
-
-```mermaid
-flowchart LR
-    PM["PM Agent"] --> Designer["Designer Agent"]
-    PM --> Engineer["Engineer Agent"]
-    Designer --> Engineer
-    Engineer --> QA["QA Agent"]
-    QA --> Engineer
-    QA -. "需求缺口 / 验收问题" .-> PM
-    Engineer --> DevOps["DevOps Agent"]
-    Engineer --> Security["Security Agent"]
-    Security --> Engineer
-    PM --> Docs["Docs Agent"]
-    Engineer --> Docs
-    QA --> Docs
-    DevOps --> Docs
-    Security -. "结论升级回 PM" .-> PM
-```
-
-PRD/TRD 对齐、实现计划确认和 QA E2E handoff 等工程门禁见 [Engineer Agent 文档](./agents/engineer/README_zh.md)。
-
-常见链路：
-
-1. `pm-agent -> engineer-agent -> qa-agent`
-2. `pm-agent -> designer-agent -> engineer-agent -> qa-agent`
-3. `engineer-agent <-> qa-agent`，用于缺陷修复和回归确认
-4. `engineer-agent -> devops-agent`，用于部署、CI/CD 和运行准备
-5. `engineer-agent -> security-agent`，用于发布前或专项安全审查
-6. `pm-agent -> docs-agent`，用于范围确认后的正式文档站点初始化、同步、站内 Release Notes 或发版前审计
-7. `docs-agent:release-notes-gen -> docs-agent:docs-audit -> pm-agent:github-release-gen`，用于已确认站内版本说明、双阶段发版验证和 GitHub Release
-
-不是所有项目都要走完整链路。每个 Agent 都能独立完成自己的角色闭环，只有在需要跨角色协作时才 handoff。
-
-## 文档索引
-
-- [架构](./docs/architecture.md)：当前角色、路由、安装、协作和扩展关系。
-- [文档治理](./docs/AGENTS.md)：文档归属、生命周期、归档和链接规则。
-- 维护 cookbook：[Role Skill](./docs/cookbook/maintain-skills.md)、[发布](./docs/cookbook/release.md)。
-- [Codex Guide](./docs/README.codex.md)：Codex 安装模型、镜像机制、排障和按路径禁用。
-- [Agents Guide](./AGENTS.md)：agent 仓库指导、文档契约、维护流程和 PR 检查的唯一事实源。
-- [Contributing](./CONTRIBUTING_zh.md)：本地验证命令和维护流程链接。
-- [Changelog Index](./CHANGELOG.md)：版本化 release changelog 入口。
-- Agent 文档：[PM](./agents/product_manager/README_zh.md)、[Designer](./agents/designer/README_zh.md)、[Engineer](./agents/engineer/README_zh.md)、[QA](./agents/qa/README_zh.md)、[DevOps](./agents/devops/README_zh.md)、[Security](./agents/security/README_zh.md)、[Docs](./agents/docs/README_zh.md)。
-
-## 贡献
-
-本地检查和贡献流程见 [CONTRIBUTING_zh.md](./CONTRIBUTING_zh.md)。`AGENTS.md` 仍是仓库指导的唯一事实源。
-
-## License
-
-本项目使用 [Apache License 2.0](./LICENSE)。
+[Apache License 2.0](./LICENSE)

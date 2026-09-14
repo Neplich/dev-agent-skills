@@ -1,227 +1,36 @@
 ---
 name: appsec-checklist
-description: "Review application code for injection, XSS, auth bypass, secret exposure, unsafe uploads, and related AppSec risks. Use after security-agent routes an AppSec review."
-visibility: internal
+description: "Review code for injection, XSS, authorization failures, unsafe file handling, secret exposure, and security-sensitive configuration."
 ---
 
-## Reader-Facing Writing Composition
+# Application Security Review
 
-For substantial reader-facing prose, co-load `human-writing` even on direct
-invocation; use the same context, not a later pass. This Skill retains evidence,
-facts, required structure, paths, gates, and verification. Skip code-, config-, schema-,
-lockfile-, and data-only output.
+Map the requested surface's inputs, transformations, storage, external calls,
+and outputs. Identify the relevant attacker control and trust boundaries from
+actual code. Follow candidate paths far enough to verify reachability and
+existing mitigations.
 
-## Mandatory Report And Escalation
+## Review surfaces
 
-Write the Security-owned report under `docs/security/{feature_path}/` with
-frontmatter containing `feature`, `feature_path`, `version`, `date`, and
-`last_updated`. Include an Executive Summary with finding count, severity
-distribution, and overall posture before detailed evidence.
+- SQL, shell, template, and interpreter inputs: parameterization, validation,
+  escaping, and the context in which values are executed.
+- Browser output: encoding, HTML sinks, script handling, and content policies.
+- Authentication and authorization: identity validation, ownership, permissions,
+  tenant boundaries, and enforcement on the server.
+- Sessions and tokens: issuance, storage, expiration, revocation, and transport.
+- Uploads and file access: path resolution, type handling, storage, size limits,
+  and exposure to execution or unauthorized reads.
+- Remote requests and callbacks: destination control, credentials, redirects,
+  verification, and access to internal resources.
+- Sensitive data: secret storage, logs, errors, transport, and persistence.
+- Configuration and dependencies: actual deployed defaults and relevant
+  vulnerable behavior.
 
-When code/test verification changes a formal documentation fact, preserve the
-mapped document and its freshness, code fact, impact, and report path; return
-that conclusion to `pm-agent` for classification and PM-owned issue filing.
-Do not send it directly to Docs or edit another role's document.
+For each finding, record file and line, attacker preconditions, source-to-sink
+path, existing defenses, impact, and a focused repair. Assign severity from the
+actual exploit conditions and affected assets. Label unverified paths and
+explain what evidence would resolve them.
 
-## PM Handoff Entry Gate
-
-Before security review, require a PM/Security handoff packet or equivalent
-confirmed security context. If the user directly invokes this specialist
-without PM handoff context, a confirmed risk surface, or a confirmed
-`feature_path` for feature-scoped work, return the request to `pm-agent` for
-classification.
-
-Use the PM-side packet definition in
-the plugin-local generated `../security-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
-
-## Execution Steps
-
-### Step 1: Understand the Feature Context
-
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the plugin-local generated `../security-agent/_internal/_generated/shared-contracts/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
-
-1. **Resolve feature scope**:
-   - For feature-scoped review, use the confirmed `feature_path`.
-   - Read `docs/pm/{feature_path}/PRD.md`.
-   - Read `docs/engineer/{feature_path}/TRD.md` and
-     `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when architecture,
-     implementation, or release scope affects security risk.
-   - If `feature_path` is unclear, return to PM for PRD/path clarification or
-     Engineer for missing/stale TRD or implementation plan; do not invent a
-     new top-level security directory.
-
-2. **Read PM documents**:
-   - PRD: understand feature functionality and data flow
-   - TRD: understand architecture, third-party services, data storage
-
-3. **Identify security-critical areas**:
-   - Authentication/authorization logic
-   - User input handling
-   - Data storage and transmission
-   - API endpoints
-   - File uploads
-   - Admin interfaces
-
-### Step 2: Scan for Common Vulnerabilities
-
-Use Grep and Read tools to search for security issues:
-
-**A. Input Validation Issues**
-- Search for user input handling without validation
-- Check for SQL injection risks (raw SQL queries)
-- Check for XSS risks (unescaped output in templates)
-- Check for command injection (shell execution with user input)
-
-**B. Authentication & Session Management**
-- Search for password handling (plain text storage, weak hashing)
-- Check session configuration (secure flags, httpOnly, sameSite)
-- Check for hardcoded credentials
-- Review JWT/token implementation
-
-**C. Access Control**
-- Check authorization logic
-- Look for missing permission checks
-- Review role-based access control implementation
-
-**D. Sensitive Data Exposure**
-- Search for API keys, secrets in code
-- Check for sensitive data in logs
-- Review encryption usage for sensitive data
-
-**E. Security Misconfiguration**
-- Check for debug mode in production
-- Review CORS configuration
-- Check for exposed admin endpoints
-- Review error handling (information disclosure)
-
-**F. Insecure Dependencies**
-- Check for known vulnerable packages (if package.json/requirements.txt exists)
-
-### Step 3: Generate Security Report
-
-Create `docs/security/{feature_path}/appsec-checklist.md` with:
-
-**Frontmatter:**
-```yaml
----
-feature: {feature}
-feature_path: {feature_path}
-parent_feature: {parent_feature}
-feature_level: {feature_level}
-version: v1
-date: YYYY-MM-DD
-last_updated: YYYY-MM-DD
----
-```
-
-**Report Structure:**
-
-1. **Executive Summary**
-   - Total issues found
-   - Risk level distribution (Critical/High/Medium/Low)
-   - Overall security posture
-
-2. **Critical Issues** (if any)
-   - Issue description
-   - Location (file:line)
-   - Risk explanation
-   - Fix recommendation
-
-3. **High Priority Issues**
-   - Same format as Critical
-
-4. **Medium Priority Issues**
-   - Same format
-
-5. **Low Priority Issues**
-   - Same format
-
-6. **Security Best Practices Checklist**
-   - [ ] Input validation on all user inputs
-   - [ ] Parameterized queries (no SQL injection)
-   - [ ] Output encoding (no XSS)
-   - [ ] Secure session management
-   - [ ] Proper authentication
-   - [ ] Authorization checks on all protected resources
-   - [ ] Secrets not in code
-   - [ ] HTTPS enforced
-   - [ ] Security headers configured
-   - [ ] Error messages don't leak info
-
-7. **Recommendations**
-   - Priority order for fixes
-   - Additional security measures to consider
-
-### Step 4: Risk Classification
-
-**Critical:**
-- SQL injection vulnerabilities
-- Authentication bypass
-- Hardcoded secrets/credentials
-- Remote code execution risks
-
-**High:**
-- XSS vulnerabilities
-- Missing authorization checks
-- Insecure session management
-- Sensitive data exposure
-
-**Medium:**
-- Missing input validation
-- Weak password policies
-- Information disclosure in errors
-- Missing security headers
-
-**Low:**
-- Debug mode enabled
-- Verbose error messages
-- Missing rate limiting
-- Outdated dependencies (no known exploits)
-
-## Output Format
-
-Use clear, actionable language. For each issue:
-
-```markdown
-### [CRITICAL] SQL Injection in User Search
-
-**Location:** `src/api/users.js:45`
-
-**Issue:**
-User input is directly concatenated into SQL query without sanitization.
-
-**Code:**
-\`\`\`javascript
-const query = `SELECT * FROM users WHERE name = '${req.query.name}'`;
-\`\`\`
-
-**Risk:**
-Attacker can execute arbitrary SQL commands, potentially accessing or deleting all database data.
-
-**Fix:**
-Use parameterized queries:
-\`\`\`javascript
-const query = 'SELECT * FROM users WHERE name = ?';
-db.query(query, [req.query.name]);
-\`\`\`
-```
-
-## Notes
-
-- Focus on actionable findings, not theoretical risks
-- Provide specific file locations and line numbers
-- Include code examples for both vulnerable and fixed versions
-- Prioritize issues that are actually exploitable in the current context
-
-## Closeout
-
-After reaching a confirmed review conclusion, including on a direct invocation,
-evaluate `../security-agent/_internal/_generated/shared-contracts/security-escalation.md`.
-When it triggers, return the conclusion and evidence to `pm-agent` for
-classification and issue filing; do not hand evidence directly to `docs-agent`,
-file the issue yourself, or modify formal documentation (`docs/site/` or
-documentation owned by other roles). The required Security-owned process report
-under `docs/security/{feature_path}/` remains escalation evidence and is not
-restricted by this prohibition. Then apply
-`../security-agent/_internal/_generated/shared-contracts/closeout-contract.md`
-to recommend the next step and wait for user confirmation.
+Use sanitized, minimal reproductions. When remediation is requested, preserve
+legitimate behavior and verify both the failure mode and authorized use after
+the fix. Report the scope reviewed and material limits of the evidence.

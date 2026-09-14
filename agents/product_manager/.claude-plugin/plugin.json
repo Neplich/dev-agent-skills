@@ -1,7 +1,7 @@
 {
   "name": "pm-agent",
   "version": "0.6.6",
-  "description": "Default entry plugin for product and engineering R&D requests when no other agent or skill is named. Explicitly naming pm-agent selects it even when a downstream capability is also named; naming another role agent or skill without pm-agent excludes pm-agent and leaves that capability to enforce its own gate. Routes product ideas, features, changes, bugs, implementation, testing, design, deployment, security, formal docs, delivery, planning, and repository status work, with human-writing composition for reader-facing documents.",
+  "description": "Product discovery, specifications, feature inventories, research, roadmaps, changelogs, release preparation, and GitHub status. Select these capabilities directly for the requested product task.",
   "author": {
     "name": "Neplich"
   }

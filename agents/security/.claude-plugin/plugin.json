@@ -1,7 +1,7 @@
 {
   "name": "security-agent",
   "version": "0.6.6",
-  "description": "Downstream security capability invoked after pm-agent handoff for confirmed AppSec, auth/authz, dependency risk, privacy, and data-flow reviews, with remediation routed through the PM handoff path.",
+  "description": "Application security, authorization, dependency risk, and privacy reviews using code evidence, reachability analysis, and actionable findings.",
   "author": {
     "name": "Neplich"
   }

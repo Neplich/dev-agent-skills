@@ -1,28 +1,18 @@
-# Anti-patterns
+# Focused Design Practices
 
-Use the most relevant anti-patterns in the final design system.
+- Select color and visual effects from the product's brand and user task.
+- Choose containers and layout grouping that clarify the information hierarchy.
+- Use readable text contrast on every surface and interaction state.
+- Give motion a purpose such as progress, feedback, or spatial continuity.
+- Establish a primary visual language with deliberate supporting treatments.
+- Give controls clear visible or accessible names.
+- Pair chart colors with labels, shapes, patterns, or other readable cues.
 
-## Generic Design Anti-patterns
+For analytics, emphasize comparisons, filters, definitions, and useful density.
+For finance, make amounts, fees, status, and consequential actions clear.
+For healthcare, use calm presentation, accessible contrast, and understandable
+recovery guidance. For commerce, prioritize imagery, discoverable filters, and
+cart feedback. For social products, keep creation and content feedback visible.
 
-- AI-purple/blue gradients by default.
-- Generic rounded cards everywhere with no product rationale.
-- Low-contrast gray text on gray surfaces.
-- Decorative animation with no interaction meaning.
-- Mixing flat, glass, skeuomorphic, and brutalist styles without a primary direction.
-- Icon-only controls without visible labels or accessibility labels.
-- Charts that rely only on color.
-
-## Product-specific Anti-patterns
-
-- Enterprise analytics: oversized marketing-style cards, vague dashboard metrics, decorative gradients behind dense data.
-- Fintech: playful colors, ambiguous red/green status, hidden fees or risky actions without confirmation.
-- Healthcare: alarming color use, low contrast, jargon-heavy errors, unclear recovery path.
-- E-commerce: weak image hierarchy, hidden cart state, filters that are hard to reach on mobile.
-- Consumer social: buried creation action, overloaded navigation, unclear feed feedback.
-
-## Forbidden Output Anti-patterns
-
-- Tailwind config, CSS variables, React/Vue/SwiftUI components, shadcn install commands, or implementation code.
-- File-by-file engineering tasks.
-- Test commands or deployment instructions.
-- Continuing into Engineer scope after the visual document is complete.
+Apply these practices to the artifact the user requested, including a design
+specification, prototype, or implemented interface.

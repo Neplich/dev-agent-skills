@@ -1,73 +1,32 @@
-# E2E Case and Script Format Reference
+# Reusable E2E Cases
 
-This file is the only manually maintained authority for persistent E2E suite,
-flow, case, script, and per-run result formats.
-
-## Directory Layout
+Use the project's existing test organization. This layout is useful when a
+persistent Markdown index accompanies an executable harness:
 
 ```text
-docs/qa/e2e/{feature_path}/
-├── TEST_SUITE.md
-├── FLOW_INDEX.md
-├── cases/TC-NNN-<short-slug>.md
-├── scripts/TC-NNN-<short-slug>.spec.md
-├── results/{platform-version}/TC-NNN/{test-time}/result.md
-└── _reports/{platform-version}/test-reports-{test-time}.md
+docs/qa/e2e/{feature}/
+  TEST_SUITE.md
+  FLOW_INDEX.md
+  cases/TC-NNN-<slug>.md
+  scripts/TC-NNN-<slug>.spec.md
+  results/{build}/TC-NNN/{test-time}/result.md
+  _reports/{build}/test-reports-{test-time}.md
 ```
 
-Use lower kebab-case slugs and a stable three-digit TC number. Existing history
-is append-only.
+Keep stable case IDs and append distinct run results. The suite indexes case
+status, priority, covered journey, account reference, execution entry, and
+latest result. The flow index maps branches to cases and identifies useful
+coverage gaps.
 
-## TEST_SUITE
+A case records its purpose, expectation source, preconditions, credential IDs,
+user actions, expected outcomes, cleanup, and evidence. The source may be a
+user requirement, issue, API contract, specification, or observed regression.
+The script or harness invocation reproduces those actions and assertions.
 
-List each active or retired case with its ID, title, priority, status, covered
-flow, required account ID, script path, and latest result pointer. Do not embed
-the full case or script body.
+A run records its build, environment, time, exact entry point, result, and
+sanitized evidence. Use a release version, commit SHA, or descriptive local
+build identity. Results distinguish observed pass/fail from execution blocked
+by an unavailable environment or credential.
 
-## FLOW_INDEX
-
-Map each product flow and branch to the TC IDs that cover it. Record uncovered
-branches explicitly. A feature update changes this map incrementally; a release
-run executes every active mapped TC.
-
-## Case File
-
-Each `cases/TC-NNN-<short-slug>.md` contains:
-
-- title and stable TC ID;
-- status and priority;
-- source PRD/TRD/confirmed implementation plan;
-- preconditions and platform version requirement;
-- credential IDs only, never secrets;
-- numbered user actions;
-- expected result after each meaningful action;
-- cleanup and evidence requirements;
-- history pointers to appended results.
-
-## Script File
-
-`scripts/TC-NNN-<short-slug>.spec.md` stores the smallest repeatable executable
-flow or repository-harness invocation. It must match the case actions and
-assertions. It may reference a credential ID but must never contain passwords,
-tokens, cookies, sessions, TOTP secrets, SSH passwords, key contents, or
-passphrases.
-
-Execution priority is repository harness, then Chrome/browser connector, then
-Playwright fallback. Reuse a shared login flow under
-`docs/qa/e2e/_shared/login-flows/` when multiple cases authenticate the same
-way.
-
-## Per-Run Result
-
-Each `result.md` records:
-
-- TC ID, scenario, platform version, environment, and local test time;
-- execution entry and exact command or interactive flow;
-- `pass`, `fail`, or `blocked`;
-- evidence paths;
-- failure or blocked reason;
-- residual risk and follow-up owner.
-
-Never use `unknown` as the platform-version directory. A missing platform
-version, credential reference, environment, aligned expectation, or confirmed
-implementation plan blocks the affected run.
+Reuse the project's login helpers. Keep secrets in protected local storage and
+place only account identifiers in committed cases, scripts, and reports.

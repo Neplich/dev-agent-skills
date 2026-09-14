@@ -618,7 +618,8 @@ def test_shared_skill_map_reference_is_reachable_inside_mirror_without_rewrite(t
         / "agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md"
     )
     assert skill_map.is_file()
-    assert "agents/engineer/skills/trd-gen/SKILL.md" in skill_map.read_text(encoding="utf-8")
+    source_map = ROOT / "agents/product_manager/skills/idea-to-spec/_internal/_shared/skill-map.md"
+    assert skill_map.read_text(encoding="utf-8") == source_map.read_text(encoding="utf-8")
     assert (target / MIRROR_DIR / "agents/engineer/skills/trd-gen/SKILL.md").is_file()
 
 

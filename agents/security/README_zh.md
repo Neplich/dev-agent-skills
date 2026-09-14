@@ -1,95 +1,25 @@
-# Security Agent
+# 安全能力
 
-`security-agent` 是安全审查角色的 dispatcher skill，负责把发布前安全 gate、应用安全检查、认证授权审查、依赖风险和隐私数据流请求路由到合适的安全 specialist skill。
+本插件包含 5 个 Skill，提供应用安全、授权、依赖与隐私数据流。每个 Skill 均可直接使用；`security-agent` 帮助按任务选择相关方法。
 
-> [!NOTE]
-> 仓库架构与文档归属见 [Architecture](../../docs/architecture.md) 和 [Documentation Governance](../../docs/AGENTS.md)。
->
-> 其他语言：[English](./README.md)
+助手根据用户目标组合这些能力，贯穿分析、实现、验证与交付。已有授权随任务延续，文档与专业参考按实际需要使用。
 
-> [!NOTE]
-> Security Agent 的目标是输出证据化风险判断和可执行修复建议。它不替代 Engineer 直接修代码，也不替代 PM 改需求边界。
+## 能力目录
 
-## 快速信息
-
-| 项目 | 内容 |
+| Skill | 用途 |
 | --- | --- |
-| 入口 skill | `security-agent` |
-| Specialist skills | 4 个 |
-| 主要输入 | 代码库、依赖清单、PM 文档、工程文档、QA 反馈 |
-| 主要输出 | `docs/security/{feature_path}/` 下的安全报告 |
-| 触发时机 | 敏感功能完成后、发布前、专项风险复审时 |
+| [security-agent](./skills/security-agent/SKILL.md) | 安全能力导航 |
+| [appsec-checklist](./skills/appsec-checklist/SKILL.md) | 应用安全审查 |
+| [authz-reviewer](./skills/authz-reviewer/SKILL.md) | 身份与授权审查 |
+| [dependency-risk-auditor](./skills/dependency-risk-auditor/SKILL.md) | 依赖风险审查 |
+| [privacy-surface-mapper](./skills/privacy-surface-mapper/SKILL.md) | 隐私与数据流梳理 |
 
-## Skill 清单
-
-| Skill | 适用场景 | 主要产物 |
-| --- | --- | --- |
-| `security-agent` | 安全请求入口与路由 | 下游 skill 选择与执行路径 |
-| `appsec-checklist` | 泛应用安全检查、发布前安全 gate、常见漏洞扫描 | 应用安全检查报告 |
-| `authz-reviewer` | 登录、session、角色权限、租户隔离、越权风险 | 认证授权审查报告 |
-| `dependency-risk-auditor` | 依赖漏洞、废弃包、供应链风险 | 依赖风险审计报告 |
-| `privacy-surface-mapper` | PII、consent、retention、data sharing、GDPR/CCPA 风险 | 隐私数据流映射 |
-
-## 路由规则
-
-- 泛安全 review 或发布前 gate：使用 `appsec-checklist`
-- 认证、授权、角色、租户隔离、session：使用 `authz-reviewer`
-- 依赖、漏洞、废弃包、供应链风险：使用 `dependency-risk-auditor`
-- PII、隐私数据流、consent、retention、GDPR/CCPA：使用 `privacy-surface-mapper`
-
-默认规则：没有明确聚焦 auth、deps 或 privacy 的安全请求，先使用 `appsec-checklist`。
-
-## 输出目录
+## 安装与使用
 
 ```text
-docs/
-└── security/
-    └── {feature_path}/
-        ├── appsec-checklist.md
-        ├── authz-review.md
-        ├── dependency-audit.md
-        └── privacy-map.md
+/plugin install security-agent@dev-agent-skills
 ```
 
-Feature-scoped Security 工作消费 PM/Engineer 已确认的 `feature_path`。路径不清时，回 PM 补 PRD/路径归属，或回 Engineer 补 TRD/实施计划；不要自建同义顶层 Security 目录。
+也可按 [Codex 安装指南](../../docs/README.codex.md) 安装全部能力。直接描述目标，或点名所需 Skill 即可。
 
-## 典型工作流
-
-```mermaid
-flowchart LR
-    Engineer["engineer-agent output"] --> Security["security-agent"]
-    Security --> AppSec["appsec-checklist"]
-    Security --> Authz["authz-reviewer"]
-    Security --> Deps["dependency-risk-auditor"]
-    Security --> Privacy["privacy-surface-mapper"]
-    AppSec --> Report["security report"]
-    Authz --> Report
-    Deps --> Report
-    Privacy --> Report
-    Report --> EngineerFix["engineer-agent fixes"]
-```
-
-## 协作边界
-
-- Security 输出风险分级、证据、影响范围和修复建议。
-- Security 不直接做业务实现或部署变更。
-- 需要修改代码、依赖或配置时，交由 Engineer 或 DevOps 接手。
-- 风险来自需求设计时，交由 PM 重新确认约束。
-- Security 不判断父功能归属；需要功能范围时读取
-  `docs/pm/{feature_path}/PRD.md` 和匹配的 Engineer TRD/实施计划。
-
-## 协作依赖
-
-Security Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
-
-- `engineer-agent` 和 `devops-agent` 用于已确认发现项的修复
-- `pm-agent` 用于需求驱动的风险与 feature-path 澄清
-
-如果所需目标不可用，Security Agent 会识别缺失的阶段和插件，将该阶段标记为 blocked，并且不会执行缺失角色的工作。
-
-## 本地维护
-
-```bash
-# 安装某个 Security skill 到当前项目运行时
-npx skills add ./agents/security/skills/appsec-checklist
-```
+[仓库架构](../../docs/architecture.md) · [文档说明](../../docs/AGENTS.md) · [English](./README.md)

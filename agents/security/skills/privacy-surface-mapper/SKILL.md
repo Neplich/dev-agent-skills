@@ -1,174 +1,30 @@
 ---
 name: privacy-surface-mapper
-description: "Map personal-data flows, purposes, retention, third parties, user rights, and regulatory obligations from confirmed scope. Use after security-agent routes privacy review."
-visibility: internal
+description: "Map personal-data collection, use, storage, sharing, retention, and user controls from implemented behavior and configuration."
 ---
 
-## Reader-Facing Writing Composition
+# Privacy Surface Mapping
 
-For substantial reader-facing prose, co-load `human-writing` even on direct
-invocation; use the same context, not a later pass. This Skill retains evidence,
-facts, required structure, paths, gates, and verification. Skip code-, config-, schema-,
-lockfile-, and data-only output.
+Trace the requested data categories through forms, APIs, logs, analytics,
+storage, caches, jobs, exports, and external processors. Use code and
+configuration to verify collection purpose and handling.
 
-## Mandatory Evidence Escalation
+| Data | Collection point | Purpose | Storage / recipient | Retention / deletion | Evidence |
+| --- | --- | --- | --- | --- | --- |
 
-Explicitly record mapped-document freshness; `unverified` is low-trust
-navigation. Verify retention and data-flow claims against code and
-configuration, distinguish configured policy from observed runtime behavior,
-and state the compliance impact of any difference. If the verified conclusion
-changes formal documentation, behavior, operations, or release readiness,
-write the Security-owned report and return the evidence to `pm-agent` for
-classification and PM-owned issue filing, not directly to Docs.
+Distinguish personal identifiers, sensitive content, and behavioral data.
+Document access controls, encryption, third-party sharing, locations, and
+cross-system propagation where evidence establishes them.
 
-## PM Handoff Entry Gate
+Inspect implemented access, correction, export, consent/preferences, and
+deletion controls. Trace deletion through dependent records, backups, caches,
+and external services as applicable. Compare configured retention with the
+jobs or runtime behavior that enforce it.
 
-Before privacy mapping, require a PM/Security handoff packet or equivalent
-confirmed data-scope context. If the user directly invokes this specialist
-without PM handoff context, confirmed data categories, or a confirmed
-`feature_path` for feature-scoped work, return the request to `pm-agent` for
-classification.
+Report factual gaps, affected people or data, existing mitigations, and focused
+improvements. For legal compliance questions, verify applicable jurisdiction
+and current authoritative requirements before drawing legal conclusions.
+Keep technical observations and legal interpretation clearly attributed.
 
-Use the PM-side packet definition in
-the plugin-local generated `../security-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
-
-## Execution Steps
-
-### Step 1: Understand Data Requirements
-
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the plugin-local generated `../security-agent/_internal/_generated/shared-contracts/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
-
-1. **Resolve feature scope**:
-   - For feature-scoped privacy mapping, use the confirmed `feature_path`.
-   - Read `docs/pm/{feature_path}/PRD.md`.
-   - Read `docs/engineer/{feature_path}/TRD.md` and
-     `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when architecture,
-     storage, integrations, or release scope affect data handling.
-   - If `feature_path` is unclear, return to PM for PRD/path clarification or
-     Engineer for missing/stale TRD or implementation plan; do not invent a
-     new top-level security directory.
-
-2. **Read PM documents**:
-   - PRD: identify what user data is collected and why
-   - Extract data fields (name, email, phone, address, etc.)
-
-### Step 2: Map Data Collection Points
-
-**A. Find data collection code:**
-- Search for form inputs, API endpoints collecting user data
-- Search for user registration/profile endpoints
-- Search for analytics/tracking code
-
-**B. Classify data types:**
-- **Personal Identifiable Information (PII):** name, email, phone, address
-- **Sensitive data:** health info, financial data, biometric data
-- **Behavioral data:** browsing history, preferences, usage patterns
-
-### Step 3: Analyze Data Storage and Transmission
-
-**A. Storage:**
-- Where is data stored (database, files, cache)
-- Is data encrypted at rest
-- Data retention period
-
-**B. Transmission:**
-- Is data encrypted in transit (HTTPS)
-- Third-party data sharing
-- Cross-border data transfers
-
-### Step 4: Check User Rights Implementation
-
-**GDPR/CCPA requires:**
-- Right to access (data export)
-- Right to deletion (data erasure)
-- Right to rectification (data correction)
-- Right to portability (data download)
-
-Search for implementation of these features.
-
-### Step 5: Generate Privacy Map Report
-
-Create `docs/security/{feature_path}/privacy-map.md`:
-
-**Frontmatter:**
-```yaml
----
-feature: {feature}
-feature_path: {feature_path}
-parent_feature: {parent_feature}
-feature_level: {feature_level}
-version: v1
-date: YYYY-MM-DD
-last_updated: YYYY-MM-DD
----
-```
-
-**Report Structure:**
-
-1. **Personal Data Inventory**
-   - Table of all personal data collected
-   - Data type, purpose, legal basis
-
-2. **Data Flow Diagram**
-   - Collection → Storage → Processing → Deletion
-
-3. **Third-Party Data Sharing**
-   - List of third parties receiving data
-   - Purpose and legal basis
-
-4. **User Rights Implementation Status**
-   - Access: ✅/❌
-   - Deletion: ✅/❌
-   - Export: ✅/❌
-   - Correction: ✅/❌
-
-5. **Privacy Risks**
-   - Compliance gaps
-   - Missing consent mechanisms
-   - Inadequate data protection
-
-6. **Recommendations**
-   - Priority fixes for compliance
-   - Privacy policy updates needed
-
-## Output Format
-
-```markdown
-## Personal Data Inventory
-
-| Data Field | Type | Purpose | Legal Basis | Retention |
-|-----------|------|---------|-------------|-----------|
-| Email | PII | Account login | Contract | Account lifetime |
-| Name | PII | Personalization | Consent | Account lifetime |
-| IP Address | PII | Security | Legitimate interest | 90 days |
-
-## User Rights Status
-
-- ✅ Right to Access: Implemented via /api/user/export
-- ❌ Right to Deletion: Not implemented
-- ❌ Right to Export: Partial (missing transaction history)
-- ✅ Right to Correction: Implemented via profile edit
-
-## Privacy Risks
-
-### [HIGH] Missing Data Deletion Endpoint
-
-**Issue:** No way for users to delete their account and data
-
-**Compliance Impact:** GDPR Article 17 violation
-
-**Fix:** Implement account deletion endpoint with cascading data removal
-```
-
-## Closeout
-
-After reaching a confirmed review conclusion, including on a direct invocation,
-evaluate `../security-agent/_internal/_generated/shared-contracts/security-escalation.md`.
-When it triggers, return the conclusion and evidence to `pm-agent` for
-classification and issue filing; do not hand evidence directly to `docs-agent`,
-file the issue yourself, or modify formal documentation (`docs/site/` or
-documentation owned by other roles). The required Security-owned process report
-under `docs/security/{feature_path}/` remains escalation evidence and is not
-restricted by this prohibition. Then apply
-`../security-agent/_internal/_generated/shared-contracts/closeout-contract.md`
-to recommend the next step and wait for user confirmation.
+Use sanitized examples and aggregate descriptions in reports. Continue into
+requested remediation and documentation using the same verified evidence.

@@ -12,16 +12,9 @@ last_verified_version: unverified
 
 # API 文档模板
 
-正文只描述当前接口状态。`related_code` 必须覆盖真实路由、schema、handler
-和契约测试；请求、响应、鉴权与错误都应有代码或测试证据，没有的部分删除，
-不保留空表。流式或文件接口需说明结束语义、Content-Type 与下载头。
+根据 route、schema、handler 和测试说明当前接口。正文覆盖请求、响应、鉴权、错误与证据；流式或文件接口说明结束语义、Content-Type 和下载头。
 
-页面路径来自已确认的功能域与子功能，例如
-`api/<feature-domain>/<subfeature>/<route>.md`，不从源码目录名机械生成。
-`api/index.md` 和各中间节点 `index.md` 只承担范围、共享约定与导航，
-并直接链接所有子节点或 route 叶子页；完整 contract 不在索引中重复。
-叶子页默认覆盖一条 route；只有读者任务、owner、生命周期和 contract
-边界都一致时才可以合并，且每条 route 仍须有可直接定位的页内锚点。
+按业务域与可独立理解的接口组织页面，索引提供范围和导航。紧密接口组可共用页面，每条接口具有可直接定位的锚点。
 
 <!-- docs-scaffold:start -->
 ```md
@@ -55,7 +48,7 @@ last_verified_version: unverified
 | --- | --- | --- | --- |
 | `<METHOD>` | `<path>` | `<当前用途>` | `<要求>` |
 
-合并紧密接口组时，“用途”必须链接到本页对应接口详情锚点。
+合并紧密接口组时，“用途”链接到本页对应接口详情锚点。
 
 ## 请求
 

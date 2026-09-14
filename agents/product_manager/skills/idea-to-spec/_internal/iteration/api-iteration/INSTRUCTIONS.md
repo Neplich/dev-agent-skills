@@ -1,40 +1,7 @@
----
-name: api-iteration
-description: Deprecated PM-owned API iteration resource. Do not update API docs from PM; route API revision requests to engineer-agent:trd-gen.
----
+# API 增量修订
 
-# API Iteration Handoff
+阅读已有文档与本次变更证据，找出受影响的声明、表格、示例和链接。保留仍然正确的内容，将修改整合到当前说明中。同步受影响的关联资料和宿主使用的元数据。
 
-API documentation is Engineer-owned. This internal PM instruction only analyzes
-why an API document must change and hands the request to
-`engineer-agent:trd-gen`.
+涉及行为或技术选择时，用用户目标、issue、实现和测试核对预期；仅关键决策存在歧义时询问。完成后检查前后一致性以及适用的验证结果。
 
-## When to use
-
-- A legacy PM route points at `api-iteration`
-- `api-validator` or review feedback indicates an API document should change
-- Endpoint contracts, auth, errors, or data models changed and need Engineer
-  documentation work
-- Do not edit `API.md` directly from PM
-
-## Inputs
-
-- `api_document`: existing API document path or summary, when available
-- `change_request`: validator report, review comments, code diff, route change,
-  or endpoint change list
-- `related_prd`: source PRD or PM decision context
-- `feature_path` metadata and evidence
-
-## Workflow
-
-1. Read the current API context and the requested change.
-2. Classify the change: validation fix, non-breaking contract update, breaking
-   contract update, endpoint addition, deprecation, or removal.
-3. Identify PM-side requirement or decision impacts.
-4. Prepare a handoff packet for `engineer-agent:trd-gen`.
-5. Do not modify `API.md`; Engineer owns the revision and versioning.
-
-## Output contract
-
-Return an Engineer handoff packet with affected endpoints, source evidence,
-compatibility risks, related PRD / DECISIONS impact, and unresolved questions.
+参考 [schema](../../_shared/doc-schemas/api-schema.md) 和 [格式约定](../../_shared/output-conventions.md)。

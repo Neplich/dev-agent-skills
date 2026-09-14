@@ -328,7 +328,7 @@ test('scaffoldDocument rejects a broken target symlink even with overwrite autho
   assert.equal((await lstat(target)).isSymbolicLink(), true);
 });
 
-test('scaffoldDocument rejects missing #118 inputs and incomplete change-map input', async (context) => {
+test('scaffoldDocument validates required page and change-map inputs', async (context) => {
   await context.test('missing owner', async () => {
     const fixture = await createFixture();
     const input = options();
@@ -501,19 +501,19 @@ test('missingParentDirectories uses Windows path semantics for rollback boundari
   ]);
 });
 
-test('scaffoldDocument rejects release notes and hands off to issue #116', async () => {
+test('scaffoldDocument identifies the versioned format for release notes', async () => {
   const fixture = await createFixture();
   const input = options('release-notes');
   input.path = 'docs/site/release-notes/v1.md';
   await assert.rejects(
     scaffoldDocument(input, { ...fixture, runDocsChecks: noChecks }),
-    /Release Notes Skill from issue #116/
+    /versioned release metadata/
   );
   const pathInput = options('api');
   pathInput.path = 'docs/site/release-notes/v1.md';
   await assert.rejects(
     scaffoldDocument(pathInput, { ...fixture, runDocsChecks: noChecks }),
-    /Release Notes Skill from issue #116/
+    /versioned release metadata/
   );
 });
 
@@ -577,7 +577,7 @@ test('parseGitPaths preserves whitespace and newlines in NUL-delimited git paths
   ]);
 });
 
-test('strict affected gate includes committed diff in a clean CI checkout', async () => {
+test('explicit strict comparison includes committed diff in a clean CI checkout', async () => {
   const outputs = new Map([
     ['symbolic-ref --quiet --short refs/remotes/origin/HEAD', ''],
     ['rev-parse --verify --quiet base-sha^{commit}', 'base-sha\n'],
@@ -930,12 +930,33 @@ test('attachChildLifecycle handles spawn errors and signal exit codes', async (c
   });
 });
 
-test('test:docs runs the affected-document gate in strict mode', async () => {
+test('test:docs validates artifacts independently of a change-map comparison', async () => {
   const packageData = JSON.parse(await readFile(resolve(SITE_SOURCE, 'package.json'), 'utf8'));
-  assert.match(packageData.scripts['test:docs'], /check:affected -- --strict/);
+  assert.match(packageData.scripts['test:docs'], /check:frontmatter/);
+  assert.match(packageData.scripts['test:docs'], /check:version/);
+  assert.doesNotMatch(packageData.scripts['test:docs'], /check:affected/);
 });
 
 test('npmExecutable uses the Windows npm command shim', () => {
   assert.equal(npmExecutable('win32'), 'npm.cmd');
   assert.equal(npmExecutable('darwin'), 'npm');
+});
+
+
+test('affected-document analysis reports suggestions without blocking by default', async () => {
+  const result = await checkAffected({}, {
+    checkFrontmatter: async () => [],
+    readChangeMap: async () => YAML.stringify({
+      change_map: {
+        'src/api/**': {
+          required_docs: ['docs/site/api/overview.md'],
+          trigger: 'API behavior changes'
+        }
+      }
+    }),
+    changedFiles: async () => ['src/api/handler.mjs'],
+    requiredDocExists: async () => true
+  });
+  assert.equal(result.blocked, false);
+  assert.deepEqual(result.suspects[0].missingDocs, ['docs/site/api/overview.md']);
 });

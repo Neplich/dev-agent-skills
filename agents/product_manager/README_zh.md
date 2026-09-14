@@ -1,119 +1,29 @@
-# Product Manager Agent
+# 产品能力
 
-`pm-agent` 是产品角色的 dispatcher skill，负责把需求、项目状态、竞品、路线图和发布沟通类请求路由到合适的 PM specialist skill。面向真实读者的文档还可以共同加载 `human-writing`。PM 负责文档化产出，不直接进入代码实现。
+本插件包含 9 个 Skill，提供需求、功能目录、研究、路线图、版本沟通与写作。每个 Skill 均可直接使用；`pm-agent` 帮助按任务选择相关方法。
 
-> [!NOTE]
-> 仓库架构与文档归属见 [Architecture](../../docs/architecture.md) 和 [Documentation Governance](../../docs/AGENTS.md)。
->
-> 其他语言：[English](./README.md)
+助手根据用户目标组合这些能力，贯穿分析、实现、验证与交付。已有授权随任务延续，文档与专业参考按实际需要使用。
 
-> [!TIP]
-> 当用户还在描述“想做什么”、范围还没有定清楚，或者空仓库里只有一个产品想法时，优先从 `pm-agent` 开始，而不是直接交给工程实现。
+## 能力目录
 
-## 快速信息
-
-| 项目 | 内容 |
+| Skill | 用途 |
 | --- | --- |
-| 入口 skill | `pm-agent` |
-| 附加 skills | 8 个：7 个 PM specialist 加 `human-writing` |
-| 主要输入 | 用户想法、本地 `docs/`、代码库现状、GitHub Issues / PRs / Milestones / Releases |
-| 主要输出 | `docs/pm/{feature_path}/`、`docs/roadmap.md`、`docs/changelog/changelog-v{version}.md` |
-| 下游协作 | `designer-agent`、`engineer-agent`、`qa-agent`、`devops-agent`、`security-agent`、`docs-agent` |
+| [pm-agent](./skills/pm-agent/SKILL.md) | 产品能力导航 |
+| [idea-to-spec](./skills/idea-to-spec/SKILL.md) | 梳理需求与验收标准 |
+| [feature-catalog](./skills/feature-catalog/SKILL.md) | 从现有项目整理功能目录 |
+| [competitive-brief](./skills/competitive-brief/SKILL.md) | 竞争研究与产品定位 |
+| [changelog-gen](./skills/changelog-gen/SKILL.md) | 开发者版本变更记录 |
+| [github-release-gen](./skills/github-release-gen/SKILL.md) | GitHub Release 内容与发布 |
+| [roadmap-gen](./skills/roadmap-gen/SKILL.md) | 路线图与里程碑 |
+| [github-reader](./skills/github-reader/SKILL.md) | GitHub 项目状态读取 |
+| [human-writing](./skills/human-writing/SKILL.md) | 面向读者的自然写作 |
 
-## Skill 清单
-
-| Skill | 适用场景 | 主要产物 |
-| --- | --- | --- |
-| `pm-agent` | PM 请求入口与路由 | 下游 skill 选择与执行路径 |
-| `idea-to-spec` | 产品想法、空仓库 app 请求、已有功能变更、spec 更新 | `PRD.md`、`DECISIONS.md`、Engineer handoff |
-| `feature-catalog` | 接手已有项目、建立功能目录、项目功能画像 | 功能目录草案、`docs/pm/FEATURE_CATALOG.md`、`prd-gen`/`trd-gen` handoff |
-| `competitive-brief` | 竞品定位、差距分析、市场扫描 | 竞品简报、定位机会、风险与建议 |
-| `changelog-gen` | 面向开发者的版本变化整理 | `docs/changelog/changelog-v{version}.md` |
-| `github-release-gen` | 已确认站内版本说明和发版审计后的 GitHub Release 工作 | 可追溯预览或 draft；实际 tag 与 post-tag 审计通过后经批准发布 |
-| `roadmap-gen` | milestone、issue、版本计划整理 | `docs/roadmap.md` |
-| `github-reader` | 项目状态、backlog、PR 队列、release blocker | GitHub 项目健康报告 |
-| `human-writing` | 与主文档 Skill 共同生成自然、面向读者的正文 | 保留事实和交付规则的主任务文档 |
-
-## 路由规则
-
-显式点名 `pm-agent`、role agent 或任意 skill 时，始终进入该能力的既有门禁。未显式点名时，产品或工程研发意图进入 `pm-agent`，普通非研发请求由当前助手处理；项目文档、代码与 marker 只在进入 PM 后作为上下文。
-
-- 想法收敛、范围定义、PRD/DECISIONS：使用 `idea-to-spec`
-- 接手已有项目、建立功能目录、功能画像：使用 `feature-catalog`
-- 竞品研究、定位差距、市场扫描：使用 `competitive-brief`
-- 开发者视角版本变化：使用 `changelog-gen`
-- GitHub Release 预览、draft 或经批准发布：完成 Docs 发版门禁后使用
-  `github-release-gen`
-- 面向用户的版本说明和 `docs/site/release-notes/` 站内版本页：交给
-  `docs-agent:release-notes-gen`
-- 路线图、milestone 规划：使用 `roadmap-gen`
-- GitHub 项目状态、PR/Issue 队列、release blocker：使用 `github-reader`
-- 面向真实读者的正文：保留已选择的主 Skill，同时加载 `human-writing`；它不是替代路由，也不是单独的润色阶段
-- 明确要求只读、不修复的缺陷诊断：分类为 `bug_report`，携带
-  `mode: diagnosis_only` 与 `allowed_mutations: none` 交给 Engineer；普通修复仍需先对齐预期行为
-
-默认规则：只要核心问题仍是“产品方向、需求、范围、计划或沟通”，留在 PM Agent；只有需求已经足够稳定时，才交给 Designer 或 Engineer。
-
-## 典型工作流
-
-```mermaid
-flowchart LR
-    Idea["用户想法 / 项目状态"] --> PM["pm-agent"]
-    PM --> Spec["idea-to-spec"]
-    PM --> GitHub["github-reader"]
-    PM --> Release["changelog / GitHub Release"]
-    PM -. "面向读者的正文" .-> Writing["human-writing"]
-    Spec --> Designer["designer-agent"]
-    Spec --> Engineer["engineer-agent"]
-```
-
-## 文档结构
-
-Feature 级 PM 文档使用固定目录：
+## 安装与使用
 
 ```text
-docs/
-└── pm/
-    └── {feature_path}/
-        ├── PRD.md
-        └── DECISIONS.md
+/plugin install pm-agent@dev-agent-skills
 ```
 
-`feature_path` 支持多级。创建 PM 功能文档前先扫描 `docs/pm/**/PRD.md`；
-如果新需求明确属于已有父 PRD，就挂到父目录下；父功能归属不清时先澄清或
-blocked，不创建新的并列顶层目录。
+也可按 [Codex 安装指南](../../docs/README.codex.md) 安装全部能力。直接描述目标，或点名所需 Skill 即可。
 
-Repo 级 PM 产物可以放在：
-
-- `docs/roadmap.md`
-- `docs/changelog/changelog-v{version}.md`
-
-站内 Release Notes 归 `docs-agent:release-notes-gen`，写入宿主站点的
-`docs/site/release-notes/`；PM 只通过 `github-release-gen` 产出 GitHub Release。
-
-## 协作边界
-
-- PM Agent 可以产出需求、业务、技术约束和决策文档。
-- PM Agent 不直接实现代码、测试、部署配置或安全修复。
-- Designer 主要消费 `PRD.md`、`DECISIONS.md`。
-- Engineer 消费 PM 文档后，通过 `engineer-agent:trd-gen` 负责 `docs/engineer/{feature_path}/TRD.md`。
-
-## 协作依赖
-
-PM Agent 将工作交接给作为独立插件打包并安装的同级 Agent：
-
-- `designer-agent` 用于已确认的 UX、UI 结构、视觉系统或设计 handoff 工作
-- `engineer-agent` 用于已确认的 TRD、实现、测试、调试、交付或代码库工作，以及边界明确的只读诊断
-- `qa-agent` 用于已确认的验收、探索、缺陷分析或回归验证工作
-- `devops-agent` 用于已确认的部署、CI/CD、环境、发版就绪、回滚或 runbook 工作
-- `security-agent` 用于已确认的 AppSec、认证授权、依赖、隐私或数据流审查工作
-- `docs-agent` 用于已确认的正式文档站 bootstrap、同步、回填、基于真实运行界面的图文用户操作手册或发版文档审计工作
-
-如果所需目标不可用，PM Agent 会识别缺失的阶段和插件，将该阶段标记为 blocked，并且不会执行缺失角色的工作。
-
-## 本地维护
-
-```bash
-# 安装某个 PM skill 到当前项目运行时
-npx skills add ./agents/product_manager/skills/idea-to-spec
-```
+[仓库架构](../../docs/architecture.md) · [文档说明](../../docs/AGENTS.md) · [English](./README.md)

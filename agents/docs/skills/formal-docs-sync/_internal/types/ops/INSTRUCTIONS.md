@@ -1,129 +1,15 @@
-# Operations Sync Instructions
+# 运维同步参考
 
-Load this module only when a confirmed write scope or an explicitly requested
-read-only candidate-planning scope contains `doc_type: ops`.
+根据配置和运行结果确定 Development、Docker、Kubernetes/Helm 等实际支持方式。分别说明前置条件、配置、命令、成功标准、回滚和排错；已验证方式可以独立交付，证据缺口按类别说明。
 
-## Evidence Checks
+共享 environment-reference.md 对照 .env.example、配置 schema、实际读取、Compose/Helm 映射和测试。每个参数记录名称、目的、类型、必填性、真实默认值、约束、敏感性、安全存储引用、生效时点和适用环境。保留 active、deprecated、renamed、missing、conflict 等真实生命周期信息，完整核对示例中的键与实际读取。
 
-For deployment work, first classify the candidate scope as Development,
-Docker, and Kubernetes/Helm. For each class report `supported`, `unsupported`,
-`blocked`, or `out-of-scope`, its evidence, owner, code glob, target pages,
-environment differences, exclusions, and change-map delta. Continue with other
-confirmed classes when one is blocked; do not create a page or command that
-pretends the blocked class is supported.
+| 部署方式 | 重点内容 |
+| --- | --- |
+| Development | 源码启动、依赖、初始化、注入、服务顺序、端口、健康、调试；有构建证据时说明镜像构建 |
+| Docker | Compose 文件与 profile、环境优先级、secret、卷、网络、端口、迁移任务、备份恢复与升级 |
+| Kubernetes/Helm | 集群与权限、namespace/release、values 层次、ConfigMap/Secret、CRD/hook/job 顺序、rollout、资源和回滚 |
 
-Treat that continuation as an execution rule, not only a reporting rule. Once
-the bounded scope for the supported classes is confirmed, write and validate
-those classes atomically even when another class remains `blocked`. For a
-blocked Kubernetes/Helm class, enumerate each applicable missing evidence
-category separately, including Chart, values, template consumption points,
-cluster authority or permissions, and executed verification results.
+镜像来源页记录 registry/repository/tag/digest、架构、来源、安全鉴权引用、拉取与校验。Helm Chart 页按实际目录说明文件职责；values 参考对照 schema、模板消费点和环境覆盖。
 
-Use confirmed deployment and runtime evidence to verify, as applicable:
-
-- supported services, components, environments, versions, owners, and
-  dependencies;
-- required permissions, configuration, secret references, backups, and
-  prerequisites;
-- exact startup, upgrade, Helm, Compose, migration, and operational commands;
-- health endpoints, logs, metrics, jobs, data checks, and explicit success
-  criteria;
-- environment differences demonstrated by configuration or execution results;
-- rollback triggers, executable rollback steps, and post-rollback checks;
-- observed failure symptoms and evidence-backed diagnostic entry points.
-
-An unexecuted command, proposed deployment path, placeholder value, or plan is
-not current operational fact. Never write credentials, tokens, cookies, or
-other secret values; reference the approved secure store instead.
-
-Build `docs/site/ops/deployment/environment-reference.md` by cross-checking
-`.env.example`, configuration schema/settings and actual reads, Compose and
-Helm mappings, and tests. Group parameters by domain or service. For every
-parameter record its exact name, purpose, type/format, requiredness,
-evidence-backed non-secret default, allowed values/constraints, applicable
-deployment classes, safe example, secret classification and store reference,
-activation timing, and evidence paths. Report missing, deprecated, renamed, or
-conflicting definitions. Do not document variables absent from both examples
-and reads, or duplicate the full table in deployment-specific pages.
-
-Before calling the environment reference complete, validate a per-parameter,
-per-source matrix: preserve an evidence-backed default and requiredness exactly
-as implemented, enumerate every applicable deployment class, and name the
-effective injection or consumption mechanism for each class. A value present
-in source defaults must not be relabeled as required merely because one
-deployment file supplies it. Give every parameter row its evidence paths and
-one explicit lifecycle status: `active`, `deprecated`, `renamed`, `missing`, or
-`conflict`. Do not collapse a deprecated parameter into a generic drift label.
-Before returning, reconcile the table against every key in each supplied
-environment example and every actual configuration read. A key found in an
-example must remain in the matrix even when its lifecycle is `deprecated` or
-its current read is absent. Do not call an example or settings source missing
-until its supplied path has been checked, and do not silently omit a stale key.
-Read an explicitly named dotfile such as `.env.example` by its exact path; a
-discovery command that hides dotfiles is not evidence that the file is absent.
-
-Use the host granularity and ops template contracts for the authoritative page
-tree:
-
-- `development/index.md` covers source startup, dependencies, initialization,
-  env injection, service order, ports, health/success, reload/debug/logging, and
-  environment boundaries. `development/image-build.md` requires real
-  Dockerfile/build-script/executed-build evidence for context, target, args,
-  dependency sources, architectures, dev tags, build/load/push entry points,
-  image entry/content and digest/manifest checks; otherwise block those facts.
-- `docker/index.md` covers Compose versions/files/profiles, dependency order,
-  env precedence, secrets, volumes, networks, ports, migration/jobs, lifecycle,
-  upgrade/backup/restore/rollback, health/log/data checks, and Docker-specific
-  differences. `docker/image-sources.md` records each service image coordinate,
-  digest, source type, architectures, secure auth reference, pull/mirror/offline
-  entry, provenance checks, and pull/permission/architecture/tag diagnostics.
-  Exclude Helm-only values, namespace, and release revision steps.
-- `kubernetes-helm/index.md` covers cluster/Helm/Ingress/StorageClass/permission
-  prerequisites, namespace/release/values layering, ConfigMap/Secret mappings,
-  preflight/backup, CRD/hook/job/migration order, install/upgrade, rollout and
-  resource checks, and rollback. `image-sources.md` records values image keys,
-  Chart/release correspondence, imagePullSecrets/identity, node architecture,
-  offline sources, preflight provenance and Pod imageID checks.
-  `chart-package.md` documents only the real Chart tree and file duties,
-  dependencies, CRDs, hooks, tests, lint/template/package/pull/push sources and
-  digest/provenance checks. `values-reference.md` derives grouped parameter
-  facts from values, schema, template consumption and environment overrides,
-  including path, purpose, type, non-secret default, requiredness, constraints,
-  environment difference, sensitivity, consumer, merge precedence and checks.
-  Exclude unsupported empty groups and Compose-only assumptions.
-
-Each class owns its prerequisites, configuration, commands, success criteria,
-rollback, and troubleshooting. Root and class indexes provide scope and
-navigation without copying child-page bodies. If migrating an aggregate page,
-include path moves, link repairs, navigation, change-map updates, and duplicate
-fact consolidation in the same confirmed atomic scope.
-
-Do not mark a class page set complete while an evidence-backed applicable item
-from the class checklist is omitted. This includes Docker network and migration
-behavior, and Kubernetes/Helm ConfigMap handling and the real Chart package
-tree when those facts exist in the confirmed evidence.
-
-Before write/read-back, materialize a per-class applicability matrix covering
-every item in the Development, Docker, and Kubernetes/Helm checklists above.
-Each supported-class row points to the exact evidence and target page, or marks
-the item `N/A` with an evidence-backed reason. The matrix must name Docker
-networks and migrations and Kubernetes/Helm ConfigMap handling explicitly; a
-class cannot be called supported or complete while one of its applicable rows
-is absent.
-After writing, audit each class page for explicit prerequisites, commands,
-success criteria, rollback, and troubleshooting sections. Reconcile Docker
-network and migration rows explicitly as evidenced facts or evidence-backed
-`N/A`; an omitted row or heading fails the class completion check.
-
-## Template and Output Rules
-
-Read the ops template linked from the host standards entry—normally
-`docs/site/standards/templates/ops-runbook.md`—and consume its single
-`docs-scaffold` block for a new page. Do not copy the template into this skill.
-
-Keep only currently executable steps, prerequisites, checkpoints, rollback,
-and troubleshooting that evidence supports. Upgrade and rollback instructions
-are ops pages, not Release Notes; hand off any Release Notes body, index,
-metadata, or navigation request to `docs-agent:release-notes-gen`. Keep
-ops pages and their change-map entries in the same confirmed write/read-back
-scope.
+正文使用真实可执行步骤和已验证结果，凭据用安全存储引用。根据部署边界选择独立页面，索引提供场景选择与导航。更新 runbook、参数页、必要索引和 change-map，逐类核对可执行性与恢复说明。

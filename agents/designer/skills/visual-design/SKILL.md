@@ -1,400 +1,48 @@
 ---
 name: visual-design
-description: "Define a reference-backed visual system for confirmed product scope. Use after designer-agent routes visual-design work."
-visibility: internal
+description: "Create and apply coherent visual systems using product context, reusable design data, typography, color, spacing, and interaction feedback."
 ---
 
-## Reader-Facing Writing Composition
+# Visual Design
 
-For substantial reader-facing prose, co-load `human-writing` even on direct
-invocation; use the same context, not a later pass. This Skill retains evidence,
-facts, required structure, paths, gates, and verification. Skip code-, config-, schema-,
-lockfile-, and data-only output.
+Start with the product's audience, tasks, information density, brand, and
+existing interface. Select a coherent visual direction and explain how it
+supports the user experience. Preserve useful established conventions.
 
-## Hard Boundaries
+## Build the system
 
-This skill defines a visual system only.
+- Choose a layout and style suited to the content and interaction frequency.
+- Define brand, neutral, and semantic colors with readable contrast and clear
+  state meaning. Pair status color with text or symbols.
+- Choose typography by language coverage, reading density, and product tone;
+  define roles, size, line height, weight, and numeric treatment.
+- Establish spacing, alignment, component shape, elevation, and interaction
+  feedback that create a consistent hierarchy.
+- Include loading, empty, error, focus, pressed, disabled, and success states.
+  Adapt layouts to content and the project's target devices.
+- Apply the system to the requested specification, prototype, or interface.
+  Inspect rendered results and relevant interactions for implementation work.
 
-Allowed actions:
-- Read PM docs and existing design docs
-- Read internal visual-design references for design-system reasoning
-- Run the local `references/design-system-data/scripts/search.py` helper for design-system lookup and reference search
-- Choose a product-appropriate aesthetic direction and justify it
-- Define color, typography, spacing, component, and copy guidelines
-- Write or update `docs/design/{feature_path}/visual-system.md`
+## Reference library
 
-Forbidden actions:
-- Writing or modifying source code, tests, design tokens in code, configs, or deployment files
-- Emitting implementation plans, code snippets for production use, shell commands, install commands, or engineer task lists
-- Generating Tailwind config, CSS variables, React/Vue/SwiftUI components, shadcn commands, or file-by-file implementation instructions
-- Calling Engineer skills or continuing into implementation after the visual system is complete
+Read the references that help the current design:
 
-If the input includes a completed PM or UX spec, use it to shape the visual system and stop at design handoff.
+- [System outline](./references/design-system-framework.md)
+- [Product patterns](./references/product-patterns.md)
+- [Style patterns](./references/style-patterns.md)
+- [Color palettes](./references/color-palettes.md)
+- [Typography](./references/typography-pairings.md)
+- [Quality checks](./references/ux-quality-rules.md)
+- [Focused design practices](./references/anti-patterns.md)
+- [Searchable design data](./references/design-system-data/README.md)
 
-When the supplied PM/design handoff already contains a confirmed feature path,
-product type, audience, brand direction, and requested visual-system output,
-accept it as the entry basis and produce the document; do not invent another
-handoff requirement. A repository-root `PM_HANDOFF.md` carrying those fields is
-an equivalent confirmed entry basis; a second design packet is not required.
-The result visibly includes the Design System Data query
-and findings, aesthetic direction, layout, palette, typography, UX rules, and
-anti-patterns while remaining code-free.
-
-Every reference-backed visual system must record the Design System Data query,
-the active installed `visual-design` skill reference source used, the relevant
-lookup findings, and how those findings support layout, style, color,
-typography, and UX decisions. A polished recommendation without this source
-evidence is incomplete. Resolve helper paths from the active installed skill
-directory rather than from the host workspace.
-
-When updating an existing visual system, the body states only the current
-design: superseded tokens, colors, or rules are rewritten, not kept with
-"deprecated" annotations. Removals are recorded in the doc changelog and git
-history: the doc carries a `## Changelog` section (initialized if absent)
-listing version, date, and change summary, and `last_updated` metadata is
-refreshed when present.
-
-## PM Handoff Entry Gate
-
-Before creating visual-system deliverables, require a PM/design handoff packet
-or equivalent confirmed PM/design scope. If the user directly invokes this
-specialist without PM handoff context or a confirmed `feature_path`, return the
-request to `pm-agent` for classification.
-
-Use the PM-side packet definition in
-the plugin-local generated `../designer-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
-
-## Feature Path Gate
-
-Before writing a feature-scoped visual system, consume a confirmed
-`feature_path` from the PM/design handoff or `docs/pm/{feature_path}/PRD.md`.
-Read PM context from `docs/pm/{feature_path}/`, read
-`docs/design/{feature_path}/ui-ux-spec.md` when it exists, and read
-`docs/engineer/{feature_path}/TRD.md` only for platform constraints that affect
-presentation. Write only to `docs/design/{feature_path}/visual-system.md`. If
-the feature path or parent feature is unclear, stop and return to
-`pm-agent:idea-to-spec`; do not create a synonym top-level design directory.
-
-If the target agent's plugin for a cross-agent handoff is not installed or
-unavailable, state the missing stage and required plugin, mark that handoff
-stage as blocked, and do not perform the missing agent's responsibilities
-yourself.
-
-## Execution Steps
-
-### Step 1: Gather Context
-
-1. **Read PM documents** from `docs/pm/{feature_path}/`:
-   - PRD: product type, features, brand tone, target audience, business goals
-   - DECISIONS: confirmed design constraints and trade-offs
-   - TRD: platform constraints that affect presentation choices
-   - UI/UX spec (if exists): component list
-
-2. **Extract design-system inputs**:
-   - Product type and domain
-   - Target users and usage context
-   - Brand tone and trust requirements
-   - Platform and device constraints
-   - Data density, workflow complexity, and accessibility risks
-
-### Step 2: Read Internal References
-
-Use the local Design System Data database first, then use local Markdown references for boundary and synthesis rules.
-
-Primary reference database:
-
-- `references/design-system-data/data/` - full CSV design database managed under this skill
-- `references/design-system-data/scripts/search.py` - BM25 search and design-system output helper
-- `references/design-system-data/README.md` - data notes and local no-code usage boundary
-
-For design-system generation, run the helper from this skill's directory (the directory containing this SKILL.md) as internal analysis:
+The local database includes product, style, color, typography, charts, icons,
+UX, and stack guidance. From this Skill directory, for example:
 
 ```bash
-uv run python references/design-system-data/scripts/search.py "<product type> <industry> <keywords>" --design-system -p "<Project Name>" -f markdown
+python3 references/design-system-data/scripts/search.py "analytics dashboard" --design-system --format markdown
+python3 references/design-system-data/scripts/search.py "table keyboard" --domain ux --json
 ```
 
-For focused lookup, use domains such as `product`, `style`, `color`, `typography`, `ux`, `chart`, or `landing`:
-
-```bash
-uv run python references/design-system-data/scripts/search.py "enterprise analytics dashboard" --domain product
-```
-
-Supplementary local references:
-
-- `references/design-system-framework.md` - output model and required reasoning fields
-- `references/product-patterns.md` - product category to pattern mapping
-- `references/style-patterns.md` - style direction selection rules
-- `references/color-palettes.md` - product-aware color systems
-- `references/typography-pairings.md` - font pairing options by tone and data density
-- `references/ux-quality-rules.md` - visual UX quality checklist
-- `references/anti-patterns.md` - forbidden generic or implementation-oriented output
-
-Reference outputs are evidence for design choices only. Do not copy raw CSV rows, CSS imports, Tailwind snippets, code examples, stack implementation guidance, or install commands into the final design artifact. Synthesize a focused recommendation for the feature.
-
-### Step 3: Classify Product and Design Risk
-
-Choose the closest product category, then record the reason.
-
-Examples:
-   - SaaS dashboard → professional, clean
-   - E-commerce → vibrant, trustworthy
-   - Content platform → readable, engaging
-   - Mobile app → touch-friendly, simple
-   - Enterprise analytics → data-dense, trustworthy, highly scannable
-   - Fintech → conservative trust, clear status colors, low ambiguity
-   - Healthcare → calm, accessible, human, error-resistant
-
-If the category is ambiguous, choose the safest adjacent category and list the assumption in the output.
-
-### Step 4: Choose Aesthetic Direction
-
-If the user gave a style preference, validate it against the product category and note any trade-off. If no style preference is provided, infer the style from the references and product context.
-
-Ask one concise clarification only when the style choice would materially change the result:
-
-```
-Question: "What aesthetic direction fits your product best?"
-Options:
-- "Minimalist" - Clean, spacious, restrained
-- "Bold/Brutalist" - Strong typography, high contrast
-- "Playful" - Rounded corners, bright colors
-- "Professional" - Corporate, trustworthy
-- "Modern/Tech" - Gradients, glassmorphism
-- "Let the AI decide based on product type"
-```
-
-Avoid generic patterns:
-- AI-purple/blue gradients unless they are explicitly brand-appropriate
-- Defaulting to Inter/Roboto unless matching an existing product system
-- Generic rounded cards everywhere
-- Decorative motion without UX purpose
-- Low-contrast gray-on-gray interfaces
-
-Prefer:
-- Product-specific style selection
-- Purposeful color roles
-- Distinctive but readable font pairings
-- Explicit anti-patterns to avoid
-- Accessibility and data readability checks
-
-### Step 5: Generate Reference-Driven Design System
-
-Create a compact design-system recommendation from the Design System Data design-system output before detailing visual rules:
-
-```markdown
-## 1. Reference-Driven Design System
-
-- Product category: [category]
-- Recommended pattern: [layout / product pattern]
-- Style direction: [primary style + optional secondary style]
-- Design rationale: [why this fits audience, domain, risk]
-- Key effects: [motion/elevation/feedback rules, if useful]
-- Avoid: [top anti-patterns for this product]
-- Source references: [which Design System Data domains influenced the choice]
-```
-
-### Step 6: Define Color System
-
-Create a purposeful color palette:
-
-```markdown
-## Color System
-
-### Primary Colors
-- Primary: #[hex] - Main brand color
-- Primary Dark: #[hex] - Hover/active states
-- Primary Light: #[hex] - Backgrounds
-
-### Semantic Colors
-- Success: #[hex] - Confirmations, success states
-- Warning: #[hex] - Warnings, cautions
-- Error: #[hex] - Errors, destructive actions
-- Info: #[hex] - Information, neutral feedback
-
-### Neutral Colors
-- Text Primary: #[hex] - Main text (ensure 4.5:1 contrast)
-- Text Secondary: #[hex] - Secondary text
-- Border: #[hex] - Dividers, borders
-- Background: #[hex] - Page background
-- Surface: #[hex] - Card/panel background
-```
-
-Include light/dark mode guidance only when relevant. Accessibility: Ensure WCAG AA contrast ratios (4.5:1 for text, 3:1 for UI elements).
-
-
-### Step 7: Define Typography System
-
-Choose font pairings that match product tone and reading density:
-
-```markdown
-## Typography
-
-### Font Families
-- Heading: [Font Name] - Display/headings
-- Body: [Font Name] - Body text, UI
-- Mono: [Monospace Font] - Code, technical content
-```
-
-The output must declare a type scale, including the intended text roles and
-their font size, line height, and weight. Derive the scale from product
-information density, brand inputs, and target-platform conventions. When no
-brand input exists, derive reasonable values from product density instead of
-applying product-independent defaults.
-
-### Step 8: Define Spacing System
-
-The output must declare a spacing system and explain how its values follow from
-product information density, brand inputs, and target-platform conventions.
-When no brand input exists, derive reasonable values from product density
-instead of applying a product-independent fixed grid.
-
-### Step 9: Define Component Styles
-
-```markdown
-## Component Styles
-
-### Buttons
-- Primary: [background] [text color] [padding] [border-radius]
-- Secondary: [styles]
-- Ghost: [styles]
-- Sizes: [size roles and values]
-
-### Input Fields
-- Border: [color] [width]
-- Focus: [border color] [shadow]
-- Error: [border color]
-- Height: [size roles and values]
-
-### Cards
-- Background: [color]
-- Border: [style]
-- Shadow: [elevation]
-- Padding: [spacing]
-- Border radius: [value]
-```
-
-The output must declare component dimensions for the components it defines and
-explain how they follow from product information density, brand inputs, and
-target-platform conventions. When no brand input exists, derive reasonable
-values from product density instead of applying product-independent defaults.
-
-
-### Step 10: Define UX Quality Rules
-
-Document visual UX quality rules that Engineer and QA can later verify without turning this skill into implementation:
-
-```markdown
-## UX Quality Rules
-
-- Accessibility: [contrast, focus, text scaling]
-- Interaction states: [hover, pressed, disabled, loading]
-- Responsive behavior: [mobile/tablet/desktop priorities]
-- Data readability: [tables/charts/status colors if relevant]
-- Feedback: [empty/error/success/loading states]
-```
-
-### Step 11: Define Anti-patterns to Avoid
-
-Include product-specific anti-patterns:
-
-```markdown
-## Anti-patterns to Avoid
-
-- [anti-pattern] - [why it is wrong for this product]
-- [anti-pattern] - [risk]
-```
-
-### Step 12: Define Copy Guidelines
-
-```markdown
-## Copy & Tone Guidelines
-
-### Voice & Tone
-Based on product type:
-- SaaS: Professional, helpful, clear
-- Consumer: Friendly, approachable, conversational
-- Enterprise: Authoritative, precise, formal
-
-### Button Labels
-- Primary actions: "Get Started", "Create Account", "Save Changes"
-- Secondary: "Learn More", "Cancel", "Go Back"
-- Avoid: "Click Here", "Submit"
-
-### Empty States
-- Encouraging: "No items yet. Create your first one!"
-- Helpful: "Upload files to get started"
-
-### Error Messages
-- Clear: "Email is required"
-- Helpful: "Password must be at least 8 characters"
-- Avoid: "Error 400", "Invalid input"
-
-### Success Messages
-- Specific: "Profile updated successfully"
-- Actionable: "Email sent! Check your inbox"
-```
-
-
-### Step 13: Generate Output Document
-
-Create `docs/design/{feature_path}/visual-system.md` with this structure:
-
-```markdown
-# Visual Design System
-
-## 1. Reference-Driven Design System
-[Product category, recommended pattern, style direction, rationale, key effects, avoid list]
-
-## 2. Color System
-[Primary, semantic, neutral colors with hex codes]
-
-## 3. Typography
-[Font families, scale, weights]
-
-## 4. Spacing
-[Spacing scale and its derivation from product density, brand inputs, and platform conventions]
-
-## 5. Component Styles
-[Buttons, inputs, cards, etc.]
-
-## 6. UX Quality Rules
-[Accessibility, states, responsive, data readability, feedback rules]
-
-## 7. Anti-patterns to Avoid
-[Product-specific anti-patterns and risks]
-
-## 8. Copy Guidelines
-[Voice, tone, examples]
-
-## Design Handoff
-Designer stops here. Next role: `engineer-agent`.
-```
-
-## Quality Checklist
-
-- [ ] Colors meet WCAG AA contrast requirements
-- [ ] Font choices are product-appropriate and not generic defaults unless justified
-- [ ] Spacing follows consistent scale
-- [ ] Component styles are complete
-- [ ] Copy guidelines match brand tone
-- [ ] Product category and style rationale are explicit
-- [ ] Design System Data design-system lookup was used when available
-- [ ] UX quality rules cover accessibility, responsive behavior, and feedback states
-- [ ] Anti-patterns are product-specific
-- [ ] Output contains no code, shell commands, config snippets, CSS imports, install commands, or engineer task list
-
-## Completion Criteria
-
-This skill is complete only when:
-- `docs/design/{feature_path}/visual-system.md` has been written or updated
-- The final response summarizes the visual system deliverable and its file location
-- The workflow stops at design handoff
-
-After completion:
-- Do not propose code changes
-- Do not generate implementation steps
-- If implementation is required, tell the user to invoke `engineer-agent`
-
-## Output Location
-
-Write to: `docs/design/{feature_path}/visual-system.md`
+Use lookup results as reference material and adapt them to the actual product.
+Present the selected design, important rationale, and verified artifact.

@@ -39,30 +39,6 @@ def add_tracked_file(root: Path, rel: str, content: str) -> Path:
     return path
 
 
-def formal_doc_frontmatter(doc_type: str) -> str:
-    child_features = 'child_features: "N/A"\n' if doc_type == "PRD" else ""
-    return (
-        "---\n"
-        'title: "Example"\n'
-        f"type: {doc_type}\n"
-        'feature: "example"\n'
-        'feature_path: "example"\n'
-        'parent_feature: "N/A"\n'
-        'feature_level: "1"\n'
-        'version: "0.1.0"\n'
-        "status: Draft\n"
-        'author: "Tester Codex"\n'
-        'date: "2026-07-06"\n'
-        'last_updated: "2026-07-06"\n'
-        'generated_by: "prd-gen"\n'
-        f"{child_features}"
-        "changelog:\n"
-        '  - version: "0.1.0"\n'
-        '    date: "2026-07-06"\n'
-        '    changes: "Initial version"\n'
-        "---\n\n"
-    )
-
 
 class DocContractTests(unittest.TestCase):
     def test_formal_status_values_match_authoritative_contract(self):
@@ -72,7 +48,7 @@ class DocContractTests(unittest.TestCase):
             "_shared/output-conventions.md"
         )
         status_line = next(
-            line for line in source.read_text().splitlines() if line.startswith("status:")
+            line for line in source.read_text().splitlines() if line.startswith("status:") and " | " in line
         )
         self.assertEqual(
             tuple(value.strip() for value in status_line.split(":", 1)[1].split("|")),
@@ -81,369 +57,57 @@ class DocContractTests(unittest.TestCase):
 
     def test_formal_document_status_validation(self):
         checker = load_doc_checker_module()
-        valid = ["Draft", "In Review", '"Approved"', "'Superseded'", "Deprecated # old"]
+        valid = ["Draft", "In Review", '\"Approved\"', "'Superseded'", "Deprecated # old"]
         invalid = ["Implemented", "Archived", "approved", "Unknown", "[Approved]"]
-        for doc_type, role in (("PRD", "pm"), ("TRD", "engineer")):
-            for status in valid + invalid:
-                with self.subTest(doc_type=doc_type, status=status):
-                    with tempfile.TemporaryDirectory() as temp_dir:
-                        root = Path(temp_dir)
-                        init_git(root)
-                        add_tracked_file(
-                            root,
-                            f"docs/{role}/example/{doc_type}.md",
-                            formal_doc_frontmatter(doc_type).replace(
-                                "status: Draft", f"status: {status}"
-                            ),
-                        )
-                        errors = []
-                        checker.validate_required_formal_frontmatter(root, errors)
-                    if status in valid:
-                        self.assertEqual(errors, [])
-                    else:
-                        self.assertEqual(len(errors), 1)
-                        self.assertIn("frontmatter 'status' must be one of", errors[0].render(root))
-
-    def test_formal_status_validation_preserves_plan_and_ledger_exceptions(self):
-        checker = load_doc_checker_module()
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            init_git(root)
-            for rel in (
-                "docs/engineer/example/IMPLEMENTATION_PLAN.md",
-                "docs/engineer/example/archive/IMPLEMENTATION_PLAN-example.md",
-                "docs/pm/repository-ci-governance/CI_PLAN.md",
-            ):
+        for status in valid + invalid:
+            with self.subTest(status=status), tempfile.TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir)
+                init_git(root)
                 add_tracked_file(
-                    root, rel,
-                    formal_doc_frontmatter("TRD").replace("status: Draft", "status: Archived"),
+                    root, "docs/design.md",
+                    f'---\ntitle: Design\ntype: TRD\nstatus: {status}\n---\n',
                 )
-            errors = []
-            checker.validate_required_formal_frontmatter(root, errors)
-        self.assertEqual(errors, [])
+                errors = checker.validate_all(root)
+                if status in valid:
+                    self.assertEqual(errors, [])
+                else:
+                    self.assertEqual(len(errors), 1)
+                    self.assertIn("frontmatter 'status' must be one of", errors[0].render(root))
 
-    def test_doc_contract_rejects_missing_required_formal_metadata(self):
+    def test_standalone_design_and_ordinary_notes_need_only_their_own_content(self):
         checker = load_doc_checker_module()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            add_tracked_file(root, "docs/notes.md", "# Notes\nA useful observation.\n")
+            add_tracked_file(
+                root, "docs/feature/TRD.md",
+                '---\ntitle: Design\ntype: TRD\nstatus: Draft\n---\n# Design\n',
+            )
+            add_tracked_file(root, "docs/feature/IMPLEMENTATION_PLAN.md", "# Work\nCompleted.\n")
+            self.assertEqual(checker.validate_all(root), [])
 
+    def test_named_formal_document_reports_incomplete_metadata(self):
+        checker = load_doc_checker_module()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            add_tracked_file(root, "docs/PRD.md", "---\ntype: PRD\n---\n")
+            rendered = "\n".join(e.render(root) for e in checker.validate_all(root))
+            self.assertIn("frontmatter 'title' must be non-empty", rendered)
+            self.assertIn("frontmatter 'status' must be non-empty", rendered)
+
+    def test_direct_skill_descriptions_and_repository_without_formal_docs_are_valid(self):
+        checker = load_doc_checker_module()
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             init_git(root)
             add_tracked_file(
-                root,
-                "docs/pm/example/FEATURE_CATALOG.md",
-                "---\n"
-                'feature: "example"\n'
-                'version: "0.1.0"\n'
-                "---\n\n"
-                "# Feature Catalog\n",
+                root, "agents/engineer/skills/debugger/SKILL.md",
+                '---\nname: debugger\ndescription: Use when the user asks to fix a bug.\n---\n',
             )
+            self.assertEqual(checker.validate_all(root), [])
 
-            errors = checker.validate_all(root)
-
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("frontmatter 'date' must be non-empty", rendered)
-        self.assertIn("frontmatter 'last_updated' must be non-empty", rendered)
-        self.assertIn("frontmatter 'title' must be non-empty", rendered)
-        self.assertIn(
-            "frontmatter 'changelog' must contain at least one entry", rendered
-        )
-
-    def test_doc_contract_rejects_inline_comment_title(self):
-        checker = load_doc_checker_module()
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            init_git(root)
-            add_tracked_file(
-                root,
-                "docs/engineer/example/TRD.md",
-                formal_doc_frontmatter("TRD").replace(
-                    'title: "Example"\n', "title: # absent\n"
-                ),
-            )
-            errors = checker.validate_all(root)
-
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("frontmatter 'title' must be non-empty", rendered)
-
-    def test_doc_contract_rejects_quoted_empty_feature_with_comment(self):
-        checker = load_doc_checker_module()
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            init_git(root)
-            add_tracked_file(
-                root,
-                "docs/engineer/example/TRD.md",
-                formal_doc_frontmatter("TRD").replace(
-                    'feature: "example"\n', 'feature: "" # absent\n'
-                ),
-            )
-            errors = checker.validate_all(root)
-
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("frontmatter 'feature' must be non-empty", rendered)
-
-    def test_doc_contract_rejects_bare_block_feature(self):
-        checker = load_doc_checker_module()
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            init_git(root)
-            add_tracked_file(
-                root,
-                "docs/engineer/example/TRD.md",
-                formal_doc_frontmatter("TRD").replace(
-                    'feature: "example"\n', "feature: |\n"
-                ),
-            )
-            errors = checker.validate_all(root)
-
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("frontmatter 'feature' must be non-empty", rendered)
-
-    def test_doc_contract_archive_segment_pm_doc_still_requires_frontmatter(self):
-        checker = load_doc_checker_module()
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            init_git(root)
-            add_tracked_file(
-                root,
-                "docs/pm/payments/archive/PRD.md",
-                "# Unfrontmattered PRD under archive segment\n",
-            )
-
-            errors = checker.validate_all(root)
-
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("docs/pm/payments/archive/PRD.md", rendered)
-
-    def test_doc_contract_rejects_prd_without_child_features(self):
-        checker = load_doc_checker_module()
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            init_git(root)
-            add_tracked_file(
-                root,
-                "docs/pm/example/PRD.md",
-                formal_doc_frontmatter("PRD").replace('child_features: "N/A"\n', "")
-                + "# Example PRD\n",
-            )
-
-            errors = checker.validate_all(root)
-
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("frontmatter 'child_features' must be non-empty for PRDs", rendered)
-
-    def test_doc_contract_rejects_changelog_entry_without_changes(self):
-        checker = load_doc_checker_module()
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            init_git(root)
-            add_tracked_file(
-                root,
-                "docs/engineer/example/TRD.md",
-                formal_doc_frontmatter("TRD").replace(
-                    '    changes: "Initial version"\n', ""
-                )
-                + "# Example TRD\n",
-            )
-
-            errors = checker.validate_all(root)
-
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("must have non-empty 'changes'", rendered)
-
-    def test_doc_contract_rejects_wrapped_changelog(self):
-        checker = load_doc_checker_module()
-        content = (
-            "---\nchangelog:\n  wrapper:\n"
-            "    - version: 0.1.0\n"
-            "      date: 2026-07-06\n"
-            "      changes: Initial version\n---\n"
-        )
-        errors = []
-
-        checker.validate_changelog_entries(Path("TRD.md"), content, errors)
-
-        self.assertIn("must be a flat list", errors[0].message)
-
-    def test_doc_contract_rejects_inline_comment_changelog_value(self):
-        checker = load_doc_checker_module()
-        content = (
-            "---\nchangelog:\n  - version: 0.1.0\n"
-            "    date: 2026-07-06\n    changes: # absent\n---\n"
-        )
-        errors = []
-
-        checker.validate_changelog_entries(Path("TRD.md"), content, errors)
-
-        self.assertIn("must have non-empty 'changes'", errors[0].message)
-
-    def test_doc_contract_accepts_quoted_block_marker_changelog_value(self):
-        checker = load_doc_checker_module()
-        content = (
-            '---\nchangelog:\n  - version: "0.1.0"\n'
-            '    date: "2026-07-06"\n    changes: "|"\n---\n'
-        )
-        errors = []
-
-        checker.validate_changelog_entries(Path("TRD.md"), content, errors)
-
-        self.assertEqual([], errors)
-
-    def test_doc_contract_rejects_quoted_whitespace_changelog_value(self):
-        checker = load_doc_checker_module()
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            init_git(root)
-            add_tracked_file(
-                root,
-                "docs/engineer/example/TRD.md",
-                formal_doc_frontmatter("TRD").replace(
-                    '    changes: "Initial version"\n', '    changes: "   "\n'
-                )
-                + "# Example TRD\n",
-            )
-
-            errors = checker.validate_all(root)
-
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("must have non-empty 'changes'", rendered)
-
-    def test_doc_contract_rejects_empty_child_features_collection(self):
-        checker = load_doc_checker_module()
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            init_git(root)
-            add_tracked_file(
-                root,
-                "docs/pm/example/PRD.md",
-                formal_doc_frontmatter("PRD").replace(
-                    'child_features: "N/A"\n', "child_features: []\n"
-                )
-                + "# Example PRD\n",
-            )
-
-            errors = checker.validate_all(root)
-
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn("frontmatter 'child_features' must be non-empty for PRDs", rendered)
-
-    def test_doc_contract_rejects_spaced_empty_child_features_collection(self):
-        checker = load_doc_checker_module()
-        content = "---\nchild_features: [ ]\n---\n"
-
-        self.assertFalse(checker.frontmatter_field_has_value(content, "child_features"))
-
-    def test_doc_contract_rejects_comment_only_child_features(self):
-        checker = load_doc_checker_module()
-        content = "---\nchild_features:\n  # absent\nchangelog:\n---\n"
-
-        self.assertFalse(checker.frontmatter_field_has_value(content, "child_features"))
-
-    def test_doc_contract_rejects_blank_child_features_list_item(self):
-        checker = load_doc_checker_module()
-        content = '---\nchild_features:\n  - ""\nchangelog:\n---\n'
-
-        self.assertFalse(checker.frontmatter_field_has_value(content, "child_features"))
-
-    def test_doc_contract_registered_exemption_skips_extended_fields(self):
-        checker = load_doc_checker_module()
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            init_git(root)
-            add_tracked_file(
-                root,
-                "docs/pm/repository-ci-governance/CI_PLAN.md",
-                "---\n"
-                'feature: "repository-ci-governance"\n'
-                'version: "0.1.0-draft"\n'
-                'date: "2026-05-06"\n'
-                'last_updated: "2026-09-01"\n'
-                "---\n\n"
-                "# Repository CI Governance Plan\n",
-            )
-
-            errors = checker.validate_all(root)
-
-        self.assertEqual([], errors)
-
-    def test_doc_contract_rejects_non_pm_description_trigger_phrase(self):
-        checker = load_doc_checker_module()
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            init_git(root)
-            skill_doc = root / "agents/engineer/skills/debugger/SKILL.md"
-            skill_doc.parent.mkdir(parents=True, exist_ok=True)
-            skill_doc.write_text(
-                "---\n"
-                "name: debugger\n"
-                "description: \"Use when the user asks to debug a failure.\"\n"
-                "visibility: internal\n"
-                "---\n\n"
-                "# Debugger\n"
-            )
-
-            errors = checker.validate_all(root)
-
-        rendered = "\n".join(error.render(root) for error in errors)
-        self.assertIn(
-            "frontmatter 'description' must not contain user-trigger phrase pattern 'Use when the user'",
-            rendered,
-        )
-
-    def test_doc_contract_accepts_formal_docs_and_internal_description(self):
-        checker = load_doc_checker_module()
-
-        with tempfile.TemporaryDirectory() as temp_dir:
-            root = Path(temp_dir)
-            init_git(root)
-            add_tracked_file(
-                root,
-                "docs/pm/example/PRD.md",
-                formal_doc_frontmatter("PRD") + "# Example PRD\n",
-            )
-            add_tracked_file(
-                root,
-                "docs/engineer/example/TRD.md",
-                formal_doc_frontmatter("TRD").replace(
-                    "changelog:\n",
-                    'related_prd: "docs/pm/example/PRD.md"\nchangelog:\n',
-                )
-                + "# Example TRD\n",
-            )
-
-            pm_agent = root / "agents/product_manager/skills/pm-agent/SKILL.md"
-            pm_agent.parent.mkdir(parents=True, exist_ok=True)
-            pm_agent.write_text(
-                "---\n"
-                "name: pm-agent\n"
-                "description: \"Use when the user asks for product work.\"\n"
-                "---\n\n"
-                "# PM Agent\n"
-            )
-            debugger = root / "agents/engineer/skills/debugger/SKILL.md"
-            debugger.parent.mkdir(parents=True, exist_ok=True)
-            debugger.write_text(
-                "---\n"
-                "name: debugger\n"
-                "description: \"Internal engineering specialist invoked by engineer-agent after pm-agent handoff.\"\n"
-                "visibility: internal\n"
-                "---\n\n"
-                "# Debugger\n"
-            )
-
-            errors = checker.validate_all(root)
-
-        self.assertEqual([], errors)
 
     def test_markdown_links_reject_missing_target_and_anchor(self):
         checker = load_doc_checker_module()
@@ -524,7 +188,3 @@ class DocContractTests(unittest.TestCase):
             checker.validate_markdown_links(root, errors)
 
         self.assertEqual([], errors)
-
-
-if __name__ == "__main__":
-    unittest.main()
