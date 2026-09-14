@@ -1,6 +1,6 @@
 {
   "name": "docs-agent",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "Documentation sites, product and technical documentation, illustrated manuals, release notes, and accuracy audits grounded in implemented behavior.",
   "author": {
     "name": "Neplich"

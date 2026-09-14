@@ -1,6 +1,6 @@
 {
   "name": "pm-agent",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "Product discovery, specifications, feature inventories, research, roadmaps, changelogs, release preparation, and GitHub status. Select these capabilities directly for the requested product task.",
   "author": {
     "name": "Neplich"

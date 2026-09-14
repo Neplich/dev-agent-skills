@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "On-demand professional capabilities for product, engineering, QA, operations, security, and documentation. The assistant combines relevant knowledge to complete the user-authorized task.",
-    "version": "0.6.6"
+    "version": "0.6.7"
   },
   "plugins": [
     {
