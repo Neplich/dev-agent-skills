@@ -33,6 +33,9 @@ The assistant owns the requested outcome and combines the relevant capabilities 
 
 This README describes the current source. A pinned installation uses the behavior shipped in its selected release tag.
 
+> [!IMPORTANT]
+> **Recommended models:** this skill workflow suits `gpt-5.6-sol`, `opus-4.8`, and earlier models running with a harness. With model releases such as GPT-6-Astra and Fable-5.1, it carries more ceremony than those models need and holds back what they can do.
+
 ## Quick Start
 
 ### Claude Code

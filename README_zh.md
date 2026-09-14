@@ -33,6 +33,9 @@
 
 本 README 描述当前源码。固定版本安装使用对应 release tag 中的能力和行为。
 
+> [!IMPORTANT]
+> **适用模型范围**：本仓库的 skill 流程适合 `gpt-5.6-sol`、`opus-4.8` 及以下模型配合 harness 使用。随着 GPT-6-Astra、Fable-5.1 等模型发布，这套流程对它们已过于冗杂，反而限制其能力释放。
+
 ## 快速开始
 
 ### Claude Code

@@ -1,6 +1,6 @@
 {
   "name": "security-agent",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "Application security, authorization, dependency risk, and privacy reviews using code evidence, reachability analysis, and actionable findings.",
   "author": {
     "name": "Neplich"

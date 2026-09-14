@@ -1,6 +1,6 @@
 {
   "name": "devops-agent",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "Deployment design, CI/CD configuration, environment audits, and incident runbooks grounded in the actual application and target environment.",
   "author": {
     "name": "Neplich"

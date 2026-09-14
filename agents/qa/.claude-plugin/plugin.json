@@ -1,6 +1,6 @@
 {
   "name": "qa-agent",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "Exploratory testing, behavior-based acceptance, defect analysis, and regression verification using reproducible evidence and reusable test cases.",
   "author": {
     "name": "Neplich"
