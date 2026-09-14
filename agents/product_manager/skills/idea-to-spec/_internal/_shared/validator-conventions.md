@@ -1,74 +1,7 @@
-# Validator Skill Conventions
+# 规格检查方法
 
-> Standard workflow, output format, safety, and failure handling rules shared by all validator skills under `validator/`.
-> Each validator skill MUST follow these conventions unless explicitly overridden.
+先确定检查对象和读者目标，再使用对应 schema 核对适用内容。检查完整性、前后一致性、清晰度和可测试性。以具体文档位置、实际影响和可执行修正说明问题。
 
-## Standard Workflow
+与源代码、接口、测试或明确需求比较时标明来源。对证据缺口说明哪些结论受影响。修订在已授权范围内直接完成；只读审阅交付发现即可。
 
-Every validator skill follows this workflow:
-
-1. **Load references**: Read the corresponding schema from
-`_internal/_shared/doc-schemas/`. Use the canonical filenames:
-   `prd-schema.md`, `trd-schema.md`, `adr-schema.md`,
-   `api-schema.md`, and `test-spec-schema.md`. Also load
-`_internal/_shared/quality-rules.md`.
-
-2. **Parse document**: Extract all sections and metadata from the input document.
-
-3. **Validate structure**: Check all required sections per the schema are present.
-
-4. **Score dimensions**: Rate Completeness (30%), Consistency (25%), Clarity (25%), Testability (20%) per quality-rules.md (1-5 each).
-
-5. **Run type-specific checks**: Apply the checks defined in each validator's own INSTRUCTIONS.md (CRITICAL / WARNING / SUGGESTION).
-
-6. **Cross-check** (if related documents provided): Verify alignment between documents (e.g., TRD covers all PRD endpoints).
-
-7. **Calculate overall score**: Apply weights from quality-rules.md.
-
-8. **Generate validation report**: Output per the Validation Report Template in quality-rules.md.
-
-## Output Contract
-
-All validators produce:
-
-- **Format**: Markdown validation report
-- **Verdict**: PASS (≥ 4.0) / NEEDS_WORK (2.5–3.9) / FAIL (< 2.5)
-- **Structure**:
-  ```markdown
-  ## Validation Report
-  - Document: <filename>
-  - Type: <PRD/TRD/ADR/API/TEST_SPEC>
-  - Overall Score: X.X / 5
-  - Status: <PASS/NEEDS_WORK/FAIL>
-
-  ### Dimension Scores
-  | Dimension | Score | Weight | Weighted |
-  |-----------|-------|--------|----------|
-
-  ### Critical Issues
-  1. [CRITICAL] ...
-
-  ### Warnings
-  1. [WARNING] ...
-
-  ### Suggestions
-  1. [SUGGESTION] ...
-  ```
-- **No modifications** to the input document — validators are strictly read-only.
-
-## Failure Handling
-
-All validators handle failures gracefully:
-
-- **Cannot parse document** → Report parsing errors with line numbers where possible.
-- **Document is wrong type** → Report type mismatch, suggest the correct validator skill.
-- **Missing sections** → Score as incomplete, list missing sections in Critical Issues.
-
-## Safety Boundaries
-
-All validators observe these rules:
-
-1. **Read-only** — Never modify the input document.
-2. **No external access** — Do not access external URLs or APIs.
-3. **No data transmission** — Do not store or transmit document content.
-4. **No API execution** — Do not call endpoints to validate API docs.
+按风险列出发现和验证方法。分数仅在读者确实需要量化比较时使用，尺度见 [质量参考](quality-rules.md)。

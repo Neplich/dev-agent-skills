@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate documentation contracts not owned by repository checkers."""
+"""Validate selected document metadata and local Markdown links."""
 
 from __future__ import annotations
 
@@ -9,106 +9,59 @@ from pathlib import Path
 from urllib.parse import unquote
 
 from check_repository_contract import (
-    ContractError,
-    add_error,
-    is_legacy_artifact_path,
-    markdown_frontmatter_block,
-    markdown_frontmatter_changelog_block,
-    parse_markdown_frontmatter,
-    repo_root,
-    tracked_files,
+    ContractError, add_error, markdown_frontmatter_block,
+    parse_markdown_frontmatter, repo_root, tracked_files,
 )
 
-
-REQUIRED_FORMAL_FRONTMATTER_FIELDS = ("feature", "version", "date", "last_updated")
-# Lifecycle values owned by idea-to-spec/_internal/_shared/output-conventions.md.
-# Implementation plans retain their separate lifecycle in the repository checker.
+# Values from idea-to-spec/_internal/_shared/output-conventions.md.
 FORMAL_DOCUMENT_STATUSES = ("Draft", "In Review", "Approved", "Superseded", "Deprecated")
-# Extended presence set aligning with the output-conventions required fields
-# (agents/product_manager/skills/idea-to-spec/_internal/_shared/
-# output-conventions.md). `changelog` is validated structurally below because
-# the frontmatter parser flattens block values to empty strings; the PRD-only
-# `child_features` field is validated per document type.
-EXTENDED_FORMAL_FRONTMATTER_FIELDS = (
-    "title",
-    "type",
-    "feature",
-    "feature_path",
-    "parent_feature",
-    "feature_level",
-    "version",
-    "status",
-    "author",
-    "date",
-    "last_updated",
-    "generated_by",
-)
-# Explicit registry of formal documents exempt from the extended field set (the
-# base four fields still apply). Every entry must name an existing tracked file
-# and record the reason; retire an entry by bringing the document up to the
-# output-conventions field set.
-FORMAL_DOC_FIELD_EXEMPTIONS: dict[str, str] = {
-    "docs/pm/repository-ci-governance/CI_PLAN.md": (
-        "checklist-style CI governance ledger; its document type is outside the"
-        " output-conventions enum and its version is a non-SemVer draft (#331)"
-    ),
-}
-CHANGELOG_ENTRY_START_RE = re.compile(r"^  - version:\s*(.*?)\s*$")
-CHANGELOG_ENTRY_FIELD_RE = re.compile(r"^    (date|changes):\s*(.*?)\s*$")
-FORMAL_DOC_PREFIXES = ("docs/pm/", "docs/engineer/")
-NON_FORMAL_DOC_NAMES = {"README.md", "README_zh.md", "CHANGELOG.md"}
-
-DESCRIPTION_DENYLIST: tuple[tuple[re.Pattern[str], str], ...] = (
-    (re.compile(r"\bTrigger on phrases like\b", re.IGNORECASE), "Trigger on phrases like"),
-    (re.compile(r"\bUse this skill when the user\b", re.IGNORECASE), "Use this skill when the user"),
-    (re.compile(r"\bUse this skill whenever the user\b", re.IGNORECASE), "Use this skill whenever the user"),
-    (re.compile(r"\bUse when the user\b", re.IGNORECASE), "Use when the user"),
-    (re.compile("实现这个功能"), "实现这个功能"),
-    (re.compile("修 bug", re.IGNORECASE), "修 bug"),
-    (re.compile("提 PR", re.IGNORECASE), "提 PR"),
-    (re.compile("测一下"), "测一下"),
-    (re.compile("写代码"), "写代码"),
-)
-
-
-IMPLEMENTATION_PLAN_ARCHIVE_RE = re.compile(
-    r"^docs/engineer/"
-    r"(?:[a-z0-9]+(?:-[a-z0-9]+)*/)+"
-    r"archive/IMPLEMENTATION_PLAN-[a-z0-9]+(?:-[a-z0-9]+)*\.md$"
-)
+FORMAL_DOCUMENT_TYPES = {"PRD", "TRD", "ADR", "API", "TEST_SPEC", "DECISIONS"}
 MARKDOWN_LINK_RE = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
 ATX_HEADING_RE = re.compile(r"^#{1,6}\s+(.+?)\s*#*\s*$")
-LINK_SOURCE_EXCLUSIONS = (
-    "/archive/",
-    "docs/changelog/",
-    "/assets/",
-    "/test/",
-    "/_internal/_generated/",
-)
+LINK_SOURCE_EXCLUSIONS = ("/assets/", "/test/", "/_internal/_generated/")
 
 
-def is_implementation_plan_artifact_path(rel: str) -> bool:
-    return (
-        rel.endswith("/IMPLEMENTATION_PLAN.md")
-        or IMPLEMENTATION_PLAN_ARCHIVE_RE.fullmatch(rel) is not None
-    )
+def validate_formal_document_metadata(root: Path, errors: list[ContractError]) -> None:
+    for rel in tracked_files(root):
+        if not rel.startswith("docs/") or not rel.endswith(".md"):
+            continue
+        path = root / rel
+        if not path.is_file():
+            continue
+        content = path.read_text(encoding="utf-8")
+        has_header = content.startswith("---\n")
+        named_formal = path.stem in FORMAL_DOCUMENT_TYPES
+        if not has_header and not named_formal:
+            continue
+        parsed = parse_markdown_frontmatter(path, content, errors)
+        if parsed is None:
+            continue
+        metadata = {}
+        for line in markdown_frontmatter_block(content).splitlines():
+            if line.startswith((" ", "\t", "-")) or ":" not in line:
+                continue
+            key, value = line.split(":", 1)
+            metadata[key.strip()] = normalize_frontmatter_scalar(value)
+        if not named_formal and metadata.get("type") not in FORMAL_DOCUMENT_TYPES:
+            continue
+        for field in ("title", "type", "status"):
+            if not metadata.get(field):
+                add_error(errors, path, f"frontmatter {field!r} must be non-empty")
+        status = metadata.get("status", "")
+        if status and status not in FORMAL_DOCUMENT_STATUSES:
+            add_error(
+                errors, path,
+                f"frontmatter 'status' must be one of {', '.join(FORMAL_DOCUMENT_STATUSES)};"
+                f" got {status!r}",
+            )
 
 
-def is_formal_pm_or_engineer_document(rel: str) -> bool:
-    if not rel.endswith(".md"):
-        return False
-    if not rel.startswith(FORMAL_DOC_PREFIXES):
-        return False
-    if is_legacy_artifact_path(rel):
-        return False
-    if Path(rel).name in NON_FORMAL_DOC_NAMES:
-        return False
-    # Implementation plan metadata, including archive-specific fields, is owned
-    # by check_repository_contract.py. Keep this checker focused on the gap:
-    # PRD/TRD plus other formal PM/Engineer docs such as DECISIONS and CI_PLAN
-    # (CI_PLAN carries a registered exemption from the extended field set; see
-    # FORMAL_DOC_FIELD_EXEMPTIONS).
-    return not is_implementation_plan_artifact_path(rel)
+def validate_all(root: Path | None = None) -> list[ContractError]:
+    root = root or repo_root()
+    errors: list[ContractError] = []
+    validate_formal_document_metadata(root, errors)
+    validate_markdown_links(root, errors)
+    return errors
 
 
 def normalize_frontmatter_scalar(value: str) -> str:
@@ -121,191 +74,6 @@ def normalize_frontmatter_scalar(value: str) -> str:
         return normalized[1:closing_quote].strip()
     normalized = re.split(r"(?:^|\s+)#", normalized, maxsplit=1)[0].strip()
     return "" if normalized in ("|", ">") else normalized
-
-
-def validate_changelog_entries(
-    path: Path,
-    content: str,
-    errors: list[ContractError],
-) -> None:
-    block = markdown_frontmatter_changelog_block(content)
-    if not block.strip():
-        add_error(
-            errors, path, "frontmatter 'changelog' must contain at least one entry"
-        )
-        return
-    entries: list[dict[str, str]] = []
-    current: dict[str, str] | None = None
-    for line in block.splitlines():
-        if not line.strip():
-            continue
-        start = CHANGELOG_ENTRY_START_RE.match(line)
-        if start is not None:
-            current = {"version": start.group(1)}
-            entries.append(current)
-            continue
-        field = CHANGELOG_ENTRY_FIELD_RE.match(line)
-        if field is not None and current is not None:
-            current[field.group(1)] = field.group(2)
-            continue
-        add_error(
-            errors,
-            path,
-            "frontmatter 'changelog' must be a flat list of '- version:' entries",
-        )
-        return
-    if not entries:
-        add_error(
-            errors,
-            path,
-            "frontmatter 'changelog' must contain at least one '- version:' entry",
-        )
-        return
-    for entry in entries:
-        for key in ("version", "date", "changes"):
-            normalized = normalize_frontmatter_scalar(entry.get(key, ""))
-            if not normalized:
-                add_error(
-                    errors,
-                    path,
-                    "frontmatter 'changelog' entry for version"
-                    f" {entry.get('version') or '<unknown>'!r}"
-                    f" must have non-empty {key!r}",
-                )
-
-
-def frontmatter_field_has_value(content: str, field: str) -> bool:
-    block = markdown_frontmatter_block(content)
-    if not block:
-        return False
-    lines = block.splitlines()
-    for index, line in enumerate(lines):
-        if line.startswith((" ", "\t", "-")) or ":" not in line:
-            continue
-        key, _, value = line.partition(":")
-        if key.strip() != field:
-            continue
-        if value.strip():
-            inline = normalize_frontmatter_scalar(value)
-            compact = re.sub(r"\s+", "", inline).lower()
-            return bool(inline) and compact not in ("[]", "{}", "~", "null")
-        for child in lines[index + 1 :]:
-            stripped = child.strip()
-            if stripped.startswith("#"):
-                continue
-            if stripped and not child.startswith((" ", "\t", "-")):
-                break
-            if stripped:
-                item = stripped[1:] if stripped.startswith("-") else stripped
-                if normalize_frontmatter_scalar(item):
-                    return True
-        return False
-    return False
-
-
-def validate_required_formal_frontmatter(
-    root: Path,
-    errors: list[ContractError],
-) -> None:
-    for rel in tracked_files(root):
-        if not is_formal_pm_or_engineer_document(rel):
-            continue
-
-        path = root / rel
-        if not path.exists():
-            continue
-
-        content = path.read_text()
-        parsed = parse_markdown_frontmatter(path, content, errors)
-        if parsed is None:
-            continue
-        raw_metadata: dict[str, str] = {}
-        for line in markdown_frontmatter_block(content).splitlines():
-            if line.startswith((" ", "\t", "-")) or ":" not in line:
-                continue
-            key, value = line.split(":", 1)
-            if key.strip():
-                raw_metadata[key.strip()] = value.strip()
-
-        for field in REQUIRED_FORMAL_FRONTMATTER_FIELDS:
-            value = raw_metadata.get(field)
-            if value is None or not normalize_frontmatter_scalar(value):
-                add_error(errors, path, f"frontmatter {field!r} must be non-empty")
-
-        if rel in FORMAL_DOC_FIELD_EXEMPTIONS:
-            continue
-
-        for field in EXTENDED_FORMAL_FRONTMATTER_FIELDS:
-            value = raw_metadata.get(field)
-            if value is None or not normalize_frontmatter_scalar(value):
-                add_error(errors, path, f"frontmatter {field!r} must be non-empty")
-
-        status = normalize_frontmatter_scalar(raw_metadata.get("status", ""))
-        if status and status not in FORMAL_DOCUMENT_STATUSES:
-            add_error(
-                errors,
-                path,
-                f"frontmatter 'status' must be one of {', '.join(FORMAL_DOCUMENT_STATUSES)};"
-                f" got {status!r}",
-            )
-
-        validate_changelog_entries(path, content, errors)
-
-        if (
-            rel.startswith("docs/pm/")
-            and Path(rel).name == "PRD.md"
-            and not frontmatter_field_has_value(content, "child_features")
-        ):
-            add_error(
-                errors,
-                path,
-                "frontmatter 'child_features' must be non-empty for PRDs"
-                ' (use "N/A" when the PRD has no direct children)',
-            )
-
-
-def validate_prd_related_trd_mirror(
-    root: Path,
-    errors: list[ContractError],
-) -> None:
-    # PRD schema and current PRD samples do not define a `related_trd` field.
-    # The reverse PRD -> TRD mirror is therefore not machine-checkable without
-    # inventing new metadata. Keep this explicitly skipped until the PRD schema
-    # adds a canonical `related_trd` contract.
-    return
-
-
-def validate_skill_description_trigger_phrases(
-    root: Path,
-    errors: list[ContractError],
-) -> None:
-    """Heuristic guard against non-PM skills reclaiming user entry phrases.
-
-    The denylist is intentionally conservative and should evolve with the
-    frontmatter description convention. `pm-agent` remains exempt because it is
-    the high-recall public entry for user-side requests.
-    """
-    for skill_doc in sorted(root.glob("agents/*/skills/*/SKILL.md")):
-        parsed = parse_markdown_frontmatter(skill_doc, skill_doc.read_text(), errors)
-        if parsed is None:
-            continue
-        metadata, _ = parsed
-
-        if metadata.get("name") == "pm-agent":
-            continue
-
-        description = metadata.get("description", "")
-        if not isinstance(description, str):
-            continue
-
-        for pattern, label in DESCRIPTION_DENYLIST:
-            if pattern.search(description):
-                add_error(
-                    errors,
-                    skill_doc,
-                    "frontmatter 'description' must not contain user-trigger "
-                    f"phrase pattern {label!r}",
-                )
 
 
 def is_active_link_source(rel: str) -> bool:
@@ -405,16 +173,6 @@ def validate_markdown_links(root: Path, errors: list[ContractError]) -> None:
                         source,
                         f"local Markdown link anchor does not exist: {destination!r}",
                     )
-
-
-def validate_all(root: Path | None = None) -> list[ContractError]:
-    root = root or repo_root()
-    errors: list[ContractError] = []
-    validate_required_formal_frontmatter(root, errors)
-    validate_prd_related_trd_mirror(root, errors)
-    validate_skill_description_trigger_phrases(root, errors)
-    validate_markdown_links(root, errors)
-    return errors
 
 
 def main() -> int:

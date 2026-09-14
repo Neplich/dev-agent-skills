@@ -1,6 +1,6 @@
 # Color Palettes
 
-Use product-aware semantic palettes. Hex values are recommendations, not code tokens.
+Use product-aware semantic palettes. Adapt hex values to the product and verify contrast in the actual design.
 
 ## Enterprise Analytics Dashboard
 
@@ -36,6 +36,6 @@ Use product-aware semantic palettes. Hex values are recommendations, not code to
 
 ## Color Rules
 
-- Text contrast must meet WCAG AA: 4.5:1 for normal text, 3:1 for large text and UI boundaries.
-- Status colors must not carry meaning alone; pair with labels or symbols in the design spec.
-- Avoid default purple-blue AI gradients unless the brand explicitly owns that direction.
+- Use at least 4.5:1 contrast for normal text and 3:1 for large text and relevant UI boundaries, subject to applicable accessibility criteria.
+- Pair status colors with labels or symbols.
+- Choose gradients and accent colors from the product's established brand and visual purpose.

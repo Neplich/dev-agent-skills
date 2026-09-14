@@ -1,141 +1,25 @@
 ---
 name: security-agent
-description: "Route confirmed AppSec, auth/authz, dependency-risk, privacy, and data-flow work while preserving remediation and PM-escalation context. Use after a PM security handoff."
-visibility: internal
+description: "Review application security, authentication and authorization, dependencies, and personal-data flows with code-backed findings."
 ---
 
-# Security Agent Dispatcher
+# Security Review
 
-`security-agent` is the security capability entry point. It routes the request
-based on whether the user needs broad application review, focused auth review,
-dependency risk analysis, or privacy/data-handling mapping.
+Identify the requested scope, assets, entry points, trust boundaries, and
+available evidence. Use the relevant capability directly and combine review,
+remediation, tests, and documentation within the user's authorized task.
 
-## Reader-Facing Writing Composition
+| Surface | Reference |
+| --- | --- |
+| Application inputs, sinks, and configuration | [AppSec review](../appsec-checklist/SKILL.md) |
+| Identity, permissions, and sessions | [Authorization review](../authz-reviewer/SKILL.md) |
+| Packages, provenance, and advisories | [Dependency audit](../dependency-risk-auditor/SKILL.md) |
+| Collection, storage, sharing, and deletion | [Privacy mapping](../privacy-surface-mapper/SKILL.md) |
 
-After selecting a Specialist, co-load `human-writing` for substantial reader-facing prose; it is not a route or later pass. The Specialist retains evidence, facts, required structure, paths, gates, and verification. Skip code-, config-, schema-, lockfile-, and data-only output.
+Trace findings to reachable code and concrete impact. Calibrate severity and
+confidence separately, distinguish observations from hypotheses, and keep
+sensitive evidence protected. Use a safe reproduction where it improves
+confidence and fits the authorized environment.
 
-## Routing Decision
-
-Before any review, preserve the accepted security entry basis, selected specialist
-or ordered chain, preserved risk surface and evidence, and remediation owner.
-Preserve every requested component of the handoff packet's `required_output`
-instead of shortening it to a filename or generic report, and explicitly
-distinguish the downstream structured review or risk report from a direct
-implementation patch. When supplied or required by the accepted packet, the
-downstream reading requirements explicitly include authentication flow, role
-matrix, sensitive routes, test evidence, and dependency inventory. A direct
-remediation handoff explicitly names `engineer-agent` or `devops-agent` as the
-receiving owner; the router never implements remediation itself. At closeout,
-decide explicitly whether the verified conclusion changes product behavior,
-formal documentation facts, operational facts, or release readiness; if so,
-return the evidence to `pm-agent` for issue classification before any follow-up
-Docs, Engineer, DevOps, or release work.
-If routing has not yet produced a verified Security-owned conclusion, preserve
-`pm_escalation: not_applicable_yet`. Security never sends a conclusion directly
-to `docs-agent` and never creates the PM tracking issue itself.
-
-## Role Boundary
-
-`security-agent` is responsible for:
-
-- identifying the primary security review outcome the user wants
-- selecting the narrowest downstream security skill
-- sequencing multiple security skills when the user clearly wants a broader
-  release-gate or sensitive-feature review
-- preserving an already-confirmed `feature_path` for feature-scoped security
-  review
-- asking at most one route-level clarification question when the target review
-  is truly ambiguous
-
-`security-agent` is not responsible for:
-
-- directly implementing code or deployment fixes
-- acting as a general incident response dispatcher
-- replacing the downstream review protocols of its specialist skills
-- deciding or inventing a feature path when PM/Engineer docs are unclear
-
-## PM Handoff Entry Gate
-
-Security is a downstream router. Before routing, require an explicit PM handoff
-packet or equivalent confirmed security context. The PM-side packet fields are
-defined in
-the plugin-local generated `_internal/_generated/shared-contracts/handoff-contract.md`.
-
-- If the user directly asks `security-agent` or a security specialist for a
-  review without PM handoff context, return the request to `pm-agent` for
-  classification.
-- Preserve confirmed feature scope, risk surface, source documents, and
-  required report type when routing to a security specialist.
-- Full feature-path, source-document, and output-location gates live in the
-  selected security specialist; this router only keeps the entry check and
-  pointer.
-
-## Available Skills
-
-- `security-agent:appsec-checklist` - Broad application security review and release-gate checklist
-- `security-agent:authz-reviewer` - Authentication, authorization, roles, permissions, access control
-- `security-agent:dependency-risk-auditor` - Dependency, CVE, abandonment, and supply-chain risk audit
-- `security-agent:privacy-surface-mapper` - Personal data mapping, privacy obligations, compliance surfaces
-
-## Default Routes
-
-Route by the security outcome the user wants.
-
-| Security Outcome | Primary Skill | 信号示例 |
-| --- | --- | --- |
-| 泛应用安全检查、发布前安全 gate、风险面扫描 | `appsec-checklist` | Broad security review, release-gate pass, risky surface scan, input handling, secrets exposure, uploads, API review, "安全过一遍", "上线前检查" |
-| 登录、session、角色权限、越权风险审查 | `authz-reviewer` | Login, sessions, roles, permissions, multi-tenant access, RBAC/ABAC, "权限模型", "鉴权", "admin 能不能越权" |
-| 依赖漏洞、废弃包、供应链风险 | `dependency-risk-auditor` | Dependency CVEs, package risk, supply chain, abandoned packages, "依赖有没有洞", "npm audit", "供应链风险" |
-| 隐私数据采集、处理面、GDPR/CCPA 风险 | `privacy-surface-mapper` | PII mapping, consent, retention, deletion/export rights, data sharing, GDPR/CCPA-style privacy review, "隐私合规", "个人数据在哪收集" |
-
-If the request is security-shaped but underspecified, default to
-`appsec-checklist` unless the user clearly centers the request on auth, deps,
-or privacy.
-
-## Common Multi-Skill Chains
-
-Use these only when the user clearly wants the broader security workflow:
-
-- 发布前安全审查 -> `appsec-checklist` -> `dependency-risk-auditor`
-- 敏感功能上线前审查 -> `appsec-checklist` -> `authz-reviewer` -> `privacy-surface-mapper`
-- 平台级安全复核 -> `appsec-checklist` -> `authz-reviewer` -> `dependency-risk-auditor` -> `privacy-surface-mapper`
-
-Do not expand into the full chain unless the user clearly wants the broader
-security outcome.
-
-## Escalation Rules
-
-- Ask one route-level clarification question only when two routes are equally
-  plausible and the expected report would materially differ.
-- If the user names a risky surface but not the exact review type, choose the
-  narrowest plausible review instead of bouncing the request.
-- If fixes are needed and the conclusion does not trigger `Security Conclusion
-  Escalation to PM` because the finding stays internal without changing formal
-  documentation facts, externally visible behavior, operational facts, or
-  release readiness, keep the security output focused on evidence and hand the
-  remediation directly to `engineer-agent` or `devops-agent` as appropriate.
-  Conclusions that trigger the escalation always return to `pm-agent`, which
-  dispatches remediation through the issue lifecycle.
-- At Security closeout, evaluate Security's own confirmed conclusion — a review finding, or a Security re-review confirming that a remediation has landed — against the `Security Conclusion Escalation to PM` rule in the plugin-local generated `_internal/_generated/shared-contracts/security-escalation.md`. If that conclusion establishes that formal documentation facts, externally visible behavior, operational facts, or release readiness have changed, return the conclusion and evidence to `pm-agent` for entry classification and issue filing. The trigger is Security's own conclusion; Security does not wait on a separate Engineer or DevOps return handoff and does not hand evidence directly to `docs-agent`.
-
-## Missing Handoff Target
-
-If a handoff target skill or agent is not installed or unavailable, tell the
-user which stage is missing and which plugin to install (for example
-`engineer-agent` or `devops-agent`), mark that handoff stage as blocked, and
-do not perform the missing agent's responsibilities yourself.
-
-## Output Behavior
-
-When routing is complete:
-
-- make the expected output clear as a structured review or risk report, not an
-  implementation patch
-- for feature-scoped work, state the expected report path under
-  `docs/security/{feature_path}/...`
-- after the routed skill or role stage completes, apply the cross-role
-  safety-net closeout defined in
-  the plugin-local generated `_internal/_generated/shared-contracts/closeout-contract.md`
-  (`Safety-Net Closeout and Auto-Continue`): suggest the collaboration-chain
-  next step, request confirmation before continuing, and honor user-enabled
-  `auto-continue`
+Present actionable findings with locations, preconditions, impact, and repair
+options. Report coverage and limitations even when the review finds no defect.

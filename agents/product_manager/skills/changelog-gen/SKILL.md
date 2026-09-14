@@ -1,215 +1,27 @@
 ---
 name: changelog-gen
-description: "Generate developer-facing changelogs from merged PRs, tags, or a dated repository history export. Use after pm-agent routes changelog work."
-visibility: internal
+description: "根据标签可达提交和 PR 生成开发者变更记录，支持单版本、Unreleased 与历史整理。"
 ---
 
-# Changelog Generator
+# 开发者变更记录
 
-Generate and maintain per-version changelog files under `docs/changelog/`, such as `docs/changelog/changelog-v1.2.0.md`, following [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format. The source of truth is merged GitHub PRs and release tags. Fetch live facts with `gh` CLI, or consume a user-supplied `gh`/release-history JSON export when GitHub access is unavailable. For an export, verify repository, capture time, tag window, reachable commits, and PR metadata; label the result with that evidence time and never fill missing records from memory.
+使用已合并 PR、可达提交和标签确定本次范围。带来源的历史导出也可使用，核对仓库、采集时间、标签范围与提交可达性。
 
-Before writing an entry, strip the full Conventional Commit prefix—including
-optional scope and breaking marker—from PR and commit titles (`type:`,
-`type(scope):`, `type!:` or `type(scope)!:`). The changelog bullet contains the
-human change description, not a bolded or literal commit prefix.
-Classify by semantic impact after stripping the prefix: a breaking redesign of
-existing behavior belongs under `Changed` even when its source title uses
-`feat` or another additive prefix.
-
-## Reader-Facing Writing Composition
-
-For substantial reader-facing prose, co-load `human-writing` even on direct
-invocation; use the same context, not a later pass. This Skill retains evidence,
-facts, required structure, paths, gates, and verification. Skip code-, config-, schema-,
-lockfile-, and data-only output.
-
-## Modes
-
-Choose the mode based on what the user asks for:
-
-| Mode | When to use | Scope |
-|------|-------------|-------|
-| **Unreleased** | "what's changed since last release" / "update unreleased" | PRs merged since latest tag |
-| **New version** | "generate changelog for v1.2.0" / "add entry for latest release" | PRs between two specified tags |
-| **Full** | "generate changelog from scratch" / "rebuild the whole changelog" | All releases in history |
-
-If the user's intent is ambiguous, ask which mode they want before proceeding.
-
-## Step 1 — Detect repo context
-
-When the request supplies a local release-history export, read it before live
-commands. The export must identify the repository, target and previous tags,
-release time, reachable commit subjects, and the PR records used for grouping.
-Missing tag-window or reachability evidence is a blocker, not permission to
-guess the latest version or its PR set.
-
-```bash
-gh repo view --json nameWithOwner,url,defaultBranchRef
-```
-
-Confirm you're inside a GitHub-connected repo. Capture `REPO_URL` (e.g. `https://github.com/owner/repo`) for PR link formatting later.
-
-Resolve the target changelog path before writing:
-
-- Released versions use `docs/changelog/changelog-v{VERSION}.md`.
-- Unreleased changes use `docs/changelog/changelog-unreleased.md`.
-
-If the target file already exists, read it before making changes so you can do a surgical update instead of a full overwrite.
-
-## Step 2 — Determine the reachable commit range
-
-```bash
-git describe --tags --abbrev=0 HEAD
-git describe --tags --abbrev=0 TARGET_TAG^
-gh release list --json tagName,publishedAt,name --order desc --limit 100
-```
-
-Use tags to select the commit range; release dates are metadata for the rendered version heading, not the primary change-selection boundary.
-
-- For **Unreleased** mode: use `LATEST_TAG..HEAD`.
-- For **New version** mode: use `PREV_TAG..TARGET_TAG`. If the target is not tagged yet, use `PREV_TAG..HEAD`.
-- For **Full** mode: repeat for every adjacent tag pair and use `LATEST_TAG..HEAD` for Unreleased.
-- For the first tag, where no previous tag exists, use `git log TARGET_TAG` to include every commit reachable from that tag.
-
-## Step 3 — Fetch reachable commits and PR metadata
+| 范围 | 提交区间 | 默认文件 |
+| --- | --- | --- |
+| Unreleased | `LATEST_TAG..HEAD` | `docs/changelog/changelog-unreleased.md` |
+| 已发布版本 | `PREV_TAG..TARGET_TAG` | `docs/changelog/changelog-v{VERSION}.md` |
+| 首次标签 | 到 TARGET_TAG 的全部可达提交 | 对应版本文件 |
 
 ```bash
 git log --format='%H%x09%s' PREV_TAG..TARGET_TAG
+gh pr view NUMBER --json number,title,body,author,labels,state
 ```
 
-As a remote alternative, use `gh api repos/{owner}/{repo}/compare/PREV_TAG...TARGET_TAG`.
+从 squash subject 的 `(#NNN)` 或 merge subject 提取 PR 编号，再核对实际 PR。直接提交也保留并按变化含义分类。仓库尚未使用标签时，可按已知发布截止日获取 merged PR 并说明范围；结果超过 limit 时分页或拆分时间窗。
 
-Extract PR numbers from squash-merge subjects ending in `(#NNN)` and from merge-commit subjects like `Merge pull request #NNN from ...`, then run `gh pr view NNN --json number,title,body,author,labels,state` for classification and grouping. Keep commits without an associated PR in a separate **Direct commits** group instead of dropping them.
+展示标题前去掉完整 Conventional Commit 前缀，包括 scope 和 breaking marker。按实际影响组织 Added、Changed、Deprecated、Removed、Fixed、Security，关键破坏性变化置前并说明迁移。相关 PR 合并为读者能理解的一条变化，保留来源链接。
 
-Only when the repository has no tags at all, use the first-release fallback:
+评估 docs、test、ci、build 和 style 的实际影响：安装、公开能力、验证、发布或使用方式变化值得记录；日常格式、依赖例行更新与内部维护可合并概述。细节见 [前缀参考](references/cc-prefixes.md)。
 
-```bash
-gh pr list --state merged --json number,title,body,mergedAt,author,labels --search "merged:<=END_DATE" --limit 200
-```
-
-Paginate or narrow the fallback date window if the first release has more than 200 merged PRs.
-
-**Skip these PRs/commits automatically:**
-- Author is a bot: `dependabot`, `renovate`, `github-actions`, or any login ending in `[bot]`
-- Title matches `chore(deps)`, `chore(deps-dev)`, `build(deps)`, `build(deps-dev)`, `chore(release)`, `Bump X from Y to Z`
-- Scope is `internal`: e.g. `feat(internal):`, `fix(internal):`, `refactor(internal):` — these are implementation details not relevant to users
-
-Do not automatically skip `docs:`, `test:`, `ci:`, general `build:`, or `style:` titles outside the dependency bump patterns above. Treat them as low-priority candidates and review the PR body, title, and any available file context before deciding.
-
-## Step 4 — Classify each PR
-
-Read the PR **title** to determine its changelog section. Use this mapping:
-
-| Title prefix | Section | Notes |
-|---|---|---|
-| `feat:` / `feat(scope):` | Added | New feature |
-| `fix:` / `fix(scope):` | Fixed | Bug fix |
-| `perf:` | Changed | Performance improvement |
-| `refactor:` | Changed | Internal restructuring |
-| `deprecate:` | Deprecated | |
-| `remove:` / `revert:` | Removed | |
-| `security:` | Security | |
-| `docs:` | Review body/context | Include if it changes user-facing docs, skill behavior, release workflow, installation, marketplace, or collaboration rules |
-| `test:` / `ci:` / `build:` / `style:` | Review body/context | Include if it changes required gates, release workflow, installation, or user-visible behavior |
-| `chore:` | — | Skip unless the title/body clearly describes user-visible behavior |
-
-For docs-first or skill marketplace repositories, include `docs:`, `test:`, `ci:`, `build:`, or `style:` PRs when the PR body or title indicates changes to:
-
-- skill behavior, routing, handoff, gates, or collaboration boundaries
-- required checks
-- marketplace registry, skill metadata, installation, packaging, or lockfile semantics
-- release workflow, changelog preflight, tags, draft releases, or publishing flow
-- public README, reference, or skill documentation that changes how users operate the project
-
-Skip low-value maintenance PRs when title/body/context indicate only spelling, formatting, link text cleanup, test or fixture renames without contract changes, mock cleanup, CI cache/runner maintenance, or dependency installation details without release-gate impact. If the body is empty and changed files are unavailable, skip low-value prefixes unless the title itself clearly describes user-visible behavior.
-
-**No prefix or ambiguous title**: use your judgment based on the PR title content — "add X", "implement X", "support X" → Added; "fix X", "resolve X", "patch X" → Fixed; anything that sounds like a change → Changed. Don't ask the user about every ambiguous case.
-
-**Breaking changes**: if the title contains `feat!:` / `fix!:` or the body contains `BREAKING CHANGE:`, add a `⚠️ BREAKING:` prefix to the entry and place it at the top of its section.
-
-**Clean the title for display**: strip the conventional prefix, capitalize the first letter, remove trailing period. Optionally keep the scope as a brief context prefix in bold if it adds meaningful location context for the reader (e.g. `**auth:**`, `**api:**`). Skip scope if it's generic (`core`, `internal`, `misc`).
-
-Examples:
-- `feat(auth): add OAuth2 login` → `**auth:** Add OAuth2 login` (or just `Add OAuth2 login`)
-- `fix: resolve crash on empty list` → `Resolve crash on empty list`
-- `fix(client): fix async error handling` → `**client:** Fix async error handling`
-- `chore: bump deps` → skip
-- `build(deps): bump vite` → skip
-- `docs: update release workflow` with body mentioning changelog preflight → Changed
-- `ci: tune cache restore key` with no release-gate impact → skip
-
-## Step 5 — Format the output
-
-Group entries by section in this order (omit empty sections):
-
-```
-### Added
-### Changed
-### Deprecated
-### Removed
-### Fixed
-### Security
-### Direct commits
-```
-
-Each entry:
-```
-- CLEANED_TITLE ([#NUMBER](REPO_URL/pull/NUMBER))
-```
-
-Full version block:
-```markdown
-## [1.2.0] - 2024-03-15
-
-### Added
-- Support for OAuth2 login ([#87](https://github.com/owner/repo/pull/87))
-
-### Fixed
-- Resolve token expiry crash on mobile ([#91](https://github.com/owner/repo/pull/91))
-```
-
-If a version has no classifiable PRs after skipping bots and chores, note:
-```markdown
-## [1.0.1] - 2024-01-10
-
-_No user-facing changes (dependency updates and internal maintenance only)._
-```
-
-## Step 6 — Write to docs/changelog/
-
-**Version file header** (use this pattern if creating a released version file from scratch):
-```markdown
-# Changelog - v{VERSION}
-
-## [v{VERSION}] - YYYY-MM-DD
-```
-
-**Unreleased file header** (use this exactly if creating `docs/changelog/changelog-unreleased.md` from scratch):
-```markdown
-# Changelog - Unreleased
-
-## [Unreleased]
-
-```
-
-**Update strategy:**
-
-- **Creating a released version file**: create or update only `docs/changelog/changelog-v{VERSION}.md`.
-- **Updating Unreleased only**: create or update only `docs/changelog/changelog-unreleased.md`.
-- **Full regeneration**: regenerate the per-version files under `docs/changelog/`. Warn the user before doing this if they have manually edited content in those files.
-- **Root index**: if a root `CHANGELOG.md` exists, keep it as an index that links to versioned files. Do not duplicate changelog entries there.
-
-Always create `docs/changelog/` if it doesn't exist.
-
-## Edge Cases
-
-- **Few or no associated PRs in a tag range**: keep the reachable commits in **Direct commits** and classify their subjects by the same prefix rules.
-- **PR number referenced but not merged**: when a commit message references `#NUMBER` but the PR was not actually merged (e.g. it's an issue reference), use `/issues/NUMBER` in the link instead of `/pull/NUMBER`. Verify with `gh pr view NUMBER --json state` if unsure.
-- **More than 40 PRs in one release**: group closely related entries (e.g., multiple "add X field to Y" PRs) into a single summarized line, keeping all PR links. Note the grouping.
-- **Squash merges with generic titles** like "Merge PR #42": fall back to reading the PR description for context.
-- **Tags without a corresponding GitHub Release**: still work — use the tag date from `gh api repos/{owner}/{repo}/git/refs/tags` if `gh release list` doesn't have it.
-- **Repository has no tags yet**: use the first-release merged-date fallback; after the first tag exists, return to commit reachability.
-
-## Reference
-
-See `references/cc-prefixes.md` for the full Conventional Commits prefix list and edge cases.
+读取已有版本文件，保留有效人工内容，整合当前变更。根 CHANGELOG.md 可作为版本索引。版本日期和链接来自真实记录，完成后核对范围、分类与链接。

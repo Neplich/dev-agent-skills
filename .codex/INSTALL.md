@@ -1,45 +1,19 @@
 # Installing Dev Agent Skills for Codex
 
 Install this repository into Codex with a hidden mirror and root-level relative
-skill symlinks. Do not symlink skills directly from this repository clone into
-the Codex skill directory.
+skill symlinks. Use the installer to maintain those relative symlinks.
 
-## Before You Install
+## Installation Scope
 
-Ask the user one question and wait for the answer:
+Use the installation scope specified by the user or established in context. If it is unresolved, ask whether the skills should be available in this project or across projects.
 
-1. Should this be a `personal` install or a `project` install?
+The install includes all forty skills across seven professional categories. Every skill is directly usable. The assistant selects relevant methods for the user's goal and continues within existing authorization.
 
-The install includes the role routers:
+## Mirror Layout
 
-- `pm-agent` - direct user entry for product planning, request classification, docs, GitHub status, and downstream handoff
-- `engineer-agent` - downstream engineering capability for PM handoff after scope is confirmed
-- `qa-agent` - downstream QA capability for PM handoff after expectations are confirmed
-- `devops-agent` - downstream DevOps capability for PM handoff after operational scope is confirmed
-- `designer-agent` - downstream design capability for PM handoff after design scope is confirmed
-- `security-agent` - downstream security capability for PM handoff after security scope is confirmed
-- `docs-agent` - downstream formal documentation bootstrap, synchronization, and release-audit capability for PM handoff
+Codex resolves skill symlinks to their real paths when discovering plugin metadata. The repository keeps `agents/{role}/.claude-plugin/plugin.json` files for Claude marketplace compatibility.
 
-The install also includes every specialist skill so `pm-agent`
-and role-router orchestration can call downstream specialist workflows.
-
-## Why Mirror Instead Of Clone Symlinks
-
-Codex resolves skill symlinks to their real path before looking upward for
-`.codex-plugin/plugin.json` or `.claude-plugin/plugin.json`. This repository must
-keep `agents/{role}/.claude-plugin/plugin.json` files for Claude marketplace
-compatibility. If a Codex skill points back into the clone by symlink, Codex can
-find those manifests and add namespace prefixes such as `Pm Agent:` to the skill
-names.
-
-The installer below mirrors the repository `agents/` tree into
-`$SKILL_ROOT/.dev-agent-skills/`, excluding plugin manifest directories and
-agent test directories. It then creates relative symlinks such as
-`$SKILL_ROOT/pm-agent -> .dev-agent-skills/agents/product_manager/skills/pm-agent`.
-The resolved skill path stays inside the hidden mirror, whose ancestors do not
-contain plugin manifests, and shared repo-relative skill references remain
-available without path rewriting. Codex does not scan dot-prefixed directories
-as skill roots, so the hidden mirror does not expose duplicate skills.
+The installer copies the `agents/` tree into `$SKILL_ROOT/.dev-agent-skills/`, with professional references included and plugin manifests and test directories excluded. It creates relative symlinks such as `$SKILL_ROOT/pm-agent -> .dev-agent-skills/agents/product_manager/skills/pm-agent`. This layout exposes each skill once under its own name and preserves relative references.
 
 ## Installation Steps
 
@@ -52,13 +26,7 @@ CLONE_ROOT="$HOME/.agents/dev-agent-skills"
 SKILL_ROOT="$HOME/.agents/skills"
 ```
 
-A personal install is discoverable in every project Codex opens. Explicitly
-named agents and skills always run their existing gates; otherwise product or
-engineering R&D intent enters `pm-agent`, and ordinary non-R&D work remains
-with the current assistant. Project docs, code, and enable markers are context
-after PM entry rather than trigger conditions. Choose `personal` only when
-that global discovery surface is intended; a project install keeps the skills
-inside the project.
+A personal install makes the skills discoverable across projects. A project install keeps them inside the selected project. Skills are selected according to the task or by explicit name.
 
 For a project install, run from the project root:
 
@@ -85,8 +53,7 @@ if [ -d "$CLONE_ROOT/.git" ]; then
     git ls-remote --exit-code --tags "$REPO_URL" "refs/tags/${TARGET_TAG}" >/dev/null \
       || { echo "error: release tag $TARGET_TAG not found on origin; aborting pinned install" >&2; exit 1; }
     # Fetch from the verified URL into the local tag ref so the checkout and
-    # identity checks always read the official object, not a stale or forged
-    # local tag or an unverified origin remote.
+    # identity checks read the official object.
     git -C "$CLONE_ROOT" fetch "$REPO_URL" "refs/tags/${TARGET_TAG}:refs/tags/${TARGET_TAG}" \
       || { echo "error: fetch failed; aborting pinned install" >&2; exit 1; }
     git -C "$CLONE_ROOT" checkout --detach "refs/tags/${TARGET_TAG}^{commit}" \
@@ -95,7 +62,7 @@ if [ -d "$CLONE_ROOT/.git" ]; then
       || { echo "error: checkout verification failed for $TARGET_TAG; aborting pinned install" >&2; exit 1; }
   else
     # A previous pinned install leaves a detached HEAD; return to main first
-    # so the unpinned update applies to the branch and not a detached state.
+    # so the unpinned update applies to main.
     git -C "$CLONE_ROOT" checkout main || { echo "error: cannot switch to main; aborting update" >&2; exit 1; }
     git -C "$CLONE_ROOT" pull --ff-only || { echo "error: update failed; aborting install" >&2; exit 1; }
   fi
@@ -136,8 +103,7 @@ migrated to hidden mirror symlinks. A legacy aggregate
 by the same rule, or when a real directory contains a dev-agent-skills
 marketplace file. Unowned aggregate entries are reported and left unchanged.
 
-Real directories and symlinks to other locations are never deleted by this
-installer. They are skipped by default. With `--force`, they are reported as
+Real directories and symlinks to other locations are preserved and reported as skipped. With `--force`, they are reported as
 conflicts and the installer exits before rebuilding the mirror or changing any
 target entries. Use `--force` to rebuild the hidden mirror and replace all owned
 symlinks:

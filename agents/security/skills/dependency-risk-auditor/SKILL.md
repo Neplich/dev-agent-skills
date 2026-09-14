@@ -1,179 +1,33 @@
 ---
 name: dependency-risk-auditor
-description: "Audit dependencies for vulnerabilities, abandonment, licensing, provenance, and supply-chain risk with evidence-backed remediation. Use after security-agent routes dependency review."
-visibility: internal
+description: "Audit resolved dependencies for relevant vulnerabilities, maintenance, licensing, provenance, and supply-chain risk."
 ---
 
-## Reader-Facing Writing Composition
+# Dependency Risk Audit
 
-For substantial reader-facing prose, co-load `human-writing` even on direct
-invocation; use the same context, not a later pass. This Skill retains evidence,
-facts, required structure, paths, gates, and verification. Skip code-, config-, schema-,
-lockfile-, and data-only output.
+Inspect ecosystem manifests and lockfiles to determine resolved versions and
+direct/transitive dependency relationships. Trace how important packages are
+used at build time and runtime.
 
-## Mandatory Evidence Escalation
+Examples of evidence sources include package.json and package-lock.json,
+pyproject.toml and Python lockfiles, go.mod/go.sum, Gemfile.lock, Maven/Gradle
+metadata, and Cargo.lock. Use the ecosystem's available audit tooling and
+current authoritative advisories for vulnerability claims.
 
-Explicitly record mapped-document freshness; `unverified` is low-trust
-navigation and dependency manifests/lockfiles plus repository evidence are the
-fact source. If the verified dependency fact changes formal documentation,
-behavior, operations, or release readiness, write the Security-owned report and
-return its evidence to `pm-agent` for classification and PM-owned issue filing,
-not directly to Docs.
+## Assess applicability
 
-## PM Handoff Entry Gate
+- Record advisory identifiers, affected version ranges, and the resolved package.
+- Trace reachable vulnerable behavior and the runtime conditions required.
+- Inspect transitive paths and whether an upgrade can be made at a direct parent.
+- Check maintenance, repository status, deprecation, ownership, provenance, and
+  license information with dated evidence.
+- Separate package advisory severity from the application's demonstrated impact.
 
-Before dependency review, require a PM/Security handoff packet or equivalent
-confirmed security or release context. Confirmed repo-wide dependency audits may
-use `N/A` feature scope; feature-scoped audits need the confirmed
-`feature_path`. If the user directly invokes this specialist without that
-context, return the request to `pm-agent` for classification.
+Recommend a verified target version or mitigation, describing compatibility
+changes and the tests needed to validate it. For requested upgrades, update
+through the project's package manager, review the lockfile diff, and run
+relevant build and behavior checks.
 
-Use the PM-side packet definition in
-the plugin-local generated `../security-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
-
-## Execution Steps
-
-### Step 0: Resolve Review Scope
-
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the plugin-local generated `../security-agent/_internal/_generated/shared-contracts/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
-
-For feature-scoped dependency review, use the confirmed `feature_path` and read
-`docs/pm/{feature_path}/PRD.md`, `docs/engineer/{feature_path}/TRD.md`, and
-`docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when they explain package
-usage, runtime, or release scope. If the path is unclear, return to PM for
-PRD/path clarification or Engineer for missing/stale TRD or implementation
-plan; do not invent a new top-level security directory.
-
-### Step 1: Identify Dependency Files
-
-Search for dependency manifest files:
-- `package.json` / `package-lock.json` (Node.js)
-- `requirements.txt` / `Pipfile` (Python)
-- `go.mod` / `go.sum` (Go)
-- `Gemfile` / `Gemfile.lock` (Ruby)
-- `pom.xml` / `build.gradle` (Java)
-- `Cargo.toml` (Rust)
-
-### Step 2: Run Security Audit Commands
-
-Execute appropriate audit commands based on the ecosystem:
-
-**Node.js:**
-```bash
-npm audit --json
-```
-
-**Python:**
-```bash
-pip-audit --format json
-```
-
-**Go:**
-```bash
-go list -json -m all | nancy sleuth
-```
-
-If audit tools are not available, proceed with manual analysis.
-
-### Step 3: Analyze Dependencies
-
-**A. Known Vulnerabilities:**
-- Parse audit output for CVEs
-- Classify by severity (Critical/High/Medium/Low)
-- Check if vulnerability is exploitable in current usage
-
-**B. Abandoned Packages:**
-- Check last update date (>2 years = potential abandonment)
-- Check GitHub repo status (archived, no recent commits)
-- Check npm/PyPI deprecation notices
-
-**C. Supply Chain Risks:**
-- Check for packages with few maintainers
-- Check for suspicious recent ownership changes
-- Check for typosquatting risks
-
-**D. Transitive Dependencies:**
-- Identify high-risk transitive dependencies
-- Check dependency tree depth
-
-### Step 4: Generate Dependency Audit Report
-
-Create `docs/security/{feature_path}/dependency-audit.md` for feature-scoped
-audits:
-
-**Frontmatter:**
-```yaml
----
-feature: {feature}
-feature_path: {feature_path}
-parent_feature: {parent_feature}
-feature_level: {feature_level}
-version: v1
-date: YYYY-MM-DD
-last_updated: YYYY-MM-DD
----
-```
-
-**Report Structure:**
-
-1. **Executive Summary**
-   - Total dependencies count
-   - Vulnerabilities found (by severity)
-   - Abandoned packages count
-   - Overall risk level
-
-2. **Critical Vulnerabilities**
-   - Package name and version
-   - CVE ID
-   - Vulnerability description
-   - Exploitability assessment
-   - Fix version / mitigation
-
-3. **High/Medium/Low Vulnerabilities**
-   - Same format as Critical
-
-4. **Abandoned Packages**
-   - Package name
-   - Last update date
-   - Replacement suggestions
-
-5. **Upgrade Recommendations**
-   - Priority order
-   - Breaking change warnings
-   - Testing requirements
-
-## Output Format
-
-```markdown
-### [CRITICAL] Prototype Pollution in lodash
-
-**Package:** lodash@4.17.15
-**CVE:** CVE-2020-8203
-**Severity:** Critical
-
-**Description:**
-Prototype pollution vulnerability allows attackers to modify object prototypes.
-
-**Exploitability:** High - package is used in user input processing
-
-**Fix:**
-Upgrade to lodash@4.17.21 or higher
-\`\`\`bash
-npm install lodash@latest
-\`\`\`
-
-**Breaking Changes:** None
-```
-
-## Closeout
-
-After reaching a confirmed review conclusion, including on a direct invocation,
-evaluate `../security-agent/_internal/_generated/shared-contracts/security-escalation.md`.
-When it triggers, return the conclusion and evidence to `pm-agent` for
-classification and issue filing; do not hand evidence directly to `docs-agent`,
-file the issue yourself, or modify formal documentation (`docs/site/` or
-documentation owned by other roles). The required Security-owned process report
-under `docs/security/{feature_path}/` remains escalation evidence and is not
-restricted by this prohibition. Then apply
-`../security-agent/_internal/_generated/shared-contracts/closeout-contract.md`
-to recommend the next step and wait for user confirmation.
+Report audited scope, tool/advisory dates, findings, reachability, remediation,
+and unavailable evidence. Protect registry credentials and keep captured audit
+output free of secret values.

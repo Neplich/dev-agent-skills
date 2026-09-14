@@ -1,28 +1,25 @@
-# Design System Data Reference Database
+# Searchable Design References
 
-This directory stores the local design database and design-system lookup scripts for `visual-design` reasoning.
+This directory contains local CSV references and BM25 search tools for product
+patterns, styles, colors, typography, UX, charts, landing pages, icons, and
+framework-specific guidance. The reference organization draws on ui ux pro max.
 
-The data design references ui ux pro max: product categories, style patterns, color palettes, typography pairings, UX guidelines, charts, landing patterns, icons, and stack guideline dimensions are organized here under this repository's own path.
+## Contents
 
-## Included
+- `data/`: design and stack reference datasets.
+- `scripts/search.py`: domain and stack search, plus design-system suggestions.
+- `scripts/core.py`: search support.
+- `scripts/design_system.py`: design-system synthesis and optional persistence.
 
-- `data/` - CSV design database, including product types, colors, styles, typography, UX guidelines, charts, landing patterns, icons, and stack guideline data.
-- `scripts/` - BM25 search and design-system generator scripts.
+From this directory:
 
-## Local Usage Boundary
+```bash
+python3 scripts/search.py "analytics dashboard" --design-system --format markdown
+python3 scripts/search.py "forms" --domain ux --json
+python3 scripts/search.py "rendering" --stack react --max-results 3
+```
 
-This repository uses the database for `visual-design` design reasoning only.
-
-Allowed:
-
-- Run design-system lookup to choose product pattern, style direction, colors, typography, key effects, and anti-patterns.
-- Search product, style, color, typography, UX, chart, and landing references as design evidence.
-- Save raw lookup output as diagnostics when needed.
-
-Forbidden:
-
-- Generate application code.
-- Emit Tailwind config, CSS variables, React/Vue/SwiftUI components, shadcn install commands, or implementation checklists in final design artifacts.
-- Treat stack-specific code examples as implementation instructions.
-
-Final `visual-design` output must remain a Markdown design handoff under `docs/design/{feature_path}/visual-system.md`.
+Use the results to inform the requested design document, prototype, or working
+interface. Validate their suitability against the product and current stack.
+The CLI's `--help` describes supported domains, stacks, and optional output
+persistence. Keep only the outputs useful to the requested task.

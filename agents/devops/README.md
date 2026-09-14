@@ -1,100 +1,25 @@
-# DevOps Agent
+# DevOps Skills
 
-`devops-agent` is the dispatcher skill for deployment, delivery automation, configuration governance, and runtime readiness. It routes deployment planning, CI/CD, environment audits, and incident playbook requests to the right DevOps specialist skill.
+This plugin provides 5 skills for deployment, ci/cd, configuration audits and incident response. Every skill can be used directly; `devops-agent` helps select relevant methods for a task.
 
-> [!NOTE]
-> Repository architecture and document ownership: [Architecture](../../docs/architecture.md) and [Documentation Governance](../../docs/AGENTS.md).
->
-> Other languages: [中文](./README_zh.md)
-
-> [!TIP]
-> DevOps Agent is not required for every feature. Use it when deployment, automation, config completeness, or rollback readiness becomes the current problem.
-
-## Quick Facts
-
-| Item | Details |
-| --- | --- |
-| Entry skill | `devops-agent` |
-| Specialist skills | 4 |
-| Main inputs | Engineering code, PM/TRD constraints, deployment requirements, environment variables, CI/CD state |
-| Main outputs | `deploy/` config, CI/CD files, `docs/devops/{feature_path}/` reports, runbook |
-| Collaboration | Upstream `engineer-agent`; may route back to `pm-agent` or `security-agent` |
+The assistant combines capabilities to complete the user's goal through analysis, implementation, validation and delivery. Authorization carries through the task, and documents and references are selected as needed.
 
 ## Skills
 
-| Skill | When to use | Main output |
-| --- | --- | --- |
-| `devops-agent` | DevOps request routing | Specialist selection and execution path |
-| `deployment-planner` | New or updated deployment config, containers, Kubernetes/Helm | `deploy/` assets for the confirmed target matrix (local / docker / helm are options, not defaults) |
-| `cicd-bootstrap` | GitHub Actions / release workflow | CI/CD configuration files |
-| `env-config-auditor` | Environment variables, secrets, runtime config coverage | Config audit report and gap list |
-| `incident-playbook-writer` | Rollback, troubleshooting, on-call preparation | Only the user-selected, evidence-backed runbooks and incident playbooks |
+| Skill | Purpose |
+| --- | --- |
+| [devops-agent](./skills/devops-agent/SKILL.md) | DevOps capability guide |
+| [deployment-planner](./skills/deployment-planner/SKILL.md) | Deployment and recovery plans |
+| [cicd-bootstrap](./skills/cicd-bootstrap/SKILL.md) | CI/CD configuration |
+| [env-config-auditor](./skills/env-config-auditor/SKILL.md) | Environment and configuration audits |
+| [incident-playbook-writer](./skills/incident-playbook-writer/SKILL.md) | Incident runbooks |
 
-## Routing Rules
-
-- Create or extend deployment assets: use `deployment-planner`
-- Add automated build, test, or release pipelines: use `cicd-bootstrap`
-- Review environment variables, secrets, or config coverage: use `env-config-auditor`
-- Write rollback, troubleshooting, or on-call docs: use `incident-playbook-writer`
-
-Default rule: if the core question is "how do we deploy it?", start with `deployment-planner`. If deployment already exists but automation is missing, start with `cicd-bootstrap`.
-
-## Deployment Artifact Model
-
-Local, Docker, and Helm are available targets, not a default bundle. Generate
-only the targets confirmed by the TRD, the PM handoff packet, existing
-deployment assets, or the user. The full layout looks like:
+## Installation and Use
 
 ```text
-deploy/
-├── local/      # Local development
-├── docker/     # Dockerfile, compose, build scripts
-└── helm/       # Helm chart, values, Kubernetes runtime settings
+/plugin install devops-agent@dev-agent-skills
 ```
 
-When needed, DevOps may also update:
+The [Codex guide](../../docs/README.codex.md) installs all skills. Describe the goal or name a skill directly.
 
-- `.github/workflows/`
-- `docs/devops/{feature_path}/`
-
-Feature-scoped DevOps work consumes an existing `feature_path` from PM/Engineer
-docs. If the path is unclear, DevOps returns to PM for PRD/path clarification or
-Engineer for missing/stale TRD or implementation plan instead of creating a new
-top-level DevOps directory.
-
-## Typical Flow
-
-```mermaid
-flowchart LR
-    Engineer["engineer-agent output"] --> DevOps["devops-agent"]
-    DevOps --> Deploy["deployment-planner"]
-    Deploy --> CI["cicd-bootstrap"]
-    CI --> Audit["env-config-auditor"]
-    Audit --> Runbook["incident-playbook-writer"]
-```
-
-## Collaboration Boundary
-
-- DevOps can generate deployment config, CI/CD, environment audits, and runbooks.
-- DevOps does not replace Engineer for business code changes or Security for security review.
-- Sensitive configuration risks should be handed to the right role for remediation or security review.
-- DevOps does not decide parent feature ownership; it consumes
-  `docs/engineer/{feature_path}/TRD.md` and
-  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md` when feature scope is
-  required.
-
-## Collaboration Dependencies
-
-DevOps Agent hands off to peer agents that are packaged and installed as separate plugins:
-
-- `pm-agent` for PRD and feature-path clarification
-- `engineer-agent` for missing or stale TRD/implementation plans
-
-If a target agent is not installed, the corresponding handoff stage is unavailable; DevOps Agent reports the missing stage and the recommended plugin and marks that stage blocked instead of doing the work itself.
-
-## Local Maintenance
-
-```bash
-# Install one DevOps skill into the current project runtime
-npx skills add ./agents/devops/skills/deployment-planner
-```
+[Architecture](../../docs/architecture.md) · [Documentation](../../docs/AGENTS.md) · [中文](./README_zh.md)

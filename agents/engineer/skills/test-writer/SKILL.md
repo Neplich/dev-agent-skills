@@ -1,167 +1,31 @@
 ---
 name: test-writer
-description: "Add or update deterministic tests from confirmed expectations, implementation context, and repository conventions. Use after engineer-agent routes test-writing work."
-visibility: internal
+description: "Add unit, integration, or end-to-end tests for requested behavior and regressions using the repository test harness."
 ---
 
-# Test Writer
+# Test Writing
 
-Write tests based on PM Test Spec documents and implemented code. Identifies the project's testing framework and conventions, writes tests that verify the implementation meets acceptance criteria, and runs them to confirm they pass.
+Identify the behavior under test from the user request, issue, API contract,
+existing tests, or implementation evidence. Inspect the project's harness,
+fixtures, assertion style, and CI commands before choosing test locations.
 
-## Reader-Facing Writing Composition
+## Select meaningful coverage
 
-For substantial reader-facing prose, co-load `human-writing` even on direct
-invocation; use the same context, not a later pass. This Skill retains evidence,
-facts, required structure, paths, gates, and verification. Skip code-, config-, schema-,
-lockfile-, and data-only output.
+- Unit tests for calculations, state transitions, boundaries, and pure logic.
+- Integration tests for storage, transactions, API contracts, permissions, and
+  external-service adapters.
+- End-to-end tests for the user journeys whose integration is material to the
+  change. Reuse existing cases and authentication helpers.
 
-## When to Use
+Test observable behavior. Include representative success, failure, and boundary
+cases, with deterministic data and explicit cleanup. Mock at external boundaries
+where appropriate and preserve the contract of the real dependency.
 
-- After `feature-implementor` completes a feature implementation
-- When the user asks to add tests for existing code
-- When Test Spec exists and tests need to be written
-- Standalone: to add test coverage for untested code
+For a defect, show that the regression test exposes the original failure, then
+verify the corrected behavior. For a feature, map the relevant expectations to
+assertions. Run the focused tests followed by the relevant existing suite.
 
-## PM Handoff Entry Gate
-
-Before writing tests, require a PM/Engineer handoff packet or equivalent
-confirmed test basis: PRD acceptance criteria, Test Spec, API Spec, or
-implementation context that already traces to confirmed scope. If the user
-directly invokes `test-writer` with "补测试" but no confirmed expected behavior
-source, return the request to `pm-agent` for classification instead of
-inventing test expectations.
-
-Use the PM-side packet definition in
-the plugin-local generated `../engineer-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
-
-## Step 1 — Read Test Spec
-
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the plugin-local generated `../engineer-agent/_internal/_generated/shared-contracts/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
-
-Locate the Test Spec:
-
-```bash
-# Canonical QA E2E suite for the feature
-ls docs/qa/e2e/{feature_path}/TEST_SUITE.md docs/qa/e2e/{feature_path}/FLOW_INDEX.md 2>/dev/null
-ls docs/qa/{feature_path}/test-spec*.md docs/qa/{feature_path}/tspecs*.md docs/qa/{feature_path}/TEST_SPEC*.md 2>/dev/null
-# Legacy level-1 fallback
-ls docs/test-spec*.md docs/tspecs*.md docs/TEST_SPEC*.md 2>/dev/null
-```
-
-Extract:
-- Test scenarios (happy path, edge cases, error cases)
-- Test data requirements
-- Coverage requirements (which components must be tested)
-- Integration test scenarios (if any)
-
-If no Test Spec exists, derive test cases from:
-1. PRD acceptance criteria (each P0 criterion = at least one test)
-2. API Spec (each endpoint = request validation + success + error tests)
-3. Obvious edge cases from reading the code
-
-## Step 2 — Detect testing setup
-
-Identify the project's test framework and conventions:
-
-| Framework | Detection | Config File | Run Command |
-|-----------|-----------|-------------|-------------|
-| Jest | `jest` in package.json deps | `jest.config.*` | `npx jest` |
-| Vitest | `vitest` in package.json deps | `vitest.config.*` | `npx vitest run` |
-| Pytest | `pytest` in requirements/pyproject | `pytest.ini`, `pyproject.toml` | `pytest` |
-| Go test | Go project | N/A (built-in) | `go test ./...` |
-| Cargo test | Rust project | N/A (built-in) | `cargo test` |
-| RSpec | `rspec` in Gemfile | `.rspec` | `bundle exec rspec` |
-
-Also check:
-- Where do existing tests live? (`tests/`, `__tests__/`, `*_test.go`, `*_test.rs`)
-- What patterns do existing tests follow? (describe/it, test(), function names)
-- Are there test utilities, fixtures, or helpers? Read them.
-- What mocking approach is used? (jest.mock, unittest.mock, testify, etc.)
-
-## Step 3 — Plan test files
-
-Map Test Spec scenarios to test files:
-
-```text
-## 测试计划
-
-| 测试文件 | 测试对象 | 场景数 | 类型 |
-|----------|---------|--------|------|
-| `tests/services/notification-service.test.ts` | NotificationService | 5 | 单元测试 |
-| `tests/api/notifications.test.ts` | POST/GET /notifications | 8 | 集成测试 |
-```
-
-## Step 4 — Write tests
-
-For each test file:
-
-1. **Read the source code** being tested — understand the public interface
-2. **Read existing test files** in the same directory for pattern matching
-3. **Write tests** following the project's testing conventions:
-   - Test file naming: match the project's pattern (`*.test.ts`, `*_test.go`, `test_*.py`)
-   - Test structure: match existing style (describe/it blocks, flat test functions, etc.)
-   - Assertions: use the project's assertion library
-   - Mocking: use the project's mocking approach
-
-### Test case priorities
-
-Write tests in this order:
-1. **Happy path**: The main success scenario from Test Spec
-2. **Input validation**: Invalid inputs, missing fields, wrong types
-3. **Error cases**: What happens when dependencies fail
-4. **Edge cases**: Boundary values, empty lists, max limits
-5. **Integration**: Cross-module interactions (if Test Spec requires)
-
-### Test naming
-
-Follow the project's naming convention. If no convention exists:
-- Describe WHAT is being tested and WHAT should happen
-- `test_create_notification_returns_201_with_valid_input`
-- `it('should return 404 when notification not found')`
-
-## Step 5 — Run tests
-
-Execute the full test suite:
-
-```bash
-# Use the project's test command
-npm test        # Node.js
-pytest -v       # Python
-go test ./... -v  # Go
-cargo test      # Rust
-```
-
-### Analyze results
-
-- **All pass**: Report success and coverage summary
-- **Test failures**: For each failure, determine:
-  - Is this a **code bug**? → Flag it and recommend `debugger` skill
-  - Is this a **test bug**? → Fix the test and re-run
-  - Is this a **missing dependency**? → Ask the user before installing, then install and re-run
-
-## Step 6 — Report
-
-```text
-## 测试结果
-
-- **测试框架**: <framework>
-- **测试文件**: <N> 个
-- **测试用例**: <N> 个
-- **通过**: <N> ✅
-- **失败**: <N> ❌ (如有)
-
-### Test Spec 覆盖
-| Test Spec 场景 | 对应测试 | 状态 |
-|----------------|---------|------|
-| <scenario> | <test name> | ✅/❌ |
-
-### 建议下一步
-- <recommendation based on results>
-```
-
-## Edge Cases
-
-- **No test framework installed**: Install the most common one for the language (vitest for TS, pytest for Python, etc.) and configure it minimally. Ask user before installing.
-- **Existing tests break**: If running the full suite reveals pre-existing failures, report them separately from new test results.
-- **Test Spec scenarios not testable**: Some scenarios (e.g., "user perceives fast response") can't be unit tested. Flag them and suggest manual testing or E2E test approaches.
-- **Flaky tests**: If a test passes sometimes and fails sometimes, flag it as flaky and investigate the cause (timing, state, randomness).
+Use temporary directories, isolated databases, or the project's test fixtures.
+Keep credentials in the approved secret mechanism and refer to them by stable
+identifiers. Report executed commands, pass/fail results, uncovered behavior,
+and any environment dependency that prevented a test from running.

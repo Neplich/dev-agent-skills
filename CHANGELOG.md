@@ -1,6 +1,6 @@
 # Changelog
 
-仓库级发布变更记录按版本归档到 `docs/changelog/`。
+以下记录对应已发布的历史版本。当前源码的使用方式见 [README](./README_zh.md)，完整修改历史可通过 Git 与各版本关联 PR 查阅。
 
 - [v0.6.6](./docs/changelog/changelog-v0.6.6.md)
 - [v0.6.5](./docs/changelog/changelog-v0.6.5.md)

@@ -1,40 +1,17 @@
-# Contributing Guide
+# Contributing
 
-> Other languages: [中文](./CONTRIBUTING_zh.md)
+This repository maintains seven plugins and forty directly usable Skills. Contributions can improve professional methods, tools, installation or documentation.
 
-This file is only a contributor command list. Repository rules, document contracts, release constraints, commit / PR wording, and maintenance boundaries are all governed by [AGENTS.md](./AGENTS.md) as the single source of authority.
-
-## Local Validation
-
-Python validation scripts in this repository use `uv run ...` by default.
-
-PR checks run in CI order:
+Work on a branch and preserve unrelated user changes. Synchronize affected registration paths, discovery descriptions, capability directories and lockfile hashes. Verify the behavior that changed. See [Skill maintenance](docs/cookbook/maintain-skills.md) and [architecture](docs/architecture.md).
 
 ```bash
-# 1. repository-contract
+uv run scripts/generate_shared_contracts.py --check
 uv run scripts/check_repository_contract.py
-
-# 2. doc-contract
 uv run scripts/check_doc_contract.py
-
-# 3. python-tests
-uv run --with pytest pytest \
-  agents/test_doc_contract.py \
-  scripts/test_generate_shared_contracts.py \
-  scripts/test_install_codex_skills.py \
-  scripts/test_check_repository_contract.py
+uv run --with pytest pytest
+git diff --check
 ```
 
-Optional JSON static format check:
+Use `<type>(<scope>): <中文描述>` for commit and PR titles and Chinese PR bodies describing changes, validation and impact. Append commits after opening a PR. Merge with explicit maintainer authorization. See [repository guidance](AGENTS.md) and the [manual release procedure](docs/cookbook/release.md).
 
-```bash
-uv run python -m json.tool .claude-plugin/marketplace.json >/tmp/marketplace.json.out
-uv run python -m json.tool skills-lock.json >/tmp/skills-lock.json.out
-```
-
-## Maintenance Index
-
-- Repository workflow, branch, and PR rules: [AGENTS.md](./AGENTS.md#开发工作流)
-- Document structure and frontmatter contract: [AGENTS.md](./AGENTS.md#文档组织)
-- Release and changelog rules: [AGENTS.md](./AGENTS.md#仓库治理)
-- QA E2E persistence and credential handling: [AGENTS.md](./AGENTS.md#qa-e2e-测试用例持久化)
+[中文](./CONTRIBUTING_zh.md)

@@ -1,99 +1,19 @@
-# Conventional Commits — Prefix Reference
+# Conventional Commit 前缀参考
 
-## Standard Prefixes
+展示变更说明时去掉 `type:`、`type(scope):`、`type!:` 或 `type(scope)!:` 前缀，scope 有定位价值时保留为上下文。按实际语义选择类别。
 
-| Prefix | Changelog Section | Include? |
-|--------|------------------|---------|
-| `feat` | Added | ✅ Yes |
-| `fix` | Fixed | ✅ Yes |
-| `perf` | Changed | ✅ Yes |
-| `refactor` | Changed | ✅ Yes |
-| `deprecate` / `deprecated` | Deprecated | ✅ Yes |
-| `remove` / `revert` | Removed | ✅ Yes |
-| `security` | Security | ✅ Yes |
-| `docs` | Review body/context | Conditional |
-| `chore` | — | ❌ Skip |
-| `ci` | Review body/context | Conditional |
-| `test` / `tests` | Review body/context | Conditional |
-| `build` | Review body/context | Conditional |
-| `style` | Review body/context | Conditional |
-| `wip` | — | ❌ Skip |
+| 前缀 | 常见分类 |
+| --- | --- |
+| feat | Added |
+| fix | Fixed |
+| perf / refactor | Changed |
+| deprecate | Deprecated |
+| remove / revert | Removed |
+| security | Security |
+| docs / test / ci / build / style / chore | 阅读正文和影响，选择适当类别 |
 
-## Conditional Low-Value Prefixes
+破坏性变化由 `!` 或 `BREAKING CHANGE` 提示，结合实际影响判断；现有行为的破坏性重设计通常属于 Changed。保留升级动作和兼容性说明。
 
-`docs`, `test`, `ci`, `build`, and `style` are low-priority candidates, not automatic skips. Read the PR body, title, and any available file context before deciding.
+安装、公开能力、验证与发布方式变化值得记录。例行依赖、格式、缓存和内部维护可以合并概述。bot 身份通过真实作者及 `[bot]` 后缀识别，实际用户影响仍按内容判断。
 
-Include these PRs when the content changes:
-
-- skill behavior, routing, handoff, gates, or collaboration boundaries
-- required checks
-- marketplace registry, skill metadata, installation, packaging, or lockfile semantics
-- release workflow, changelog preflight, tags, draft releases, or publishing flow
-- public README, reference, or skill documentation that changes how users operate the project
-
-Skip these PRs when they are only:
-
-- spelling, copyediting, formatting, or link text cleanup
-- README examples that do not change behavior or operational guidance
-- test renames, fixture cleanup, mock cleanup, or coverage reshuffling without contract changes
-- CI cache, runner, dependency install, or lint-only maintenance without release-gate impact
-
-If the body is empty and changed files are unavailable, skip low-value prefixes unless the title itself clearly describes user-visible behavior.
-
-## Scope Handling
-
-`feat(auth): add OAuth2` → strip `feat(auth):` → `Add OAuth2`
-`fix(api): resolve null pointer` → strip `fix(api):` → `Resolve null pointer`
-
-## Breaking Changes
-
-Indicated by `!` after type/scope:
-- `feat!: redesign config API` → ⚠️ BREAKING, Added section
-- `fix(core)!: change return type` → ⚠️ BREAKING, Fixed section
-
-Or in PR body:
-```
-BREAKING CHANGE: the `config` field has been renamed to `configuration`
-```
-
-When a breaking change is detected, format the entry as:
-```
-- ⚠️ **BREAKING**: Redesign config API ([#42](url))
-```
-And place it at the top of its section.
-
-## Ambiguous / No Prefix
-
-When a PR title has no conventional prefix, classify by keywords:
-
-**→ Added** (new capability introduced):
-- starts with: `add`, `implement`, `introduce`, `create`, `support`, `enable`, `new`
-
-**→ Fixed** (something broken now works):
-- starts with: `fix`, `resolve`, `patch`, `correct`, `repair`, `handle`, `prevent`
-- contains: `crash`, `bug`, `error`, `issue`, `broken`
-
-**→ Changed** (existing behavior modified):
-- starts with: `update`, `change`, `improve`, `enhance`, `refactor`, `migrate`, `upgrade`, `replace`
-
-**→ Removed**:
-- starts with: `remove`, `delete`, `drop`, `deprecate`
-
-**→ Security**:
-- contains: `security`, `vulnerability`, `CVE`, `XSS`, `injection`, `auth bypass`
-
-**Default fallback**: if none of the above match, use **Changed**.
-
-## Bot PR Detection
-
-Skip PRs where `author.login` matches:
-- `dependabot`, `dependabot[bot]`
-- `renovate`, `renovate[bot]`
-- `github-actions`, `github-actions[bot]`
-- Any login ending in `[bot]`
-
-Also skip PRs with these title patterns regardless of author:
-- `chore(deps):` or `chore(deps-dev):`
-- `chore(release):`
-- `build(deps):` or `build(deps-dev):`
-- `Bump X from Y to Z`
+标题缺少前缀时根据其行为与 PR 内容分类。示例：`feat(auth): add OAuth2 login` 可写为 `**auth:** Add OAuth2 login`，`fix: resolve empty-list crash` 可写为 `Resolve empty-list crash`。

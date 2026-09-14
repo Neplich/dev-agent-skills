@@ -1,159 +1,23 @@
-# PRD (Product Requirements Document) Schema
+# 产品要求参考
 
-> Shared schema referenced by `prd-gen`, `prd-validator`, and `prd-iteration`.
-> Extracted and standardized from `idea-to-spec` template.
-
-## Required Sections
-
-### 1. Document Metadata
+根据任务和读者需要选择以下内容，沿用宿主实际工具读取的格式。
 
 ```yaml
-title: <project name> — Product Requirements Document
-version: <SemVer>
-status: Draft | In Review | Approved | Superseded
-author: <generation requester display name + agent platform name>
-date: <YYYY-MM-DD>
-feature: <leaf feature slug>
-feature_path: <multi-level feature path>
-parent_feature: <parent feature path or "N/A">
-feature_level: <positive integer path depth>
-child_features: <list of direct child feature paths, or "N/A">
-reviewers: []
+---
+title: "文档标题"
+type: PRD
+status: Draft
+---
 ```
 
-Feature-scoped PRDs must be written to `docs/pm/{feature_path}/PRD.md`.
-`feature_path` is the canonical cross-role key and supports one or more
-slash-separated lower kebab-case segments. `feature` is the leaf slug for
-compatibility; `parent_feature` is `N/A` for level 1 and the parent path for
-deeper features; `feature_level` must equal the number of path segments.
-`child_features` is the parent PRD's child-feature index: it lists direct child
-feature paths (or `N/A`) and must be updated together with the path metadata
-above on any confirmed split or move. Legacy
-single-level PRDs without these fields may be read as level-1 features, but new
-or updated PRDs must include them.
+状态使用 `Draft`、`In Review`、`Approved`、`Superseded`、`Deprecated`。版本、作者、日期、feature_path 与关联资料按维护需要添加，见 [输出约定](../output-conventions.md)。
 
-Repository governance PRDs that mirror the agent registry under
-`docs/pm/agents/{agent}/skills/{skill}/PRD.md` use the same multi-level contract:
-preserve the `skills` segment in `feature_path`, set
-`parent_feature` to `agents/{agent}/skills`, and set `feature_level` to `4`.
+- 用户问题、使用者与目标结果。
+- 本次范围、主要任务和优先级。
+- 功能要求：稳定 ID、行为、验收条件。
+- 权限、异常、边界、依赖和兼容性。
+- 适用的性能、可靠性、安全与可访问性指标。
+- 数据与接口触点、用户流程和必要的交互说明。
+- 实施或发布需要的约束、风险和待确定事项。
 
-### 2. Background & Motivation
-
-- Problem statement with user/business context
-- **Quality**: Must clearly state the *user pain* being addressed.
-
-### 3. Goals & Non-Goals
-
-#### Goals
-- Numbered, measurable product goals
-
-#### Non-Goals
-- Explicitly excluded from this version
-
-- **Quality**: At least 1 non-goal to show deliberate scoping.
-
-### 4. User Personas
-
-| Persona | Description | Key Needs | Pain Points |
-|---------|-------------|-----------|-------------|
-
-- **Quality**: At least 1 persona; each must have needs and pain points.
-
-### 5. User Stories & Scenarios
-
-Format: `As a <persona>, I want to <action> so that <benefit>.`
-
-| ID | User Story | Priority | Acceptance Criteria |
-|----|-----------|----------|---------------------|
-
-- **Quality**: Every P0 story must have acceptance criteria.
-
-### 6. Functional Requirements
-
-| ID | Feature | Description | Priority | Acceptance Criteria |
-|----|---------|-------------|----------|---------------------|
-
-- **Quality**: Each requirement has a unique ID; P0 items have testable AC.
-
-### 7. Non-Functional Requirements
-
-| Category | Requirement | Metric | Target |
-|----------|-------------|--------|--------|
-| Performance | Page load time | p95 latency | < 2s |
-| Availability | Uptime | monthly | 99.9% |
-| Security | Auth | method | OAuth 2.0 |
-| Accessibility | WCAG level | compliance | AA |
-
-### 8. User Flows
-
-- Primary flow: step-by-step or Mermaid diagram
-- Alternative / error flows
-- **Quality**: At least 1 primary flow documented.
-
-### 9. UI/UX Requirements
-
-- Wireframes or layout descriptions
-- Interaction patterns
-- Responsive / accessibility notes
-- **Quality**: At least a text description of key screens.
-
-### 10. Data Model
-
-- Entity list with key attributes
-- Relationships (1:1, 1:N, M:N)
-- ER diagram (Mermaid) if applicable
-- **Quality**: At least entities mentioned; diagram optional.
-
-### 11. API Touchpoints
-
-| Endpoint | Method | Purpose | Request | Response |
-|----------|--------|---------|---------|----------|
-
-- **Quality**: List external and internal API dependencies.
-
-### 12. Assumptions & Constraints
-
-| Type | Description | Impact if Wrong |
-|------|-------------|-----------------|
-
-### 13. Dependencies
-
-- External: third-party services, APIs
-- Internal: other teams, shared components
-
-### 14. Release Plan & Milestones
-
-| Phase | Scope | Target Date | Owner |
-|-------|-------|-------------|-------|
-
-### 15. Risks & Mitigations
-
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-
-### 16. Open Questions
-
-| # | Question | Owner | Deadline | Resolution |
-|---|----------|-------|----------|------------|
-
-### 17. Appendix (Optional)
-
-- Glossary, mockups, research data, competitor analysis
-
-## Section Completeness Weights
-
-| Section | Weight |
-|---------|--------|
-| Background & Motivation | 10% |
-| Goals & Non-Goals | 10% |
-| User Personas | 5% |
-| User Stories | 15% |
-| Functional Requirements | 15% |
-| Non-Functional Requirements | 5% |
-| User Flows | 10% |
-| UI/UX Requirements | 5% |
-| Data Model | 5% |
-| API Touchpoints | 5% |
-| Release Plan | 5% |
-| Risks & Mitigations | 5% |
-| Open Questions | 5% |
+正文以当前事实或明确目标为依据，关键声明链接可核对来源。

@@ -1,250 +1,28 @@
-# Product Manager Internal Routing Map
+# 产品资料索引
 
-> Shared routing contract for `idea-to-spec` and the internal instruction
-> resources under `_internal/`.
-> Load this file first whenever `idea-to-spec` needs to decide lane selection,
-> handoff shape, lifecycle routing, or fallback behavior.
+按当前任务选择生成、修订、分析或校验方法。工程设计可参考 `engineer-agent:trd-gen`；当前助手按已有能力完成授权工作。
 
-## 1. Public Surface and Internal Layout
+| 主题 | 资料 |
+| --- | --- |
+| change-impactor | [analysis/change-impactor/INSTRUCTIONS.md](../analysis/change-impactor/INSTRUCTIONS.md) |
+| structure-governance | [analysis/structure-governance/INSTRUCTIONS.md](../analysis/structure-governance/INSTRUCTIONS.md) |
+| trace-check | [analysis/trace-check/INSTRUCTIONS.md](../analysis/trace-check/INSTRUCTIONS.md) |
+| version-differ | [analysis/version-differ/INSTRUCTIONS.md](../analysis/version-differ/INSTRUCTIONS.md) |
+| adr-gen | [gen/adr-gen/INSTRUCTIONS.md](../gen/adr-gen/INSTRUCTIONS.md) |
+| api-gen | [gen/api-gen/INSTRUCTIONS.md](../gen/api-gen/INSTRUCTIONS.md) |
+| mermaid-gen | [gen/mermaid-gen/INSTRUCTIONS.md](../gen/mermaid-gen/INSTRUCTIONS.md) |
+| prd-gen | [gen/prd-gen/INSTRUCTIONS.md](../gen/prd-gen/INSTRUCTIONS.md) |
+| tspecs-gen | [gen/tspecs-gen/INSTRUCTIONS.md](../gen/tspecs-gen/INSTRUCTIONS.md) |
+| weekly-report-gen | [gen/weekly-report-gen/INSTRUCTIONS.md](../gen/weekly-report-gen/INSTRUCTIONS.md) |
+| adr-iteration | [iteration/adr-iteration/INSTRUCTIONS.md](../iteration/adr-iteration/INSTRUCTIONS.md) |
+| api-iteration | [iteration/api-iteration/INSTRUCTIONS.md](../iteration/api-iteration/INSTRUCTIONS.md) |
+| prd-iteration | [iteration/prd-iteration/INSTRUCTIONS.md](../iteration/prd-iteration/INSTRUCTIONS.md) |
+| trd-iteration | [iteration/trd-iteration/INSTRUCTIONS.md](../iteration/trd-iteration/INSTRUCTIONS.md) |
+| tspecs-iteration | [iteration/tspecs-iteration/INSTRUCTIONS.md](../iteration/tspecs-iteration/INSTRUCTIONS.md) |
+| adr-validator | [validator/adr-validator/INSTRUCTIONS.md](../validator/adr-validator/INSTRUCTIONS.md) |
+| api-validator | [validator/api-validator/INSTRUCTIONS.md](../validator/api-validator/INSTRUCTIONS.md) |
+| prd-validator | [validator/prd-validator/INSTRUCTIONS.md](../validator/prd-validator/INSTRUCTIONS.md) |
+| trd-validator | [validator/trd-validator/INSTRUCTIONS.md](../validator/trd-validator/INSTRUCTIONS.md) |
+| tspecs-validator | [validator/tspecs-validator/INSTRUCTIONS.md](../validator/tspecs-validator/INSTRUCTIONS.md) |
 
-- `idea-to-spec` is the only public, triggerable design-entry skill in this
-  skill group.
-- All other capabilities are internal instruction resources and live under:
-  - `_internal/analysis/`
-  - `_internal/gen/`
-  - `_internal/iteration/`
-  - `_internal/orchestration/`
-  - `_internal/validator/`
-- Shared conventions and document schemas live under
-  `_internal/_shared/`.
-- Default loading rule: keep only `idea-to-spec` in active context, then load
-  exactly one internal `INSTRUCTIONS.md` plus the minimum shared references
-  needed for the current step.
-
-## 2. Entry Lane Selection
-
-Pick one execution lane during Phase 0. Treat this as the first routing
-decision, before deciding which internal instruction resource to load.
-
-| Situation | Lane | Default next action |
-| --- | --- | --- |
-| Empty workspace, vague concept, early idea validation, or new-repo product request with unsettled scope | `greenfield-discovery` | Stay in `idea-to-spec` |
-| Empty workspace and the user wants durable docs now | `greenfield-bootstrap` | Load `project-init` |
-| Existing repo, adding a new feature or module | `existing-project-feature` | Stay in `idea-to-spec` until requirements or architecture stabilize |
-| Existing repo, changing approved behavior / scope / rollout | `existing-project-update` | Load `change-impactor`, then route to iteration |
-| Existing repo, read-only feature-tree or cross-role document-structure audit | `structure-governance` | Load `structure-governance` and write only a runtime HTML report |
-| User explicitly wants the full document chain | `pipeline` | Load `flow` |
-| User only wants a document diff or comparison | `diff-only` | Load `version-differ` |
-
-## 3. Conversation Protocol Rules
-
-These rules apply before any internal routing:
-
-- Advance one decision point per turn.
-- For meaningful product or technical trade-offs, present `2-3` options with
-  explicit trade-offs and recommend one default.
-- Use section-based progression and do not move to the next section until the
-  current one is confirmed or deliberately deferred.
-- Record confirmed decisions, open questions, assumptions, and rejected options
-  in `docs/pm/{feature_path}/DECISIONS.md` when the conversation is in
-  documenting mode.
-- Before writing PM feature docs, scan `docs/pm/**/PRD.md` and resolve a
-  multi-level `feature_path`. If parent ownership is not clear, block or ask a
-  minimal clarification instead of creating a new top-level sibling directory.
-- Treat feature docs as durable memory for long-running design threads.
-- After a major stage, consolidate process notes into stable declarative prose.
-
-## 4. Progressive Disclosure Rules
-
-- Default to one recommended next skill plus one optional alternative.
-- Stay inside `idea-to-spec` while any of these remain unstable:
-  - problem statement
-  - target users
-  - scope and non-goals
-  - rollout constraints
-  - architecture direction
-- For existing-project requests, inspect repo structure and current docs before
-  recommending generation or iteration.
-- For empty or near-empty workspaces, keep product ideas on the PM path first
-  even when the user's verbs sound like "build", "create", or "init".
-- For change requests against approved docs, prefer impact analysis and direct
-  iteration over regeneration.
-- Show the full pipeline only when the user explicitly asks for end-to-end
-  coverage or is clearly ready to operationalize multiple formal documents.
-- If the user names a downstream capability explicitly, honor the intent but
-  still use `idea-to-spec` to frame unresolved assumptions and assemble the
-  handoff packet.
-
-## 5. Internal Instruction Resource Registry
-
-Use the narrowest internal instruction resource that matches the lane and
-document state.
-
-| Capability | Skill | Internal path | Use when |
-| --- | --- | --- | --- |
-| Change impact analysis | `change-impactor` | `_internal/analysis/change-impactor/INSTRUCTIONS.md` | A change request may affect one or more existing docs |
-| Traceability review | `trace-check` | `_internal/analysis/trace-check/INSTRUCTIONS.md` | Need coverage or mapping review after generation / iteration |
-| Version diff | `version-differ` | `_internal/analysis/version-differ/INSTRUCTIONS.md` | Need comparison only, not editing |
-| Document structure governance | `structure-governance` | `_internal/analysis/structure-governance/INSTRUCTIONS.md` | Need a read-only feature-tree inventory, structure problem list, and merge / split / move recommendations |
-| PRD generation | `prd-gen` | `_internal/gen/prd-gen/INSTRUCTIONS.md` | Requirements and flows are stable |
-| TRD generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | PRD and product decisions are stable; explicit Engineer handoff is needed |
-| ADR generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | A technical decision needs durable Engineer-owned rationale |
-| API generation | `engineer-agent:trd-gen` | `agents/engineer/skills/trd-gen/SKILL.md` | Interface contracts are stable and ready for Engineer-owned API documentation |
-| Test spec generation | `tspecs-gen` | `_internal/gen/tspecs-gen/INSTRUCTIONS.md` | QA assets should be derived from approved requirements or design |
-| Workflow execution | `flow` | `_internal/orchestration/flow/INSTRUCTIONS.md` | User wants an end-to-end pipeline |
-| Project bootstrap | `project-init` | `_internal/orchestration/project-init/INSTRUCTIONS.md` | Empty workspace needs durable doc scaffolding |
-| Multi-doc update | `iteration-coordinator` | `_internal/orchestration/iteration-coordinator/INSTRUCTIONS.md` | Multiple docs must change together |
-| Direct doc update | Matching `*-iteration` | `_internal/iteration/.../INSTRUCTIONS.md` | One approved doc needs revision |
-| Quality review | Matching `*-validator` | `_internal/validator/.../INSTRUCTIONS.md` | A generated or updated doc needs a score / gap report |
-
-## 6. Internal PM Handoff Packet Contract
-
-When `idea-to-spec` hands work to any internal instruction resource, pass a
-compact packet that preserves settled context and avoids re-asking basics.
-
-- `project_context`: repo path, workspace status, tech stack, key modules
-- `docs_context`: doc inventory, maturity, missing artifacts, active feature doc
-  paths
-- `feature_path`: resolved multi-level PM feature path, or `unresolved`
-- `feature`: terminal feature slug or compatible legacy feature value
-- `parent_feature`: parent feature path, or `N/A` for level 1
-- `feature_level`: positive integer matching `feature_path` depth
-- `feature_path_evidence`: list of sources proving why this path is correct
-- `request_lane`: one of the lane values above
-- `problem_and_goal`: problem, target users, success metrics
-- `scope`: MVP, non-goals, priorities, rollout constraints
-- `current_state`: integrations, permissions, data flows, dependencies
-- `change_request`: delta summary for existing-project updates
-- `decisions_locked`: agreed decisions that should not be reopened lightly
-- `decision_log_path`: path to `docs/pm/{feature_path}/DECISIONS.md` when it
-  exists
-- `drafted_sections`: sections already produced in this session or in the
-  working docs
-- `assumptions_and_open_questions`: unresolved items that need confirmation
-- `recommended_next_skill`: selected internal capability and reason
-
-Example packet:
-
-```yaml
-project_context:
-  path: /repo
-  status: existing-project
-  tech_stack: [nextjs, postgres]
-  key_modules: [comments-service, auth-service, notification-center]
-docs_context:
-  inventory:
-    - docs/pm/notifications/PRD.md
-    - docs/engineer/notifications/TRD.md
-  maturity: approved-core-docs
-  missing_artifacts: [docs/pm/notifications/DECISIONS.md]
-  active_feature_docs:
-    - docs/pm/notifications/PRD.md
-feature_path: notifications
-feature: notifications
-parent_feature: N/A
-feature_level: 1
-feature_path_evidence:
-  - source: docs/pm/notifications/PRD.md
-    reason: Existing level-1 feature PRD matches the requested notification center scope
-request_lane: existing-project-feature
-problem_and_goal:
-  problem: Users miss comment mentions.
-  target_users: [workspace members]
-  success_metrics: ["notification read rate > 70%"]
-scope:
-  mvp: [in-app notifications, unread badge]
-  non_goals: [email digests]
-current_state:
-  integrations: [comments service, auth service]
-  permissions: [workspace member, admin]
-change_request:
-  summary: Add in-app notifications for mentions and assignments.
-decisions_locked:
-  - Start with polling, not websockets
-decision_log_path: docs/pm/notifications/DECISIONS.md
-drafted_sections:
-  - current state
-  - user flows
-  - acceptance criteria
-assumptions_and_open_questions:
-  - Notification retention window still unconfirmed
-recommended_next_skill:
-  name: prd-gen
-  reason: Requirements are stable and ready for formalization
-```
-
-When the next owner is `engineer-agent:trd-gen`, this packet is mandatory. If
-`feature_path` is unresolved, do not hand off as if the path were settled; route
-back to PM clarification or document the blocker.
-
-If the target agent's plugin for a cross-agent handoff is not installed or
-unavailable, state the missing stage and required plugin, mark that handoff
-stage as blocked, and do not perform the missing agent's responsibilities
-yourself.
-
-## 7. Shared Cross-Role Contracts
-
-The following files are the only manually maintained sources for cross-role
-contracts. Load only the contracts needed by the current route:
-
-- [Cross-role PM handoff packet](./handoff-contract.md)
-- [Safety-net closeout and auto-continue](./closeout-contract.md)
-- [Security conclusion escalation](./security-escalation.md)
-- [Formal-document consumption](./consumption-contract.md)
-
-Downstream role plugins consume generated copies under their Router skill's
-`_internal/_generated/shared-contracts/` directory. Never edit those copies
-directly; refresh them with `scripts/generate_shared_contracts.py`.
-
-## 9. Phase and Situation Routing
-
-| Phase / Situation | Primary internal skill | Alternative / follow-up |
-| --- | --- | --- |
-| Empty workspace, durable docs needed | `project-init` | Stay in `idea-to-spec` for lightweight validation only |
-| Existing repo, new feature requirements stable | `prd-gen` | `prd-validator` after generation |
-| Existing repo, technical design needed after PRD confirmation | `engineer-agent:trd-gen` | Engineer-owned API / ADR docs through `trd-gen`, then matching validators after Engineer TRD confirmation |
-| Existing repo, one approved PM doc needs revision | Matching PM `*-iteration` | Matching validator; Engineer-owned TRD/API/ADR revisions hand off to `engineer-agent:trd-gen` |
-| Existing repo, multiple docs need coordinated revision | `change-impactor` -> `iteration-coordinator` | `trace-check` and `version-differ` after updates |
-| Existing repo, feature-tree and cross-role structure audit | `structure-governance` | If a split proposal is later confirmed, return through matching iteration and normal downstream handoffs |
-| QA assets or regression mapping needed | `tspecs-gen` | `tspecs-validator` or `trace-check` |
-| Full end-to-end pipeline requested | `flow` | Narrower gen / validator steps if the user backs off |
-| Diff only | `version-differ` | `trace-check` if the issue is coverage rather than versioning |
-
-## 10. Existing-Project Update Rules
-
-- Run `change-impactor` first when the user asks to update an existing feature,
-  requirement, rollout policy, or integration and the blast radius is unclear.
-- If exactly one core doc is affected, use the matching `*-iteration` skill
-  directly instead of `iteration-coordinator`.
-- If multiple docs are affected, use this order by default:
-  - PRD -> TRD -> API -> TEST_SPEC
-  - ADR handoffs to `engineer-agent:trd-gen` run in parallel when a decision record is affected
-- After multi-doc updates, prefer `trace-check` before closing the loop.
-- Regenerate from scratch only when:
-  - the target artifact is missing
-  - the current artifact is too incomplete to safely iterate
-  - the user explicitly prefers regeneration
-
-## 11. Lifecycle Coverage Matrix
-
-| Document Type | Generator | Validator | Iteration |
-| --- | --- | --- | --- |
-| PRD | `prd-gen` | `prd-validator` | `prd-iteration` |
-| TRD | `engineer-agent:trd-gen` | `trd-validator` | hand off to `engineer-agent:trd-gen` for revisions |
-| API | `engineer-agent:trd-gen` | `api-validator` | hand off to `engineer-agent:trd-gen` for revisions |
-| ADR | `engineer-agent:trd-gen` | `adr-validator` | hand off to `engineer-agent:trd-gen` for revisions |
-| TEST_SPEC | `tspecs-gen` | `tspecs-validator` | `tspecs-iteration` |
-| Cross-role feature tree | N/A | `structure-governance` read-only report | Confirmed split / move returns to PRD iteration, then mirrors through each owning role |
-
-## 12. Shared References
-
-- Schema source root:
-  `_internal/_shared/doc-schemas/`
-- Generator conventions:
-  `_internal/_shared/gen-conventions.md`
-- Validator conventions:
-  `_internal/_shared/validator-conventions.md`
-- Quality scoring:
-  `_internal/_shared/quality-rules.md`
-- Versioning and output rules:
-  `_internal/_shared/output-conventions.md`
+格式见 [output-conventions.md](output-conventions.md)，上下文和完成证据见 [handoff-contract.md](handoff-contract.md)、[closeout-contract.md](closeout-contract.md)。

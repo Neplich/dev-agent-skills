@@ -1,127 +1,23 @@
----
-name: mermaid-gen
-description: Generate Mermaid diagrams from verbal descriptions. Use when users say "draw a diagram", "create flowchart", "sequence diagram", "ER diagram", "mermaid", "architecture diagram", "C4 diagram", or need to visualize processes, data models, or system interactions.
----
+# Mermaid 图示
 
-# Mermaid Diagram Generator
+根据用户描述或已验证的实现选择合适图形。节点名称准确，边说明关系，子图表达有实际意义的边界。
 
-Generate Mermaid diagram code blocks from natural language descriptions.
+| 类型 | 用途 |
+| --- | --- |
+| flowchart | 操作、决策和控制流 |
+| sequenceDiagram | 调用与交互时序 |
+| erDiagram | 数据实体与关系 |
+| C4Context / C4Container | 系统与容器关系 |
+| gantt | 有依据的时间计划 |
+| stateDiagram-v2 | 状态与事件转换 |
+| classDiagram | 类型结构与关系 |
+| pie | 有来源的分布 |
 
-## When to use
-
-- Need to visualize a process, flow, or architecture
-- Creating diagrams for documentation (PRD, TRD, ADR)
-- Want a quick diagram from a verbal description
-- **Lightweight** — no document structure, just the diagram
-
-## Inputs
-
-- **Required**:
-  - `description`: What to diagram (verbal description or structured data)
-- **Optional**:
-  - `diagram_type`: flowchart / sequence / er / c4 / gantt / pie / state / classDiagram (auto-detected if omitted)
-  - `style`: minimal / detailed (default: detailed)
-
-## Workflow
-
-1. **Analyze description**: Determine the best diagram type if not specified.
-
-2. **Generate Mermaid code**: Produce valid Mermaid syntax:
-   - Use clear node labels
-   - Add meaningful edge labels
-   - Group related items with subgraphs where appropriate
-   - Apply direction (TD/LR) based on content flow
-
-3. **Validate syntax**: Ensure the Mermaid code is syntactically correct (matching brackets, valid node IDs, proper arrow syntax).
-
-4. **Present**: Output as a fenced Mermaid code block.
-
-## Output Contract
-
-- **Format**: Mermaid code block (` ```mermaid `)
-- **No frontmatter** — this is a utility skill, not a document generator
-- Multiple diagrams if the description covers different aspects
-
-## Supported Diagram Types
-
-| Type | Use Case | Example Trigger |
-|------|----------|-----------------|
-| flowchart | Process flows, decision trees | "Draw the checkout flow" |
-| sequence | API calls, system interactions | "Show the auth sequence" |
-| erDiagram | Data models, entity relationships | "ER diagram for users and orders" |
-| C4Context / C4Container | System architecture | "Architecture diagram for our platform" |
-| gantt | Project timelines | "Show the release timeline" |
-| stateDiagram-v2 | State machines | "Order status transitions" |
-| classDiagram | Class relationships | "Class diagram for the domain model" |
-| pie | Distribution/breakdown | "Show traffic by source" |
-
-## Conventions
-
-This is a **utility skill** (no formal document schema). Follow `_internal/_shared/gen-conventions.md` for safety boundaries. No YAML frontmatter in output.
-
-## Failure Handling
-
-- Ambiguous description → ask one clarifying question about scope or diagram type
-- Too complex for one diagram → split into multiple diagrams with explanation
-- Unsupported diagram type → suggest closest supported type
-
-## Examples
-
-### Example 1: Authentication flow
-
-**User**: Draw a sequence diagram for OAuth2 authorization code flow.
-
-**Expected Output**:
+复杂主题按读者问题拆成几张图。核对语法、标签、方向、字段与真实关系，必要时渲染检查，使用 Mermaid 代码块或宿主支持的最终图形交付。
 
 ```mermaid
-sequenceDiagram
-    participant U as User
-    participant C as Client App
-    participant A as Auth Server
-    participant R as Resource Server
-
-    U->>C: Click "Login"
-    C->>A: Authorization request (client_id, redirect_uri, scope)
-    A->>U: Show login/consent page
-    U->>A: Enter credentials & grant consent
-    A->>C: Redirect with authorization code
-    C->>A: Exchange code for tokens (code, client_secret)
-    A->>C: Access token + Refresh token
-    C->>R: API request (Bearer token)
-    R->>C: Protected resource
-```
-
-### Example 2: ER diagram
-
-**User**: ER diagram for e-commerce: users, orders, products, reviews.
-
-**Expected Output**:
-
-```mermaid
-erDiagram
-    USER ||--o{ ORDER : places
-    USER ||--o{ REVIEW : writes
-    ORDER ||--|{ ORDER_ITEM : contains
-    PRODUCT ||--o{ ORDER_ITEM : "ordered in"
-    PRODUCT ||--o{ REVIEW : "reviewed by"
-
-    USER {
-        int id PK
-        string email
-        string name
-        datetime created_at
-    }
-    ORDER {
-        int id PK
-        int user_id FK
-        decimal total
-        string status
-        datetime created_at
-    }
-    PRODUCT {
-        int id PK
-        string name
-        decimal price
-        string category
-    }
+flowchart LR
+  A[用户提交] --> B[校验输入]
+  B --> C[执行任务]
+  C --> D[返回结果]
 ```

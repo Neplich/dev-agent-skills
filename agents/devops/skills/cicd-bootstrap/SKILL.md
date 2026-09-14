@@ -1,195 +1,35 @@
 ---
 name: cicd-bootstrap
-description: "Add or update CI/CD automation, GitHub Actions, build checks, image workflows, and release configuration from confirmed evidence. Use after devops-agent routes CI/CD work."
-visibility: internal
+description: "Create or update CI/CD workflows with verified build and test commands, scoped permissions, environment configuration, and deployment checks."
 ---
 
-# CI/CD Bootstrap
+# CI/CD Configuration
 
-Generate CI/CD pipeline configurations that automate testing, building, and deployment based on the deployment strategy (local/docker/helm).
+Inspect the Git platform, existing workflows, package scripts, runtime versions,
+lockfiles, and deployment targets. Use the repository's actual build and test
+commands. Extend the relevant jobs and preserve existing supported workflows.
 
-## Reader-Facing Writing Composition
+## Pipeline design
 
-For substantial reader-facing prose, co-load `human-writing` even on direct
-invocation; use the same context, not a later pass. This Skill retains evidence,
-facts, required structure, paths, gates, and verification. Skip code-, config-, schema-,
-lockfile-, and data-only output.
+- CI checks out the intended revision, installs the correct runtime and locked
+  dependencies, runs relevant checks, and builds the requested artifact.
+- Deployment workflows use the requested trigger and environment. Connect
+  successful verification to the intended artifact, destination, and health check.
+- Image jobs preserve registry conventions, supported architectures, immutable
+  tags or digests, and build contexts for each service or variant.
+- Permissions, secrets, environment protection, concurrency, and cache keys
+  reflect the needs and trust boundaries of the actual job.
 
-## Mandatory Automation Evidence
+A project may use PR checks, staging deployment on a selected branch, or
+production deployment on a release event. Configure the events requested by
+the task and existing operating model. Document the names and purpose of
+required secrets while keeping their values in protected storage.
 
-When a change map exists, record the mapped documents read first, their
-freshness, and the code/workflow evidence used to verify every command, target,
-and release claim. `unverified` documents are low-trust navigation only.
-Creating a workflow never authorizes commit, deployment, publication, tagging,
-or release; report each unexecuted delivery action separately and preserve its
-owner and approval boundary.
+Validate workflow syntax and the commands available locally. Use the platform's
+actual run results to verify remote behavior when execution is authorized.
+Read back published artifacts, image digests, or target health for deployment
+claims. Distinguish configuration created, checks executed, and runtime verified
+in the delivery report.
 
-## When to Use
-
-- Deployment configs exist in `deploy/` directory
-- User wants to automate the deployment process
-- Need to set up GitHub Actions
-- Project is ready for continuous deployment
-- Existing CI/CD must be extended for a new service, worker, environment, or release path
-- Existing workflows must be updated after deployment architecture or target changes
-
-## PM Handoff Entry Gate
-
-Before writing CI/CD config, require a PM/DevOps handoff packet or equivalent
-confirmed release or automation context. Confirmed repo-wide CI/CD work may use
-`N/A` feature scope; feature-scoped release work needs the confirmed
-`feature_path`. If the user directly invokes this specialist without that
-context, return the request to `pm-agent` for classification.
-
-Use the PM-side packet definition in
-the plugin-local generated `../devops-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
-
-## Context Preflight
-
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the plugin-local generated `../devops-agent/_internal/_generated/shared-contracts/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
-
-Before writing CI/CD config, inspect:
-
-- whether `.github/workflows/` already exists
-- which deployment targets exist under `deploy/`
-- which test/build commands are actually present in the repo
-- whether the task is repo-wide automation or specific to one release path
-- for feature-scoped release work, the confirmed `feature_path` plus
-  `docs/engineer/{feature_path}/TRD.md` and
-  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
-
-If CI/CD already exists, prefer targeted updates over full regeneration.
-
-For every documentation image unit confirmed by `deployment-planner`, preserve
-the host project's immutable version/tag policy, required architectures,
-registry convention, and release triggers. Add build and publish validation per
-variant, and verify the published manifest or digest through the host's
-established mechanism. A workflow definition alone is not publication
-evidence.
-
-If the release path is feature-scoped but the `feature_path` is unclear, do not
-create a synonymous top-level `docs/devops/{name}/` folder. Return to PM for
-PRD/path clarification or Engineer for missing or stale TRD/implementation
-plan.
-
-## Input Requirements
-
-Detect or ask:
-- **Deployment target**: Which deployment method to use (docker/helm)
-- **Environments**: staging and/or production
-- **Deployment triggers**: On PR merge, on tag, manual
-
-## Step 1 — Detect Git Platform and Deployment Method
-
-Check which platform:
-```bash
-ls .github/ 2>/dev/null
-```
-
-Check available deployment methods:
-```bash
-ls deploy/docker/ deploy/helm/ 2>/dev/null
-```
-
-Check likely build/test entrypoints in the repo before inventing pipeline commands.
-
-## Step 2 — Create GitHub Actions Workflow (if GitHub)
-
-### 2.1 Create `.github/workflows/ci.yml`
-
-CI workflow for pull requests:
-- Checkout code
-- Setup runtime (Node.js/Python/Go)
-- Install dependencies
-- Run linter
-- Run tests
-- Build application
-
-### 2.2 Create `.github/workflows/deploy-staging.yml`
-
-Auto-deploy to staging on main branch merge:
-- Run CI checks
-- Build Docker image (if using docker)
-- Push to container registry
-- Deploy to staging environment
-
-### 2.3 Create `.github/workflows/deploy-production.yml`
-
-Deploy to production on tag creation:
-- Trigger on: `v*.*.*` tags
-- Run full CI checks
-- Build production image
-- Deploy to production
-- Create GitHub release
-
-## Step 3 — Configure Secrets
-
-Document required secrets in a durable operational path:
-
-- prefer `deploy/SECRETS.md`
-- if feature-scoped release notes are needed, also reference or create
-  `docs/devops/{feature_path}/RELEASE_PLAN.md`
-
-For GitHub Actions:
-- `DOCKER_USERNAME` / `DOCKER_PASSWORD` (if using Docker Hub)
-- `KUBECONFIG` (if using K8s)
-- `STAGING_SERVER` / `PRODUCTION_SERVER` (if using SSH)
-
-## Step 4 — Validate The Pipeline Definition
-
-If the user wants an active validation, suggest or perform the safest available non-destructive verification path. Do not create throwaway commits by default.
-
-Example validation options:
-
-```bash
-git diff -- .github/workflows/
-```
-
-If a dry-run tool exists for the chosen CI platform, use it. Otherwise summarize what still requires manual verification in the hosting platform.
-
-## Step 5 — Summary
-
-Output:
-```
-## CI/CD 配置完成
-
-已创建自动化部署流程：
-
-### CI Pipeline
-- 位置: `.github/workflows/ci.yml`
-- 触发: 每次 PR 提交
-- 步骤: lint → test → build
-
-### Staging 部署
-- 触发: main 分支合并
-- 自动部署到 staging 环境
-
-### Production 部署
-- 触发: 创建 v*.*.* tag
-- 部署到 production 环境
-
-### 需要配置的 Secrets
-见 `deploy/SECRETS.md`
-
-### 下一步建议
-- 使用 `env-config-auditor` 检查环境变量
-- 在真实 PR 或预发布分支上验证 CI 流程
-```
-
-## Edge Cases
-
-- **No deploy/ directory**: Run `deployment-planner` first
-- **Existing CI config**: Ask before overwriting
-- **Multiple deployment targets**: Generate separate workflows
-- **Custom build steps**: Ask user for specific commands
-
-## Output Rules
-
-- Primary outputs belong in repo-native CI/CD locations:
-  - `.github/workflows/`
-- Secrets documentation should be durable and reviewable
-- Feature-scoped release plans or CI/CD readiness notes belong under
-  `docs/devops/{feature_path}/...`
-- Do not invent generic lint/test/build commands when the repository already exposes canonical commands
-- Writing workflow changes does not authorize commit, push, image publication,
-  or deployment; obtain those permissions separately
+Keep operational instructions close to the relevant workflow or deployment
+assets. Report remaining environment configuration with a concrete next action.

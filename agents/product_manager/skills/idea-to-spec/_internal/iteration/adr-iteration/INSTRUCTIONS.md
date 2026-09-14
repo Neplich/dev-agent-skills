@@ -1,38 +1,7 @@
----
-name: adr-iteration
-description: Deprecated PM-owned ADR iteration resource. Do not update ADR files from PM; route ADR revision requests to engineer-agent:trd-gen.
----
+# ADR 增量修订
 
-# ADR Iteration Handoff
+阅读已有文档与本次变更证据，找出受影响的声明、表格、示例和链接。保留仍然正确的内容，将修改整合到当前说明中。同步受影响的关联资料和宿主使用的元数据。
 
-ADRs are Engineer-owned. This internal PM instruction only analyzes why an ADR
-must change and hands the request to `engineer-agent:trd-gen`.
+涉及行为或技术选择时，用用户目标、issue、实现和测试核对预期；仅关键决策存在歧义时询问。完成后检查前后一致性以及适用的验证结果。
 
-## When to use
-
-- A legacy PM route points at `adr-iteration`
-- `adr-validator` or review feedback indicates an ADR should change
-- An ADR status, supersession, or content update needs Engineer ownership
-- Do not edit, accept, deprecate, supersede, or renumber ADR files from PM
-
-## Inputs
-
-- `adr_document`: existing ADR path or summary, when available
-- `change_request`: validator report, review comments, architecture decision,
-  status transition request, or supersession context
-- `related_prd`: source PRD or PM decision context
-- `feature_path` metadata and evidence
-
-## Workflow
-
-1. Read the current ADR context and requested transition or content change.
-2. Check whether PM scope or product decisions are impacted.
-3. Prepare a handoff packet for `engineer-agent:trd-gen` with the requested
-   status or content change and supporting evidence.
-4. Do not modify ADR files; Engineer owns the revision, numbering, status, and
-   changelog.
-
-## Output contract
-
-Return an Engineer handoff packet with decision context, requested transition,
-alternatives or constraints, related PM evidence, and unresolved questions.
+参考 [schema](../../_shared/doc-schemas/adr-schema.md) 和 [格式约定](../../_shared/output-conventions.md)。

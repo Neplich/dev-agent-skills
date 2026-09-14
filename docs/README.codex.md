@@ -1,154 +1,42 @@
-# Dev Agent Skills for Codex
+# Codex 安装指南
 
-通过 Codex 的原生 skill 发现机制安装本仓库的 Agent skills。Codex 侧使用隐藏镜像加根部相对软链，不使用指向仓库 clone 内部 skill 目录的软链接。
+本仓库通过隐藏镜像与根目录相对软链安装全部四十个 Skill。每项能力均可直接使用，按用户目标选择所需方法。
 
-## 快速安装
+## 安装
 
-在 Codex 中输入：
+向 Codex 提供：
 
 ```text
 Fetch and follow instructions from https://raw.githubusercontent.com/Neplich/dev-agent-skills/refs/heads/main/.codex/INSTALL.md
 ```
 
-Codex 会先确认一个问题：
+指定 `personal` 可供多个项目发现，指定 `project` 则安装在当前项目。已明确的安装范围直接沿用。
 
-1. 安装范围是 `personal` 还是 `project`
+| 范围 | 仓库位置 | Skill 位置 |
+| --- | --- | --- |
+| personal | `~/.agents/dev-agent-skills` | `~/.agents/skills` |
+| project | `<project>/.agents/dev-agent-skills` | `<project>/.agents/skills` |
 
-默认全量安装包含这些 role routers：
+完整 clone、更新、固定 release tag 和安装命令见 [.codex/INSTALL.md](../.codex/INSTALL.md)。默认安装当前 `main`；设置 `TARGET_TAG` 可固定发布版本，并核对 tag 对应提交。
 
-- `pm-agent`：直接用户入口，负责需求分类、范围确认、文档产出、GitHub 状态读取和下游 handoff
-- `engineer-agent`：PM handoff 后的下游工程能力，承接已确认范围内的代码分析、TRD、实现、测试、调试和交付
-- `qa-agent`：PM handoff 后的下游 QA 能力，承接已确认预期下的探索测试、规范测试、Bug 分析和回归验证
-- `devops-agent`：PM handoff 后的下游 DevOps 能力，承接已确认运维范围内的部署规划、CI/CD、环境审计和故障处理
-- `designer-agent`：PM handoff 后的下游设计能力，承接已确认设计范围内的 UI/UX、视觉系统和界面规范
-- `security-agent`：PM handoff 后的下游安全能力，承接已确认安全范围内的应用安全、权限审查、依赖风险和隐私映射
-- `docs-agent`：PM handoff 后的下游正式文档能力，承接站点初始化、证据驱动同步与发版审计
+## 镜像与更新
 
-默认全量安装同时包含全部 specialist skills，确保 `pm-agent` 和 role router 编排流程可以调用下游 specialist。
+安装器将 `agents/` 复制到 `<target>/.dev-agent-skills/agents/`，并在目标根目录为各 Skill 创建相对软链。镜像包含专业参考，排除插件 manifest 和测试目录，使 Skill 在 Codex 中以自身名称被发现。
 
-## 为什么不用 clone 软链接
-
-Codex 会先把 skill 软链接解析到真实路径，再从该真实路径向上查找 `.codex-plugin/plugin.json` 或 `.claude-plugin/plugin.json`。本仓库为了兼容 Claude marketplace，必须保留 `agents/{role}/.claude-plugin/plugin.json`。
-
-如果 `~/.agents/skills/<skill-name>` 软链接到仓库 clone 内的 `agents/{role}/skills/<skill-name>`，Codex 会在祖先目录命中该 role 的 `plugin.json`，并给 skill 名加上 `Pm Agent:` 这类 namespace 前缀。镜像式安装会把仓库 `agents/` 树复制到 `~/.agents/skills/.dev-agent-skills/`，剔除 plugin manifest 和 agent test 目录，再在目标根目录创建 `~/.agents/skills/<skill-name> -> .dev-agent-skills/agents/{role}/skills/{skill-name}` 这类相对软链。解析后的真实路径仍在隐藏镜像内，祖先链不含 plugin manifest；共享 repo-relative skill references 保持原样可读，不需要 support tree 或路径改写。详见 [issue #95](https://github.com/Neplich/dev-agent-skills/issues/95)。
-
-```mermaid
-flowchart TD
-    A["软链接安装"] --> B["真实路径落入仓库 clone"]
-    B --> C["向上命中 agents/{role}/.claude-plugin/plugin.json"]
-    C --> D["Codex UI 显示 role namespace 前缀"]
-    E["镜像式安装"] --> F["agents/ 镜像到 .dev-agent-skills/"]
-    F --> G["目标根目录创建相对软链"]
-    G --> H["真实路径仍在隐藏镜像"]
-    H --> I["祖先链无 plugin manifest"]
-    I --> J["Codex UI 只显示 skill 名"]
-```
-
-## 安装层级
-
-### Personal
-
-适合希望在所有项目里复用这些 Agent 的场景。
-
-- 仓库 clone 到 `~/.agents/dev-agent-skills`
-- `agents/` 镜像到 `~/.agents/skills/.dev-agent-skills/agents/`
-- selected skills 以相对软链暴露到 `~/.agents/skills/<skill-name>`
-
-Personal 安装的 skill 在宿主可见的每个项目中都可被发现。显式点名
-`pm-agent`、role agent 或 skill 时始终使用该能力并保留其既有门禁；未显式点名时，
-研发意图进入 `pm-agent`，普通非研发请求由当前助手处理。
-
-### Project
-
-适合只想在当前项目里启用这些 Agent 的场景。
-
-- 仓库 clone 到 `<project>/.agents/dev-agent-skills`
-- `agents/` 镜像到 `<project>/.agents/skills/.dev-agent-skills/agents/`
-- selected skills 以相对软链暴露到 `<project>/.agents/skills/<skill-name>`
-
-Project 安装把 skill 保持在项目目录内，天然隔离其他项目；项目内的
-`.agents/skills/.dev-agent-skills/.dev-agent-skills-mirror.json` 记录安装镜像。若需要最严格的隔离，优先选择本层级。
-
-两种安装方式都保持仓库内的 `agents/*/skills/*` 目录不变，用于兼容 Claude marketplace。
-
-## 手动安装
-
-### 1. 选择安装层级
-
-Personal:
-
-```bash
-CLONE_ROOT="$HOME/.agents/dev-agent-skills"
-SKILL_ROOT="$HOME/.agents/skills"
-```
-
-Project，需要在项目根目录执行：
-
-```bash
-PROJECT_ROOT="$PWD"
-CLONE_ROOT="$PROJECT_ROOT/.agents/dev-agent-skills"
-SKILL_ROOT="$PROJECT_ROOT/.agents/skills"
-```
-
-### 2. clone 或更新仓库
-
-默认安装最新 main。需要固定 release 版本时先设置 `TARGET_TAG`（例如
-`v0.4.1`），在 clone/更新后执行固定 checkout：
-
-```bash
-# 可选：固定 release 版本；默认不设置则使用最新 main
-# TARGET_TAG="v0.4.1"
-
-if [ -d "$CLONE_ROOT/.git" ]; then
-  # 先前使用过固定版本时 clone 处于 detached HEAD，先切回 main 再更新
-  git -C "$CLONE_ROOT" checkout main \
-    || { echo "error: cannot switch to main; aborting update" >&2; exit 1; }
-  git -C "$CLONE_ROOT" pull --ff-only \
-    || { echo "error: pull failed; aborting update" >&2; exit 1; }
-else
-  mkdir -p "$(dirname "$CLONE_ROOT")"
-  git clone https://github.com/Neplich/dev-agent-skills.git "$CLONE_ROOT"
-fi
-
-if [ -n "${TARGET_TAG:-}" ]; then
-  git -C "$CLONE_ROOT" fetch origin "refs/tags/${TARGET_TAG}:refs/tags/${TARGET_TAG}"
-  git -C "$CLONE_ROOT" checkout --detach "refs/tags/${TARGET_TAG}^{commit}"
-fi
-```
-
-远端 tag 存在性校验、commit identity 核验与固定版本后续更新语义以
-`.codex/INSTALL.md` 的完整步骤为准。
-
-### 3. 安装 skills
-
-默认安装全部 skills：
+`.dev-agent-skills-mirror.json` 标记镜像归属。安装器管理自己拥有的镜像和软链，迁移可识别的旧版安装；遇到其他目录或软链时保留其内容并报告冲突。`--force` 重建归属镜像和软链，存在非归属同名目标时先报告冲突。
 
 ```bash
 python3 "$CLONE_ROOT/scripts/install_codex_skills.py" --target "$SKILL_ROOT"
 ```
 
-`--target <path>` 指定可见 skill 软链所在目录；默认值是 `~/.agents/skills`。无论目标是个人级还是项目级，隐藏镜像都创建在 `<target>/.dev-agent-skills/`。
+`CLONE_ROOT` 和 `SKILL_ROOT` 使用安装步骤中选定的路径。更新后检查安装器输出的 installed、updated、migrated、replaced 或 skipped 项。
 
-隐藏镜像内的 `.dev-agent-skills-mirror.json` 是安装器 ownership marker。已有隐藏镜像若是软链，或包含这个 marker，才会被视为本安装器可管理；已有真实目录缺少 marker 时会报冲突，不会删除。
+## 按路径禁用
 
-脚本只管理两类目标：解析路径落在 `<target>/.dev-agent-skills/` 内的软链，以及解析路径落在 dev-agent-skills checkout 内的旧软链。旧 checkout 软链会自动迁移到隐藏镜像软链。`<target>/dev-agent-skills` legacy aggregate 若能证明归属，也会在安装前移除；非归属 aggregate 会告警并保留。
-
-真实目录、无 owner marker 的隐藏镜像、以及指向其他位置的软链都视为非归属目标：默认跳过或报冲突，`--force` 也不会删除它们。`--force` 的语义是重建隐藏镜像并替换所有归属软链；如果目标里存在非归属 skill 名冲突，脚本会列出冲突项并在修改前退出：
-
-```bash
-python3 "$CLONE_ROOT/scripts/install_codex_skills.py" --target "$SKILL_ROOT" --force
-```
-
-脚本会输出 installed、updated、migrated、replaced 或 skipped 清单，并检查目标目录祖先链中是否存在 `.claude-plugin/plugin.json` 或 `.codex-plugin/plugin.json`。
-
-## 按路径禁用单个 skill
-
-如需保留已安装 skill 但让 Codex 不加载某个 skill，可在 `~/.codex/config.toml` 中添加：
+在 `~/.codex/config.toml` 中指定可见 Skill 软链的绝对路径：
 
 ```toml
 [[skills.config]]
 path = "/Users/you/.agents/skills/debugger"
 enabled = false
 ```
-
-`path` 使用目标根目录下的可见软链路径。

@@ -1,35 +1,7 @@
----
-name: api-gen
-description: Deprecated PM-owned API generator. Do not generate API docs from PM; route API documentation requests to engineer-agent:trd-gen.
----
+# API 编写参考
 
-# API Documentation Handoff
+对照路由注册、handler、请求与响应模型、鉴权、中间件和 contract tests，记录方法、路径、参数、状态码、分页、限流、错误和可执行示例。区分真实实现与目标接口。工程设计参考 `engineer-agent:trd-gen`。
 
-This internal PM resource is retained only as a migration stub for older
-references. API documentation is Engineer-owned and must be handled by
-`engineer-agent:trd-gen`.
+读取当前请求及相关证据，选择适合交付物的章节，完成编写后核对事实、术语、链接与可验证性。已有文件沿用稳定路径和有效格式，更新受影响内容。
 
-## When to use
-
-- Only when a legacy PM flow or stale reference points at `api-gen`
-- Only to stop PM-side API generation and prepare an Engineer handoff packet
-- Do not create, update, or scaffold `API.md` from this PM resource
-
-## Required handoff
-
-Route API documentation requests to `engineer-agent:trd-gen` with:
-
-- confirmed `feature_path`, `feature`, `parent_feature`, and `feature_level`
-- source PRD and decision context
-- interface goals, constraints, and non-goals
-- available code, route definitions, or OpenAPI evidence
-- known auth, data model, error handling, and versioning requirements
-- open questions or blockers that Engineer must resolve
-
-## Output contract
-
-Return a handoff packet only. The target Engineer output path is
-`docs/engineer/{feature_path}/API.md`, but this PM resource must not write it.
-
-If `feature_path` is unresolved or PM scope is not confirmed, return to
-`idea-to-spec` path and scope clarification before handing off to Engineer.
+模板参考 [schema](../../_shared/doc-schemas/api-schema.md)，格式参考 [output-conventions.md](../../_shared/output-conventions.md)。

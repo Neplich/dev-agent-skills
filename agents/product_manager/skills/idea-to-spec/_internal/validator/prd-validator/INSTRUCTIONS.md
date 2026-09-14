@@ -1,48 +1,5 @@
----
-name: prd-validator
-description: Validate a Product Requirements Document (PRD) against quality standards. Use when users say "validate PRD", "review PRD", "check PRD quality", "PRD review", or need to assess completeness and testability of product requirements before development.
----
+# PRD 检查参考
 
-# PRD Validator
+用户问题、目标与需求相符；关键要求有可观察验收结果；主流程、异常、权限和依赖得到适当覆盖。
 
-Validate a PRD document against the standardized schema and quality rules.
-
-## When to use
-
-- PRD draft ready for quality review
-- Before handing off PRD to engineering
-- After `prd-iteration` to verify improvements
-- **Read-only** — never modifies the document
-
-## Inputs
-
-- **Required**:
-  - `prd_document`: The PRD to validate (file path or inline content)
-- **Optional**:
-  - `strict_mode`: Treat warnings as errors (default: false)
-
-## Conventions
-
-Follow `_internal/_shared/validator-conventions.md` for standard workflow, output format, failure handling, and safety boundaries.
-
-- **Schema**: `_internal/_shared/doc-schemas/prd-schema.md`
-
-## PRD-Specific Checks
-
-| Check | Severity | Rule |
-|-------|----------|------|
-| P0 acceptance criteria | CRITICAL | Every P0 user story/requirement must have testable AC |
-| User persona | CRITICAL | At least 1 persona with needs and pain points |
-| Primary user flow | CRITICAL | At least 1 documented user flow |
-| Non-goals | WARNING | Must list at least 1 non-goal |
-| NFR metrics | WARNING | NFRs must have numeric targets |
-| Open questions | WARNING | Should have owners and deadlines |
-
-
-## Examples
-
-### Example 1
-
-**User**: Review this PRD for quality.
-
-**Expected Output**: Validation report with scores, critical issues (e.g., "US-03 missing acceptance criteria"), warnings, and suggestions.
+按任务适用性读取 [schema](../../_shared/doc-schemas/prd-schema.md)，结合原始需求、代码和测试核对具体声明。报告影响结果的问题、位置、证据和修正建议。沿用 [检查方法](../../_shared/validator-conventions.md)。

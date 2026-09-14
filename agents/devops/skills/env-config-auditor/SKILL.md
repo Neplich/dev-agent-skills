@@ -1,181 +1,31 @@
 ---
 name: env-config-auditor
-description: "Audit deployment readiness and configuration differences across local, CI/CD, and runtime contexts, including variables, secret references, and endpoints. Use after devops-agent routes environment auditing."
-visibility: internal
+description: "Compare environment variables and secret references across source, examples, deployment files, and CI to identify actionable configuration gaps."
 ---
 
-# Environment Config Auditor
+# Environment Configuration Audit
 
-Validate environment configuration completeness and security across all deployment environments.
+Inspect the requested application or environment. Discover variable reads in
+source, framework configuration, startup scripts, manifests, Compose/Helm files,
+and CI. Compare those references with documented examples and available secret
+names, keeping secret values protected.
 
-## Reader-Facing Writing Composition
+## Check the configuration path
 
-For substantial reader-facing prose, co-load `human-writing` even on direct
-invocation; use the same context, not a later pass. This Skill retains evidence,
-facts, required structure, paths, gates, and verification. Skip code-, config-, schema-,
-lockfile-, and data-only output.
+- Which values are required, optional, or have defaults in code?
+- Which runtime or build phase consumes each value?
+- Do local, staging, and production assets provide the intended names and types?
+- Do examples describe realistic safe defaults and the source of protected values?
+- Are database URLs, origins, callback addresses, ports, and service names
+  consistent across dependent components?
+- Does the application report a missing required value usefully at startup?
 
-## Mandatory Environment Evidence
+Check for committed credentials, sensitive logging, overly permissive defaults,
+and environment-specific assumptions. Trace each finding to source and the
+configuration location that needs attention. Existing documentation is a useful
+index; verify material claims in code or deployed configuration.
 
-Build a per-environment and per-runtime-variant matrix covering DNS/TLS,
-authentication or network restriction, ports, probes, service/Ingress/Gateway
-values, secret/config references, and differences between local, CI, Docker,
-and Helm/runtime contexts. Mark unavailable runtime or permission evidence as
-`unknown` and do not infer readiness from configuration text alone. For formal
-documentation follow-up, hand only verified landed facts and unresolved owners
-to `formal-docs-sync`; never write the formal pages here.
-
-Persist the audit at `deploy/ENV_AUDIT.md` unless the confirmed handoff names a
-different durable path. For every variable, compare code reads, local/example
-configuration, Docker/runtime configuration, and CI/CD injection; record each
-missing coverage location, the resulting configuration or security risk,
-recommended owner/action, and exact evidence source.
-
-## When to Use
-
-- Before first deployment
-- After adding new features that need env vars
-- Troubleshooting deployment issues
-- Security audit of configuration
-
-## PM Handoff Entry Gate
-
-Before auditing config, require a PM/DevOps handoff packet or equivalent
-confirmed operational context. Confirmed repo-wide readiness work may use `N/A`
-feature scope; feature-scoped audits need the confirmed `feature_path`. If the
-user directly invokes this specialist without that context, return the request
-to `pm-agent` for classification.
-
-Use the PM-side packet definition in
-the plugin-local generated `../devops-agent/_internal/_generated/shared-contracts/handoff-contract.md`.
-
-## Context Preflight
-
-宿主存在 `docs/site/standards/change-map.yaml` 时，项目探索先按 pm-agent 维护的 `consumption-contract.md`（the plugin-local generated `../devops-agent/_internal/_generated/shared-contracts/consumption-contract.md`）执行“任务落点 → change-map 反查 → 精准读取 → 关键判断回代码验证”；不存在时静默沿用当前代码探索。
-
-Before auditing, inspect the narrowest relevant context:
-
-- code paths that read environment variables
-- `deploy/` config that defines local, Docker, or Helm runtime settings
-- CI/CD config such as `.github/workflows/` or `.gitlab-ci.yml`
-- relevant engineering or PM docs only if they clarify environment-specific constraints
-- for feature-scoped audits, the confirmed `feature_path`,
-  `docs/engineer/{feature_path}/TRD.md`, and
-  `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`
-
-If the repo has no durable deployment/config context yet, suggest running `deployment-planner` first.
-
-For every documentation runtime variant and environment, verify Public DNS and
-TLS; Internal authentication, network restriction, or equivalent access
-control; ports; probes and health checks; service, Ingress or Gateway values;
-secret and config references; and environment differences. Record `unknown`
-where runtime or permission evidence is unavailable. A reachable endpoint or a
-documented domain is not sufficient evidence.
-
-If a feature-scoped audit lacks a clear `feature_path`, do not create a new
-top-level `docs/devops/{name}/` directory. Return to PM for PRD/path
-clarification or Engineer for missing or stale TRD/implementation plan.
-
-## Step 1 — Scan for Required Environment Variables
-
-Search codebase for env var usage:
-```bash
-grep -r "process.env\." --include="*.js" --include="*.ts"
-grep -r "os.getenv" --include="*.py"
-grep -r "os.Getenv" --include="*.go"
-```
-
-Extract all unique environment variable names.
-
-## Step 2 — Check Configuration Files
-
-Compare env vars across environments:
-
-### 2.1 Check `deploy/local/.env.example`
-List all variables defined
-
-### 2.2 Check `deploy/docker/.env.example`
-List all variables defined
-
-### 2.3 Check CI/CD secrets documentation
-Check `deploy/SECRETS.md` if exists
-
-### 2.4 Check repo-native CI/CD config
-Check `.github/workflows/` or `.gitlab-ci.yml` for secret names and deploy-time config references
-
-## Step 3 — Identify Missing Variables
-
-Create a comparison table:
-
-| Variable | Code Usage | Local | Docker | Helm | CI/CD |
-|----------|-----------|-------|--------|------|-------|
-| DATABASE_URL | ✅ | ✅ | ✅ | ❌ | ✅ |
-| API_KEY | ✅ | ❌ | ❌ | ❌ | ❌ |
-
-## Step 4 — Check for Security Issues
-
-Scan for common security problems:
-
-### 4.1 Hardcoded secrets
-```bash
-grep -r "password\s*=\s*['\"]" --include="*.js" --include="*.py" --include="*.go"
-```
-
-### 4.2 Unsafe defaults
-Check for:
-- `DEBUG=true` in production configs
-- Default passwords
-- Exposed ports
-
-### 4.3 Missing required secrets
-Verify sensitive vars are not in `.env.example` with real values
-
-## Step 5 — Generate Durable Audit Report
-
-Write the report to a durable project path:
-
-- prefer `docs/devops/{feature_path}/ENV_AUDIT.md` for feature or release scoped audits
-- otherwise use `deploy/ENV_AUDIT.md` for repo-wide deployment audits
-
-Use this structure:
-
-```markdown
-# Environment Configuration Audit Report
-
-## Missing Variables
-- API_KEY: Missing in all environments
-- DATABASE_URL: Missing in Helm config
-
-## Security Issues
-- ⚠️ Hardcoded password found in backend/config.js:42
-- ⚠️ DEBUG=true in docker/.env.example
-
-## Recommendations
-1. Add API_KEY to all .env.example files
-2. Remove hardcoded credentials
-3. Set DEBUG=false for production
-```
-
-## Step 6 — Summary
-
-Output:
-
-- the audit report path
-- the highest-risk missing or unsafe config items
-- per-variant documentation environment coverage and its residual owner
-- whether the next likely step is:
-  - `deployment-planner`
-  - `cicd-bootstrap`
-  - direct Engineer follow-up for missing runtime config
-
-For the documentation-site completeness chain, hand only landed and verified
-operational facts to `docs-agent:formal-docs-sync`; do not edit formal
-documentation in this specialist.
-
-## Edge Cases
-
-- **No deploy/ directory**: Suggest running `deployment-planner` first
-- **No env vars found**: Verify search patterns for the tech stack
-- **Encrypted secrets**: Skip validation, note in report
-- **Unknown feature scope**: use `deploy/ENV_AUDIT.md` only for true repo-wide
-  audits; otherwise return to PM/Engineer instead of inventing a feature folder
+Report variable name, consumer, required state, available source, gap, and
+recommended action. Apply corrections included in the task and run relevant
+configuration or startup checks. Label values and environments that could not
+be inspected and explain the resulting verification limit.

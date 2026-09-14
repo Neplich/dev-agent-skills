@@ -1,76 +1,32 @@
-# 文档治理
+# 文档说明
 
-## 职责归属
+文档记录当前可用的能力、操作方法与经过核实的事实。按读者任务组织内容，每个主题维护一个清晰入口。
 
-| 位置 | 唯一职责 | 禁止承载 |
-| --- | --- | --- |
-| 根 `AGENTS.md` | 每次工作都要加载的仓库不变量、权限、变更分级和 owner 指针 | Specialist 协议或长操作清单 |
-| `docs/architecture.md` | 当前 Agent、安装、路由、协作和扩展架构 | 操作步骤或决策历史 |
-| `docs/AGENTS.md` | 文档层级、职责、生命周期、归档和链接规则 | Agent 执行协议 |
-| `docs/cookbook/` | 指向权威 Skill 的简短顺序化维护流程 | 重复的 schema 或契约 |
-| `docs/pm/{feature_path}/` | 产品需求和已接受的产品决策 | 技术实现取舍 |
-| `docs/engineer/{feature_path}/` | 当前技术设计、ADR 和活跃实施范围 | 产品决策或活跃入口中的已完成计划历史 |
-| `agents/*/README*.md` | 角色能力目录、输入输出、边界和导航 | 共享契约或 Specialist 执行细节 |
-| `agents/*/skills/*/` | Router 路由或 Specialist 专属协议 | 人工复制的跨角色契约 |
+| 位置 | 内容 |
+| --- | --- |
+| 根 README | 能力介绍、安装与首次使用 |
+| 根 AGENTS.md | 本仓库维护方式与权限 |
+| docs/architecture.md | 当前能力组织与分发结构 |
+| docs/README.codex.md | Codex 安装方式与维护 |
+| docs/cookbook/ | Skill 维护与手动发布步骤 |
+| agents/*/README*.md | 各插件的能力目录 |
+| agents/*/skills/*/ | 专业方法、脚本、模板与参考 |
+| docs/changelog/ | 已发布版本的事实记录 |
 
-产品决策留在功能路径下的 `DECISIONS.md`，技术理由留在 `TRD.md` 或
-`ADR-*.md`。不要创建中央 `docs/decisions/` 目录。
+需要长期保存需求、技术方案、API、决策或测试结果时，沿用项目合适的文档位置。内容详略以实际读者和维护价值为依据。更新文档时同步相关入口，合并重复说明，保留最终结论和必要证据。历史修改可通过 Git 查阅。
 
-## 功能文档
-
-公开过程文档使用 `docs/{role}/{feature_path}/`，每个路径段均为 lower
-kebab-case。功能文档的 frontmatter 必填字段以
-`agents/product_manager/skills/idea-to-spec/_internal/_shared/output-conventions.md`
-为准（含 `title`、`type`、`feature`、`feature_path`、`parent_feature`、
-`feature_level`、`version`、`status`、`author`、`date`、`last_updated`、
-`generated_by` 和 `changelog`；PRD 另有 `child_features`，`related_docs`
-可选）。当前事实变化时同步更新 `last_updated` 和文档 changelog。迭代或更新
-触及既有文档时，将其 metadata 与结构补齐到该约定的最新形态：缺失的必填字段
-当场补建，不因文档早于约定而跳过。
-
-不要为了目录对称创建空的 Design、QA、DevOps 或 Security 文档树。只有角色确实存在
-交付物时才创建对应路径。
-
-## 实施计划生命周期
-
-- 活跃入口固定为 `docs/engineer/{feature_path}/IMPLEMENTATION_PLAN.md`。
-- 活跃计划表示已批准但尚未完成的工作，因此状态不得为 `Implemented` 或 `Archived`。
-- closeout 完成并取得明确归档批准后，移动到
-  `archive/IMPLEMENTATION_PLAN-<scope>.md`。
-- 归档 scope 使用 lower kebab-case，并与 `implementation_scope` 一致。
-- 冻结计划只使用 `Archived` 或 `Superseded`，并包含 `archived_at`、
-  `archive_approved_by` 和 `source_plan`。
-- 除非另有已批准的治理修正，不编辑冻结历史。
+选择使用 frontmatter 时保持字段准确；状态值沿用所选文档格式。链接指向仓库内真实文件，标题锚点与目标标题一致。
 
 ## QA E2E 资产
 
-持久化 E2E 资产位于 `docs/qa/e2e/{feature_path}/`。QA Router 的以下 reference
-分别是凭据存储、用例/脚本格式和报告格式的唯一权威：
+已有可复用 E2E 用例优先作为回归依据。需要持久化时可使用 `docs/qa/e2e/{feature_path}/`，凭据保存在被 Git 忽略的本地账号文件中，报告保留经过脱敏的结果和证据。QA Skill 的用例、凭据和报告参考提供具体格式。
 
-- `agents/qa/skills/qa-agent/references/e2e-credential-store.md`
-- `agents/qa/skills/qa-agent/references/e2e-case-format.md`
-- `agents/qa/skills/qa-agent/references/e2e-test-report.md`
+## 共享参考与版本记录
 
-历史结果只追加不覆盖。Secret 只保存在被 Git 忽略的本地账号文件中，不进入用例、脚本
-或报告。
+`_internal/_generated/shared-contracts/` 由生成脚本维护，编辑源文件后重新生成。它们提供按需使用的协作和文档参考。
 
-## 派生内容与历史内容
-
-Router 的 `_internal/_generated/shared-contracts/` 是只读派生物。修改 PM 权威源后运行
-`scripts/generate_shared_contracts.py`，禁止手改副本。
-
-版本 changelog 位于 `docs/changelog/changelog-v{version}.md`，根 `CHANGELOG.md`
-只维护索引。冻结归档、changelog 历史和生成契约都不是当前规则源。
-
-## 链接与检查
-
-活跃 Markdown 的本地链接必须解析到仓库内。带 fragment 的链接必须匹配 GitHub 风格
-heading slug，包括重复标题的序号后缀；路径不得逃出仓库。被排除为链接来源的历史文件
-仍可作为有效链接目标。
-
-运行：
+`docs/changelog/changelog-v{version}.md` 记录对应历史版本，根 `CHANGELOG.md` 提供索引。当前使用方式见 README 与架构说明。
 
 ```bash
 uv run scripts/check_doc_contract.py
-uv run scripts/check_repository_contract.py
 ```

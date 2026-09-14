@@ -1,18 +1,14 @@
-# Design System Framework
+# Visual System Outline
 
-Use this framework to synthesize a focused visual system. Do not paste this file wholesale into outputs.
+Use the elements that help establish and apply a coherent design:
 
-## Required Decision Fields
+- Product context, audience, and primary tasks.
+- Layout pattern and information hierarchy.
+- Visual direction and the reason it suits the product.
+- Colors, typography, spacing, component treatment, and interaction states.
+- Purposeful motion and feedback.
+- Accessibility, responsive behavior, and verification notes.
 
-- Product category: the closest product/domain pattern.
-- Recommended pattern: the layout or experience pattern that best supports the product.
-- Style direction: one primary visual style plus optional secondary influence.
-- Design rationale: why the choices match users, domain risk, and product goals.
-- Key effects: purposeful motion, elevation, feedback, or data emphasis.
-- Anti-patterns: what to avoid for this product type.
-
-## Output Rule
-
-The final artifact is a Markdown design document under `docs/design/{feature_path}/visual-system.md`.
-
-It must stop at design handoff. It must not include code snippets, shell commands, token files, install commands, or implementation task lists.
+A document explains decisions useful to designers and implementers. A working
+interface expresses those decisions in the project's components and styles.
+Choose the artifact format and detail from the user's requested outcome.

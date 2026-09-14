@@ -1,7 +1,7 @@
 {
   "name": "qa-agent",
   "version": "0.6.6",
-  "description": "Downstream QA capability invoked after pm-agent handoff for confirmed acceptance, exploratory testing, bug analysis, and regression verification. Requirement or implementation gaps return through the PM-orchestrated handoff path.",
+  "description": "Exploratory testing, behavior-based acceptance, defect analysis, and regression verification using reproducible evidence and reusable test cases.",
   "author": {
     "name": "Neplich"
   }

@@ -14,7 +14,7 @@ import { REPO_ROOT, SITE_ROOT, toPosix } from './lib/paths.mjs';
 const exec = promisify(execFile);
 const START = '<!-- docs-scaffold:start -->';
 const END = '<!-- docs-scaffold:end -->';
-const RELEASE_HANDOFF = 'Release Notes are not supported by new:doc; use the independent Release Notes Skill from issue #116.';
+const RELEASE_FORMAT_GUIDANCE = 'Release notes use versioned release metadata. This command creates api, database, design, manual, ops, and product pages.';
 const TYPES = {
   api: { directory: 'api', template: 'api-template.md' },
   database: { directory: 'database', template: 'database.md' },
@@ -87,7 +87,7 @@ function normalizeRepoGlob(value, option) {
 function validateInputs(options, repoRoot) {
   required(options.type, '--type');
   if (options.type === 'release-notes' || options.type === 'release') {
-    throw new Error(RELEASE_HANDOFF);
+    throw new Error(RELEASE_FORMAT_GUIDANCE);
   }
   const type = TYPES[options.type];
   if (!type) throw new Error(`Unknown document type: ${options.type}`);
@@ -114,7 +114,7 @@ function validateInputs(options, repoRoot) {
   const normalized = toPosix(options.path);
   const expected = `docs/site/${type.directory}/`;
   if (normalized === 'docs/site/release-notes' || normalized.startsWith('docs/site/release-notes/')) {
-    throw new Error(RELEASE_HANDOFF);
+    throw new Error(RELEASE_FORMAT_GUIDANCE);
   }
   const target = resolve(repoRoot, normalized);
   const lexical = toPosix(relative(repoRoot, target));
