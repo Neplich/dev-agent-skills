@@ -9,7 +9,7 @@
     "idea-to-spec": {
       "source": "agents/product_manager/skills/idea-to-spec",
       "sourceType": "local",
-      "computedHash": "6d7add8cf8964838e5b5cfbb241dac62fc856d4a5beaa803549f56df89fcb7b6"
+      "computedHash": "f7c3114288dbbd186ffef5067d1a30c48a27ccd773faaf036a0cbad9b88b24b7"
     },
     "feature-catalog": {
       "source": "agents/product_manager/skills/feature-catalog",
@@ -149,7 +149,7 @@
     "visual-design": {
       "source": "agents/designer/skills/visual-design",
       "sourceType": "local",
-      "computedHash": "e6e6423cc0c4dd30a2d003a83c268adf70252dfbd5de148676794172caa61ee1"
+      "computedHash": "158fb146357721e3eebb88a7990f1982944219e95f311c4b9e0cb51ddbfcd80c"
     },
     "security-agent": {
       "source": "agents/security/skills/security-agent",
@@ -184,7 +184,7 @@
     "docs-site-bootstrap": {
       "source": "agents/docs/skills/docs-site-bootstrap",
       "sourceType": "local",
-      "computedHash": "ea012ec89a515a6d7fbba7a78eeda8d9c07547339791d090e3e0386c0cf5ec47"
+      "computedHash": "a3389d4d638b657c954835e611ff81d1b9877378a7cbc89b86bba81620c8504a"
     },
     "formal-docs-sync": {
       "source": "agents/docs/skills/formal-docs-sync",
