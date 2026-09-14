@@ -65,6 +65,63 @@ def formal_doc_frontmatter(doc_type: str) -> str:
 
 
 class DocContractTests(unittest.TestCase):
+    def test_formal_status_values_match_authoritative_contract(self):
+        checker = load_doc_checker_module()
+        source = ROOT / (
+            "agents/product_manager/skills/idea-to-spec/_internal/"
+            "_shared/output-conventions.md"
+        )
+        status_line = next(
+            line for line in source.read_text().splitlines() if line.startswith("status:")
+        )
+        self.assertEqual(
+            tuple(value.strip() for value in status_line.split(":", 1)[1].split("|")),
+            checker.FORMAL_DOCUMENT_STATUSES,
+        )
+
+    def test_formal_document_status_validation(self):
+        checker = load_doc_checker_module()
+        valid = ["Draft", "In Review", '"Approved"', "'Superseded'", "Deprecated # old"]
+        invalid = ["Implemented", "Archived", "approved", "Unknown", "[Approved]"]
+        for doc_type, role in (("PRD", "pm"), ("TRD", "engineer")):
+            for status in valid + invalid:
+                with self.subTest(doc_type=doc_type, status=status):
+                    with tempfile.TemporaryDirectory() as temp_dir:
+                        root = Path(temp_dir)
+                        init_git(root)
+                        add_tracked_file(
+                            root,
+                            f"docs/{role}/example/{doc_type}.md",
+                            formal_doc_frontmatter(doc_type).replace(
+                                "status: Draft", f"status: {status}"
+                            ),
+                        )
+                        errors = []
+                        checker.validate_required_formal_frontmatter(root, errors)
+                    if status in valid:
+                        self.assertEqual(errors, [])
+                    else:
+                        self.assertEqual(len(errors), 1)
+                        self.assertIn("frontmatter 'status' must be one of", errors[0].render(root))
+
+    def test_formal_status_validation_preserves_plan_and_ledger_exceptions(self):
+        checker = load_doc_checker_module()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            init_git(root)
+            for rel in (
+                "docs/engineer/example/IMPLEMENTATION_PLAN.md",
+                "docs/engineer/example/archive/IMPLEMENTATION_PLAN-example.md",
+                "docs/pm/repository-ci-governance/CI_PLAN.md",
+            ):
+                add_tracked_file(
+                    root, rel,
+                    formal_doc_frontmatter("TRD").replace("status: Draft", "status: Archived"),
+                )
+            errors = []
+            checker.validate_required_formal_frontmatter(root, errors)
+        self.assertEqual(errors, [])
+
     def test_doc_contract_rejects_missing_required_formal_metadata(self):
         checker = load_doc_checker_module()
 

@@ -21,6 +21,9 @@ from check_repository_contract import (
 
 
 REQUIRED_FORMAL_FRONTMATTER_FIELDS = ("feature", "version", "date", "last_updated")
+# Lifecycle values owned by idea-to-spec/_internal/_shared/output-conventions.md.
+# Implementation plans retain their separate lifecycle in the repository checker.
+FORMAL_DOCUMENT_STATUSES = ("Draft", "In Review", "Approved", "Superseded", "Deprecated")
 # Extended presence set aligning with the output-conventions required fields
 # (agents/product_manager/skills/idea-to-spec/_internal/_shared/
 # output-conventions.md). `changelog` is validated structurally below because
@@ -236,6 +239,15 @@ def validate_required_formal_frontmatter(
             value = raw_metadata.get(field)
             if value is None or not normalize_frontmatter_scalar(value):
                 add_error(errors, path, f"frontmatter {field!r} must be non-empty")
+
+        status = normalize_frontmatter_scalar(raw_metadata.get("status", ""))
+        if status and status not in FORMAL_DOCUMENT_STATUSES:
+            add_error(
+                errors,
+                path,
+                f"frontmatter 'status' must be one of {', '.join(FORMAL_DOCUMENT_STATUSES)};"
+                f" got {status!r}",
+            )
 
         validate_changelog_entries(path, content, errors)
 
