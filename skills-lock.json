@@ -136,21 +136,6 @@
       "sourceType": "local",
       "computedHash": "b9ed7b3c9d953a3d32749a52eb0b8eb716d4e5bdeea835b4d65e8af624c307fc"
     },
-    "designer-agent": {
-      "source": "agents/designer/skills/designer-agent",
-      "sourceType": "local",
-      "computedHash": "c68e24fc9871ebd89704d179554c6e7a9ed97d76edfd80bf787973263e180403"
-    },
-    "ui-ux-design": {
-      "source": "agents/designer/skills/ui-ux-design",
-      "sourceType": "local",
-      "computedHash": "9bccefeb3f5b23af944f4ff443e24709375e1813e96686369c9e43fc0603c82c"
-    },
-    "visual-design": {
-      "source": "agents/designer/skills/visual-design",
-      "sourceType": "local",
-      "computedHash": "158fb146357721e3eebb88a7990f1982944219e95f311c4b9e0cb51ddbfcd80c"
-    },
     "security-agent": {
       "source": "agents/security/skills/security-agent",
       "sourceType": "local",

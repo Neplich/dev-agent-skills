@@ -16,7 +16,6 @@ CONTRACT_NAMES = (
     "consumption-contract.md",
 )
 ROUTER_ROOTS = (
-    "agents/designer/skills/designer-agent",
     "agents/engineer/skills/engineer-agent",
     "agents/qa/skills/qa-agent",
     "agents/devops/skills/devops-agent",

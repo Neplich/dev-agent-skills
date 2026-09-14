@@ -1,6 +1,6 @@
 # Contributing
 
-This repository maintains seven plugins and forty directly usable Skills. Contributions can improve professional methods, tools, installation or documentation.
+This repository maintains six plugins and thirty-seven directly usable Skills. Contributions can improve professional methods, tools, installation or documentation.
 
 Work on a branch and preserve unrelated user changes. Synchronize affected registration paths, discovery descriptions, capability directories and lockfile hashes. Verify the behavior that changed. See [Skill maintenance](docs/cookbook/maintain-skills.md) and [architecture](docs/architecture.md).
 

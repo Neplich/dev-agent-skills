@@ -7,7 +7,7 @@ skill symlinks. Use the installer to maintain those relative symlinks.
 
 Use the installation scope specified by the user or established in context. If it is unresolved, ask whether the skills should be available in this project or across projects.
 
-The install includes all forty skills across seven professional categories. Every skill is directly usable. The assistant selects relevant methods for the user's goal and continues within existing authorization.
+The install includes all thirty-seven skills across six professional categories. Every skill is directly usable. The assistant selects relevant methods for the user's goal and continues within existing authorization.
 
 ## Mirror Layout
 
@@ -97,7 +97,7 @@ The installer owns only two target shapes:
   by an ancestor `.claude-plugin/marketplace.json` with `name:
   dev-agent-skills`
 
-Owned symlinks are replaced automatically. Older clone symlink installs are
+Owned symlinks are replaced automatically. On upgrade, obsolete aliases pointing into the managed mirror are removed when their skills are no longer registered. Older clone symlink installs are
 migrated to hidden mirror symlinks. A legacy aggregate
 `$SKILL_ROOT/dev-agent-skills` entry is removed before install when it is owned
 by the same rule, or when a real directory contains a dev-agent-skills

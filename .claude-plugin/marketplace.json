@@ -4,7 +4,7 @@
     "name": "Neplich"
   },
   "metadata": {
-    "description": "On-demand professional capabilities for product, engineering, QA, operations, design, security, and documentation. The assistant combines relevant knowledge to complete the user-authorized task.",
+    "description": "On-demand professional capabilities for product, engineering, QA, operations, security, and documentation. The assistant combines relevant knowledge to complete the user-authorized task.",
     "version": "0.6.6"
   },
   "plugins": [
@@ -64,17 +64,6 @@
         "./skills/cicd-bootstrap",
         "./skills/env-config-auditor",
         "./skills/incident-playbook-writer"
-      ]
-    },
-    {
-      "name": "designer-agent",
-      "description": "User journeys, interaction design, responsive layouts, and visual systems supported by reusable design references and data.",
-      "source": "./agents/designer",
-      "strict": true,
-      "skills": [
-        "./skills/designer-agent",
-        "./skills/ui-ux-design",
-        "./skills/visual-design"
       ]
     },
     {

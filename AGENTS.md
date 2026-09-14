@@ -1,6 +1,6 @@
 # Repository Instructions
 
-This repository publishes an on-demand professional knowledge library: seven plugins and forty directly usable Skills. Role names organize expertise. The current assistant owns the user's task and combines relevant capabilities through completion.
+This repository publishes an on-demand professional knowledge library: six plugins and thirty-seven directly usable Skills. Role names organize expertise. The current assistant owns the user's task and combines relevant capabilities through completion.
 
 ## Working Approach
 
