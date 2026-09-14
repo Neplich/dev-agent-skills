@@ -2,7 +2,7 @@
 feature: repository-ci-governance
 version: 0.1.0-draft
 date: 2026-05-06
-last_updated: 2026-09-01
+last_updated: 2026-09-14
 ---
 
 # Repository CI Governance Plan
@@ -22,6 +22,10 @@ CI 的第一版目标是保护 `main`、skill 注册结构和基础测试。
 ## 当前已确认约束
 
 - [x] `main` 已启用分支保护，后续变更默认通过 PR 合入。
+- [x] 2026-09-14 修复 #335：GitHub API 复核时分支保护缺失，现已重新配置并回读验证。
+  必须通过 PR 合入，三个必过检查绑定 GitHub Actions；合入前分支必须与 `main` 同步。
+  规则对管理员同样生效，禁止强推和删除 `main`。当前仅一位管理员，因此所需审批数为 0，
+  不要求另一位审阅者批准；Agent 合并仍须取得维护者明确确认。
 - [x] 仓库限制性权限默认只授予唯一管理员，后续维护者或机器人再显式添加。
 - [x] 合并方式默认只允许 squash merge。
 - [x] tag 已通过 ruleset 保护，当前只允许 Admin bypass。
@@ -144,6 +148,11 @@ jobs：
 - [x] `python-tests`
 
 - [x] 通过后再把这三个 job 加入 `main` required status checks。
+
+复核实际配置使用 `gh api repos/Neplich/dev-agent-skills/branches/main/protection`：
+`required_status_checks.checks` 应包含以上三个 job，`app_id` 均为 `15368`
+（GitHub Actions），`strict` 和 `enforce_admins.enabled` 均为 `true`。
+Workflow 存在或运行成功不代表分支保护已启用；台账完成状态以平台配置回读为准。
 
 ## 待确认问题
 

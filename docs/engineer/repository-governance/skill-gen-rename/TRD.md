@@ -1,8 +1,8 @@
 ---
 title: "生成类 skill 后缀统一为 -gen TRD"
 type: TRD
-version: "1.0.1"
-status: Implemented
+version: "1.0.2"
+status: Approved
 author: "Neplich Claude"
 date: "2026-08-06"
 generated_by: "trd-gen"
@@ -10,10 +10,13 @@ feature: "skill-gen-rename"
 feature_path: "repository-governance/skill-gen-rename"
 parent_feature: "repository-governance"
 feature_level: "2"
-last_updated: "2026-09-01"
+last_updated: "2026-09-14"
 related_prd: "docs/pm/repository-governance/skill-gen-rename/PRD.md"
 related_issue: "https://github.com/Neplich/dev-agent-skills/issues/230"
 changelog:
+  - version: "1.0.2"
+    date: "2026-09-14"
+    changes: "按正式文档生命周期将状态修正为 Approved；原有重命名工作已完成，实施事实保持不变（#336）"
   - version: "1.0.1"
     date: "2026-09-01"
     changes: "按 skill 最新约定补齐 frontmatter 字段（changelog）"
