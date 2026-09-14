@@ -35,6 +35,8 @@ This README describes the current source. A pinned installation uses the behavio
 
 > [!IMPORTANT]
 > **Recommended models:** this skill workflow suits `gpt-5.6-sol`, `opus-4.8`, and earlier models running with a harness. With model releases such as GPT-6-Astra and Fable-5.1, it carries more ceremony than those models need and holds back what they can do.
+>
+> For highly autonomous models such as GPT-6-Astra and Fable-5.1, use the streamlined [H-Level Model Skills](https://github.com/Neplich/h-level-model-skills): eight skills focused on reusable assets, specification templates, and specialized conventions.
 
 ## Quick Start
 
